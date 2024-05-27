@@ -1,0 +1,14 @@
+# ninja log v5
+348	380	1716750374064445560	SFMLTemplate	aaba62c79b78c9dc
+8	344	1716748573396653394	CMakeFiles/SFMLTemplate.dir/Source/Input.cpp.o	e5bb15beafe1e312
+7	363	1716748573415955089	CMakeFiles/SFMLTemplate.dir/Source/Graphics.cpp.o	9672086ef94ae9aa
+7	348	1716750374029680276	CMakeFiles/SFMLTemplate.dir/main.cpp.o	e9365749870df4d7
+7	379	1716748573433144513	CMakeFiles/SFMLTemplate.dir/Source/Audio.cpp.o	c790f04e87d47700
+4	39	1716785735204396169	build.ninja	1d809fe5ead3727d
+7	375	1716748573426934742	CMakeFiles/SFMLTemplate.dir/Source/Network.cpp.o	f0304bffb286d519
+9	50	1716829144995999249	CMakeFiles/SFMLTemplate.dir/Source/Entity.cpp.o	d9d5878017e4a031
+9	286	1716829145228723183	CMakeFiles/SFMLTemplate.dir/Source/Input.cpp.o	e5bb15beafe1e312
+8	359	1716829186401678037	CMakeFiles/SFMLTemplate.dir/main.cpp.o	e9365749870df4d7
+8	250	1716830662241980236	CMakeFiles/SFMLTemplate.dir/Source/Input.cpp.o	e5bb15beafe1e312
+8	240	1716830775734218525	CMakeFiles/SFMLTemplate.dir/Source/Input.cpp.o	e5bb15beafe1e312
+240	269	1716830775765366459	SFMLTemplate	989b042d71b39882
