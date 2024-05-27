@@ -2,8 +2,8 @@
 // Created by Johnnie Otis on 5/26/24.
 //
 
-#ifndef SFMLTEMPLATE_AUDIO_H
-#define SFMLTEMPLATE_AUDIO_H
+#ifndef SFML_CORE_HEADER_AUDIO_H_
+#define SFML_CORE_HEADER_AUDIO_H_
 
 
 class Audio
@@ -13,4 +13,4 @@ public:
 };
 
 
-#endif //SFMLTEMPLATE_AUDIO_H
+#endif //SFML_CORE_HEADER_AUDIO_H_

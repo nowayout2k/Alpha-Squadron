@@ -2,8 +2,8 @@
 // Created by Johnnie Otis on 5/26/24.
 //
 
-#ifndef SFMLTEMPLATE_INPUT_H
-#define SFMLTEMPLATE_INPUT_H
+#ifndef SFML_CORE_HEADER_INPUT_H_
+#define SFML_CORE_HEADER_INPUT_H_
 
 #include <functional>
 #include <unordered_map>
@@ -15,12 +15,12 @@ public:
     using ActionDelegate = std::function<void()>;
 
     void HandleInput();
-    static void subscribe(const sf::Keyboard::Key key, const ActionDelegate& delegate);
-    static void unsubscribe(const sf::Keyboard::Key key);
-    void clearAll();
+    static void Subscribe(sf::Keyboard::Key key, const ActionDelegate& delegate);
+    static void Unsubscribe(sf::Keyboard::Key key);
+	static void ClearAll();
 
 private:
     static std::unordered_map<int, ActionDelegate> actionDelegates;
 };
 
-#endif //SFMLTEMPLATE_INPUT_H
+#endif //SFML_CORE_HEADER_INPUT_H_

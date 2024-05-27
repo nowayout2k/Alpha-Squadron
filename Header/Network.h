@@ -2,17 +2,21 @@
 // Created by Johnnie Otis on 5/26/24.
 //
 
-#ifndef SFMLTEMPLATE_NETWORK_H
-#define SFMLTEMPLATE_NETWORK_H
+#ifndef SFML_CORE_HEADER_NETWORK_H_
+#define SFML_CORE_HEADER_NETWORK_H_
 
+#include <SFML/Network/UdpSocket.hpp>
 
 class Network
 {
 public:
-    void open_port();
-    void close_port();
-    void http_request();
+    sf::Socket::Status OpenPort();
+    void ClosePort();
+    void HttpRequest();
+    sf::Socket::Status ReceiveData();
+private:
+    sf::UdpSocket socket;
 };
 
 
-#endif //SFMLTEMPLATE_NETWORK_H
+#endif //SFML_CORE_HEADER_NETWORK_H_

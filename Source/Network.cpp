@@ -6,7 +6,7 @@
 #include <SFML/Network.hpp>
 #include <iostream>
 
-void Network::http_request()
+void Network::HttpRequest()
 {
     // HTTP example
     sf::Http http("http://www.example.com");
@@ -17,15 +17,25 @@ void Network::http_request()
     std::cout << "Response body: " << response.getBody() << std::endl;
 }
 
-void Network::OpenPort()
+sf::Socket::Status Network::OpenPort()
 {
-    // UDP Socket example
-    sf::UdpSocket socket;
-    socket.bind(54000);
+    return socket.bind(54000);
+}
+
+void Network::ClosePort()
+{
+	socket.unbind();
+}
+
+sf::Socket::Status Network::ReceiveData()
+{
     char data[100];
     std::size_t received;
     sf::IpAddress sender;
     unsigned short port;
-    socket.receive(data, 100, received, sender, port);
+
+    sf::Socket::Status status = socket.receive(data, 100, received, sender, port);
+
     std::cout << "Received " << received << " bytes from " << sender << " on port " << port << std::endl;
+    return status;
 }

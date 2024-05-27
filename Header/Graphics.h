@@ -2,8 +2,8 @@
 // Created by Johnnie Otis on 5/26/24.
 //
 
-#ifndef SFMLTEMPLATE_GRAPHICS_H
-#define SFMLTEMPLATE_GRAPHICS_H
+#ifndef SFML_CORE_HEADER_GRAPHICS_H_
+#define SFML_CORE_HEADER_GRAPHICS_H_
 
 
 class Graphics
@@ -13,4 +13,4 @@ public:
 };
 
 
-#endif //SFMLTEMPLATE_GRAPHICS_H
+#endif //SFML_CORE_HEADER_GRAPHICS_H_

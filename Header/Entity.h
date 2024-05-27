@@ -2,13 +2,14 @@
 // Created by Johnnie Otis on 5/26/24.
 //
 
-#ifndef SFMLTEMPLATE_ENTITY_H
-#define SFMLTEMPLATE_ENTITY_H
+#ifndef SFML_CORE_HEADER_ENTITY_H_
+#define SFML_CORE_HEADER_ENTITY_H_
 
 
-class Entity {
+class Entity
+{
 
 };
 
 
-#endif //SFMLTEMPLATE_ENTITY_H
+#endif //SFML_CORE_HEADER_ENTITY_H_

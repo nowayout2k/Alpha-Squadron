@@ -6,7 +6,7 @@
 
 std::unordered_map<int, Input::ActionDelegate> Input::actionDelegates;
 
-void Input::HandleInput()
+void Input::HandleInput() // NOLINT(*-convert-member-functions-to-static)
 {
     for (const auto& pair : actionDelegates)
     {
@@ -17,21 +17,21 @@ void Input::HandleInput()
     }
 }
 
-void Input::clearAll()
+void Input::ClearAll()
 {
-    actionDelegates.clear();
+	actionDelegates.clear();
 }
 
-void Input::unsubscribe(const sf::Keyboard::Key key)
+void Input::Unsubscribe(sf::Keyboard::Key key)
 {
     auto keyInt = static_cast<int>(key);
     auto iter = actionDelegates.find(keyInt);
     if(iter != actionDelegates.end())
-        actionDelegates.erase(iter);
+		actionDelegates.erase(iter);
 }
 
-void Input::subscribe(const sf::Keyboard::Key key, const std::function<void()>& delegate)
+void Input::Subscribe(sf::Keyboard::Key key, const ActionDelegate &delegate)
 {
     auto keyInt = static_cast<int>(key);
-    actionDelegates[keyInt] = delegate;
+	actionDelegates[keyInt] = delegate;
 }
