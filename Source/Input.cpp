@@ -3,71 +3,75 @@
 //
 
 #include "../Header/Input.h"
+#include "../Header/Graphics.h"
 
 namespace SfmlCoreInput
 {
 	std::unordered_map<int, InputData> Input::keyDelegates;
-	InputData Input::mouseButtonPressedData;
-	InputData Input::mouseButtonReleasedData;
-	InputData Input::mouseWheelScrolledData;
-	InputData Input::mouseMovedData;
-	InputData Input::mouseWheelMovedData;
-	InputData Input::keyPressedData;
-	InputData Input::keyReleasedData;
-	InputData Input::textEnteredData;
 
-	Input::Input()
+	Input::Input(bool isKeyboardEnabled, bool isMouseEnabled, bool isJoystickEnabled, bool isTouchEnabled, bool isSensorEnabled)
 	{
-		bMouseButtonPressed = false;
-		bMouseButtonReleased = false;
-		bKeyPressed = false;
-		bKeyReleased = false;
-		bTextEntered = false;
-		bMouseWheelScrolled = false;
-		bMouseMoved = false;
-		bMouseWheelMoved = false;
+		Input::keyboardEnabled = isKeyboardEnabled;
+		Input::mouseEnabled = isMouseEnabled;
+		Input::joystickEnabled = isJoystickEnabled;
+		Input::touchEnabled = isTouchEnabled;
+		Input::sensorEnabled = isSensorEnabled;
 	}
 
 	void Input::HandleInput() // NOLINT(*-convert-member-functions-to-static)
 	{
 		for (const auto& pair : keyDelegates)
 		{
-			if (sf::Keyboard::isKeyPressed(static_cast<sf::Keyboard::Key>(pair.first)))
+			if (keyboardEnabled && sf::Keyboard::isKeyPressed(static_cast<sf::Keyboard::Key>(pair.first)))
 			{
-
-				if(pair.second.delegate != nullptr)
+				if (pair.second.delegate != nullptr)
 					pair.second.delegate(); // Call the delegate function
+			}
+
+			unsigned int joystickId = 0;
+			if (joystickEnabled && sf::Joystick::isConnected(joystickId))
+			{
+				// Check if a specific button is pressed
+				if (sf::Joystick::isButtonPressed(joystickId, sf::Joystick::))
+				{
+
+				}
+				float x = sf::Joystick::getAxisPosition(joystickId, sf::Joystick::X);
+				float y = sf::Joystick::getAxisPosition(joystickId, sf::Joystick::Y);
+			}
+
+			if (mouseEnabled)
+			{
+				sf::Vector2i mousePosition = sf::Mouse::getPosition(Graphics::GetCurrentWindow());
+				if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+				{
+
+				}
+				if (sf::Mouse::isButtonPressed(sf::Mouse::Middle))
+				{
+
+				}
+				if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
+				{
+
+				}
+			}
+
+			if (touchEnabled)
+			{
+				unsigned int finger = 0;
+				if(sf::Touch::isDown(finger))
+				{
+					sf::Vector2i position = sf::Touch::getPosition(finger, Graphics::GetCurrentWindow());
+				}
+			}
+
+			if (sensorEnabled && sf::Sensor::isAvailable(sf::Sensor::Accelerometer))
+			{
+				sf::Vector3f acceleration = sf::Sensor::getValue(sf::Sensor::Accelerometer);
 			}
 		}
 
-		bMouseButtonPressed = false;
-		bMouseButtonReleased = false;
-		bKeyPressed = false;
-		bKeyReleased = false;
-		bTextEntered = false;
-		bMouseWheelScrolled = false;
-		bMouseMoved = false;
-		bMouseWheelMoved = false;
-	}
-
-	void Input::HandleInputEvent(sf::Event::EventType eventType)
-	{
-		if (eventType == sf::Event::MouseButtonPressed)
-			bMouseButtonPressed = true;
-		if (eventType == sf::Event::MouseButtonReleased)
-			bMouseButtonReleased = true;
-		if (eventType == sf::Event::KeyPressed)
-			bKeyPressed = true;
-		if (eventType == sf::Event::KeyReleased)
-			bKeyReleased = true;
-		if (eventType == sf::Event::TextEntered)
-			bTextEntered = true;
-		if (eventType == sf::Event::MouseWheelScrolled)
-			bMouseWheelScrolled = true;
-		if (eventType == sf::Event::MouseMoved)
-			bMouseMoved = true;
-		if (eventType == sf::Event::MouseWheelMoved)
-			bMouseWheelMoved = true;
 	}
 
 	void Input::ClearAll()
@@ -75,78 +79,21 @@ namespace SfmlCoreInput
 		keyDelegates.clear();
 	}
 
-	void Input::SubscribeToKey(sf::Keyboard::Key key, const Input::ActionDelegate& delegate, const bool& onRelease)
+	void Input::Subscribe(int id, Input::ActionDelegate& delegate, const bool& onRelease)
 	{
-		auto keyInt = static_cast<int>(key);
-
 		InputData data;
 		if(onRelease)
-			data = InputData(sf::Keyboard::KeyCount + 2, delegate, true);
+			data = InputData(id, delegate, true);
 		else
-			data = InputData(sf::Keyboard::KeyCount + 1, delegate, false);
+			data = InputData(id + sf::Keyboard::KeyCount, delegate, false);
 
-		keyDelegates[data.keyId] = data;
+		keyDelegates[data.id] = data;
 	}
 
-	void Input::UnsubscribeFromKey(sf::Keyboard::Key key)
+	void Input::Unsubscribe(int id)
 	{
-		auto keyInt = static_cast<int>(key);
-		auto iter = keyDelegates.find(keyInt);
+		auto iter = keyDelegates.find(id);
 		if (iter != keyDelegates.end())
 			keyDelegates.erase(iter);
-	}
-
-	void Input::SubscribeToMouseClick(Input::ActionDelegate& delegate, const bool onRelease)
-	{
-		if(onRelease)
-			mouseButtonReleasedData = InputData(sf::Keyboard::KeyCount + 4, delegate, true);
-		else
-			mouseButtonPressedData = InputData(sf::Keyboard::KeyCount + 3, delegate, false);
-	}
-
-	void Input::UnsubscribeToMouseClick(const Input::ActionDelegate& delegate)
-	{
-		mouseButtonPressedData = InputData();
-		mouseButtonReleasedData = InputData();
-	}
-
-	void Input::SubscribeToMouseMove(const Input::ActionDelegate& delegate)
-	{
-		mouseMovedData = InputData(sf::Keyboard::KeyCount + 5, delegate, false);
-	}
-
-	void Input::UnsubscribeToMouseMove()
-	{
-		mouseMovedData = InputData();
-	}
-
-	void Input::SubscribeToMouseWheelMoved(const Input::ActionDelegate& delegate)
-	{
-		mouseWheelMovedData = InputData(sf::Keyboard::KeyCount + 6, delegate, false);
-	}
-
-	void Input::UnsubscribeToMouseWheelMoved()
-	{
-		mouseWheelMovedData = InputData();
-	}
-
-	void Input::SubscribeToMouseWheelScrolled(const Input::ActionDelegate& delegate)
-	{
-		mouseWheelScrolledData = InputData(sf::Keyboard::KeyCount + 7, delegate, false);
-	}
-
-	void Input::UnsubscribeToMouseWheelScrolled()
-	{
-		mouseWheelScrolledData = InputData();
-	}
-
-	void Input::SubscribeToTextEntered(const Input::ActionDelegate& delegate)
-	{
-		textEnteredData = InputData(sf::Keyboard::KeyCount + 8, delegate, false);
-	}
-
-	void Input::UnsubscribeToTextEntered()
-	{
-		textEnteredData = InputData();
 	}
 }

@@ -5,10 +5,16 @@
 #ifndef SFML_CORE_HEADER_GRAPHICS_H_
 #define SFML_CORE_HEADER_GRAPHICS_H_
 
-
+#include <SFML/Graphics/RenderWindow.hpp>
 class Graphics
 {
 public:
+	sf::RenderWindow& CreateWindow(const sf::VideoMode& mode, const std::string& title, sf::Uint32 style);
+	static sf::RenderWindow& GetCurrentWindow() { return currentWindow; }
+
+ private:
+	static sf::RenderWindow currentWindow;
+
 	/*Drawable Object Functions:
 
 		sf::Drawable::setColor: Sets the color of the drawable object.
@@ -39,6 +45,8 @@ public:
 		sf::Text::setString: Sets the string of the text.
 	sf::Text::setFont: Sets the font of the text.
 	sf::Text::setCharacterSize: Sets the character size of the text.*/
+
+
 };
 
 

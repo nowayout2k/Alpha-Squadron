@@ -29,7 +29,8 @@ add_executable(SFML-Core main.cpp
         Source/Utility.cpp
         Header/Utility.h
         Header/InputData.h
-        Header/LogType.h)
+        Header/LogType.h
+)
 
 # Link the SFML libraries
 target_link_libraries(SFML-Core sfml-system sfml-window sfml-graphics sfml-network sfml-audio)

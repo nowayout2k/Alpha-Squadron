@@ -1,23 +1,15 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include "Header/Input.h"
+#include "Header/Logger.h"
+#include "Header/Graphics.h"
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(800, 600), "SFML Graphics Example");
-    SfmlCoreInput::Input input;
+	Graphics graphics;
+	sf::RenderWindow& window = graphics.CreateWindow(sf::VideoMode(800, 600), "SFML Core", sf::Style::None);
 
-	window.setFramerateLimit(60);//: Sets the maximum frame rate of the window.
-	window.setTitle("SFML Core");//: Sets the title of the window.
-	window.setSize(sf::Vector2u(1024,780));//: Sets the size of the window.
-	window.setPosition(sf::Vector2i(0,0));//: Sets the position of the window on the screen.
-	window.setMouseCursorVisible(false);//: Sets the visibility of the mouse cursor in the window.
-	window.setVerticalSyncEnabled(true);//: Enables or disables vertical synchronization.
-	sf::View view(sf::FloatRect(0, 0, 800, 600)); // Define a view with the same size as the window
-	window.setView(view); // Set the view for the window
-	window.setActive(true);
-	auto contextSettings = window.getSettings();//: Retrieves the current OpenGL context settings of the window.
-	auto activeContext = sf::Context::getActiveContext();//: Retrieves the currently active OpenGL context.
+    SfmlCoreInput::Input input(true, false, false, false, false);
 
     sf::CircleShape circleShape(55);
     while (window.isOpen())
@@ -28,7 +20,31 @@ int main()
             if (event.type == sf::Event::Closed)
                 window.close();
 
-			if (event.type == sf::Event::MouseButtonPressed ||
+			if (event.type == sf::Event::Resized)
+			{
+				SfmlCoreUtility::Logger::Log(SfmlCoreUtility::LogType::Verbose,"Window resized to " + std::to_string(event.size.width) + "x" + std::to_string(event.size.height));
+			}
+
+			if (event.type == sf::Event::LostFocus)
+			{
+				SfmlCoreUtility::Logger::Log(SfmlCoreUtility::LogType::Verbose,"Window lost focus");
+			}
+
+			if (event.type == sf::Event::GainedFocus)
+			{
+				SfmlCoreUtility::Logger::Log(SfmlCoreUtility::LogType::Verbose,"Window gained focus");
+			}
+
+			if (event.type == sf::Event::JoystickConnected ||
+				event.type == sf::Event::JoystickDisconnected ||
+				event.type == sf::Event::JoystickButtonPressed ||
+				event.type == sf::Event::JoystickButtonReleased ||
+				event.type == sf::Event::JoystickMoved ||
+				event.type == sf::Event::TouchBegan ||
+				event.type == sf::Event::TouchMoved ||
+				event.type == sf::Event::TouchEnded ||
+				event.type == sf::Event::SensorChanged ||
+				event.type == sf::Event::MouseButtonPressed ||
 				event.type == sf::Event::MouseButtonReleased ||
 				event.type == sf::Event::KeyPressed ||
 				event.type == sf::Event::KeyReleased ||
@@ -36,7 +52,7 @@ int main()
 				event.type == sf::Event::MouseWheelScrolled ||
 				event.type == sf::Event::MouseMoved ||
 				event.type == sf::Event::MouseWheelMoved)
-					input.HandleInputEvent(event.type);
+					continue;
         }
 
         window.clear();

@@ -13,18 +13,19 @@ namespace SfmlCoreInput
 	{
 		InputData()
 		{
-			this->keyId = -1;
+			this->id = -1;
 			this->delegate = nullptr;
 			this->onRelease = false;
+
 		}
-		InputData(int keyId, std::function<void()> delegate, bool onRelease)
+		InputData(int id, std::function<void()>& delegate, bool onRelease)
 		{
-			this->keyId = keyId;
+			this->id = id;
 			this->delegate = delegate;
 			this->onRelease = onRelease;
 		}
 
-		int keyId;
+		int id;
 		std::function<void()> delegate;
 		bool onRelease;
 	};

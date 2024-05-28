@@ -4,7 +4,6 @@
 
 #include <iostream>
 #include "../Header/Logger.h"
-#include "../Header/LogType.h"
 
 namespace SfmlCoreUtility
 {
