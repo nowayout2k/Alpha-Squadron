@@ -6,7 +6,3 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
-void Graphics::Test()
-{
-
-}

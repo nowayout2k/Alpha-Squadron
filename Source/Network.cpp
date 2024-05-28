@@ -3,18 +3,27 @@
 //
 
 #include "../Header/Network.h"
+#include "../Header/Logger.h"
 #include <SFML/Network.hpp>
 #include <iostream>
 
-void Network::HttpRequest()
-{
-    // HTTP example
-    sf::Http http("http://www.example.com");
-    sf::Http::Request request("/");
-    sf::Http::Response response = http.sendRequest(request);
+sf::UdpSocket Network::socket;
 
-    std::cout << "Status: " << response.getStatus() << std::endl;
-    std::cout << "Response body: " << response.getBody() << std::endl;
+std::future<std::string> Network::HttpRequestAsync(const std::string& hostUrl, const std::string& uri)
+{
+	return std::async(std::launch::async, &SendRequest, hostUrl, uri);
+}
+
+std::string Network::SendRequest(const std::string& hostUrl, const std::string& uri)
+{
+	// HTTP example
+	sf::Http http(hostUrl);
+	sf::Http::Request request(uri);
+	sf::Http::Response response = http.sendRequest(request);
+
+	SfmlCoreUtility::Logger::Log(SfmlCoreUtility::LogType::Verbose, "Status: " + std::to_string(response.getStatus()));
+	SfmlCoreUtility::Logger::Log(SfmlCoreUtility::LogType::Verbose, "Response body: " + response.getBody());
+	return response.getBody();
 }
 
 sf::Socket::Status Network::OpenPort()
@@ -36,6 +45,6 @@ sf::Socket::Status Network::ReceiveData()
 
     sf::Socket::Status status = socket.receive(data, 100, received, sender, port);
 
-    std::cout << "Received " << received << " bytes from " << sender << " on port " << port << std::endl;
+	SfmlCoreUtility::Logger::Log(SfmlCoreUtility::LogType::Verbose,  "Received " + std::to_string(received) + " bytes from " + sender.toString() + " on port " + std::to_string(port));
     return status;
 }
