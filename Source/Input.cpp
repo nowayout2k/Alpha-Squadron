@@ -1,99 +1,132 @@
-//
-// Created by Johnnie Otis on 5/26/24.
-//
-
 #include "../Header/Input.h"
-#include "../Header/Graphics.h"
 
 namespace SfmlCoreInput
 {
-	std::unordered_map<int, InputData> Input::keyDelegates;
+    Input::Input(bool isKeyboardEnabled, bool isMouseEnabled, bool isJoystickEnabled, bool isTouchEnabled, bool isSensorEnabled)
+            : keyboardEnabled(isKeyboardEnabled), mouseEnabled(isMouseEnabled), joystickEnabled(isJoystickEnabled),
+              touchEnabled(isTouchEnabled), sensorEnabled(isSensorEnabled) {}
 
-	Input::Input(bool isKeyboardEnabled, bool isMouseEnabled, bool isJoystickEnabled, bool isTouchEnabled, bool isSensorEnabled)
-	{
-		Input::keyboardEnabled = isKeyboardEnabled;
-		Input::mouseEnabled = isMouseEnabled;
-		Input::joystickEnabled = isJoystickEnabled;
-		Input::touchEnabled = isTouchEnabled;
-		Input::sensorEnabled = isSensorEnabled;
-	}
+    void Input::HandleInput()
+    {
+        if (keyboardEnabled)
+        {
+            for (const auto& data : keyDelegates)
+            {
+                if ((data.onRelease && !sf::Keyboard::isKeyPressed(data.key)) ||
+                    (!data.onRelease && sf::Keyboard::isKeyPressed(data.key)))
+                {
+                    data.delegate();
+                }
+            }
+        }
 
-	void Input::HandleInput() // NOLINT(*-convert-member-functions-to-static)
-	{
-		for (const auto& pair : keyDelegates)
-		{
-			if (keyboardEnabled && sf::Keyboard::isKeyPressed(static_cast<sf::Keyboard::Key>(pair.first)))
-			{
-				if (pair.second.delegate != nullptr)
-					pair.second.delegate(); // Call the delegate function
-			}
+        if (joystickEnabled && sf::Joystick::isConnected(0))
+        {
+            for (const auto& data : joystickDelegates)
+            {
+                sf::Vector2i position(sf::Joystick::getAxisPosition(0, sf::Joystick::X),
+                                      sf::Joystick::getAxisPosition(0, sf::Joystick::Y));
+                if (sf::Joystick::isButtonPressed(0, data.button))
+                {
+                    data.delegate(position);
+                }
+            }
+        }
 
-			unsigned int joystickId = 0;
-			if (joystickEnabled && sf::Joystick::isConnected(joystickId))
-			{
-				// Check if a specific button is pressed
-				if (sf::Joystick::isButtonPressed(joystickId, sf::Joystick::))
-				{
+        if (mouseEnabled)
+        {
+            sf::Vector2i position = sf::Mouse::getPosition();
+            for (const auto& data : mouseDelegates)
+            {
+                if (sf::Mouse::isButtonPressed(data.button))
+                {
+                    data.delegate(position);
+                }
+            }
+        }
 
-				}
-				float x = sf::Joystick::getAxisPosition(joystickId, sf::Joystick::X);
-				float y = sf::Joystick::getAxisPosition(joystickId, sf::Joystick::Y);
-			}
+        if (touchEnabled)
+        {
+            for (unsigned int touchCount = 0; touchCount < 5; ++touchCount)
+            {
+                sf::Vector2i position = sf::Touch::getPosition(touchCount);
+                for (const auto& data : touchDelegates)
+                {
+                    if (data.touchCount == touchCount)
+                    {
+                        data.delegate(position);
+                    }
+                }
+            }
+        }
 
-			if (mouseEnabled)
-			{
-				sf::Vector2i mousePosition = sf::Mouse::getPosition(Graphics::GetCurrentWindow());
-				if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-				{
+        if (sensorEnabled)
+        {
+            for (const auto& data : sensorDelegates)
+            {
+                sf::Vector3f acceleration = sf::Sensor::getValue(data.sensor);
+                data.delegate(acceleration);
+            }
+        }
+    }
 
-				}
-				if (sf::Mouse::isButtonPressed(sf::Mouse::Middle))
-				{
+    void Input::SubscribeKey(sf::Keyboard::Key key, const ActionDelegate& delegate, bool onRelease)
+    {
+        keyDelegates.emplace_back(key, delegate, onRelease);
+    }
 
-				}
-				if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
-				{
+    void Input::SubscribeJoystickButton(unsigned int button, const PositionDelegate& delegate)
+    {
+        joystickDelegates.emplace_back(button, delegate);
+    }
 
-				}
-			}
+    void Input::SubscribeMouseButton(sf::Mouse::Button button, const PositionDelegate& delegate)
+    {
+        mouseDelegates.emplace_back(button, delegate);
+    }
 
-			if (touchEnabled)
-			{
-				unsigned int finger = 0;
-				if(sf::Touch::isDown(finger))
-				{
-					sf::Vector2i position = sf::Touch::getPosition(finger, Graphics::GetCurrentWindow());
-				}
-			}
+    void Input::SubscribeTouchEvent(unsigned int touchCount, const PositionDelegate& delegate)
+    {
+        touchDelegates.emplace_back(touchCount, delegate);
+    }
 
-			if (sensorEnabled && sf::Sensor::isAvailable(sf::Sensor::Accelerometer))
-			{
-				sf::Vector3f acceleration = sf::Sensor::getValue(sf::Sensor::Accelerometer);
-			}
-		}
+    void Input::SubscribeSensorEvent(sf::Sensor::Type sensor, const AccelerationDelegate& delegate)
+    {
+        sensorDelegates.emplace_back(sensor, delegate);
+    }
 
-	}
+    void Input::UnsubscribeKey(sf::Keyboard::Key key)
+    {
+        keyDelegates.erase(std::remove_if(keyDelegates.begin(), keyDelegates.end(),[key](const auto& data) { return data.key == key; }),keyDelegates.end());
+    }
 
-	void Input::ClearAll()
-	{
-		keyDelegates.clear();
-	}
+    void Input::UnsubscribeJoystickButton(unsigned int button)
+    {
+        joystickDelegates.erase(std::remove_if(joystickDelegates.begin(), joystickDelegates.end(),[button](const auto& data) { return data.button == button; }),joystickDelegates.end());
+    }
 
-	void Input::Subscribe(int id, Input::ActionDelegate& delegate, const bool& onRelease)
-	{
-		InputData data;
-		if(onRelease)
-			data = InputData(id, delegate, true);
-		else
-			data = InputData(id + sf::Keyboard::KeyCount, delegate, false);
+    void Input::UnsubscribeMouseButton(sf::Mouse::Button button)
+    {
+        mouseDelegates.erase(std::remove_if(mouseDelegates.begin(), mouseDelegates.end(),[button](const auto& data) { return data.button == button; }),mouseDelegates.end());
+    }
 
-		keyDelegates[data.id] = data;
-	}
+    void Input::UnsubscribeTouchEvent(unsigned int touchCount)
+    {
+        touchDelegates.erase(std::remove_if(touchDelegates.begin(), touchDelegates.end(),[touchCount](const auto& data) { return data.touchCount == touchCount; }),touchDelegates.end());
+    }
 
-	void Input::Unsubscribe(int id)
-	{
-		auto iter = keyDelegates.find(id);
-		if (iter != keyDelegates.end())
-			keyDelegates.erase(iter);
-	}
+    void Input::UnsubscribeSensorEvent(sf::Sensor::Type sensor)
+    {
+        sensorDelegates.erase(std::remove_if(sensorDelegates.begin(), sensorDelegates.end(),[sensor](const auto& data) { return data.sensor == sensor; }),sensorDelegates.end());
+    }
+
+    void Input::ClearAll()
+    {
+        keyDelegates.clear();
+        joystickDelegates.clear();
+        mouseDelegates.clear();
+        touchDelegates.clear();
+        sensorDelegates.clear();
+    }
 }
+

@@ -28,7 +28,6 @@ add_executable(SFML-Core main.cpp
         Header/Logger.h
         Source/Utility.cpp
         Header/Utility.h
-        Header/InputData.h
         Header/LogType.h
 )
 
