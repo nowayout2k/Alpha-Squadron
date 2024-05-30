@@ -6,6 +6,8 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
+sf::RenderWindow Graphics::currentWindow;
+
 sf::RenderWindow& Graphics::CreateWindow(const sf::VideoMode& mode, const std::string& title, sf::Uint32 style) // NOLINT(*-convert-member-functions-to-static)
 {
 	currentWindow.create(mode, title, style);

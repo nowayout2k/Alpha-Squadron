@@ -75,17 +75,17 @@ namespace SfmlCoreInput
         keyDelegates.emplace_back(key, delegate, onRelease);
     }
 
-    void Input::SubscribeJoystickButton(unsigned int button, const PositionDelegate& delegate)
+    void Input::SubscribeJoystickButton(unsigned int button, const FloatPositionDelegate& delegate)
     {
         joystickDelegates.emplace_back(button, delegate);
     }
 
-    void Input::SubscribeMouseButton(sf::Mouse::Button button, const PositionDelegate& delegate)
+    void Input::SubscribeMouseButton(sf::Mouse::Button button, const IntPositionDelegate& delegate)
     {
         mouseDelegates.emplace_back(button, delegate);
     }
 
-    void Input::SubscribeTouchEvent(unsigned int touchCount, const PositionDelegate& delegate)
+    void Input::SubscribeTouchEvent(unsigned int touchCount, const IntPositionDelegate& delegate)
     {
         touchDelegates.emplace_back(touchCount, delegate);
     }

@@ -15,7 +15,7 @@ namespace SfmlCoreInput
     {
     public:
         using ActionDelegate = std::function<void()>;
-        using IntPositionDelegate = std::function<void(const sf::Vector2f&)>;
+        using IntPositionDelegate = std::function<void(const sf::Vector2i&)>;
 		using FloatPositionDelegate = std::function<void(const sf::Vector2f&)>;
         using AccelerationDelegate = std::function<void(const sf::Vector3f&)>;
 

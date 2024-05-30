@@ -3,15 +3,16 @@
 #include "Header/Input.h"
 #include "Header/Logger.h"
 #include "Header/Graphics.h"
+#include "Header/Entity.h"
 
 int main()
 {
 	Graphics graphics;
-	sf::RenderWindow& window = graphics.CreateWindow(sf::VideoMode(800, 600), "SFML Core", sf::Style::None);
-
+	sf::RenderWindow& window = graphics.CreateWindow(sf::VideoMode(800, 600), "SFML Core", sf::Style::Default);
     SfmlCoreInput::Input input(true, false, false, false, false);
+	std::unique_ptr<sf::Drawable> entity;
+	entity = std::make_unique<Entity>();
 
-    sf::CircleShape circleShape(55);
     while (window.isOpen())
     {
 		sf::Event event;
@@ -57,7 +58,7 @@ int main()
 
         window.clear();
         input.HandleInput();
-        window.draw(circleShape);
+        window.draw(*entity);
         window.display();
     }
     return 0;

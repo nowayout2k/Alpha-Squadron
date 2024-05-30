@@ -27,6 +27,8 @@ add_executable(Alpha-Squadron main.cpp
         Source/Utility.cpp
         Header/Utility.h
         Header/LogType.h
+        Source/Entity.cpp
+        Header/Entity.h
 )
 
 # Link the SFML libraries
