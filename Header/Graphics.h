@@ -11,7 +11,6 @@ class Graphics
 {
 public:
 	sf::RenderWindow& CreateWindow(const sf::VideoMode& mode, const std::string& title, sf::Uint32 style);
-	static sf::RenderWindow& GetCurrentWindow() { return currentWindow; }
 
  private:
 	static sf::RenderWindow currentWindow;

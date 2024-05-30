@@ -9,88 +9,89 @@
 #include <vector>
 #include <functional>
 
-namespace SfmlCoreInput
-{
-    class Input
-    {
+class Input {
     public:
         using ActionDelegate = std::function<void()>;
-        using IntPositionDelegate = std::function<void(const sf::Vector2i&)>;
-		using FloatPositionDelegate = std::function<void(const sf::Vector2f&)>;
-        using AccelerationDelegate = std::function<void(const sf::Vector3f&)>;
+        using IntPositionDelegate = std::function<void(const sf::Vector2i &)>;
+        using FloatPositionDelegate = std::function<void(const sf::Vector2f &)>;
+        using AccelerationDelegate = std::function<void(const sf::Vector3f &)>;
 
-        Input(bool isKeyboardEnabled, bool isMouseEnabled, bool isJoystickEnabled, bool isTouchEnabled, bool isSensorEnabled);
+        Input(bool isKeyboardEnabled, bool isMouseEnabled, bool isJoystickEnabled, bool isTouchEnabled,
+              bool isSensorEnabled);
 
         void HandleInput();
 
-        void SubscribeKey(sf::Keyboard::Key key, const ActionDelegate& delegate, bool onRelease = false);
-        void SubscribeJoystickButton(unsigned int button, const FloatPositionDelegate& delegate);
-        void SubscribeMouseButton(sf::Mouse::Button button, const IntPositionDelegate& delegate);
-        void SubscribeTouchEvent(unsigned int touchCount, const IntPositionDelegate& delegate);
-        void SubscribeSensorEvent(sf::Sensor::Type sensor, const AccelerationDelegate& delegate);
+        static void SubscribeKey(sf::Keyboard::Key key, const ActionDelegate &delegate, bool onRelease = false);
 
-        void UnsubscribeKey(sf::Keyboard::Key key);
-        void UnsubscribeJoystickButton(unsigned int button);
-        void UnsubscribeMouseButton(sf::Mouse::Button button);
-        void UnsubscribeTouchEvent(unsigned int touchCount);
-        void UnsubscribeSensorEvent(sf::Sensor::Type sensor);
+        static void SubscribeJoystickButton(unsigned int button, const FloatPositionDelegate &delegate);
 
-        void ClearAll();
+        static void SubscribeMouseButton(sf::Mouse::Button button, const IntPositionDelegate &delegate);
+
+        static void SubscribeTouchEvent(unsigned int touchCount, const IntPositionDelegate &delegate);
+
+        static void SubscribeSensorEvent(sf::Sensor::Type sensor, const AccelerationDelegate &delegate);
+
+        static void UnsubscribeKey(sf::Keyboard::Key key);
+
+        static void UnsubscribeJoystickButton(unsigned int button);
+
+        static void UnsubscribeMouseButton(sf::Mouse::Button button);
+
+        static void UnsubscribeTouchEvent(unsigned int touchCount);
+
+        static void UnsubscribeSensorEvent(sf::Sensor::Type sensor);
+
+        static void ClearAll();
 
     private:
-        struct KeyInputData
-        {
+        struct KeyInputData {
             sf::Keyboard::Key key;
             ActionDelegate delegate;
             bool onRelease;
 
-            KeyInputData(sf::Keyboard::Key k, const ActionDelegate& d, bool release) : key(k), delegate(d), onRelease(release) {}
+            KeyInputData(sf::Keyboard::Key k, const ActionDelegate &d, bool release) : key(k), delegate(d),
+                                                                                       onRelease(release) {}
         };
 
-        struct JoystickInputData
-        {
+        struct JoystickInputData {
             unsigned int button;
-			FloatPositionDelegate delegate;
+            FloatPositionDelegate delegate;
 
-            JoystickInputData(unsigned int b, const FloatPositionDelegate& d) : button(b), delegate(d) {}
+            JoystickInputData(unsigned int b, const FloatPositionDelegate &d) : button(b), delegate(d) {}
         };
 
-        struct MouseInputData
-        {
+        struct MouseInputData {
             sf::Mouse::Button button;
-			IntPositionDelegate delegate;
+            IntPositionDelegate delegate;
 
-            MouseInputData(sf::Mouse::Button b, const IntPositionDelegate& d) : button(b), delegate(d) {}
+            MouseInputData(sf::Mouse::Button b, const IntPositionDelegate &d) : button(b), delegate(d) {}
         };
 
-        struct TouchInputData
-        {
+        struct TouchInputData {
             unsigned int touchCount;
-			IntPositionDelegate delegate;
+            IntPositionDelegate delegate;
 
-            TouchInputData(unsigned int count, const IntPositionDelegate& d) : touchCount(count), delegate(d) {}
+            TouchInputData(unsigned int count, const IntPositionDelegate &d) : touchCount(count), delegate(d) {}
         };
 
-        struct SensorInputData
-        {
+        struct SensorInputData {
             sf::Sensor::Type sensor;
             AccelerationDelegate delegate;
 
-            SensorInputData(sf::Sensor::Type s, const AccelerationDelegate& d) : sensor(s), delegate(d) {}
+            SensorInputData(sf::Sensor::Type s, const AccelerationDelegate &d) : sensor(s), delegate(d) {}
         };
 
-        std::vector<KeyInputData> keyDelegates;
-        std::vector<JoystickInputData> joystickDelegates;
-        std::vector<MouseInputData> mouseDelegates;
-        std::vector<TouchInputData> touchDelegates;
-        std::vector<SensorInputData> sensorDelegates;
+        static std::vector<KeyInputData> keyDelegates;
+        static std::vector<JoystickInputData> joystickDelegates;
+        static std::vector<MouseInputData> mouseDelegates;
+        static std::vector<TouchInputData> touchDelegates;
+        static std::vector<SensorInputData> sensorDelegates;
 
-        bool keyboardEnabled;
-        bool mouseEnabled;
-        bool joystickEnabled;
-        bool touchEnabled;
-        bool sensorEnabled;
-    };
-}
+        static bool keyboardEnabled;
+        static bool mouseEnabled;
+        static bool joystickEnabled;
+        static bool touchEnabled;
+        static bool sensorEnabled;
+};
 
 #endif // SFML_CORE_HEADER_INPUT_H_

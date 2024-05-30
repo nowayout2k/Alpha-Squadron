@@ -8,8 +8,8 @@
 int main()
 {
 	Graphics graphics;
-	sf::RenderWindow& window = graphics.CreateWindow(sf::VideoMode(800, 600), "SFML Core", sf::Style::Default);
-    SfmlCoreInput::Input input(true, false, false, false, false);
+	sf::RenderWindow& window = graphics.CreateWindow(sf::VideoMode(800, 600), "Alpha Squadron", sf::Style::Default);
+    Input input(true, false, false, false, false);
 	std::unique_ptr<sf::Drawable> entity;
 	entity = std::make_unique<Entity>();
 
