@@ -6,13 +6,13 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
-sf::RenderWindow& Graphics::CreateWindow(const sf::VideoMode& mode, const std::string& title, sf::Uint32 style)
+sf::RenderWindow& Graphics::CreateWindow(const sf::VideoMode& mode, const std::string& title, sf::Uint32 style) // NOLINT(*-convert-member-functions-to-static)
 {
 	currentWindow.create(mode, title, style);
-	currentWindow.setFramerateLimit(60);//: Sets the maximum frame rate of the window.
-	currentWindow.setPosition(sf::Vector2i(0,0));//: Sets the position of the window on the screen.
-	currentWindow.setMouseCursorVisible(false);//: Sets the visibility of the mouse cursor in the window.
-	currentWindow.setVerticalSyncEnabled(true);//: Enables or disables vertical synchronization.
+	currentWindow.setFramerateLimit(60);
+	currentWindow.setPosition(sf::Vector2i(0,0));
+	currentWindow.setMouseCursorVisible(false);
+	currentWindow.setVerticalSyncEnabled(true);
 	currentWindow.setActive(true);
 	return currentWindow;
 }

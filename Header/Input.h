@@ -15,7 +15,8 @@ namespace SfmlCoreInput
     {
     public:
         using ActionDelegate = std::function<void()>;
-        using PositionDelegate = std::function<void(const sf::Vector2i&)>;
+        using IntPositionDelegate = std::function<void(const sf::Vector2f&)>;
+		using FloatPositionDelegate = std::function<void(const sf::Vector2f&)>;
         using AccelerationDelegate = std::function<void(const sf::Vector3f&)>;
 
         Input(bool isKeyboardEnabled, bool isMouseEnabled, bool isJoystickEnabled, bool isTouchEnabled, bool isSensorEnabled);
@@ -23,9 +24,9 @@ namespace SfmlCoreInput
         void HandleInput();
 
         void SubscribeKey(sf::Keyboard::Key key, const ActionDelegate& delegate, bool onRelease = false);
-        void SubscribeJoystickButton(unsigned int button, const PositionDelegate& delegate);
-        void SubscribeMouseButton(sf::Mouse::Button button, const PositionDelegate& delegate);
-        void SubscribeTouchEvent(unsigned int touchCount, const PositionDelegate& delegate);
+        void SubscribeJoystickButton(unsigned int button, const FloatPositionDelegate& delegate);
+        void SubscribeMouseButton(sf::Mouse::Button button, const IntPositionDelegate& delegate);
+        void SubscribeTouchEvent(unsigned int touchCount, const IntPositionDelegate& delegate);
         void SubscribeSensorEvent(sf::Sensor::Type sensor, const AccelerationDelegate& delegate);
 
         void UnsubscribeKey(sf::Keyboard::Key key);
@@ -49,25 +50,25 @@ namespace SfmlCoreInput
         struct JoystickInputData
         {
             unsigned int button;
-            PositionDelegate delegate;
+			FloatPositionDelegate delegate;
 
-            JoystickInputData(unsigned int b, const PositionDelegate& d) : button(b), delegate(d) {}
+            JoystickInputData(unsigned int b, const FloatPositionDelegate& d) : button(b), delegate(d) {}
         };
 
         struct MouseInputData
         {
             sf::Mouse::Button button;
-            PositionDelegate delegate;
+			IntPositionDelegate delegate;
 
-            MouseInputData(sf::Mouse::Button b, const PositionDelegate& d) : button(b), delegate(d) {}
+            MouseInputData(sf::Mouse::Button b, const IntPositionDelegate& d) : button(b), delegate(d) {}
         };
 
         struct TouchInputData
         {
             unsigned int touchCount;
-            PositionDelegate delegate;
+			IntPositionDelegate delegate;
 
-            TouchInputData(unsigned int count, const PositionDelegate& d) : touchCount(count), delegate(d) {}
+            TouchInputData(unsigned int count, const IntPositionDelegate& d) : touchCount(count), delegate(d) {}
         };
 
         struct SensorInputData

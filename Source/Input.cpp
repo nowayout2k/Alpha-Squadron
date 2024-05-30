@@ -24,7 +24,7 @@ namespace SfmlCoreInput
         {
             for (const auto& data : joystickDelegates)
             {
-                sf::Vector2i position(sf::Joystick::getAxisPosition(0, sf::Joystick::X),
+                sf::Vector2f position(sf::Joystick::getAxisPosition(0, sf::Joystick::X),
                                       sf::Joystick::getAxisPosition(0, sf::Joystick::Y));
                 if (sf::Joystick::isButtonPressed(0, data.button))
                 {

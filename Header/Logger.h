@@ -10,7 +10,6 @@ namespace SfmlCoreUtility
 {
 	class Logger
 	{
-
 	 public:
 		static void Log(LogType logType, const std::string& message);
 	};
