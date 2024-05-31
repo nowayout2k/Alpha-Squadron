@@ -11,74 +11,88 @@
 
 class Input {
     public:
-        using ActionDelegate = std::function<void()>;
-        using IntPositionDelegate = std::function<void(const sf::Vector2i &)>;
-        using FloatPositionDelegate = std::function<void(const sf::Vector2f &)>;
-        using AccelerationDelegate = std::function<void(const sf::Vector3f &)>;
+        using KeyInputDelegate = std::function<void(std::vector<sf::Keyboard::Key>& otherKeysPressed)>;
+        using MouseInputDelegate = std::function<void(const sf::Vector2i&, std::vector<sf::Mouse::Button>& otherButtonsPressed)>;
+        using TouchInputDelegate = std::function<void(const sf::Vector2i&, std::vector<int> fingerIndices)>;
+        using JoystickInputDelegate = std::function<void(const sf::Vector2f&, std::vector<int>& otherButtonsPressed)>;
+        using SensorInputDelegate = std::function<void(const sf::Vector3f&)>;
 
         Input(bool isKeyboardEnabled, bool isMouseEnabled, bool isJoystickEnabled, bool isTouchEnabled,
               bool isSensorEnabled);
 
         void HandleInput();
 
-        static void SubscribeKey(sf::Keyboard::Key key, const ActionDelegate &delegate, bool onRelease = false);
+        //input Event Handlers
+        void HandleMouseButtonPressedEvent();
+        void HandleKeyPressedEvent();
+        void HandleTouchEvent();
+        void HandleJoystickEvent();
 
-        static void SubscribeJoystickButton(unsigned int button, const FloatPositionDelegate &delegate);
+        //Subscribe
+        static void SubscribeKey(sf::Keyboard::Key key, const KeyInputDelegate& delegate);
+        static void SubscribeJoystickButton(unsigned int button, const JoystickInputDelegate& delegate);
+        static void SubscribeMouseButton(sf::Mouse::Button button, const MouseInputDelegate& delegate);
+        static void SubscribeTouchEvent(unsigned int touchCount, const TouchInputDelegate& delegate);
+        static void SubscribeSensorEvent(sf::Sensor::Type sensor, const SensorInputDelegate& delegate);
 
-        static void SubscribeMouseButton(sf::Mouse::Button button, const IntPositionDelegate &delegate);
-
-        static void SubscribeTouchEvent(unsigned int touchCount, const IntPositionDelegate &delegate);
-
-        static void SubscribeSensorEvent(sf::Sensor::Type sensor, const AccelerationDelegate &delegate);
-
+        //Unsubscribe
         static void UnsubscribeKey(sf::Keyboard::Key key);
-
         static void UnsubscribeJoystickButton(unsigned int button);
-
         static void UnsubscribeMouseButton(sf::Mouse::Button button);
-
         static void UnsubscribeTouchEvent(unsigned int touchCount);
-
         static void UnsubscribeSensorEvent(sf::Sensor::Type sensor);
 
-        static void ClearAll();
+        static void ClearAllDelegates();
+
+        static void HandleMouseButtonPressedEvent(sf::Mouse::Button button);
+        static void HandleKeyPressedEvent(sf::Keyboard::Key key);
+        static void HandleTouchStartEvent(int fingerIndex);
+        static void HandleJoystickPressedEvent(int button);
+
+        static void HandleMouseButtonReleasedEvent(sf::Mouse::Button button);
+        static void HandleKeyReleasedEvent(sf::Keyboard::Key key);
+        static void HandleTouchEndEvent(int fingerIndex);
+        static void HandleJoystickReleasedEvent(int button);
 
     private:
-        struct KeyInputData {
+        struct KeyInputData
+        {
             sf::Keyboard::Key key;
-            ActionDelegate delegate;
-            bool onRelease;
+            KeyInputDelegate delegate;
 
-            KeyInputData(sf::Keyboard::Key k, const ActionDelegate &d, bool release) : key(k), delegate(d),
-                                                                                       onRelease(release) {}
+            KeyInputData(sf::Keyboard::Key k, const KeyInputDelegate &d) : key(k), delegate(d) {}
         };
 
-        struct JoystickInputData {
+        struct JoystickInputData
+        {
             unsigned int button;
-            FloatPositionDelegate delegate;
+            JoystickInputDelegate delegate;
 
-            JoystickInputData(unsigned int b, const FloatPositionDelegate &d) : button(b), delegate(d) {}
+            JoystickInputData(unsigned int b, const JoystickInputDelegate &d) : button(b), delegate(d) {}
         };
 
-        struct MouseInputData {
+        struct MouseInputData
+        {
             sf::Mouse::Button button;
-            IntPositionDelegate delegate;
+            MouseInputDelegate delegate;
 
-            MouseInputData(sf::Mouse::Button b, const IntPositionDelegate &d) : button(b), delegate(d) {}
+            MouseInputData(sf::Mouse::Button b, const MouseInputDelegate &d) : button(b), delegate(d) {}
         };
 
-        struct TouchInputData {
+        struct TouchInputData
+        {
             unsigned int touchCount;
-            IntPositionDelegate delegate;
+            TouchInputDelegate delegate;
 
-            TouchInputData(unsigned int count, const IntPositionDelegate &d) : touchCount(count), delegate(d) {}
+            TouchInputData(unsigned int count, const TouchInputDelegate &d) : touchCount(count), delegate(d) {}
         };
 
-        struct SensorInputData {
+        struct SensorInputData
+        {
             sf::Sensor::Type sensor;
-            AccelerationDelegate delegate;
+            SensorInputDelegate delegate;
 
-            SensorInputData(sf::Sensor::Type s, const AccelerationDelegate &d) : sensor(s), delegate(d) {}
+            SensorInputData(sf::Sensor::Type s, const SensorInputDelegate &d) : sensor(s), delegate(d) {}
         };
 
         static std::vector<KeyInputData> keyDelegates;
@@ -86,6 +100,11 @@ class Input {
         static std::vector<MouseInputData> mouseDelegates;
         static std::vector<TouchInputData> touchDelegates;
         static std::vector<SensorInputData> sensorDelegates;
+
+        static std::vector<sf::Keyboard::Key> pressedKeysThisFrame;
+        static std::vector<int> pressedJoystickButtonsThisFrame;
+        static std::vector<sf::Mouse::Button> pressedMouseButtonsThisFrame;
+        static std::vector<int> fingerIndicesThisFrame;
 
         static bool keyboardEnabled;
         static bool mouseEnabled;
