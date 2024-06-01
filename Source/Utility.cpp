@@ -21,4 +21,18 @@ namespace SfmlCoreUtility
 		Logger::Log(LogType::Verbose,
 			"Vector addition result: (" + std::to_string(result.x) + ", " + std::to_string(result.y) + ")");
 	}
+
+    template<typename T>
+    std::string Utility::GetHash(const T& obj)
+    {
+        // Serialize the object into a string
+        std::string data(reinterpret_cast<const char*>(&obj), sizeof(obj));
+
+        // Use a hash function (e.g., std::hash) to generate a hash of the serialized data
+        std::hash<std::string> hasher;
+        size_t hashValue = hasher(data);
+
+        // Convert hash value to a string
+        return std::to_string(hashValue);
+    }
 }

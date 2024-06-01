@@ -9,16 +9,16 @@
 #include <vector>
 #include <functional>
 
-class Input {
+class Input
+{
     public:
         using KeyInputDelegate = std::function<void(std::vector<sf::Keyboard::Key>& otherKeysPressed)>;
         using MouseInputDelegate = std::function<void(const sf::Vector2i&, std::vector<sf::Mouse::Button>& otherButtonsPressed)>;
-        using TouchInputDelegate = std::function<void(const sf::Vector2i&, std::vector<int> fingerIndices)>;
+        using TouchInputDelegate = std::function<void(const sf::Vector2i&, std::vector<int>& fingerIndices)>;
         using JoystickInputDelegate = std::function<void(const sf::Vector2f&, std::vector<int>& otherButtonsPressed)>;
         using SensorInputDelegate = std::function<void(const sf::Vector3f&)>;
 
-        Input(bool isKeyboardEnabled, bool isMouseEnabled, bool isJoystickEnabled, bool isTouchEnabled,
-              bool isSensorEnabled);
+        Input(bool isKeyboardEnabled, bool isMouseEnabled, bool isJoystickEnabled, bool isTouchEnabled, bool isSensorEnabled);
 
         void HandleInput();
 
@@ -32,15 +32,15 @@ class Input {
         static void SubscribeKey(sf::Keyboard::Key key, const KeyInputDelegate& delegate);
         static void SubscribeJoystickButton(unsigned int button, const JoystickInputDelegate& delegate);
         static void SubscribeMouseButton(sf::Mouse::Button button, const MouseInputDelegate& delegate);
-        static void SubscribeTouchEvent(unsigned int touchCount, const TouchInputDelegate& delegate);
-        static void SubscribeSensorEvent(sf::Sensor::Type sensor, const SensorInputDelegate& delegate);
+        static void SubscribeTouch(unsigned int fingerIndex, const TouchInputDelegate& delegate);
+        static void SubscribeSensor(sf::Sensor::Type sensor, const SensorInputDelegate& delegate);
 
         //Unsubscribe
         static void UnsubscribeKey(sf::Keyboard::Key key);
         static void UnsubscribeJoystickButton(unsigned int button);
         static void UnsubscribeMouseButton(sf::Mouse::Button button);
-        static void UnsubscribeTouchEvent(unsigned int touchCount);
-        static void UnsubscribeSensorEvent(sf::Sensor::Type sensor);
+        static void UnsubscribeTouch(unsigned int touchCount);
+        static void UnsubscribeSensor(sf::Sensor::Type sensor);
 
         static void ClearAllDelegates();
 
@@ -81,10 +81,10 @@ class Input {
 
         struct TouchInputData
         {
-            unsigned int touchCount;
+            unsigned int fingerIndex;
             TouchInputDelegate delegate;
 
-            TouchInputData(unsigned int count, const TouchInputDelegate &d) : touchCount(count), delegate(d) {}
+            TouchInputData(unsigned int fingerIndex, const TouchInputDelegate &d) : fingerIndex(fingerIndex), delegate(d) {}
         };
 
         struct SensorInputData
@@ -95,11 +95,50 @@ class Input {
             SensorInputData(sf::Sensor::Type s, const SensorInputDelegate &d) : sensor(s), delegate(d) {}
         };
 
-        static std::vector<KeyInputData> keyDelegates;
-        static std::vector<JoystickInputData> joystickDelegates;
-        static std::vector<MouseInputData> mouseDelegates;
-        static std::vector<TouchInputData> touchDelegates;
-        static std::vector<SensorInputData> sensorDelegates;
+        enum InputType
+        {
+            Unknown = -1,
+            Keyboard = 0,
+            Mouse = 1,
+            Joystick = 2,
+            Touch = 3,
+            Sensor = 4
+        };
+
+        std::string to_string(InputType e)
+        {
+            switch (e)
+            {
+                case InputType::Unknown:
+                    return "Unknown";
+                case InputType::Keyboard:
+                    return "Keyboard";
+                case InputType::Joystick:
+                    return "Joystick";
+                case InputType::Touch:
+                    return "Touch";
+                case InputType::Sensor:
+                    return "Sensor";
+                default:
+                    return "Unknown";
+            }
+        }
+
+        static void ClearIdCaches();
+
+        template<typename T> static std::string GenerateID(InputType inputType, const T& input);
+        template<typename T> static std::string GetHash(InputType inputType, const T &input);
+
+        static std::unordered_map<std::string, KeyInputData> keyDelegates;
+        static std::unordered_map<std::string, JoystickInputData> joystickDelegates;
+        static std::unordered_map<std::string, MouseInputData> mouseDelegates;
+        static std::unordered_map<std::string, TouchInputData> touchDelegates;
+        static std::unordered_map<std::string, SensorInputData> sensorDelegates;
+
+        static std::unordered_map<sf::Keyboard::Key, std::string> keyboardIdCache;
+        static std::unordered_map<int, std::string> joystickIdCache;
+        static std::unordered_map<sf::Mouse::Button, std::string> mouseIdCache;
+        static std::unordered_map<int, std::string> touchIdCache;
 
         static std::vector<sf::Keyboard::Key> pressedKeysThisFrame;
         static std::vector<int> pressedJoystickButtonsThisFrame;

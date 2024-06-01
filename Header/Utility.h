@@ -25,6 +25,7 @@ namespace SfmlCoreUtility
 		sf::Thread::wait: Waits for a thread to finish executing.
 		 */
 		static void Timer();
+        template<typename T> static std::string GetHash(const T& obj);
 	};
 }
 #endif //SFML_CORE_HEADER_UTILITY_H_

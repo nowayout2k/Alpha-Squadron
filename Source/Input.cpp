@@ -1,10 +1,15 @@
 #include "../Header/Input.h"
 
-std::vector<Input::KeyInputData> Input::keyDelegates;
-std::vector<Input::JoystickInputData> Input::joystickDelegates;
-std::vector<Input::MouseInputData> Input::mouseDelegates;
-std::vector<Input::TouchInputData> Input::touchDelegates;
-std::vector<Input::SensorInputData> Input::sensorDelegates;
+std::unordered_map<std::string, Input::KeyInputData> Input::keyDelegates;
+std::unordered_map<std::string, Input::JoystickInputData> Input::joystickDelegates;
+std::unordered_map<std::string, Input::MouseInputData> Input::mouseDelegates;
+std::unordered_map<std::string, Input::TouchInputData> Input::touchDelegates;
+std::unordered_map<std::string, Input::SensorInputData> Input::sensorDelegates;
+
+std::unordered_map<sf::Keyboard::Key, std::string> Input::keyboardIdCache;
+std::unordered_map<int, std::string> Input::joystickIdCache;
+std::unordered_map<sf::Mouse::Button, std::string> Input::mouseIdCache;
+std::unordered_map<int, std::string> Input::touchIdCache;
 
 std::vector<sf::Keyboard::Key> Input::pressedKeysThisFrame;
 std::vector<int> Input::pressedJoystickButtonsThisFrame;
@@ -30,24 +35,29 @@ void Input::HandleInput()
 {
     if (keyboardEnabled)
     {
-        for (const auto& data : keyDelegates)
+        for (const auto& key : Input::pressedKeysThisFrame)
         {
-            if (sf::Keyboard::isKeyPressed(data.key))
+            std::string id = GenerateID(InputType::Keyboard, key);
+            auto it = keyDelegates.find(id);
+            if (it != keyDelegates.end())
             {
-                data.delegate(Input::pressedKeysThisFrame);
+                it->second.delegate(Input::pressedKeysThisFrame);
             }
         }
     }
 
     if (joystickEnabled && sf::Joystick::isConnected(0))
     {
-        for (const auto& data : joystickDelegates)
+        for (const auto& button : Input::pressedJoystickButtonsThisFrame)
         {
             sf::Vector2f position(sf::Joystick::getAxisPosition(0, sf::Joystick::X),
                                   sf::Joystick::getAxisPosition(0, sf::Joystick::Y));
-            if (sf::Joystick::isButtonPressed(0, data.button))
+
+            std::string id = GenerateID(InputType::Joystick, button);
+            auto it = joystickDelegates.find(id);
+            if (it != joystickDelegates.end())
             {
-                data.delegate(position, Input::pressedJoystickButtonsThisFrame);
+                it->second.delegate(position, Input::pressedJoystickButtonsThisFrame);
             }
         }
     }
@@ -55,26 +65,27 @@ void Input::HandleInput()
     if (mouseEnabled)
     {
         sf::Vector2i position = sf::Mouse::getPosition();
-        for (const auto& data : mouseDelegates)
+        for (const auto& button : Input::pressedMouseButtonsThisFrame)
         {
-            if (sf::Mouse::isButtonPressed(data.button))
+            std::string id = GenerateID(InputType::Mouse, button);
+            auto it = mouseDelegates.find(id);
+            if (it != mouseDelegates.end())
             {
-                data.delegate(position, Input::pressedMouseButtonsThisFrame);
+                it->second.delegate(position, Input::pressedMouseButtonsThisFrame);
             }
         }
     }
 
     if (touchEnabled)
     {
-        for (unsigned int touchCount = 0; touchCount < 5; ++touchCount)
+        for (const auto& fingerIndex : Input::fingerIndicesThisFrame)
         {
-            sf::Vector2i position = sf::Touch::getPosition(touchCount);
-            for (const auto& data : touchDelegates)
+            std::string id = GenerateID(InputType::Touch, fingerIndex);
+            auto it = touchDelegates.find(id);
+            sf::Vector2i position = sf::Touch::getPosition(fingerIndex);
+            if (it != touchDelegates.end())
             {
-                if (data.touchCount == touchCount)
-                {
-                    data.delegate(position, fingerIndicesThisFrame);
-                }
+                it->second.delegate(position, Input::fingerIndicesThisFrame);
             }
         }
     }
@@ -83,60 +94,95 @@ void Input::HandleInput()
     {
         for (const auto& data : sensorDelegates)
         {
-            sf::Vector3f acceleration = sf::Sensor::getValue(data.sensor);
-            data.delegate(acceleration);
+            sf::Vector3f acceleration = sf::Sensor::getValue(data.second.sensor);
+            data.second.delegate(acceleration);
         }
     }
 }
 
 void Input::SubscribeKey(sf::Keyboard::Key key, const KeyInputDelegate& delegate)
 {
-    keyDelegates.emplace_back(key, delegate);
+    std::string id = GenerateID(InputType::Keyboard, key);
+    auto data = KeyInputData(key, delegate);
+    auto itr = keyDelegates.find(id);
+    if (itr != keyDelegates.end())
+        itr->second = data;
+    else
+        keyDelegates.emplace(id, data);
 }
 
 void Input::SubscribeJoystickButton(unsigned int button, const JoystickInputDelegate& delegate)
 {
-    joystickDelegates.emplace_back(button, delegate);
+    std::string id = GenerateID(InputType::Joystick, button);
+    auto data = JoystickInputData(button, delegate);
+    auto itr = joystickDelegates.find(id);
+    if (itr != joystickDelegates.end())
+        itr->second = data;
+    else
+        joystickDelegates.emplace(id, data);
 }
 
 void Input::SubscribeMouseButton(sf::Mouse::Button button, const MouseInputDelegate& delegate)
 {
-    mouseDelegates.emplace_back(button, delegate);
+    std::string id = GenerateID(InputType::Mouse, button);
+    auto data = MouseInputData(button, delegate);
+    auto itr = mouseDelegates.find(id);
+    if (itr != mouseDelegates.end())
+        itr->second = data;
+    else
+        mouseDelegates.emplace(id, data);
 }
 
-void Input::SubscribeTouchEvent(unsigned int touchCount, const TouchInputDelegate& delegate)
+void Input::SubscribeTouch(unsigned int fingerIndex, const TouchInputDelegate& delegate)
 {
-    touchDelegates.emplace_back(touchCount, delegate);
+    std::string id = GenerateID(InputType::Touch, fingerIndex);
+    auto data = TouchInputData(fingerIndex, delegate);
+    auto itr = touchDelegates.find(id);
+    if (itr != touchDelegates.end())
+        itr->second = data;
+    else
+        touchDelegates.emplace(id, data);
 }
 
-void Input::SubscribeSensorEvent(sf::Sensor::Type sensor, const SensorInputDelegate& delegate)
+void Input::SubscribeSensor(sf::Sensor::Type sensor, const SensorInputDelegate& delegate)
 {
-    sensorDelegates.emplace_back(sensor, delegate);
+    std::string id = GenerateID(InputType::Sensor, sensor);
+    auto data = SensorInputData(sensor, delegate);
+    auto itr = sensorDelegates.find(id);
+    if (itr != sensorDelegates.end())
+        itr->second = data;
+    else
+        sensorDelegates.emplace(id, data);
 }
 
 void Input::UnsubscribeKey(sf::Keyboard::Key key)
 {
-    keyDelegates.erase(std::remove_if(keyDelegates.begin(), keyDelegates.end(),[key](const auto& data) { return data.key == key; }),keyDelegates.end());
+    std::string id = GenerateID(InputType::Keyboard, key);
+    keyDelegates.erase(id);
 }
 
 void Input::UnsubscribeJoystickButton(unsigned int button)
 {
-    joystickDelegates.erase(std::remove_if(joystickDelegates.begin(), joystickDelegates.end(),[button](const auto& data) { return data.button == button; }),joystickDelegates.end());
+    std::string id = GenerateID(InputType::Joystick, button);
+    joystickDelegates.erase(id);
 }
 
 void Input::UnsubscribeMouseButton(sf::Mouse::Button button)
 {
-    mouseDelegates.erase(std::remove_if(mouseDelegates.begin(), mouseDelegates.end(),[button](const auto& data) { return data.button == button; }),mouseDelegates.end());
+    std::string id = GenerateID(InputType::Mouse, button);
+    mouseDelegates.erase(id);
 }
 
-void Input::UnsubscribeTouchEvent(unsigned int touchCount)
+void Input::UnsubscribeTouch(unsigned int fingerIndex)
 {
-    touchDelegates.erase(std::remove_if(touchDelegates.begin(), touchDelegates.end(),[touchCount](const auto& data) { return data.touchCount == touchCount; }),touchDelegates.end());
+    std::string id = GenerateID(InputType::Touch, fingerIndex);
+    touchDelegates.erase(id);
 }
 
-void Input::UnsubscribeSensorEvent(sf::Sensor::Type sensor)
+void Input::UnsubscribeSensor(sf::Sensor::Type sensor)
 {
-    sensorDelegates.erase(std::remove_if(sensorDelegates.begin(), sensorDelegates.end(),[sensor](const auto& data) { return data.sensor == sensor; }),sensorDelegates.end());
+    std::string id = GenerateID(InputType::Sensor, sensor);
+    sensorDelegates.erase(id);
 }
 
 void Input::ClearAllDelegates()
@@ -186,5 +232,67 @@ void Input::HandleTouchEndEvent(int fingerIndex)
 void Input::HandleJoystickReleasedEvent(int button)
 {
     std::remove(pressedJoystickButtonsThisFrame.begin(), pressedJoystickButtonsThisFrame.end(),button);
+}
+
+void Input::ClearIdCaches()
+{
+    keyboardIdCache.clear();
+    joystickIdCache.clear();
+    mouseIdCache.clear();
+    touchIdCache.clear();
+}
+
+template<typename T>
+std::string Input::GenerateID(InputType inputType, const T &input)
+{
+    std::string hash;
+    switch(inputType)
+    {
+        case InputType::Keyboard:
+            if(keyboardIdCache.find(input) != keyboardIdCache.end())
+                return keyboardIdCache[input];
+            keyboardIdCache[input] = hash;
+            hash = GetHash(inputType, input);
+            break;
+        case InputType::Mouse:
+            if(mouseIdCache.find(input) != mouseIdCache.end())
+                return mouseIdCache[input];
+            mouseIdCache[input] = hash;
+            hash = GetHash(inputType, input);
+            break;
+        case InputType::Joystick:
+            if(joystickIdCache.find(input) != joystickIdCache.end())
+                return joystickIdCache[input];
+            joystickIdCache[input] = hash;
+            hash = GetHash(inputType, input);
+            break;
+        case InputType::Touch:
+            if(touchIdCache.find(input) != touchIdCache.end())
+                return touchIdCache[input];
+            touchIdCache[input] = hash;
+            hash = GetHash(inputType, input);
+            break;
+        case InputType::Sensor:
+            hash = GetHash(inputType, input);
+            break;
+        case InputType::Unknown:
+            hash = GetHash(inputType, input);
+            break;
+    }
+    return hash;
+}
+
+template<typename T>
+std::string Input::GetHash(InputType inputType, const T &input)
+{
+    // Serialize the input into a string
+    std::string data = std::to_string(inputType) + std::to_string(input);
+
+    // Use a hash function to generate a hash of the serialized data
+    std::hash<std::string> hasher;
+    size_t hashValue = hasher(data);
+
+    // Convert hash value to a string
+    return std::to_string(hashValue);
 }
 
