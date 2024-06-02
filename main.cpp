@@ -7,7 +7,7 @@
 
 int main()
 {
-	sf::RenderWindow& window = WindowManager::CreateWindow(sf::VideoMode(800, 600), "Alpha Squadron", sf::Style::Close);
+	sf::RenderWindow& window = WindowManager::createWindow(sf::VideoMode(800, 600), "Alpha Squadron", sf::Style::Close);
     GameManager gameManager;
 
     sf::Clock clock;
@@ -46,9 +46,9 @@ int main()
 				event.type == sf::Event::MouseWheelMoved)
 					continue;
         }
-        gameManager.Update(clock.getElapsedTime().asSeconds());
+		gameManager.update(clock.getElapsedTime().asSeconds());
         window.clear();
-        gameManager.Render(window);
+		gameManager.render(window);
         window.display();
     }
     return 0;

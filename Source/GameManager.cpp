@@ -10,42 +10,42 @@
 
 GameManager::GameManager()
 {
-    entities.push_back(std::make_unique<ScrollingBackground>());
-    entities.push_back(std::make_unique<Player>(true));
-    entities.push_back(std::make_unique<Enemy>(true));
+    m_entities.push_back(std::make_unique<ScrollingBackground>());
+    m_entities.push_back(std::make_unique<Player>(true));
+    m_entities.push_back(std::make_unique<Enemy>(true));
 }
 
-void GameManager::Update(float deltaTime)
+void GameManager::update(float deltaTime)
 {
-    for (const auto& entity : entities)
+    for (const auto& entity : m_entities)
     {
-        entity->Update(deltaTime);
+		entity->update(deltaTime);
     }
-    HandleCollisions();
+	handleCollisions();
 }
 
-void GameManager::Render(sf::RenderWindow &window)
+void GameManager::render(sf::RenderWindow &window)
 {
-    for (const auto& entity : entities)
+    for (const auto& entity : m_entities)
     {
         window.draw(*entity);
     }
 }
 
-void GameManager::HandleCollisions()
+void GameManager::handleCollisions()
 {
-    for (const auto& entity : entities)
+    for (const auto& entity : m_entities)
     {
-        for (const auto& other : entities)
+        for (const auto& other : m_entities)
         {
             if(entity == other)
                 continue;
 
             auto spriteEntity = dynamic_cast<SpriteEntity*>(entity.get());
             auto spriteEntityOther = dynamic_cast<SpriteEntity*>(other.get());
-            if(spriteEntity && spriteEntity->IsColliding(spriteEntityOther->GetGlobalBounds()))
+            if(spriteEntity && spriteEntity->isColliding(spriteEntityOther->getGlobalBounds()))
             {
-                entity->Collision(other.get());
+				entity->collision(other.get());
             }
         }
     }

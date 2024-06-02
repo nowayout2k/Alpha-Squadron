@@ -7,14 +7,14 @@
 #include <SFML/Network.hpp>
 #include <iostream>
 
-sf::UdpSocket Network::socket;
+sf::UdpSocket Network::m_socket;
 
-std::future<std::string> Network::HttpRequestAsync(const std::string& hostUrl, const std::string& uri)
+std::future<std::string> Network::httpRequestAsync(const std::string& hostUrl, const std::string& uri)
 {
-	return std::async(std::launch::async, &SendRequest, hostUrl, uri);
+	return std::async(std::launch::async, &sendRequest, hostUrl, uri);
 }
 
-std::string Network::SendRequest(const std::string& hostUrl, const std::string& uri)
+std::string Network::sendRequest(const std::string& hostUrl, const std::string& uri)
 {
 	// HTTP example
 	sf::Http http(hostUrl);
@@ -26,24 +26,24 @@ std::string Network::SendRequest(const std::string& hostUrl, const std::string& 
 	return response.getBody();
 }
 
-sf::Socket::Status Network::OpenPort()
+sf::Socket::Status Network::openPort()
 {
-    return socket.bind(54000);
+    return m_socket.bind(54000);
 }
 
-void Network::ClosePort()
+void Network::closePort()
 {
-	socket.unbind();
+	m_socket.unbind();
 }
 
-sf::Socket::Status Network::ReceiveData()
+sf::Socket::Status Network::receiveData()
 {
     char data[100];
     std::size_t received;
     sf::IpAddress sender;
     unsigned short port;
 
-    sf::Socket::Status status = socket.receive(data, 100, received, sender, port);
+    sf::Socket::Status status = m_socket.receive(data, 100, received, sender, port);
 
 	Logger::Log(LogType::Verbose,  "Received " + std::to_string(received) + " bytes from " + sender.toString() + " on port " + std::to_string(port));
     return status;

@@ -2,8 +2,8 @@
 // Created by Johnnie on 5/27/2024.
 //
 
-#ifndef SFML_CORE_HEADER_UTILITY_H_
-#define SFML_CORE_HEADER_UTILITY_H_
+#ifndef ALPHA_SQUADRON_HEADER_UTILITY_H_
+#define ALPHA_SQUADRON_HEADER_UTILITY_H_
 static class Utility
 {
     /*
@@ -17,10 +17,10 @@ static class Utility
     sf::Thread::wait: Waits for a thread to finish executing.
      */
 public:
-    static void BeginStopwatch(std::string message);
-    static void EndStopwatch(std::string message);
-    template<typename T> static std::string GetHash(const T& obj);
+    static void beginStopwatch(std::string message);
+    static void endStopwatch(std::string message);
+    template<typename T> static std::string getHash(const T& obj);
 private:
-    static sf::Clock clock;
+    static sf::Clock m_clock;
 };
-#endif //SFML_CORE_HEADER_UTILITY_H_
+#endif //ALPHA_SQUADRON_HEADER_UTILITY_H_

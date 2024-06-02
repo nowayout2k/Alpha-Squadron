@@ -7,23 +7,23 @@
 #include "../Header/Utility.h"
 #include "../Header/Logger.h"
 
-sf::Clock Utility::clock;
+sf::Clock Utility::m_clock;
 
-void Utility::BeginStopwatch(std::string message)
+void Utility::beginStopwatch(std::string message)
 {
-    clock.restart();
-    sf::Time elapsed = clock.getElapsedTime();
+    m_clock.restart();
+    sf::Time elapsed = m_clock.getElapsedTime();
     Logger::Log(LogType::Test, message + " Stopwatch Started!");
 }
 
-void Utility::EndStopwatch(std::string message)
+void Utility::endStopwatch(std::string message)
 {
-    sf::Time elapsed = clock.getElapsedTime();
+    sf::Time elapsed = m_clock.getElapsedTime();
     Logger::Log(LogType::Test, message + " Stopwatch stopped at: " + std::to_string(elapsed.asSeconds()) + " seconds");
 }
 
 template<typename T>
-std::string Utility::GetHash(const T& obj)
+std::string Utility::getHash(const T& obj)
 {
     // Serialize the object into a string
     std::string data(reinterpret_cast<const char*>(&obj), sizeof(obj));

@@ -2,8 +2,8 @@
 // Created by Johnnie on 5/27/2024.
 //
 
-#ifndef SFML_CORE_HEADER_LOG_TYPE_H_
-#define SFML_CORE_HEADER_LOG_TYPE_H_
+#ifndef ALPHA_SQUADRON_HEADER_LOGTYPE_H_
+#define ALPHA_SQUADRON_HEADER_LOGTYPE_H_
 enum LogType
 {
     Test,
@@ -12,4 +12,4 @@ enum LogType
     Error
 };
 
-#endif //SFML_CORE_HEADER_LOG_TYPE_H_
+#endif //ALPHA_SQUADRON_HEADER_LOGOTYPE_H_

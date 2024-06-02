@@ -2,8 +2,8 @@
 // Created by Johnnie Otis on 5/30/24.
 //
 
-#ifndef ALPHA_SQUADRON_SPRITEENTITY_H
-#define ALPHA_SQUADRON_SPRITEENTITY_H
+#ifndef ALPHA_SQUADRON_HEADER_SPRITE_ENTITY_H_
+#define ALPHA_SQUADRON_HEADER_SPRITE_ENTITY_H_
 
 
 #include "Entity.h"
@@ -13,12 +13,12 @@
 class SpriteEntity : public Entity
 {
 public:
-    virtual void Update(float deltaTime) = 0;
-    virtual void Collision(const Entity* other) { if(!hasCollision) return; };
-    bool IsColliding(const sf::Rect<float>& bounds) const { return hasCollision && GetGlobalBounds().intersects(bounds); }
-    sf::Rect<float> GetGlobalBounds() const { return getTransform().transformRect(m_sprite->getGlobalBounds()); };
+    virtual void update(float deltaTime) = 0;
+    virtual void collision(const Entity* other) { if(!m_hasCollision) return; };
+    bool isColliding(const sf::Rect<float>& bounds) const { return m_hasCollision && getGlobalBounds().intersects(bounds); }
+    sf::Rect<float> getGlobalBounds() const { return getTransform().transformRect(m_sprite->getGlobalBounds()); };
 protected:
-    explicit SpriteEntity(const bool hasCollision, const std::string &pathToTexture, const sf::IntRect textureRect = sf::IntRect()) : hasCollision(hasCollision)
+    explicit SpriteEntity(const bool hasCollision, const std::string &pathToTexture, const sf::IntRect textureRect = sf::IntRect()) : m_hasCollision(hasCollision)
     {
         if(textureRect == sf::IntRect())
         {
@@ -40,7 +40,7 @@ protected:
         m_drawable = m_sprite.get();
     }
 
-    void LoadTexture(const std::string &pathToTexture, const sf::IntRect textureRect)
+    void loadTexture(const std::string &pathToTexture, const sf::IntRect textureRect)
     {
         if (!m_texture.loadFromFile(pathToTexture, textureRect))
         {
@@ -52,7 +52,7 @@ protected:
     std::shared_ptr<sf::Sprite> m_sprite;
     sf::Texture m_texture;
 private:
-    bool hasCollision;
+    bool m_hasCollision;
 };
 
-#endif //ALPHA_SQUADRON_SPRITEENTITY_H
+#endif //ALPHA_SQUADRON_HEADER_SPRITE ENTITY_H_

@@ -2,8 +2,8 @@
 // Created by Johnnie Otis on 5/26/24.
 //
 
-#ifndef SFML_CORE_HEADER_NETWORK_H_
-#define SFML_CORE_HEADER_NETWORK_H_
+#ifndef ALPHA_SQUADRON_HEADER_NETWORK_H_
+#define ALPHA_SQUADRON_HEADER_NETWORK_H_
 
 #include <SFML/Network/UdpSocket.hpp>
 #include <future>
@@ -35,14 +35,14 @@ public:
 	sf::IpAddress::resolve: Resolves a host name to an IP address.
 	 */
 
-	static sf::Socket::Status OpenPort();
-	static void ClosePort();
-	static std::future<std::string> HttpRequestAsync(const std::string& hostUrl, const std::string& uri);
-	static sf::Socket::Status ReceiveData();
+	static sf::Socket::Status openPort();
+	static void closePort();
+	static std::future<std::string> httpRequestAsync(const std::string& hostUrl, const std::string& uri);
+	static sf::Socket::Status receiveData();
 private:
-	static std::string SendRequest(const std::string& hostUrl, const std::string& uri);
-	static sf::UdpSocket socket;
+	static std::string sendRequest(const std::string& hostUrl, const std::string& uri);
+	static sf::UdpSocket m_socket;
 };
 
 
-#endif //SFML_CORE_HEADER_NETWORK_H_
+#endif //ALPHA_SQUADRON_HEADER_NETWORK_H_

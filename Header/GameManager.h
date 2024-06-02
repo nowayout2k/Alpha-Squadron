@@ -13,13 +13,12 @@ class GameManager
 {
 public:
     GameManager();
-    void Update(float deltaTime);
-    void Render(sf::RenderWindow& window);
+    void update(float deltaTime);
+    void render(sf::RenderWindow& window);
 
 private:
-    void HandleCollisions();
-    bool IsColliding(const sf::Sprite& sprite1, const sf::Sprite& sprite2);
-    std::vector<std::unique_ptr<Entity>> entities;
+    void handleCollisions();
+    std::vector<std::unique_ptr<Entity>> m_entities;
 };
 
 

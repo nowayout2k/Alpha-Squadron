@@ -2,8 +2,8 @@
 // Created by Johnnie on 5/27/2024.
 //
 
-#ifndef SFML_CORE_HEADER_LOGGER_H_
-#define SFML_CORE_HEADER_LOGGER_H_
+#ifndef ALPHA_SQUADRON_HEADER_LOGGER_H_
+#define ALPHA_SQUADRON_HEADER_LOGGER_H_
 #include "LogType.h"
 
 class Logger
@@ -12,4 +12,4 @@ public:
     static void Log(LogType logType, const std::string& message);
 };
 
-#endif //SFML_CORE_HEADER_LOGGER_H_
+#endif //ALPHA_SQUADRON_HEADER_LOGGER_H_

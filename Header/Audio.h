@@ -2,8 +2,8 @@
 // Created by Johnnie Otis on 5/26/24.
 //
 
-#ifndef SFML_CORE_HEADER_AUDIO_H_
-#define SFML_CORE_HEADER_AUDIO_H_
+#ifndef ALPHA_SQUADRON_HEADER_AUDIO_H_
+#define ALPHA_SQUADRON_HEADER_AUDIO_H_
 
 
 class Audio
@@ -37,4 +37,4 @@ public:
 };
 
 
-#endif //SFML_CORE_HEADER_AUDIO_H_
+#endif //ALPHA_SQUADRON_HEADER_AUDIO_H_

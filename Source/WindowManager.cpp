@@ -6,15 +6,15 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
-sf::RenderWindow WindowManager::currentWindow;
+sf::RenderWindow WindowManager::m_currentWindow;
 
-sf::RenderWindow& WindowManager::CreateWindow(const sf::VideoMode& mode, const std::string& title, sf::Uint32 style) // NOLINT(*-convert-member-functions-to-static)
+sf::RenderWindow& WindowManager::createWindow(const sf::VideoMode& mode, const std::string& title, sf::Uint32 style) // NOLINT(*-convert-member-functions-to-static)
 {
-	currentWindow.create(mode, title, style);
-	currentWindow.setFramerateLimit(60);
-	currentWindow.setPosition(sf::Vector2i(0,0));
-	currentWindow.setMouseCursorVisible(false);
-	currentWindow.setVerticalSyncEnabled(true);
-	currentWindow.setActive(true);
-	return currentWindow;
+	m_currentWindow.create(mode, title, style);
+	m_currentWindow.setFramerateLimit(60);
+	m_currentWindow.setPosition(sf::Vector2i(0,0));
+	m_currentWindow.setMouseCursorVisible(false);
+	m_currentWindow.setVerticalSyncEnabled(true);
+	m_currentWindow.setActive(true);
+	return m_currentWindow;
 }

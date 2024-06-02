@@ -11,18 +11,18 @@ Player::Player(const bool hasCollision) : SpriteEntity(hasCollision,
                                                        sf::IntRect(240, 298, 52, 12))
 {
     setScale(1.5f, 1.5f);
-    sf::Vector2u windowSize = WindowManager::GetSize();
+    sf::Vector2u windowSize = WindowManager::getSize();
     setPosition(windowSize.x / 2.f, windowSize.y / 2.f);
 }
 
-void Player::Update(float deltaTime)
+void Player::update(float deltaTime)
 {
-    sf::Vector2f offset = HandleInput();
-    AdjustOffsetToWindow(offset);
+    sf::Vector2f offset = handleInput();
+	adjustOffsetToWindow(offset);
     move(offset);
 }
 
-sf::Vector2f Player::HandleInput()
+sf::Vector2f Player::handleInput()
 {
     sf::Vector2f offset(0.f, 0.f);
 
@@ -44,12 +44,12 @@ sf::Vector2f Player::HandleInput()
     return offset;
 }
 
-void Player::AdjustOffsetToWindow(sf::Vector2f& offset)
+void Player::adjustOffsetToWindow(sf::Vector2f& offset)
 {
-    sf::Vector2u windowSize = WindowManager::GetSize();
+    sf::Vector2u windowSize = WindowManager::getSize();
     sf::FloatRect windowBounds(0.f, 0.f, static_cast<float>(windowSize.x), static_cast<float>(windowSize.y));
 
-    sf::FloatRect playerBounds = GetGlobalBounds();
+    sf::FloatRect playerBounds = getGlobalBounds();
     playerBounds.left += offset.x;
     playerBounds.top += offset.y;
 
@@ -59,9 +59,9 @@ void Player::AdjustOffsetToWindow(sf::Vector2f& offset)
         offset.y = 0.f;
 }
 
-void Player::Collision(const Entity* other)
+void Player::collision(const Entity* other)
 {
-    SpriteEntity::Collision(other);
+	SpriteEntity::collision(other);
     const Enemy* enemy = dynamic_cast<const Enemy*>(other);
     if (enemy)
         m_sprite->setColor(sf::Color::Red);

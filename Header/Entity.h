@@ -14,8 +14,8 @@
 class Entity : public sf::Drawable, public sf::Transformable
 {
  public:
-    virtual void Update(float deltaTime) = 0;
-    virtual void Collision(const Entity* other) = 0;
+    virtual void update(float deltaTime) = 0;
+    virtual void collision(const Entity* other) = 0;
 protected:
     Entity() = default;
     sf::Drawable* m_drawable;

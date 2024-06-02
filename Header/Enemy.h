@@ -2,8 +2,8 @@
 // Created by Johnnie Otis on 6/1/24.
 //
 
-#ifndef ALPHA_SQUADRON_ENEMY_H
-#define ALPHA_SQUADRON_ENEMY_H
+#ifndef ALPHA_SQUADRON_HEADER_ENEMY_H_
+#define ALPHA_SQUADRON_HEADER_ENEMY_H_
 
 
 #include "Entity.h"
@@ -13,12 +13,12 @@ class Enemy : public SpriteEntity
 {
 public:
     Enemy(bool hasCollision);
-    void Update(float deltaTime) override;
-    void Collision(const Entity* other) override;
+    void update(float deltaTime) override;
+    void collision(const Entity* other) override;
 
 private:
     sf::Texture m_texture;
 };
 
 
-#endif //ALPHA_SQUADRON_ENEMY_H
+#endif //ALPHA_SQUADRON_HEADER_ENEMY_H_

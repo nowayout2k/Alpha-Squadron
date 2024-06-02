@@ -12,14 +12,14 @@ Enemy::Enemy(bool hasCollision) : SpriteEntity(hasCollision, "../Assets/Textures
     setPosition(sf::Vector2f(100, 100));
 }
 
-void Enemy::Update(float deltaTime)
+void Enemy::update(float deltaTime)
 {
 
 }
 
-void Enemy::Collision(const Entity* other)
+void Enemy::collision(const Entity* other)
 {
-    SpriteEntity::Collision(other);
+	SpriteEntity::collision(other);
     const Player* player = dynamic_cast<const Player*>(other);
     if (player)
         m_sprite->setColor(sf::Color::Red);
