@@ -11,7 +11,7 @@
 class ScrollingBackground : public SpriteEntity
 {
 public:
-    ScrollingBackground(const std::string &pathToTexture);
+    ScrollingBackground();
     void Update(float deltaTime) override;
 };
 

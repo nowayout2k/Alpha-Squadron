@@ -5,7 +5,7 @@
 #include "../Header/Enemy.h"
 #include "../Header/Player.h"
 
-Enemy::Enemy(std::string pathToTexture, bool hasCollision) : SpriteEntity(pathToTexture, hasCollision)
+Enemy::Enemy(bool hasCollision) : SpriteEntity(hasCollision, "../Assets/Textures/Player.png")
 {
     setScale(sf::Vector2f(.1,.1));
     setPosition(sf::Vector2f(100, 100));

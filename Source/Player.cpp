@@ -6,9 +6,11 @@
 #include "../Header/Player.h"
 #include "../Header/Enemy.h"
 
-Player::Player(const std::string& pathToTexture, const bool hasCollision) : SpriteEntity(pathToTexture, hasCollision)
+Player::Player(const bool hasCollision) : SpriteEntity(hasCollision,
+                                                       "../Assets/Textures/AircraftSpriteSheet.png",
+                                                       sf::IntRect(240, 298, 52, 12))
 {
-    setScale(0.1f, 0.1f);
+    setScale(1.5f, 1.5f);
     sf::Vector2u windowSize = WindowManager::GetSize();
     setPosition(windowSize.x / 2.f, windowSize.y / 2.f);
 }

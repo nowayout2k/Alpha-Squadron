@@ -12,7 +12,7 @@
 class Enemy : public SpriteEntity
 {
 public:
-    Enemy(std::string pathToTexture, bool hasCollision);
+    Enemy(bool hasCollision);
     void Update(float deltaTime) override;
     void Collision(const Entity* other) override;
 

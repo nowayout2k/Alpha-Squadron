@@ -18,16 +18,37 @@ public:
     bool IsColliding(const sf::Rect<float>& bounds) const { return hasCollision && GetGlobalBounds().intersects(bounds); }
     sf::Rect<float> GetGlobalBounds() const { return getTransform().transformRect(m_sprite->getGlobalBounds()); };
 protected:
-    explicit SpriteEntity(const std::string &pathToTexture, const bool hasCollision) : hasCollision(hasCollision)
+    explicit SpriteEntity(const bool hasCollision, const std::string &pathToTexture, const sf::IntRect textureRect = sf::IntRect()) : hasCollision(hasCollision)
     {
-        if (!m_texture.loadFromFile(pathToTexture))
+        if(textureRect == sf::IntRect())
         {
-            Logger::Log(LogType::Error, "Texture not found at: " + pathToTexture);
-            return;
+            if (!m_texture.loadFromFile(pathToTexture))
+            {
+                Logger::Log(LogType::Error, "Texture not found at: " + pathToTexture);
+                return;
+            }
+        }
+        else
+        {
+            if (!m_texture.loadFromFile(pathToTexture, textureRect))
+            {
+                Logger::Log(LogType::Error, "Texture not found at: " + pathToTexture);
+                return;
+            }
         }
         m_sprite = std::make_unique<sf::Sprite>(m_texture);
         m_drawable = m_sprite.get();
     }
+
+    void LoadTexture(const std::string &pathToTexture, const sf::IntRect textureRect)
+    {
+        if (!m_texture.loadFromFile(pathToTexture, textureRect))
+        {
+            Logger::Log(LogType::Error, "Texture not found at: " + pathToTexture);
+            return;
+        }
+    }
+
     std::shared_ptr<sf::Sprite> m_sprite;
     sf::Texture m_texture;
 private:

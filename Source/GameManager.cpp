@@ -10,9 +10,9 @@
 
 GameManager::GameManager()
 {
-    entities.push_back(std::make_unique<ScrollingBackground>("../Assets/Textures/Background.jpg"));
-    entities.push_back(std::make_unique<Player>("../Assets/Textures/Player.png", true));
-    entities.push_back(std::make_unique<Enemy>("../Assets/Textures/Player.png", true));
+    entities.push_back(std::make_unique<ScrollingBackground>());
+    entities.push_back(std::make_unique<Player>(true));
+    entities.push_back(std::make_unique<Enemy>(true));
 }
 
 void GameManager::Update(float deltaTime)

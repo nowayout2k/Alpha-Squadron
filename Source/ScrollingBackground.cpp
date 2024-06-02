@@ -4,7 +4,7 @@
 
 #include "../Header/ScrollingBackground.h"
 
-ScrollingBackground::ScrollingBackground(const std::string &pathToTexture) : SpriteEntity(pathToTexture, false)
+ScrollingBackground::ScrollingBackground() : SpriteEntity(false, "../Assets/Textures/Background.jpg")
 {
     sf::Vector2u windowSize = WindowManager::GetSize();
     sf::Vector2u textureSize = m_texture.getSize();

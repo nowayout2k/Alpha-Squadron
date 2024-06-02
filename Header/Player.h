@@ -11,7 +11,7 @@
 class Player : public SpriteEntity
 {
 public:
-    explicit Player(const std::string& pathToTexture, const bool hasCollision);
+    explicit Player(const bool hasCollision);
     void Update(float deltaTime) override;
     void Collision(const Entity* other) override;
 private:
