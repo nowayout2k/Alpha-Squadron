@@ -6,25 +6,20 @@
 #define ALPHA_SQUADRON_GAMEMANAGER_H
 
 
+#include <SFML/Graphics/RenderWindow.hpp>
 #include "Player.h"
 
 class GameManager
 {
 public:
     GameManager();
-    Player player;
+    void Update();
+    void Render(sf::RenderWindow& window);
 
-    void WPressed(std::vector<Input::InputEventInfo> otherKeys);
-    void SPressed(std::vector<Input::InputEventInfo> otherKeys);
-    void APressed(std::vector<Input::InputEventInfo> otherKeys);
-    void DPressed(std::vector<Input::InputEventInfo> otherKeys);
-    void UpPressed(std::vector<Input::InputEventInfo> otherKeys);
-    void DownPressed(std::vector<Input::InputEventInfo> otherKeys);
-    void LeftPressed(std::vector<Input::InputEventInfo> otherKeys);
-    void RightPressed(std::vector<Input::InputEventInfo> otherKeys);
 private:
-    void SetUpInput();
-
+    void HandleCollisions();
+    bool IsColliding(const sf::Sprite& sprite1, const sf::Sprite& sprite2);
+    std::vector<std::unique_ptr<Entity>> entities;
 };
 
 

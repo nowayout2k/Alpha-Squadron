@@ -7,17 +7,13 @@
 
 
 #include "Entity.h"
-#include "Input.h"
 
 class Player : public Entity
 {
 public:
-    Player()
-    {
-        m_texture.loadFromFile("../Assets/Textures/Player.png");
-        SetTexture(m_texture);
-        SetScale(sf::Vector2f(.1,.1));
-    }
+    Player();
+    void Update() override;
+    void Collision(const Entity* other) override;
 
 private:
     sf::Texture m_texture;

@@ -22,14 +22,19 @@ class Entity : public sf::Drawable
     void SetRotation(float angle) { m_sprite.setRotation(angle); };
     void SetScale(sf::Vector2f factors) { m_sprite.setScale(factors); };
 
+    sf::Rect<float> GetGlobalBounds() { return m_sprite.getGlobalBounds(); };
+
     void MovePosition(sf::Vector2f offset) { m_sprite.move(offset); };
+
+    virtual void Update() = 0;
+
+    bool IsColliding(const sf::Rect<float>& bounds){ return GetGlobalBounds().intersects(bounds); }
+    virtual void Collision(const Entity* other) = 0;
 protected:
     void SetTexture(sf::Texture& texture) { m_sprite.setTexture(texture); }
-    Entity() {};
-
+    sf::Sprite m_sprite;
 private:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override { target.draw(m_sprite, states); };
-	sf::Sprite m_sprite;
 };
 
 #endif //ALPHA_SQUADRON_HEADER_ENTITY_H_

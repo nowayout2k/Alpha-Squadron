@@ -1,24 +1,17 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
-#include "Header/Input.h"
 #include "Header/Logger.h"
-#include "Header/Graphics.h"
 #include "Header/Entity.h"
-#include "Header/Player.h"
 #include "Header/GameManager.h"
-#include "Header/Utility.h"
+#include "Header/WindowManager.h"
 
 int main()
 {
-	Graphics graphics;
-	sf::RenderWindow& window = graphics.CreateWindow(sf::VideoMode(800, 600), "Alpha Squadron", sf::Style::Default);
-    Input input(true, false, false, false, false);
+	sf::RenderWindow& window = WindowManager::CreateWindow(sf::VideoMode(800, 600), "Alpha Squadron", sf::Style::Default);
     GameManager gameManager;
 
     while (window.isOpen())
     {
-        window.clear();
-
 		sf::Event event;
         while (window.pollEvent(event))
         {
@@ -40,45 +33,6 @@ int main()
 				Logger::Log(LogType::Verbose,"Window gained focus");
 			}
 
-            if(event.type == sf::Event::MouseButtonPressed)
-            {
-                Input::HandlePressedEvent(Input::InputType::Mouse, event.mouseButton.button);
-            }
-
-            if(event.type == sf::Event::MouseButtonReleased)
-            {
-                Input::HandleReleasedEvent(Input::InputType::Mouse,event.mouseButton.button);
-            }
-
-            if (event.type == sf::Event::JoystickButtonPressed)
-            {
-                Input::HandlePressedEvent(Input::InputType::Joystick,event.joystickButton.button);
-            }
-            if (event.type == sf::Event::JoystickButtonReleased)
-            {
-                Input::HandleReleasedEvent(Input::InputType::Joystick,event.joystickButton.button);
-            }
-
-            if (event.type == sf::Event::KeyPressed)
-            {
-                Input::HandlePressedEvent(Input::InputType::Keyboard,event.key.code);
-            }
-            if (event.type == sf::Event::KeyReleased)
-            {
-                Input::HandleReleasedEvent(Input::InputType::Keyboard,event.key.code);
-            }
-
-            if (event.type == sf::Event::TouchBegan)
-            {
-                Input::HandlePressedEvent(Input::InputType::Touch,event.touch.finger);
-            }
-
-            if (event.type == sf::Event::TouchEnded)
-            {
-                Input::HandleReleasedEvent(Input::InputType::Touch,event.touch.finger);
-            }
-
-
             if (event.type == sf::Event::JoystickConnected ||
 				event.type == sf::Event::JoystickDisconnected ||
 				event.type == sf::Event::JoystickMoved ||
@@ -90,8 +44,9 @@ int main()
 				event.type == sf::Event::MouseWheelMoved)
 					continue;
         }
-        input.HandleInput();
-        window.draw(gameManager.player);
+        gameManager.Update();
+        window.clear();
+        gameManager.Render(window);
         window.display();
     }
     return 0;

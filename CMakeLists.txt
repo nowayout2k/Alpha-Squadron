@@ -16,12 +16,8 @@ find_package(SFML COMPONENTS system window graphics network audio REQUIRED)
 add_executable(Alpha-Squadron main.cpp
         Source/Audio.cpp
         Header/Audio.h
-        Source/Graphics.cpp
-        Header/Graphics.h
         Source/Network.cpp
         Header/Network.h
-        Source/Input.cpp
-        Header/Input.h
         Source/Logger.cpp
         Header/Logger.h
         Source/Utility.cpp
@@ -32,6 +28,10 @@ add_executable(Alpha-Squadron main.cpp
         Header/Player.h
         Source/GameManager.cpp
         Header/GameManager.h
+        Source/Enemy.cpp
+        Header/Enemy.h
+        Source/WindowManager.cpp
+        Header/WindowManager.h
 )
 
 # Link the SFML libraries

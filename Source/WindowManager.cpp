@@ -2,13 +2,13 @@
 // Created by Johnnie Otis on 5/26/24.
 //
 
-#include "../Header/Graphics.h"
+#include "../Header/WindowManager.h"
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
-sf::RenderWindow Graphics::currentWindow;
+sf::RenderWindow WindowManager::currentWindow;
 
-sf::RenderWindow& Graphics::CreateWindow(const sf::VideoMode& mode, const std::string& title, sf::Uint32 style) // NOLINT(*-convert-member-functions-to-static)
+sf::RenderWindow& WindowManager::CreateWindow(const sf::VideoMode& mode, const std::string& title, sf::Uint32 style) // NOLINT(*-convert-member-functions-to-static)
 {
 	currentWindow.create(mode, title, style);
 	currentWindow.setFramerateLimit(60);
