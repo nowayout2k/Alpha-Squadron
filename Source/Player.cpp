@@ -5,6 +5,7 @@
 #include <SFML/Window/Keyboard.hpp>
 #include "../Header/Player.h"
 #include "../Header/Enemy.h"
+#include "../Header/AudioManager.h"
 
 Player::Player(const bool hasCollision) : SpriteEntity(hasCollision,
                                                        "../Assets/Textures/AircraftSpriteSheet.png",
@@ -64,5 +65,9 @@ void Player::collision(const Entity* other)
 	SpriteEntity::collision(other);
     const Enemy* enemy = dynamic_cast<const Enemy*>(other);
     if (enemy)
-        m_sprite->setColor(sf::Color::Red);
+	{
+		m_sprite->setColor(sf::Color::Red);
+		AudioManager::playSound(SoundEffectType::Collect, 10);
+	}
+
 }

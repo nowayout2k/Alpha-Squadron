@@ -7,12 +7,14 @@
 #include "../Header/Enemy.h"
 #include "../Header/Player.h"
 #include "../Header/ScrollingBackground.h"
+#include "../Header/AudioManager.h"
 
 GameManager::GameManager()
 {
     m_entities.push_back(std::make_unique<ScrollingBackground>());
     m_entities.push_back(std::make_unique<Player>(true));
     m_entities.push_back(std::make_unique<Enemy>(true));
+	AudioManager::playMusic(MusicType::Level1, 10);
 }
 
 void GameManager::update(float deltaTime)
