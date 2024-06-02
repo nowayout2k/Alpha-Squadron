@@ -17,7 +17,6 @@ public:
         m_texture.loadFromFile("../Assets/Textures/Player.png");
         SetTexture(m_texture);
         SetScale(sf::Vector2f(.1,.1));
-
     }
 
 private:

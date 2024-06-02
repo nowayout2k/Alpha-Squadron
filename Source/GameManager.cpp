@@ -11,156 +11,156 @@ GameManager::GameManager()
     std::unique_ptr<sf::Drawable> entity;
     entity = std::make_unique<Player>();
 }
+void GameManager::WPressed(std::vector<Input::InputEventInfo> otherKeys)
+{
+    sf::Vector2f offset(0, -10);
+    for (Input::InputEventInfo info : otherKeys)
+    {
+        if(info.InputValue == sf::Keyboard::Key::Up)
+        {
+            offset = sf::Vector2f(0, 0);
+            break;
+        }
+        if(info.InputValue == sf::Keyboard::Key::Left || info.InputValue == sf::Keyboard::Key::Right ||
+           info.InputValue == sf::Keyboard::Key::A || info.InputValue == sf::Keyboard::Key::D)
+        {
+            offset = sf::Vector2f(0, -5);
+        }
+
+    }
+
+    player.MovePosition(offset);
+}
+
+void GameManager::SPressed(std::vector<Input::InputEventInfo> otherKeys)
+{
+    sf::Vector2f offset(0, 10);
+    for (Input::InputEventInfo info : otherKeys)
+    {
+        if(info.InputValue == sf::Keyboard::Key::Down)
+        {
+            offset = sf::Vector2f(0, 0);
+            break;
+        }
+        if(info.InputValue == sf::Keyboard::Key::Left || info.InputValue == sf::Keyboard::Key::Right ||
+           info.InputValue == sf::Keyboard::Key::A || info.InputValue == sf::Keyboard::Key::D)
+        {
+            offset = sf::Vector2f(0, 5);
+        }
+
+    }
+
+    player.MovePosition(offset);
+};
+void GameManager::APressed(std::vector<Input::InputEventInfo> otherKeys)
+{
+    sf::Vector2f offset(-10, 0);
+    for (Input::InputEventInfo info : otherKeys)
+    {
+        if(info.InputValue == sf::Keyboard::Key::Left)
+        {
+            offset = sf::Vector2f(0, 0);
+            break;
+        }
+        if(info.InputValue == sf::Keyboard::Key::Up || info.InputValue == sf::Keyboard::Key::Down ||
+           info.InputValue == sf::Keyboard::Key::W || info.InputValue == sf::Keyboard::Key::S)
+        {
+            offset = sf::Vector2f(-5, 0);
+        }
+
+    }
+
+    player.MovePosition(offset);
+}
+void GameManager::DPressed(std::vector<Input::InputEventInfo> otherKeys)
+{
+    sf::Vector2f offset(10, 0);
+    for (Input::InputEventInfo info : otherKeys)
+    {
+        if(info.InputValue == sf::Keyboard::Key::Right)
+        {
+            offset = sf::Vector2f(0, 0);
+            break;
+        }
+        if(info.InputValue == sf::Keyboard::Key::Up || info.InputValue == sf::Keyboard::Key::Down ||
+           info.InputValue == sf::Keyboard::Key::W || info.InputValue == sf::Keyboard::Key::S)
+        {
+            offset = sf::Vector2f(5, 0);
+        }
+
+    }
+
+    player.MovePosition(offset);
+}
+void GameManager::UpPressed(std::vector<Input::InputEventInfo> otherKeys)
+{
+    sf::Vector2f offset(0, -10);
+    for (Input::InputEventInfo info : otherKeys)
+    {
+        if(info.InputValue == sf::Keyboard::Key::Left || info.InputValue == sf::Keyboard::Key::Right ||
+           info.InputValue == sf::Keyboard::Key::A || info.InputValue == sf::Keyboard::Key::D)
+        {
+            offset = sf::Vector2f(0, -5);
+        }
+
+    }
+
+    player.MovePosition(offset);
+}
+void GameManager::DownPressed(std::vector<Input::InputEventInfo> otherKeys)
+{
+    sf::Vector2f offset(0, 10);
+    for (Input::InputEventInfo info : otherKeys)
+    {
+        if(info.InputValue == sf::Keyboard::Key::Left || info.InputValue == sf::Keyboard::Key::Right ||
+           info.InputValue == sf::Keyboard::Key::A || info.InputValue == sf::Keyboard::Key::D)
+        {
+            offset = sf::Vector2f(0, 5);
+        }
+
+    }
+
+    player.MovePosition(offset);
+}
+void GameManager::LeftPressed(std::vector<Input::InputEventInfo> otherKeys)
+{
+    sf::Vector2f offset(-10, 0);
+    for (Input::InputEventInfo info : otherKeys)
+    {
+        if(info.InputValue == sf::Keyboard::Key::Up || info.InputValue == sf::Keyboard::Key::Down ||
+           info.InputValue == sf::Keyboard::Key::W || info.InputValue == sf::Keyboard::Key::S)
+        {
+            offset = sf::Vector2f(-5, 0);
+        }
+
+    }
+
+    player.MovePosition(offset);
+}
+void GameManager::RightPressed(std::vector<Input::InputEventInfo> otherKeys)
+{
+    sf::Vector2f offset(10, 0);
+    for (Input::InputEventInfo info : otherKeys)
+    {
+        if(info.InputValue == sf::Keyboard::Key::Up || info.InputValue == sf::Keyboard::Key::Down ||
+           info.InputValue == sf::Keyboard::Key::W || info.InputValue == sf::Keyboard::Key::S)
+        {
+            offset = sf::Vector2f(5, 0);
+        }
+    }
+
+    player.MovePosition(offset);
+}
 
 void GameManager::SetUpInput()
 {
-    //Setup Input
-    Input::SubscribeKey(sf::Keyboard::Key::W,
-                        [this](std::vector<sf::Keyboard::Key> otherKeys)
-                        {
-                            sf::Vector2f offset(0, -10);
-                            for (sf::Keyboard::Key key : otherKeys)
-                            {
-                                if(key == sf::Keyboard::Key::Up)
-                                {
-                                    offset = sf::Vector2f(0, 0);
-                                    break;
-                                }
-                                if(key == sf::Keyboard::Key::Left || key == sf::Keyboard::Key::Right ||
-                                    key == sf::Keyboard::Key::A || key == sf::Keyboard::Key::D)
-                                {
-                                    offset = sf::Vector2f(0, -5);
-                                }
+    Input::SubscribeKey(sf::Keyboard::Key::W, std::bind(&GameManager::WPressed, this, std::placeholders::_1));
+    Input::SubscribeKey(sf::Keyboard::Key::S,std::bind(&GameManager::SPressed, this, std::placeholders::_1));
+    Input::SubscribeKey(sf::Keyboard::Key::A,std::bind(&GameManager::APressed, this, std::placeholders::_1));
+    Input::SubscribeKey(sf::Keyboard::Key::D, std::bind(&GameManager::DPressed, this, std::placeholders::_1));
 
-                            }
-
-                            player.MovePosition(offset);
-                        });
-    Input::SubscribeKey(sf::Keyboard::Key::S,
-                        [this](std::vector<sf::Keyboard::Key> otherKeys)
-                        {
-                            sf::Vector2f offset(0, 10);
-                            for (sf::Keyboard::Key key : otherKeys)
-                            {
-                                if(key == sf::Keyboard::Key::Down)
-                                {
-                                    offset = sf::Vector2f(0, 0);
-                                    break;
-                                }
-                                if(key == sf::Keyboard::Key::Left || key == sf::Keyboard::Key::Right ||
-                                        key == sf::Keyboard::Key::A || key == sf::Keyboard::Key::D)
-                                {
-                                    offset = sf::Vector2f(0, 5);
-                                }
-
-                            }
-
-                            player.MovePosition(offset);
-                        });
-    Input::SubscribeKey(sf::Keyboard::Key::A,
-                        [this](std::vector<sf::Keyboard::Key> otherKeys)
-                        {
-                            sf::Vector2f offset(-10, 0);
-                            for (sf::Keyboard::Key key : otherKeys)
-                            {
-                                if(key == sf::Keyboard::Key::Left)
-                                {
-                                    offset = sf::Vector2f(0, 0);
-                                    break;
-                                }
-                                if(key == sf::Keyboard::Key::Up || key == sf::Keyboard::Key::Down ||
-                                   key == sf::Keyboard::Key::W || key == sf::Keyboard::Key::S)
-                                {
-                                    offset = sf::Vector2f(-5, 0);
-                                }
-
-                            }
-
-                            player.MovePosition(offset);
-                        });
-    Input::SubscribeKey(sf::Keyboard::Key::D,
-                        [this](std::vector<sf::Keyboard::Key> otherKeys)
-                        {
-                            sf::Vector2f offset(10, 0);
-                            for (sf::Keyboard::Key key : otherKeys)
-                            {
-                                if(key == sf::Keyboard::Key::Right)
-                                {
-                                    offset = sf::Vector2f(0, 0);
-                                    break;
-                                }
-                                if(key == sf::Keyboard::Key::Up || key == sf::Keyboard::Key::Down ||
-                                   key == sf::Keyboard::Key::W || key == sf::Keyboard::Key::S)
-                                {
-                                    offset = sf::Vector2f(5, 0);
-                                }
-
-                            }
-
-                            player.MovePosition(offset);
-                        });
-
-    Input::SubscribeKey(sf::Keyboard::Key::Up,
-                        [this](std::vector<sf::Keyboard::Key> otherKeys)
-                        {
-                            sf::Vector2f offset(0, -10);
-                            for (sf::Keyboard::Key key : otherKeys)
-                            {
-                                if(key == sf::Keyboard::Key::Left || key == sf::Keyboard::Key::Right ||
-                                   key == sf::Keyboard::Key::A || key == sf::Keyboard::Key::D)
-                                {
-                                    offset = sf::Vector2f(0, -5);
-                                }
-
-                            }
-
-                            player.MovePosition(offset);
-                        });
-    Input::SubscribeKey(sf::Keyboard::Key::Down,
-                        [this](std::vector<sf::Keyboard::Key> otherKeys)
-                        {
-                            sf::Vector2f offset(0, 10);
-                            for (sf::Keyboard::Key key : otherKeys)
-                            {
-                                if(key == sf::Keyboard::Key::Left || key == sf::Keyboard::Key::Right ||
-                                   key == sf::Keyboard::Key::A || key == sf::Keyboard::Key::D)
-                                {
-                                    offset = sf::Vector2f(0, 5);
-                                }
-
-                            }
-
-                            player.MovePosition(offset);
-                        });
-    Input::SubscribeKey(sf::Keyboard::Key::Left,
-                        [this](std::vector<sf::Keyboard::Key> otherKeys)
-                        {
-                            sf::Vector2f offset(-10, 0);
-                            for (sf::Keyboard::Key key : otherKeys)
-                            {
-                                if(key == sf::Keyboard::Key::Up || key == sf::Keyboard::Key::Down ||
-                                   key == sf::Keyboard::Key::W || key == sf::Keyboard::Key::S)
-                                {
-                                    offset = sf::Vector2f(-5, 0);
-                                }
-
-                            }
-
-                            player.MovePosition(offset);
-                        });
-    Input::SubscribeKey(sf::Keyboard::Key::Right,
-                        [this](std::vector<sf::Keyboard::Key> otherKeys)
-                        {
-                            sf::Vector2f offset(10, 0);
-                            for (sf::Keyboard::Key key : otherKeys)
-                            {
-                                if(key == sf::Keyboard::Key::Up || key == sf::Keyboard::Key::Down ||
-                                   key == sf::Keyboard::Key::W || key == sf::Keyboard::Key::S)
-                                {
-                                    offset = sf::Vector2f(5, 0);
-                                }
-                            }
-
-                            player.MovePosition(offset);
-                        });
+    Input::SubscribeKey(sf::Keyboard::Key::Up,std::bind(&GameManager::UpPressed, this, std::placeholders::_1));
+    Input::SubscribeKey(sf::Keyboard::Key::Down,std::bind(&GameManager::DownPressed, this, std::placeholders::_1));
+    Input::SubscribeKey(sf::Keyboard::Key::Left,std::bind(&GameManager::LeftPressed, this, std::placeholders::_1));
+    Input::SubscribeKey(sf::Keyboard::Key::Right,std::bind(&GameManager::RightPressed, this, std::placeholders::_1));
 }

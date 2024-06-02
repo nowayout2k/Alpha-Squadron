@@ -11,22 +11,36 @@
 
 class Input
 {
+
     public:
-        using KeyInputDelegate = std::function<void(std::vector<sf::Keyboard::Key>& otherKeysPressed)>;
-        using MouseInputDelegate = std::function<void(const sf::Vector2i&, std::vector<sf::Mouse::Button>& otherButtonsPressed)>;
-        using TouchInputDelegate = std::function<void(const sf::Vector2i&, std::vector<int>& fingerIndices)>;
-        using JoystickInputDelegate = std::function<void(const sf::Vector2f&, std::vector<int>& otherButtonsPressed)>;
+        enum InputType
+        {
+            Unknown = -1,
+            Keyboard = 0,
+            Mouse = 1,
+            Joystick = 2,
+            Touch = 3,
+            Sensor = 4
+        };
+
+        struct InputEventInfo
+        {
+            InputEventInfo(int inputValue, bool isHeldDown, bool isValid)
+                    : InputValue(inputValue), IsHeldDown(isHeldDown), IsValid(isValid){};
+            int InputValue;
+            bool IsHeldDown;
+            bool IsValid;
+        };
+
+        using KeyInputDelegate = std::function<void(std::vector<Input::InputEventInfo>& otherKeysPressed)>;
+        using MouseInputDelegate = std::function<void(const sf::Vector2i&, std::vector<Input::InputEventInfo>& otherButtonsPressed)>;
+        using TouchInputDelegate = std::function<void(const sf::Vector2i&, std::vector<Input::InputEventInfo>& fingerIndices)>;
+        using JoystickInputDelegate = std::function<void(const sf::Vector2f&, std::vector<Input::InputEventInfo>& otherButtonsPressed)>;
         using SensorInputDelegate = std::function<void(const sf::Vector3f&)>;
 
         Input(bool isKeyboardEnabled, bool isMouseEnabled, bool isJoystickEnabled, bool isTouchEnabled, bool isSensorEnabled);
 
         void HandleInput();
-
-        //input Event Handlers
-        void HandleMouseButtonPressedEvent();
-        void HandleKeyPressedEvent();
-        void HandleTouchEvent();
-        void HandleJoystickEvent();
 
         //Subscribe
         static void SubscribeKey(sf::Keyboard::Key key, const KeyInputDelegate& delegate);
@@ -44,16 +58,8 @@ class Input
 
         static void ClearAllDelegates();
 
-        static void HandleMouseButtonPressedEvent(sf::Mouse::Button button);
-        static void HandleKeyPressedEvent(sf::Keyboard::Key key);
-        static void HandleTouchStartEvent(int fingerIndex);
-        static void HandleJoystickPressedEvent(int button);
-
-        static void HandleMouseButtonReleasedEvent(sf::Mouse::Button button);
-        static void HandleKeyReleasedEvent(sf::Keyboard::Key key);
-        static void HandleTouchEndEvent(int fingerIndex);
-        static void HandleJoystickReleasedEvent(int button);
-
+        static void HandlePressedEvent(Input::InputType type, int inputValue);
+        static void HandleReleasedEvent(Input::InputType type, int inputValue);
     private:
         struct KeyInputData
         {
@@ -95,16 +101,6 @@ class Input
             SensorInputData(sf::Sensor::Type s, const SensorInputDelegate &d) : sensor(s), delegate(d) {}
         };
 
-        enum InputType
-        {
-            Unknown = -1,
-            Keyboard = 0,
-            Mouse = 1,
-            Joystick = 2,
-            Touch = 3,
-            Sensor = 4
-        };
-
         std::string to_string(InputType e)
         {
             switch (e)
@@ -125,9 +121,11 @@ class Input
         }
 
         static void ClearIdCaches();
+        static void CheckAllInputValidity();
+        static void CheckInputValidity(std::vector<Input::InputEventInfo>* inputThisFrame);
 
-        template<typename T> static std::string GenerateID(InputType inputType, const T& input);
-        template<typename T> static std::string GetHash(InputType inputType, const T &input);
+        static std::string GenerateID(InputType inputType, const int& input);
+        static std::string GetHash(InputType inputType, const int& input);
 
         static std::unordered_map<std::string, KeyInputData> keyDelegates;
         static std::unordered_map<std::string, JoystickInputData> joystickDelegates;
@@ -135,15 +133,15 @@ class Input
         static std::unordered_map<std::string, TouchInputData> touchDelegates;
         static std::unordered_map<std::string, SensorInputData> sensorDelegates;
 
-        static std::unordered_map<sf::Keyboard::Key, std::string> keyboardIdCache;
+        static std::unordered_map<int, std::string> keyboardIdCache;
         static std::unordered_map<int, std::string> joystickIdCache;
-        static std::unordered_map<sf::Mouse::Button, std::string> mouseIdCache;
+        static std::unordered_map<int, std::string> mouseIdCache;
         static std::unordered_map<int, std::string> touchIdCache;
 
-        static std::vector<sf::Keyboard::Key> pressedKeysThisFrame;
-        static std::vector<int> pressedJoystickButtonsThisFrame;
-        static std::vector<sf::Mouse::Button> pressedMouseButtonsThisFrame;
-        static std::vector<int> fingerIndicesThisFrame;
+        static std::vector<InputEventInfo> pressedKeysThisFrame;
+        static std::vector<InputEventInfo> pressedJoystickButtonsThisFrame;
+        static std::vector<InputEventInfo> pressedMouseButtonsThisFrame;
+        static std::vector<InputEventInfo> fingerIndicesThisFrame;
 
         static bool keyboardEnabled;
         static bool mouseEnabled;

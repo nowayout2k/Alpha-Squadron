@@ -6,6 +6,7 @@
 #include "Header/Entity.h"
 #include "Header/Player.h"
 #include "Header/GameManager.h"
+#include "Header/Utility.h"
 
 int main()
 {
@@ -16,6 +17,8 @@ int main()
 
     while (window.isOpen())
     {
+        window.clear();
+
 		sf::Event event;
         while (window.pollEvent(event))
         {
@@ -24,56 +27,55 @@ int main()
 
 			if (event.type == sf::Event::Resized)
 			{
-				SfmlCoreUtility::Logger::Log(SfmlCoreUtility::LogType::Verbose,"Window resized to " + std::to_string(event.size.width) + "x" + std::to_string(event.size.height));
+				Logger::Log(LogType::Verbose,"Window resized to " + std::to_string(event.size.width) + "x" + std::to_string(event.size.height));
 			}
 
 			if (event.type == sf::Event::LostFocus)
 			{
-				SfmlCoreUtility::Logger::Log(SfmlCoreUtility::LogType::Verbose,"Window lost focus");
+				Logger::Log(LogType::Verbose,"Window lost focus");
 			}
 
 			if (event.type == sf::Event::GainedFocus)
 			{
-				SfmlCoreUtility::Logger::Log(SfmlCoreUtility::LogType::Verbose,"Window gained focus");
+				Logger::Log(LogType::Verbose,"Window gained focus");
 			}
 
             if(event.type == sf::Event::MouseButtonPressed)
             {
-                Input::HandleMouseButtonPressedEvent(event.mouseButton.button);
+                Input::HandlePressedEvent(Input::InputType::Mouse, event.mouseButton.button);
             }
 
             if(event.type == sf::Event::MouseButtonReleased)
             {
-                Input::HandleMouseButtonReleasedEvent(event.mouseButton.button);
+                Input::HandleReleasedEvent(Input::InputType::Mouse,event.mouseButton.button);
             }
 
             if (event.type == sf::Event::JoystickButtonPressed)
             {
-                Input::HandleJoystickPressedEvent(event.joystickButton.button);
+                Input::HandlePressedEvent(Input::InputType::Joystick,event.joystickButton.button);
             }
             if (event.type == sf::Event::JoystickButtonReleased)
             {
-                Input::HandleJoystickReleasedEvent(event.joystickButton.button);
+                Input::HandleReleasedEvent(Input::InputType::Joystick,event.joystickButton.button);
             }
 
             if (event.type == sf::Event::KeyPressed)
             {
-                Input::HandleKeyPressedEvent(event.key.code);
+                Input::HandlePressedEvent(Input::InputType::Keyboard,event.key.code);
             }
             if (event.type == sf::Event::KeyReleased)
             {
-                Input::HandleKeyReleasedEvent(event.key.code);
+                Input::HandleReleasedEvent(Input::InputType::Keyboard,event.key.code);
             }
-
 
             if (event.type == sf::Event::TouchBegan)
             {
-                Input::HandleTouchStartEvent(event.touch.finger);
+                Input::HandlePressedEvent(Input::InputType::Touch,event.touch.finger);
             }
 
             if (event.type == sf::Event::TouchEnded)
             {
-                Input::HandleTouchEndEvent(event.touch.finger);
+                Input::HandleReleasedEvent(Input::InputType::Touch,event.touch.finger);
             }
 
 
@@ -88,8 +90,6 @@ int main()
 				event.type == sf::Event::MouseWheelMoved)
 					continue;
         }
-
-        window.clear();
         input.HandleInput();
         window.draw(gameManager.player);
         window.display();

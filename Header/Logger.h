@@ -6,13 +6,10 @@
 #define SFML_CORE_HEADER_LOGGER_H_
 #include "LogType.h"
 
-namespace SfmlCoreUtility
+class Logger
 {
-	class Logger
-	{
-	 public:
-		static void Log(LogType logType, const std::string& message);
-	};
-}
+public:
+    static void Log(LogType logType, const std::string& message);
+};
 
 #endif //SFML_CORE_HEADER_LOGGER_H_
