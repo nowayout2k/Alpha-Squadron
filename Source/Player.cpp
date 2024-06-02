@@ -1,61 +1,66 @@
 //
-// Created by Johnnie Otis on 5/30/24.
+// Created by Johnnie Otis on 6/2/24.
 //
 
 #include <SFML/Window/Keyboard.hpp>
 #include "../Header/Player.h"
 #include "../Header/Enemy.h"
-#include "../Header/WindowManager.h"
 
-Player::Player()
+Player::Player(const std::string& pathToTexture, const bool hasCollision) : SpriteEntity(pathToTexture, hasCollision)
 {
-    m_texture.loadFromFile("../Assets/Textures/Player.png");
-    SetTexture(m_texture);
-    SetScale(sf::Vector2f(.1,.1));
+    setScale(0.1f, 0.1f);
+    sf::Vector2u windowSize = WindowManager::GetSize();
+    setPosition(windowSize.x / 2.f, windowSize.y / 2.f);
 }
 
-void Player::Update()
+void Player::Update(float deltaTime)
 {
-    sf::Vector2f offset(0, 0);
+    sf::Vector2f offset = HandleInput();
+    AdjustOffsetToWindow(offset);
+    move(offset);
+}
 
-    bool moveUp = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up);
-    bool moveDown = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down);
-    bool moveLeft = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left);
-    bool moveRight = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right);
+sf::Vector2f Player::HandleInput()
+{
+    sf::Vector2f offset(0.f, 0.f);
 
-    if (moveUp) offset.y -= 10;
-    if (moveDown) offset.y += 10;
-    if (moveLeft) offset.x -= 10;
-    if (moveRight) offset.x += 10;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+        offset.y -= 10.f;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+        offset.y += 10.f;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+        offset.x -= 10.f;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+        offset.x += 10.f;
 
-    if ((moveUp || moveDown) && (moveLeft || moveRight))
+    if (offset.x != 0.f && offset.y != 0.f)
     {
-        offset.x /= std::sqrt(2);
-        offset.y /= std::sqrt(2);
+        offset.x /= std::sqrt(2.f);
+        offset.y /= std::sqrt(2.f);
     }
 
-    /*sf::Vector2u windowSize = WindowManager::GetSize();
-    sf::FloatRect windowBounds(0, 0, static_cast<float>(windowSize.x), static_cast<float>(windowSize.y));
+    return offset;
+}
 
-    auto playerBounds = GetGlobalBounds();
-    if(windowBounds.intersects(playerBounds))
-    {
-        if(windowBounds.left > playerBounds.left)
-            offset.x = playerBounds.left + windowBounds.left;
-        if(windowBounds.left + windowBounds.width < playerBounds.left + playerBounds.width)
-            offset.x = (playerBounds.left + playerBounds.width) - (windowBounds.left + windowBounds.width);
-        if(windowBounds.top < playerBounds.top)
-            offset.y = playerBounds.top + windowBounds.top;
-        if(windowBounds.top + windowBounds.height > playerBounds.top + playerBounds.height)
-            offset.y = (playerBounds.top + playerBounds.height) + (windowBounds.top + windowBounds.height);
-    }*/
+void Player::AdjustOffsetToWindow(sf::Vector2f& offset)
+{
+    sf::Vector2u windowSize = WindowManager::GetSize();
+    sf::FloatRect windowBounds(0.f, 0.f, static_cast<float>(windowSize.x), static_cast<float>(windowSize.y));
 
-    MovePosition(offset);
+    sf::FloatRect playerBounds = GetGlobalBounds();
+    playerBounds.left += offset.x;
+    playerBounds.top += offset.y;
+
+    if (playerBounds.left < windowBounds.left || playerBounds.left + playerBounds.width > windowBounds.width)
+        offset.x = 0.f;
+    if (playerBounds.top < windowBounds.top || playerBounds.top + playerBounds.height > windowBounds.height)
+        offset.y = 0.f;
 }
 
 void Player::Collision(const Entity* other)
 {
+    SpriteEntity::Collision(other);
     const Enemy* enemy = dynamic_cast<const Enemy*>(other);
     if (enemy)
-        m_sprite.setColor(sf::Color::Red);
+        m_sprite->setColor(sf::Color::Red);
 }

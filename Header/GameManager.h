@@ -7,13 +7,13 @@
 
 
 #include <SFML/Graphics/RenderWindow.hpp>
-#include "Player.h"
+#include "SpriteEntity.h"
 
 class GameManager
 {
 public:
     GameManager();
-    void Update();
+    void Update(float deltaTime);
     void Render(sf::RenderWindow& window);
 
 private:

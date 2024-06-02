@@ -5,22 +5,21 @@
 #include "../Header/Enemy.h"
 #include "../Header/Player.h"
 
-Enemy::Enemy()
+Enemy::Enemy(std::string pathToTexture, bool hasCollision) : SpriteEntity(pathToTexture, hasCollision)
 {
-    m_texture.loadFromFile("../Assets/Textures/Player.png");
-    SetTexture(m_texture);
-    SetScale(sf::Vector2f(.1,.1));
-    SetPosition(sf::Vector2f(100, 100));
+    setScale(sf::Vector2f(.1,.1));
+    setPosition(sf::Vector2f(100, 100));
 }
 
-void Enemy::Update()
+void Enemy::Update(float deltaTime)
 {
 
 }
 
 void Enemy::Collision(const Entity* other)
 {
+    SpriteEntity::Collision(other);
     const Player* player = dynamic_cast<const Player*>(other);
     if (player)
-        m_sprite.setColor(sf::Color::Red);
+        m_sprite->setColor(sf::Color::Red);
 }

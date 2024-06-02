@@ -7,12 +7,13 @@
 
 
 #include "Entity.h"
+#include "SpriteEntity.h"
 
-class Enemy : public Entity
+class Enemy : public SpriteEntity
 {
 public:
-    Enemy();
-    void Update() override;
+    Enemy(std::string pathToTexture, bool hasCollision);
+    void Update(float deltaTime) override;
     void Collision(const Entity* other) override;
 
 private:

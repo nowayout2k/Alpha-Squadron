@@ -1,22 +1,22 @@
 //
-// Created by Johnnie Otis on 5/30/24.
+// Created by Johnnie Otis on 6/2/24.
 //
 
 #ifndef ALPHA_SQUADRON_PLAYER_H
 #define ALPHA_SQUADRON_PLAYER_H
 
 
-#include "Entity.h"
+#include "SpriteEntity.h"
 
-class Player : public Entity
+class Player : public SpriteEntity
 {
 public:
-    Player();
-    void Update() override;
+    explicit Player(const std::string& pathToTexture, const bool hasCollision);
+    void Update(float deltaTime) override;
     void Collision(const Entity* other) override;
-
 private:
-    sf::Texture m_texture;
+    sf::Vector2f HandleInput();
+    void AdjustOffsetToWindow(sf::Vector2f& offset);
 };
 
 
