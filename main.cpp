@@ -11,9 +11,9 @@ int main()
     GameManager gameManager;
 
     sf::Clock clock;
+
     while (window.isOpen())
     {
-        clock.restart();
 		sf::Event event;
         while (window.pollEvent(event))
         {
@@ -46,7 +46,7 @@ int main()
 				event.type == sf::Event::MouseWheelMoved)
 					continue;
         }
-		gameManager.update(clock.getElapsedTime().asSeconds());
+		gameManager.update(clock.restart().asSeconds());
         window.clear();
 		gameManager.render(window);
         window.display();

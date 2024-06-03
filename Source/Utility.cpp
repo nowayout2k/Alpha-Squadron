@@ -22,6 +22,12 @@ void Utility::endStopwatch(std::string message)
     Logger::Log(LogType::Test, message + " Stopwatch stopped at: " + std::to_string(elapsed.asSeconds()) + " seconds");
 }
 
+float Utility::lerp(float a, float b, float t)
+{
+	t = std::clamp(t, 0.0f, 1.0f);
+	return a + (b - a) * t;
+}
+
 template<typename T>
 std::string Utility::getHash(const T& obj)
 {

@@ -20,6 +20,7 @@ public:
     static void beginStopwatch(std::string message);
     static void endStopwatch(std::string message);
     template<typename T> static std::string getHash(const T& obj);
+	static float lerp(float a, float b, float t);
 private:
     static sf::Clock m_clock;
 };

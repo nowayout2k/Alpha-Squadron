@@ -6,6 +6,7 @@
 #include "../Header/Player.h"
 #include "../Header/Enemy.h"
 #include "../Header/AudioManager.h"
+#include "../Header/Utility.h"
 
 Player::Player(const bool hasCollision) : SpriteEntity(hasCollision,
                                                        "../Assets/Textures/AircraftSpriteSheet.png",
@@ -21,6 +22,8 @@ void Player::update(float deltaTime)
     sf::Vector2f offset = handleInput();
 	adjustOffsetToWindow(offset);
     move(offset);
+
+	handleAnimation(deltaTime, offset);
 }
 
 sf::Vector2f Player::handleInput()
@@ -60,6 +63,39 @@ void Player::adjustOffsetToWindow(sf::Vector2f& offset)
         offset.y = 0.f;
 }
 
+void Player::startDamageAnimation()
+{
+	m_hasCollision = false;
+	m_timeSinceDamage = 0;
+	m_isBeingDamaged = true;
+}
+
+void Player::handleAnimation(float deltaTime, sf::Vector2f offset)
+{
+	if(m_isBeingDamaged)
+	{
+		m_timeSinceDamage += deltaTime;
+		Logger::Log(Verbose, "Damage Timer = " + std::to_string(m_timeSinceDamage));
+		if(m_timeSinceDamage > DAMAGE_FLASH_TIME)
+		{
+			m_sprite->setColor(sf::Color::White);
+			m_isBeingDamaged = false;
+		}
+		else
+		{
+			//float t = 0.5f * (1.0f + std::sin(phase * 2.0f * M_PI));
+			float phase = fmod(m_timeSinceDamage, 1.0f);
+			float c = Utility::lerp(0, 255, phase);
+			m_sprite->setColor(sf::Color(255,c,c,255));
+		}
+
+		if(m_timeSinceDamage > DAMAGE_INVINCIBILITY_TIME)
+		{
+			m_hasCollision = true;
+		}
+	}
+}
+
 void Player::collision(const Entity* other)
 {
 	SpriteEntity::collision(other);
@@ -68,6 +104,7 @@ void Player::collision(const Entity* other)
 	{
 		m_sprite->setColor(sf::Color::Red);
 		AudioManager::playSound(SoundEffectType::Collect, 10);
+		startDamageAnimation();
 	}
 
 }

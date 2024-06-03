@@ -10,6 +10,7 @@
 #include <SFML/Audio/SoundBuffer.hpp>
 #include "SoundEffectType.h"
 #include "MusicType.h"
+
 static class AudioManager
 {
  public:

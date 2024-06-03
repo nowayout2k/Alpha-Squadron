@@ -17,6 +17,12 @@ public:
 private:
     sf::Vector2f handleInput();
     void adjustOffsetToWindow(sf::Vector2f& offset);
+	void startDamageAnimation();
+	void handleAnimation(float deltaTime, sf::Vector2f offset);
+	const float DAMAGE_FLASH_TIME = 4.0f;
+	const float DAMAGE_INVINCIBILITY_TIME = 1.0f;
+	float m_timeSinceDamage = 0;
+	bool m_isBeingDamaged = false;
 };
 
 

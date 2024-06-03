@@ -51,8 +51,7 @@ protected:
 
     std::shared_ptr<sf::Sprite> m_sprite;
     sf::Texture m_texture;
-private:
-    bool m_hasCollision;
+	bool m_hasCollision;
 };
 
 #endif //ALPHA_SQUADRON_HEADER_SPRITE ENTITY_H_
