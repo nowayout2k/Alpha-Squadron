@@ -10,10 +10,18 @@ Enemy::Enemy(bool hasCollision, sf::Vector2f position) : SpriteEntity(hasCollisi
 {
     setScale(sf::Vector2f(-2,2));
     setPosition(position);
+	m_health = 100;
 }
+
 bool goUp = false;
 void Enemy::update(float deltaTime)
 {
+	if(m_health == 0)
+	{
+		m_isAlive = false;
+		return;
+	}
+
 	Entity::update(deltaTime);
 	auto windowSize = WindowManager::getSize();
 	if(goUp)
@@ -35,5 +43,5 @@ void Enemy::collision(const Entity* other)
 	SpriteEntity::collision(other);
     const Player* player = dynamic_cast<const Player*>(other);
     if (player && player->hasCollision())
-        m_isAlive = false;
+        m_health-=100;
 }

@@ -18,6 +18,7 @@ public:
 
 private:
     sf::Texture m_texture;
+	int m_health;
 };
 
 

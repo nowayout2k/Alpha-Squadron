@@ -19,10 +19,14 @@ private:
     void adjustOffsetToWindow(sf::Vector2f& offset);
 	void startDamageAnimation();
 	void handleAnimation(float deltaTime, sf::Vector2f offset);
+	void updateColor(float deltaTime);
+
 	const float DAMAGE_FLASH_TIME = 4.0f;
-	const float DAMAGE_INVINCIBILITY_TIME = 1.0f;
-	float m_timeSinceDamage = 0;
-	bool m_isBeingDamaged = false;
+	const float DAMAGE_INVINCIBILITY_TIME = .3f;
+
+	float m_timeSinceDamage;
+	bool m_isBeingDamaged;
+	int m_health;
 };
 
 

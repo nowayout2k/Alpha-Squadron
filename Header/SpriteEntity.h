@@ -17,7 +17,7 @@ public:
     virtual void collision(const Entity* other) { if(!m_hasCollision) return; };
     bool isColliding(const sf::Rect<float>& bounds) const { return m_hasCollision && getGlobalBounds().intersects(bounds); }
     sf::Rect<float> getGlobalBounds() const { return getTransform().transformRect(m_sprite->getGlobalBounds()); };
-	bool hasCollision() { return m_hasCollision; }
+	bool hasCollision() const { return m_hasCollision; }
 protected:
     explicit SpriteEntity(const bool hasCollision, const std::string &pathToTexture, const sf::IntRect textureRect = sf::IntRect()) : m_hasCollision(hasCollision)
     {

@@ -15,6 +15,9 @@ Player::Player(const bool hasCollision) : SpriteEntity(hasCollision,
     setScale(1.5f, 1.5f);
     sf::Vector2u windowSize = WindowManager::getSize();
     setPosition(0, windowSize.y / 2.f);
+	m_timeSinceDamage = 0;
+	m_isBeingDamaged = false;
+	m_health = 100;
 }
 
 void Player::update(float deltaTime)
@@ -67,12 +70,16 @@ void Player::adjustOffsetToWindow(sf::Vector2f& offset)
 
 void Player::startDamageAnimation()
 {
-	m_hasCollision = false;
 	m_timeSinceDamage = 0;
 	m_isBeingDamaged = true;
 }
 
 void Player::handleAnimation(float deltaTime, sf::Vector2f offset)
+{
+	updateColor(deltaTime);
+}
+
+void Player::updateColor(float deltaTime)
 {
 	if(m_isBeingDamaged)
 	{
@@ -91,10 +98,7 @@ void Player::handleAnimation(float deltaTime, sf::Vector2f offset)
 			m_sprite->setColor(sf::Color(255,c,c,255));
 		}
 
-		if(m_timeSinceDamage > DAMAGE_INVINCIBILITY_TIME)
-		{
-			m_hasCollision = true;
-		}
+		m_hasCollision = m_timeSinceDamage > DAMAGE_INVINCIBILITY_TIME;
 	}
 }
 
