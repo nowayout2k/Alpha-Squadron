@@ -14,11 +14,13 @@
 class Entity : public sf::Drawable, public sf::Transformable
 {
  public:
-    virtual void update(float deltaTime) = 0;
+    virtual void update(float deltaTime) { if(!m_isAlive) return; };
     virtual void collision(const Entity* other) = 0;
+	bool isAlive() const { return m_isAlive;};
 protected:
-    Entity() = default;
+    Entity(){ m_isAlive = true; };
     sf::Drawable* m_drawable;
+	bool m_isAlive;
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override
     {
         target.draw(*m_drawable, states.transform *= getTransform());

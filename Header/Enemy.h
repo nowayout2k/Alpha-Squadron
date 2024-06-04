@@ -12,7 +12,7 @@
 class Enemy : public SpriteEntity
 {
 public:
-    Enemy(bool hasCollision);
+    Enemy(bool hasCollision, sf::Vector2f position);
     void update(float deltaTime) override;
     void collision(const Entity* other) override;
 

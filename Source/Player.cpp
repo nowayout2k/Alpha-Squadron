@@ -14,12 +14,14 @@ Player::Player(const bool hasCollision) : SpriteEntity(hasCollision,
 {
     setScale(1.5f, 1.5f);
     sf::Vector2u windowSize = WindowManager::getSize();
-    setPosition(windowSize.x / 2.f, windowSize.y / 2.f);
+    setPosition(0, windowSize.y / 2.f);
 }
 
 void Player::update(float deltaTime)
 {
-    sf::Vector2f offset = handleInput();
+	Entity::update(deltaTime);
+
+    sf::Vector2f offset = handleInput() * deltaTime;
 	adjustOffsetToWindow(offset);
     move(offset);
 
@@ -31,13 +33,13 @@ sf::Vector2f Player::handleInput()
     sf::Vector2f offset(0.f, 0.f);
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-        offset.y -= 10.f;
+        offset.y -= 400.f;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-        offset.y += 10.f;
+        offset.y += 400.f;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-        offset.x -= 10.f;
+        offset.x -= 400.f;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-        offset.x += 10.f;
+        offset.x += 400.f;
 
     if (offset.x != 0.f && offset.y != 0.f)
     {
@@ -83,9 +85,9 @@ void Player::handleAnimation(float deltaTime, sf::Vector2f offset)
 		}
 		else
 		{
-			//float t = 0.5f * (1.0f + std::sin(phase * 2.0f * M_PI));
 			float phase = fmod(m_timeSinceDamage, 1.0f);
-			float c = Utility::lerp(0, 255, phase);
+			float t = 0.5f * (1.0f + std::cos(phase * 2.0f * M_PI));
+			float c = Utility::lerp(0, 255, t);
 			m_sprite->setColor(sf::Color(255,c,c,255));
 		}
 
@@ -102,6 +104,11 @@ void Player::collision(const Entity* other)
     const Enemy* enemy = dynamic_cast<const Enemy*>(other);
     if (enemy)
 	{
+		if(m_isBeingDamaged)
+		{
+			m_isAlive = false;
+			return;
+		}
 		m_sprite->setColor(sf::Color::Red);
 		AudioManager::playSound(SoundEffectType::Collect, 10);
 		startDamageAnimation();

@@ -11,18 +11,28 @@
 
 GameManager::GameManager()
 {
+	auto windowSize = WindowManager::getSize();
     m_entities.push_back(std::make_unique<ScrollingBackground>());
     m_entities.push_back(std::make_unique<Player>(true));
-    m_entities.push_back(std::make_unique<Enemy>(true));
+    m_entities.push_back(std::make_unique<Enemy>(true, sf::Vector2f(windowSize.x-200, windowSize.y/2)));
+	m_entities.push_back(std::make_unique<Enemy>(true, sf::Vector2f(windowSize.x-100, windowSize.y/2)));
 	AudioManager::playMusic(MusicType::Level1, 10);
 }
 
 void GameManager::update(float deltaTime)
 {
-    for (const auto& entity : m_entities)
-    {
-		entity->update(deltaTime);
-    }
+	for (auto it = m_entities.begin(); it != m_entities.end(); )
+	{
+		if (!(*it)->isAlive())
+		{
+			it = m_entities.erase(it);
+		}
+		else
+		{
+			(*it)->update(deltaTime);
+			++it;
+		}
+	}
 	handleCollisions();
 }
 
