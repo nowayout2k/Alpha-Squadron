@@ -117,5 +117,4 @@ void Player::collision(const Entity* other)
 		AudioManager::playSound(SoundEffectType::Collect, 10);
 		startDamageAnimation();
 	}
-
 }

@@ -39,7 +39,7 @@ void AudioManager::playMusic(MusicType musicType, float volume)
 	switch (musicType)
 	{
 	case MusicType::Level1:
-		pathToFile = "../Assets/Music/Battle.mp3";
+		pathToFile = "../Assets/Music/U.N. Squadron (SNES)_ Mission 1 - Front line base.mp3";
 		break;
 	default:
 		Logger::Log(Error, "Music Type is unknown!");
