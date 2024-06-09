@@ -10,6 +10,8 @@
 #include "../Header/Bullet.h"
 #include "../Header/GameManager.h"
 
+#define M_PI 3.14159265358979323846
+
 Player::Player() : SpriteEntity(true, "../Assets/Textures/AircraftSpriteSheet.png", sf::IntRect(240, 298, 52, 12))
 {
     setScale(1.5f, 1.5f);

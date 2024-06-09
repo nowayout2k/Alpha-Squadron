@@ -7,7 +7,7 @@
 
 int main()
 {
-	sf::RenderWindow& window = WindowManager::createWindow(sf::VideoMode(800, 600), "Alpha Squadron", sf::Style::Close);
+	sf::RenderWindow& window = WindowManager::createWindow(sf::VideoMode(800, 600), "Alpha Squadron", sf::Style::None);
     GameManager gameManager;
 
     sf::Clock clock;
@@ -34,6 +34,8 @@ int main()
 			{
 				Logger::Log(LogType::Verbose,"Window gained focus");
 			}
+			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Key::Escape)
+				return 0;
 
             if (event.type == sf::Event::JoystickConnected ||
 				event.type == sf::Event::JoystickDisconnected ||
