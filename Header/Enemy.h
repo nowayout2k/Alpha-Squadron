@@ -5,9 +5,8 @@
 #ifndef ALPHA_SQUADRON_HEADER_ENEMY_H_
 #define ALPHA_SQUADRON_HEADER_ENEMY_H_
 
-
-#include "Entity.h"
 #include "SpriteEntity.h"
+#include "Entity.h"
 
 class Enemy : public SpriteEntity
 {

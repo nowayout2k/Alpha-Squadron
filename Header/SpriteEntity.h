@@ -6,11 +6,12 @@
 #define ALPHA_SQUADRON_HEADER_SPRITE_ENTITY_H_
 
 
-#include "Entity.h"
 #include "WindowManager.h"
 #include "Logger.h"
+#include "Entity.h"
+#include "DrawableEntity.h"
 
-class SpriteEntity : public Entity
+class SpriteEntity : public DrawableEntity
 {
 public:
     virtual void update(float deltaTime) = 0;
@@ -19,38 +20,35 @@ public:
     sf::Rect<float> getGlobalBounds() const { return getTransform().transformRect(m_sprite->getGlobalBounds()); };
 	bool hasCollision() const { return m_hasCollision; }
 protected:
-    explicit SpriteEntity(const bool hasCollision, const std::string &pathToTexture, const sf::IntRect textureRect = sf::IntRect()) : m_hasCollision(hasCollision)
+    explicit SpriteEntity(const bool hasCollision, const std::string& pathToTexture, const sf::IntRect textureRect = sf::IntRect()) : m_hasCollision(hasCollision)
     {
-        if(textureRect == sf::IntRect())
-        {
-            if (!m_texture.loadFromFile(pathToTexture))
-            {
-                Logger::Log(LogType::Error, "Texture not found at: " + pathToTexture);
-                return;
-            }
-        }
-        else
-        {
-            if (!m_texture.loadFromFile(pathToTexture, textureRect))
-            {
-                Logger::Log(LogType::Error, "Texture not found at: " + pathToTexture);
-                return;
-            }
-        }
+		loadTexture(pathToTexture, textureRect);
         m_sprite = std::make_unique<sf::Sprite>(m_texture);
-        m_drawable = m_sprite.get();
+		addDrawable(m_sprite.get(), true);
     }
 
-    void loadTexture(const std::string &pathToTexture, const sf::IntRect textureRect)
+    bool loadTexture(const std::string &pathToTexture, const sf::IntRect textureRect = sf::IntRect())
     {
-        if (!m_texture.loadFromFile(pathToTexture, textureRect))
-        {
-            Logger::Log(LogType::Error, "Texture not found at: " + pathToTexture);
-            return;
-        }
+		if(textureRect == sf::IntRect())
+		{
+			if (!m_texture.loadFromFile(pathToTexture))
+			{
+				Logger::Log(LogType::Error, "Texture not found at: " + pathToTexture);
+				return false;
+			}
+		}
+		else
+		{
+			if (!m_texture.loadFromFile(pathToTexture, textureRect))
+			{
+				Logger::Log(LogType::Error, "Texture not found at: " + pathToTexture);
+				return false;
+			}
+		}
+		return true;
     }
 
-    std::shared_ptr<sf::Sprite> m_sprite;
+    std::unique_ptr<sf::Sprite> m_sprite;
     sf::Texture m_texture;
 	bool m_hasCollision;
 };

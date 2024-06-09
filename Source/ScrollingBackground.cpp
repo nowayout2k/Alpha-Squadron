@@ -4,17 +4,58 @@
 
 #include "../Header/ScrollingBackground.h"
 
-ScrollingBackground::ScrollingBackground() : SpriteEntity(false, "../Assets/Textures/Background.jpg")
+ScrollingBackground::ScrollingBackground(std::vector<std::string>&& backgroundTexturePaths)
 {
+	m_backgroundPaths = std::move(backgroundTexturePaths);
+	m_currentBackgroundIndex = 0;
 	m_windowSize = WindowManager::getSize();
-	m_textureSize = m_texture.getSize();
-    setScale((m_windowSize.x/m_textureSize.x)*2, m_windowSize.y/m_textureSize.y);
-    setPosition(0, 0);
+
+	m_spriteA = std::make_unique<sf::Sprite>();
+	m_spriteB = std::make_unique<sf::Sprite>();
+
+	addDrawable(m_spriteA.get(), false);
+	addDrawable(m_spriteB.get(), false);
+
+	loadNextTextures();
+
+	m_spriteA->setScale(m_windowSize.x/m_textureA.getSize().x, m_windowSize.y/m_textureA.getSize().y);
+	m_spriteB->setScale(m_windowSize.x/m_textureB.getSize().x, m_windowSize.y/m_textureB.getSize().y);
+
+	m_spriteA->setPosition(0,0);
+	m_spriteB->setPosition(m_textureA.getSize().x * m_spriteA->getScale().x,0);
 }
 
 void ScrollingBackground::update(float deltaTime)
 {
-	move(sf::Vector2f(-100,0) * deltaTime);
-	if(m_textureSize.x * getScale().x + getPosition().x <= m_windowSize.x)
-		setPosition(0,0);
+	m_spriteA->move(sf::Vector2f(-100,0) * deltaTime);
+	m_spriteB->move(sf::Vector2f(-100,0) * deltaTime);
+	if(m_textureA.getSize().x * m_spriteA->getScale().x + m_spriteA->getPosition().x <= 0)
+	{
+		loadNextTextures();
+		m_spriteA->setPosition(0,0);
+		m_spriteB->setPosition(m_textureA.getSize().x * m_spriteA->getScale().x,0);
+	}
+}
+
+bool ScrollingBackground::loadNextTextures()
+{
+
+	if (!m_textureB.loadFromFile(m_backgroundPaths[m_currentBackgroundIndex]))
+	{
+		Logger::Log(LogType::Error, "Texture not found at: " + m_backgroundPaths[m_currentBackgroundIndex]);
+		return false;
+	}
+	m_spriteB->setTexture(m_textureB);
+
+	m_currentBackgroundIndex++;
+	if(m_currentBackgroundIndex >= m_backgroundPaths.size())
+		m_currentBackgroundIndex = 0;
+
+	if (!m_textureA.loadFromFile(m_backgroundPaths[m_currentBackgroundIndex]))
+	{
+		Logger::Log(LogType::Error, "Texture not found at: " + m_backgroundPaths[m_currentBackgroundIndex]);
+		return false;
+	}
+	m_spriteA->setTexture(m_textureA);
+	return true;
 }

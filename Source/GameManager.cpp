@@ -9,11 +9,14 @@
 #include "../Header/ScrollingBackground.h"
 #include "../Header/AudioManager.h"
 
+std::vector<std::unique_ptr<Entity>> GameManager::m_entities;
+std::vector<std::unique_ptr<Entity>> GameManager::m_pendingEntities;
+
 GameManager::GameManager()
 {
 	auto windowSize = WindowManager::getSize();
-    m_entities.push_back(std::make_unique<ScrollingBackground>());
-    m_entities.push_back(std::make_unique<Player>(true));
+	m_entities.push_back(std::make_unique<ScrollingBackground>(std::vector<std::string>{"../Assets/Textures/Background.jpg", "../Assets/Textures/Background.jpg"}));
+    m_entities.push_back(std::make_unique<Player>());
     m_entities.push_back(std::make_unique<Enemy>(true, sf::Vector2f(windowSize.x-200, windowSize.y/2)));
 	m_entities.push_back(std::make_unique<Enemy>(true, sf::Vector2f(windowSize.x-100, windowSize.y/2)));
 	AudioManager::playMusic(MusicType::Level1, 10);
@@ -21,9 +24,15 @@ GameManager::GameManager()
 
 void GameManager::update(float deltaTime)
 {
+	for (auto& entity : m_pendingEntities)
+	{
+		m_entities.push_back(std::move(entity));
+	}
+	m_pendingEntities.clear();
+
 	for (auto it = m_entities.begin(); it != m_entities.end(); )
 	{
-		if (!(*it)->isAlive())
+		if ((*it)->isDestroyPending())
 		{
 			it = m_entities.erase(it);
 		}
@@ -40,7 +49,9 @@ void GameManager::render(sf::RenderWindow &window)
 {
     for (const auto& entity : m_entities)
     {
-        window.draw(*entity);
+		auto drawableEntity = dynamic_cast<sf::Drawable*>(entity.get());
+		if(drawableEntity)
+			window.draw(*drawableEntity);
     }
 }
 
@@ -55,9 +66,9 @@ void GameManager::handleCollisions()
 
             auto spriteEntity = dynamic_cast<SpriteEntity*>(entity.get());
             auto spriteEntityOther = dynamic_cast<SpriteEntity*>(other.get());
-            if(spriteEntity && spriteEntity->isColliding(spriteEntityOther->getGlobalBounds()))
+            if(spriteEntity && spriteEntityOther && spriteEntity->isColliding(spriteEntityOther->getGlobalBounds()))
             {
-				entity->collision(other.get());
+				spriteEntity->collision(other.get());
             }
         }
     }

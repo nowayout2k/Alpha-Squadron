@@ -7,15 +7,26 @@
 
 
 #include "SpriteEntity.h"
+#include "DrawableEntity.h"
 
-class ScrollingBackground : public SpriteEntity
+class ScrollingBackground : public DrawableEntity
 {
 public:
-    ScrollingBackground();
+    ScrollingBackground(std::vector<std::string>&& backgroundTexturePaths);
     void update(float deltaTime) override;
  private:
+
+	bool loadNextTextures();
+
+	std::vector<std::string> m_backgroundPaths;
+	int m_currentBackgroundIndex;
 	sf::Vector2u m_windowSize;
-	sf::Vector2u m_textureSize;
+
+	sf::Texture m_textureA;
+	sf::Texture m_textureB;
+
+	std::unique_ptr<sf::Sprite> m_spriteA;
+	std::unique_ptr<sf::Sprite> m_spriteB;
 };
 
 

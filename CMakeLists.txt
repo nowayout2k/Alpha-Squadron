@@ -37,6 +37,10 @@ add_executable(Alpha-Squadron main.cpp
         Header/ScrollingBackground.h
         Header/SoundEffectType.h
         Header/MusicType.h
+        Header/DrawableEntity.h
+        Header/DrawableData.h
+        Source/Bullet.cpp
+        Header/Bullet.h
 )
 
 # Link the SFML libraries

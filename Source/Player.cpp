@@ -7,10 +7,10 @@
 #include "../Header/Enemy.h"
 #include "../Header/AudioManager.h"
 #include "../Header/Utility.h"
+#include "../Header/Bullet.h"
+#include "../Header/GameManager.h"
 
-Player::Player(const bool hasCollision) : SpriteEntity(hasCollision,
-                                                       "../Assets/Textures/AircraftSpriteSheet.png",
-                                                       sf::IntRect(240, 298, 52, 12))
+Player::Player() : SpriteEntity(true, "../Assets/Textures/AircraftSpriteSheet.png", sf::IntRect(240, 298, 52, 12))
 {
     setScale(1.5f, 1.5f);
     sf::Vector2u windowSize = WindowManager::getSize();
@@ -18,20 +18,21 @@ Player::Player(const bool hasCollision) : SpriteEntity(hasCollision,
 	m_timeSinceDamage = 0;
 	m_isBeingDamaged = false;
 	m_health = 100;
+	m_fireCooldownRemaining = 0;
 }
 
 void Player::update(float deltaTime)
 {
 	Entity::update(deltaTime);
-
-    sf::Vector2f offset = handleInput() * deltaTime;
-	adjustOffsetToWindow(offset);
+	if(m_fireCooldownRemaining > 0)
+		m_fireCooldownRemaining -= deltaTime;
+    sf::Vector2f offset = handleInput(deltaTime);
     move(offset);
 
 	handleAnimation(deltaTime, offset);
 }
 
-sf::Vector2f Player::handleInput()
+sf::Vector2f Player::handleInput(float deltaTime)
 {
     sf::Vector2f offset(0.f, 0.f);
 
@@ -50,6 +51,13 @@ sf::Vector2f Player::handleInput()
         offset.y /= std::sqrt(2.f);
     }
 
+	offset *= deltaTime;
+
+	adjustOffsetToWindow(offset);
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+		fireBullet(offset);
+
     return offset;
 }
 
@@ -66,6 +74,16 @@ void Player::adjustOffsetToWindow(sf::Vector2f& offset)
         offset.x = 0.f;
     if (playerBounds.top < windowBounds.top || playerBounds.top + playerBounds.height > windowBounds.height)
         offset.y = 0.f;
+}
+
+void Player::fireBullet(sf::Vector2f offset)
+{
+	if(m_fireCooldownRemaining > 0)
+		return;
+
+	auto spawnPos = getPosition() + offset + sf::Vector2f (m_texture.getSize().x, m_texture.getSize().y/2);
+	GameManager::addEntity(std::move(std::make_unique<Bullet>(this, spawnPos)));
+	m_fireCooldownRemaining = FIRE_COOLDOWN_TIME;
 }
 
 void Player::startDamageAnimation()
@@ -110,7 +128,7 @@ void Player::collision(const Entity* other)
 	{
 		if(m_isBeingDamaged)
 		{
-			m_isAlive = false;
+			destroy();
 			return;
 		}
 		m_sprite->setColor(sf::Color::Red);
@@ -118,3 +136,4 @@ void Player::collision(const Entity* other)
 		startDamageAnimation();
 	}
 }
+
