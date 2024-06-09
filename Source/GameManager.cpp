@@ -27,10 +27,11 @@ void GameManager::levelSetup()
 	m_entities.clear();
 	m_pendingEntities.clear();
 	auto windowSize = WindowManager::getSize();
-	addEntity(std::make_unique<ScrollingBackground>(std::vector<std::string>{"../Assets/Textures/Background.jpg", "../Assets/Textures/Background.jpg"}));
+	addEntity(std::make_unique<SpriteEntity>(false, "../Assets/Textures/sky.png"));
+	addEntity(std::make_unique<ScrollingBackground>(std::vector<std::string>{"../Assets/Textures/house1.png", "../Assets/Textures/house1.png", "../Assets/Textures/house1.png"}));
 	addEntity(std::make_unique<Player>());
-	addEntity(std::make_unique<Enemy>(true, sf::Vector2f(windowSize.x-200, windowSize.y/2)));
-	addEntity(std::make_unique<Enemy>(true, sf::Vector2f(windowSize.x-100, windowSize.y/2)));
+	addEntity(std::make_unique<Enemy>(true, sf::Vector2f((float)windowSize.x-500, (float)windowSize.y/2)));
+	addEntity(std::make_unique<Enemy>(true, sf::Vector2f((float)windowSize.x-100, (float)windowSize.y/2)));
 	AudioManager::playMusic(MusicType::Level1, 10);
 }
 
@@ -64,7 +65,7 @@ void GameManager::update(float deltaTime)
 			++it;
 		}
 	}
-	handleCollisions();
+
 	if(!hasPlayer)
 	{
 		restart();
@@ -73,9 +74,11 @@ void GameManager::update(float deltaTime)
 	if (!hasEnemy)
 	{
 		auto windowSize = WindowManager::getSize();
-		addEntity(std::make_unique<Enemy>(true, sf::Vector2f(windowSize.x-200, windowSize.y/2)));
-		addEntity(std::make_unique<Enemy>(true, sf::Vector2f(windowSize.x-100, windowSize.y/2)));
+		addEntity(std::make_unique<Enemy>(true, sf::Vector2f((float)windowSize.x-500, (float)windowSize.y/2)));
+		addEntity(std::make_unique<Enemy>(true, sf::Vector2f((float)windowSize.x-100, (float)windowSize.y/2)));
 	}
+
+	handleCollisions();
 }
 
 void GameManager::render(sf::RenderWindow &window)
@@ -92,14 +95,18 @@ void GameManager::handleCollisions()
 {
     for (const auto& entity : m_entities)
     {
+		if(entity->isDestroyPending())
+			continue;
+
         for (const auto& other : m_entities)
         {
-            if(entity == other)
+            if(other->isDestroyPending() && entity == other)
                 continue;
 
             auto spriteEntity = dynamic_cast<SpriteEntity*>(entity.get());
             auto spriteEntityOther = dynamic_cast<SpriteEntity*>(other.get());
-            if(spriteEntity && spriteEntityOther && spriteEntity->isColliding(spriteEntityOther->getGlobalBounds()))
+            if(spriteEntity && spriteEntity->hasCollision() && spriteEntityOther && spriteEntityOther->hasCollision() &&
+				spriteEntity->isColliding(spriteEntityOther->getGlobalBounds()))
             {
 				spriteEntity->collision(other.get());
             }

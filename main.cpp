@@ -7,7 +7,7 @@
 
 int main()
 {
-	sf::RenderWindow& window = WindowManager::createWindow(sf::VideoMode(800, 600), "Alpha Squadron", sf::Style::None);
+	sf::RenderWindow& window = WindowManager::createWindow(sf::VideoMode(1920, 1080), "Alpha Squadron", sf::Style::None);
     GameManager gameManager;
 
     sf::Clock clock;

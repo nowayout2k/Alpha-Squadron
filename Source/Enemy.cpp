@@ -10,7 +10,7 @@
 Enemy::Enemy(bool hasCollision, sf::Vector2f position) : SpriteEntity(hasCollision, "../Assets/Textures/EnemiesSpriteSheet.png",
                                                sf::IntRect(70, 200, 25, 12))
 {
-    setScale(sf::Vector2f(-2,2));
+    setScale(sf::Vector2f(-4,4));
     setPosition(position);
 	m_health = 100;
 	m_fireCooldownRemaining = 4;
@@ -33,14 +33,14 @@ void Enemy::update(float deltaTime)
 	{
 		if(getPosition().y <= 0)
 			goUp = false;
-		offset = sf::Vector2f(0, -100);
+		offset = sf::Vector2f(0, -500);
 
 	}
 	else
 	{
 		if(getPosition().y >= windowSize.y)
 			goUp = true;
-		offset = sf::Vector2f(0, 100);
+		offset = sf::Vector2f(0, 500);
 	}
 
 	offset *= deltaTime;
@@ -60,15 +60,15 @@ void Enemy::update(float deltaTime)
 void Enemy::collision(const Entity* other)
 {
 	SpriteEntity::collision(other);
-    const Player* player = dynamic_cast<const Player*>(other);
-	const Bullet* bullet = dynamic_cast<const Bullet*>(other);
-    if ((player && player->hasCollision()))
+    const auto* player = dynamic_cast<const Player*>(other);
+	const auto* bullet = dynamic_cast<const Bullet*>(other);
+    if (player && player->hasCollision())
 	{
 		m_health-=100;
 	}
 	else if (bullet && bullet->hasCollision())
 	{
-		const Player* playerOwner = dynamic_cast<const Player*>(bullet->getOwner());
+		const auto* playerOwner = dynamic_cast<const Player*>(bullet->getOwner());
 		if(playerOwner)
 			m_health-=100;
 	}
@@ -77,6 +77,6 @@ void Enemy::collision(const Entity* other)
 void Enemy::fireBullet(sf::Vector2f offset)
 {
 	auto spawnPos = getPosition() + offset;
-	GameManager::addEntity(std::move(std::make_unique<Bullet>(this, spawnPos, sf::Vector2f(-500, 0))));
+	GameManager::addEntity(std::move(std::make_unique<Bullet>(this, spawnPos, sf::Vector2f(-1000, 0))));
 	m_fireCooldownRemaining = FIRE_COOLDOWN_TIME;
 }

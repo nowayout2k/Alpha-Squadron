@@ -11,9 +11,8 @@ Bullet::Bullet(Entity* owner, sf::Vector2f spawnPos, sf::Vector2f velocity) : m_
 	"../Assets/Textures/AircraftSpriteSheet.png",
 	sf::IntRect(376, 108, 10, 12))
 {
-	setScale(2.0f, 2.0f);
+	setScale(4.0f, 4.0f);
 	setPosition(spawnPos);
-	m_hasCollision = true;
 	AudioManager::playSound(SoundEffectType::Collect, 10);
 }
 
@@ -22,12 +21,15 @@ void Bullet::update(float deltaTime)
 	sf::Vector2u windowSize = WindowManager::getSize();
 	move(m_velocity*deltaTime);
 	auto position = getPosition();
-	if(position.x > windowSize.x || position.y > windowSize.y || position.x <= 0 || position.y <= 0)
+	if(position.x > (float)windowSize.x || position.y > (float)windowSize.y || position.x <= 0 || position.y <= 0 || !m_owner)
 		destroy();
 }
 
 void Bullet::collision(const Entity* other)
 {
+	if(!m_owner || m_owner->isDestroyPending())
+		destroy();
+
 	SpriteEntity::collision(other);
 	auto enemy = dynamic_cast<const Enemy*>(other);
 	auto player = dynamic_cast<const Player*>(other);

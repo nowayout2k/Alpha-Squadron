@@ -14,9 +14,9 @@
 
 Player::Player() : SpriteEntity(true, "../Assets/Textures/AircraftSpriteSheet.png", sf::IntRect(240, 298, 52, 12))
 {
-    setScale(1.5f, 1.5f);
+    setScale(4.0f, 4.0f);
     sf::Vector2u windowSize = WindowManager::getSize();
-    setPosition(0, windowSize.y / 2.f);
+    setPosition(0, (float)windowSize.y / 2.f);
 	m_timeSinceDamage = 0;
 	m_isBeingDamaged = false;
 	m_health = 100;
@@ -25,7 +25,7 @@ Player::Player() : SpriteEntity(true, "../Assets/Textures/AircraftSpriteSheet.pn
 
 void Player::update(float deltaTime)
 {
-	Entity::update(deltaTime);
+	SpriteEntity::update(deltaTime);
 	if(m_fireCooldownRemaining > 0)
 		m_fireCooldownRemaining -= deltaTime;
     sf::Vector2f offset = handleInput(deltaTime);
@@ -39,13 +39,13 @@ sf::Vector2f Player::handleInput(float deltaTime)
     sf::Vector2f offset(0.f, 0.f);
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-        offset.y -= 400.f;
+        offset.y -= 800.f;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-        offset.y += 400.f;
+        offset.y += 800.f;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-        offset.x -= 400.f;
+        offset.x -= 800.f;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-        offset.x += 400.f;
+        offset.x += 800.f;
 
     if (offset.x != 0.f && offset.y != 0.f)
     {
@@ -83,8 +83,8 @@ void Player::fireBullet(sf::Vector2f offset)
 	if(m_fireCooldownRemaining > 0)
 		return;
 
-	auto spawnPos = getPosition() + offset + sf::Vector2f (m_texture.getSize().x, m_texture.getSize().y/2);
-	GameManager::addEntity(std::move(std::make_unique<Bullet>(this, spawnPos, sf::Vector2f(500, 0))));
+	auto spawnPos = getPosition() + offset + sf::Vector2f (getScaledTextureSize().x, getScaledTextureSize().y/2);
+	GameManager::addEntity(std::move(std::make_unique<Bullet>(this, spawnPos, sf::Vector2f(1000, 0))));
 	m_fireCooldownRemaining = FIRE_COOLDOWN_TIME;
 }
 
@@ -107,29 +107,29 @@ void Player::updateColor(float deltaTime)
 		Logger::Log(Verbose, "Damage Timer = " + std::to_string(m_timeSinceDamage));
 		if(m_timeSinceDamage > DAMAGE_FLASH_TIME)
 		{
-			m_sprite->setColor(sf::Color::White);
+			setColor(sf::Color::White);
 			m_isBeingDamaged = false;
 		}
 		else
 		{
 			float phase = fmod(m_timeSinceDamage, 1.0f);
-			float t = 0.5f * (1.0f + std::cos(phase * 2.0f * M_PI));
+			float t = 0.5 * (1.0f + std::cos(phase * 2.0f * M_PI));
 			float c = Utility::lerp(0, 255, t);
-			m_sprite->setColor(sf::Color(255,c,c,255));
+			setColor(sf::Color(255,c,c,255));
 		}
 
-		m_hasCollision = m_timeSinceDamage > DAMAGE_INVINCIBILITY_TIME;
+		setCollision(m_timeSinceDamage > DAMAGE_INVINCIBILITY_TIME);
 	}
 }
 
 void Player::collision(const Entity* other)
 {
 	SpriteEntity::collision(other);
-    const Enemy* enemy = dynamic_cast<const Enemy*>(other);
-	const Bullet* bullet = dynamic_cast<const Bullet*>(other);
+    const auto* enemy = dynamic_cast<const Enemy*>(other);
+	const auto* bullet = dynamic_cast<const Bullet*>(other);
 	if (bullet && bullet->hasCollision())
 	{
-		const Enemy* enemyOwner = dynamic_cast<const Enemy*>(bullet->getOwner());
+		const auto* enemyOwner = dynamic_cast<const Enemy*>(bullet->getOwner());
 		if(enemyOwner)
 			takeDamage(20);
 	}
@@ -147,7 +147,7 @@ void Player::takeDamage(int health)
 		destroy();
 		return;
 	}
-	m_sprite->setColor(sf::Color::Red);
+	setColor(sf::Color::Red);
 	AudioManager::playSound(SoundEffectType::Collect, 10);
 	startDamageAnimation();
 }

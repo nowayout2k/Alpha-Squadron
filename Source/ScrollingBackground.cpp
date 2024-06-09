@@ -18,22 +18,22 @@ ScrollingBackground::ScrollingBackground(std::vector<std::string>&& backgroundTe
 
 	loadNextTextures();
 
-	m_spriteA->setScale(m_windowSize.x/m_textureA.getSize().x, m_windowSize.y/m_textureA.getSize().y);
-	m_spriteB->setScale(m_windowSize.x/m_textureB.getSize().x, m_windowSize.y/m_textureB.getSize().y);
+	m_spriteA->setScale((float)m_windowSize.x/(float)m_textureA.getSize().x, (float)m_windowSize.y/(float)m_textureA.getSize().y);
+	m_spriteB->setScale((float)m_windowSize.x/(float)m_textureB.getSize().x, (float)m_windowSize.y/(float)m_textureB.getSize().y);
 
 	m_spriteA->setPosition(0,0);
-	m_spriteB->setPosition(m_textureA.getSize().x * m_spriteA->getScale().x,0);
+	m_spriteB->setPosition((float)m_textureA.getSize().x * m_spriteA->getScale().x,0);
 }
 
 void ScrollingBackground::update(float deltaTime)
 {
 	m_spriteA->move(sf::Vector2f(-100,0) * deltaTime);
 	m_spriteB->move(sf::Vector2f(-100,0) * deltaTime);
-	if(m_textureA.getSize().x * m_spriteA->getScale().x + m_spriteA->getPosition().x <= 0)
+	if((float)m_textureA.getSize().x * m_spriteA->getScale().x + m_spriteA->getPosition().x <= 0)
 	{
 		loadNextTextures();
 		m_spriteA->setPosition(0,0);
-		m_spriteB->setPosition(m_textureA.getSize().x * m_spriteA->getScale().x,0);
+		m_spriteB->setPosition((float)m_textureA.getSize().x * m_spriteA->getScale().x,0);
 	}
 }
 
