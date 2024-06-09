@@ -22,6 +22,7 @@ private:
 	void handleAnimation(float deltaTime, sf::Vector2f offset);
 	void updateColor(float deltaTime);
 	void fireBullet(sf::Vector2f offset);
+	void takeDamage(int health);
 
 	const float DAMAGE_FLASH_TIME = 4.0f;
 	const float DAMAGE_INVINCIBILITY_TIME = .3f;
@@ -30,7 +31,7 @@ private:
 	bool m_isBeingDamaged;
 	int m_health;
 	float m_fireCooldownRemaining = 0;
-	const float FIRE_COOLDOWN_TIME = 0.5f;
+	const float FIRE_COOLDOWN_TIME = 0.2f;
 };
 
 

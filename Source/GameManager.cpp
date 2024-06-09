@@ -14,11 +14,23 @@ std::vector<std::unique_ptr<Entity>> GameManager::m_pendingEntities;
 
 GameManager::GameManager()
 {
+	levelSetup();
+}
+
+void GameManager::restart()
+{
+	levelSetup();
+}
+
+void GameManager::levelSetup()
+{
+	m_entities.clear();
+	m_pendingEntities.clear();
 	auto windowSize = WindowManager::getSize();
-	m_entities.push_back(std::make_unique<ScrollingBackground>(std::vector<std::string>{"../Assets/Textures/Background.jpg", "../Assets/Textures/Background.jpg"}));
-    m_entities.push_back(std::make_unique<Player>());
-    m_entities.push_back(std::make_unique<Enemy>(true, sf::Vector2f(windowSize.x-200, windowSize.y/2)));
-	m_entities.push_back(std::make_unique<Enemy>(true, sf::Vector2f(windowSize.x-100, windowSize.y/2)));
+	addEntity(std::make_unique<ScrollingBackground>(std::vector<std::string>{"../Assets/Textures/Background.jpg", "../Assets/Textures/Background.jpg"}));
+	addEntity(std::make_unique<Player>());
+	addEntity(std::make_unique<Enemy>(true, sf::Vector2f(windowSize.x-200, windowSize.y/2)));
+	addEntity(std::make_unique<Enemy>(true, sf::Vector2f(windowSize.x-100, windowSize.y/2)));
 	AudioManager::playMusic(MusicType::Level1, 10);
 }
 
@@ -30,8 +42,18 @@ void GameManager::update(float deltaTime)
 	}
 	m_pendingEntities.clear();
 
-	for (auto it = m_entities.begin(); it != m_entities.end(); )
+	bool hasEnemy = false;
+	bool hasPlayer = false;
+	for (auto it = m_entities.begin(); it != m_entities.end();)
 	{
+		auto enemy = dynamic_cast<Enemy*>(it->get());
+		if (enemy)
+			hasEnemy = true;
+
+		auto player = dynamic_cast<Player*>(it->get());
+		if(player)
+			hasPlayer = true;
+
 		if ((*it)->isDestroyPending())
 		{
 			it = m_entities.erase(it);
@@ -43,6 +65,17 @@ void GameManager::update(float deltaTime)
 		}
 	}
 	handleCollisions();
+	if(!hasPlayer)
+	{
+		restart();
+		return;
+	}
+	if (!hasEnemy)
+	{
+		auto windowSize = WindowManager::getSize();
+		addEntity(std::make_unique<Enemy>(true, sf::Vector2f(windowSize.x-200, windowSize.y/2)));
+		addEntity(std::make_unique<Enemy>(true, sf::Vector2f(windowSize.x-100, windowSize.y/2)));
+	}
 }
 
 void GameManager::render(sf::RenderWindow &window)

@@ -82,7 +82,7 @@ void Player::fireBullet(sf::Vector2f offset)
 		return;
 
 	auto spawnPos = getPosition() + offset + sf::Vector2f (m_texture.getSize().x, m_texture.getSize().y/2);
-	GameManager::addEntity(std::move(std::make_unique<Bullet>(this, spawnPos)));
+	GameManager::addEntity(std::move(std::make_unique<Bullet>(this, spawnPos, sf::Vector2f(500, 0))));
 	m_fireCooldownRemaining = FIRE_COOLDOWN_TIME;
 }
 
@@ -124,16 +124,29 @@ void Player::collision(const Entity* other)
 {
 	SpriteEntity::collision(other);
     const Enemy* enemy = dynamic_cast<const Enemy*>(other);
-    if (enemy)
+	const Bullet* bullet = dynamic_cast<const Bullet*>(other);
+	if (bullet && bullet->hasCollision())
 	{
-		if(m_isBeingDamaged)
-		{
-			destroy();
-			return;
-		}
-		m_sprite->setColor(sf::Color::Red);
-		AudioManager::playSound(SoundEffectType::Collect, 10);
-		startDamageAnimation();
+		const Enemy* enemyOwner = dynamic_cast<const Enemy*>(bullet->getOwner());
+		if(enemyOwner)
+			takeDamage(20);
 	}
+    if (enemy && enemy->hasCollision())
+	{
+		takeDamage(10);
+	}
+}
+
+void Player::takeDamage(int health)
+{
+	m_health -= health;
+	if(m_isBeingDamaged || m_health <= 0)
+	{
+		destroy();
+		return;
+	}
+	m_sprite->setColor(sf::Color::Red);
+	AudioManager::playSound(SoundEffectType::Collect, 10);
+	startDamageAnimation();
 }
 
