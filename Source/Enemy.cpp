@@ -6,6 +6,7 @@
 #include "../Header/Player.h"
 #include "../Header/Bullet.h"
 #include "../Header/GameManager.h"
+#include "../Header/Utility.h"
 
 Enemy::Enemy(bool hasCollision, sf::Vector2f position) : SpriteEntity(hasCollision, "../Assets/Textures/EnemiesSpriteSheet.png",
                                                sf::IntRect(70, 200, 25, 12))
@@ -16,7 +17,8 @@ Enemy::Enemy(bool hasCollision, sf::Vector2f position) : SpriteEntity(hasCollisi
 	m_fireCooldownRemaining = 4;
 }
 
-bool goUp = false;
+bool goUp = true;
+
 void Enemy::update(float deltaTime)
 {
 	if(m_health <= 0)
@@ -29,6 +31,7 @@ void Enemy::update(float deltaTime)
 
 	sf::Vector2f offset;
 	auto windowSize = WindowManager::getSize();
+
 	if(goUp)
 	{
 		if(getPosition().y <= 0)
@@ -64,13 +67,13 @@ void Enemy::collision(const Entity* other)
 	const auto* bullet = dynamic_cast<const Bullet*>(other);
     if (player && player->hasCollision())
 	{
-		m_health-=100;
+		m_health-=50;
 	}
 	else if (bullet && bullet->hasCollision())
 	{
 		const auto* playerOwner = dynamic_cast<const Player*>(bullet->getOwner());
 		if(playerOwner)
-			m_health-=100;
+			m_health-=50;
 	}
 }
 

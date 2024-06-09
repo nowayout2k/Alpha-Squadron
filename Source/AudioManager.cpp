@@ -20,6 +20,9 @@ void AudioManager::playSound(SoundEffectType soundEffectType, float volume)
 	case SoundEffectType::Collect:
 		pathToFile = "../Assets/SFX/Collect.wav";
 		break;
+	case SoundEffectType::Shoot1:
+		pathToFile = "../Assets/SFX/shoot1.wav";
+		break;
 	default:
 		Logger::Log(Error, "Sound Effect Type is unknown!");
 		return;

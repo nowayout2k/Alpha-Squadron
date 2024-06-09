@@ -30,8 +30,8 @@ void GameManager::levelSetup()
 	addEntity(std::make_unique<SpriteEntity>(false, "../Assets/Textures/sky.png"));
 	addEntity(std::make_unique<ScrollingBackground>(std::vector<std::string>{"../Assets/Textures/house1.png", "../Assets/Textures/house1.png", "../Assets/Textures/house1.png"}));
 	addEntity(std::make_unique<Player>());
-	addEntity(std::make_unique<Enemy>(true, sf::Vector2f((float)windowSize.x-500, (float)windowSize.y/2)));
-	addEntity(std::make_unique<Enemy>(true, sf::Vector2f((float)windowSize.x-100, (float)windowSize.y/2)));
+	addEntity(std::make_unique<Enemy>(true, sf::Vector2f((float)windowSize.x-500, (float)windowSize.y+100)));
+	addEntity(std::make_unique<Enemy>(true, sf::Vector2f((float)windowSize.x-100, (float)windowSize.y+100)));
 	AudioManager::playMusic(MusicType::Level1, 10);
 }
 
@@ -74,8 +74,8 @@ void GameManager::update(float deltaTime)
 	if (!hasEnemy)
 	{
 		auto windowSize = WindowManager::getSize();
-		addEntity(std::make_unique<Enemy>(true, sf::Vector2f((float)windowSize.x-500, (float)windowSize.y/2)));
-		addEntity(std::make_unique<Enemy>(true, sf::Vector2f((float)windowSize.x-100, (float)windowSize.y/2)));
+		addEntity(std::make_unique<Enemy>(true, sf::Vector2f((float)windowSize.x-500, (float)windowSize.y+100)));
+		addEntity(std::make_unique<Enemy>(true, sf::Vector2f((float)windowSize.x-100, (float)windowSize.y+100)));
 	}
 
 	handleCollisions();

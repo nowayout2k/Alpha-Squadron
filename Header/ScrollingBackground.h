@@ -12,18 +12,19 @@
 class ScrollingBackground : public DrawableEntity
 {
 public:
-    ScrollingBackground(std::vector<std::string>&& backgroundTexturePaths);
+    explicit ScrollingBackground(std::vector<std::string>&& backgroundTexturePaths);
     void update(float deltaTime) override;
  private:
 
-	bool loadNextTextures();
-
+	bool loadNextTexture(sf::Texture& texture);
+	void swapCurrentTexture();
 	std::vector<std::string> m_backgroundPaths;
 	int m_currentBackgroundIndex;
 	sf::Vector2u m_windowSize;
 
 	sf::Texture m_textureA;
 	sf::Texture m_textureB;
+	sf::Texture* m_currentTexture;
 
 	std::unique_ptr<sf::Sprite> m_spriteA;
 	std::unique_ptr<sf::Sprite> m_spriteB;

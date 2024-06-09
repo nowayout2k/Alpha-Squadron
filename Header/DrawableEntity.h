@@ -10,7 +10,7 @@
 class DrawableEntity : public Entity, public sf::Transformable, public sf::Drawable
 {
  protected:
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override
+	void draw(sf::RenderTarget& target, sf::RenderStates states) const override
 	{
 		for (const auto& drawableData : m_drawablesData)
 		{
@@ -28,7 +28,7 @@ class DrawableEntity : public Entity, public sf::Transformable, public sf::Drawa
 	};
 	void addDrawable(sf::Drawable* drawable, bool usesTransformState)
 	{
-		m_drawablesData.push_back(DrawableData(drawable, usesTransformState));
+		m_drawablesData.emplace_back(drawable, usesTransformState);
 	}
 
  private:

@@ -13,7 +13,7 @@ Bullet::Bullet(Entity* owner, sf::Vector2f spawnPos, sf::Vector2f velocity) : m_
 {
 	setScale(4.0f, 4.0f);
 	setPosition(spawnPos);
-	AudioManager::playSound(SoundEffectType::Collect, 10);
+	AudioManager::playSound(SoundEffectType::Shoot1, 10);
 }
 
 void Bullet::update(float deltaTime)
