@@ -7,6 +7,7 @@
 
 std::unordered_map<std::string, std::shared_ptr<sf::Texture>> DataCache::m_textureCache;
 std::unordered_map<std::string, std::shared_ptr<sf::SoundBuffer>> DataCache::m_soundCache;
+std::unordered_map<std::string, std::shared_ptr<sf::Font>> DataCache::m_fontCache;
 
 std::shared_ptr<sf::Texture> DataCache::getTexture(const std::string path, const sf::IntRect textureRect)
 {
@@ -75,6 +76,46 @@ void DataCache::cleanupSoundCache()
 		if(itr->second.use_count() <= 1)
 		{
 			m_soundCache.erase(itr->first);
+		}
+		else
+		{
+			itr++;
+		}
+	}
+}
+
+std::shared_ptr<sf::Font> DataCache::getFont(const Font font)
+{
+	std::string fontName;
+	switch(font)
+	{
+	case Font::Gamer:
+		fontName = "../Assets/Fonts/Gamer.ttf";
+		break;
+
+	}
+
+	if(m_fontCache.find(fontName) != m_fontCache.end())
+		return m_fontCache[fontName];
+
+	m_fontCache[fontName] = std::make_shared<sf::Font>();
+	auto fontBuffer = m_fontCache[fontName];
+
+	if (!fontBuffer->loadFromFile(fontName))
+	{
+		Logger::Log(LogType::Error, "Font name not found: " + fontName);
+	}
+
+	return fontBuffer;
+}
+
+void DataCache::cleanupFontCache()
+{
+	for (auto itr = m_fontCache.begin(); itr != m_fontCache.end();)
+	{
+		if(itr->second.use_count() <= 1)
+		{
+			m_fontCache.erase(itr->first);
 		}
 		else
 		{

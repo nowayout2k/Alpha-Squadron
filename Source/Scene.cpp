@@ -7,6 +7,8 @@
 #include "../Header/Player.h"
 #include "../Header/ScrollingBackground.h"
 #include "../Header/Audio.h"
+#include "../Header/TextEntity.h"
+#include "../Header/Font.h"
 
 std::vector<std::unique_ptr<Entity>> Scene::m_entities;
 std::vector<std::unique_ptr<Entity>> Scene::m_pendingEntities;
@@ -25,9 +27,10 @@ void Scene::setup()
 {
 	m_entities.clear();
 	m_pendingEntities.clear();
-	auto windowSize = WindowHandler::getSize();
+	auto windowSize = Window::getSize();
 	addEntity(std::make_unique<SpriteEntity>(false, "../Assets/Textures/sky.png"));
 	addEntity(std::make_unique<ScrollingBackground>(std::vector<std::string>{"../Assets/Textures/house1.png", "../Assets/Textures/house1.png", "../Assets/Textures/house1.png"}));
+	addEntity(std::make_unique<TextEntity>(Font::Gamer, "Test", 80, sf::Color::Black, sf::Text::Style::Regular, sf::Vector2f()));
 	addEntity(std::make_unique<Player>());
 	addEntity(std::make_unique<Enemy>(true, sf::Vector2f((float)windowSize.x-500, (float)windowSize.y+100)));
 	addEntity(std::make_unique<Enemy>(true, sf::Vector2f((float)windowSize.x-100, (float)windowSize.y+100)));
@@ -72,7 +75,7 @@ void Scene::update(float deltaTime)
 	}
 	if (!hasEnemy)
 	{
-		auto windowSize = WindowHandler::getSize();
+		auto windowSize = Window::getSize();
 		addEntity(std::make_unique<Enemy>(true, sf::Vector2f((float)windowSize.x-500, (float)windowSize.y+100)));
 		addEntity(std::make_unique<Enemy>(true, sf::Vector2f((float)windowSize.x-100, (float)windowSize.y+100)));
 	}

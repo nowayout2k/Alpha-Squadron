@@ -3,11 +3,11 @@
 #include "Header/Logger.h"
 #include "Header/Entity.h"
 #include "Header/Scene.h"
-#include "Header/WindowHandler.h"
+#include "Header/Window.h"
 
 int main()
 {
-	sf::RenderWindow& window = WindowHandler::createWindow(sf::VideoMode(1740,1000), "Alpha Squadron", sf::Style::None);
+	sf::RenderWindow& window = Window::createWindow(sf::VideoMode(1740,1000), "Alpha Squadron", sf::Style::None);
     Scene gameManager;
 
     sf::Clock clock;

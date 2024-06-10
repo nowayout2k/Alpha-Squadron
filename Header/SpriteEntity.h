@@ -6,7 +6,7 @@
 #define ALPHA_SQUADRON_HEADER_SPRITE_ENTITY_H_
 
 
-#include "WindowHandler.h"
+#include "Window.h"
 #include "Logger.h"
 #include "Entity.h"
 #include "DrawableEntity.h"
@@ -17,8 +17,8 @@ class SpriteEntity : public DrawableEntity
 public:
 	explicit SpriteEntity(const bool hasCollision, const std::string& pathToTexture, const sf::IntRect textureRect = sf::IntRect()) : m_hasCollision(hasCollision)
 	{
-		m_texture = *loadTexture(pathToTexture, textureRect).get();
-		m_sprite = std::make_unique<sf::Sprite>(m_texture);
+		m_texture = loadTexture(pathToTexture, textureRect);
+		m_sprite = std::make_unique<sf::Sprite>(*m_texture);
 		addDrawable(m_sprite.get(), true);
 	}
 	virtual ~SpriteEntity() override = default;
@@ -29,7 +29,7 @@ public:
 	bool hasCollision() const { return m_hasCollision; }
 	void setColor(sf::Color color) const { m_sprite->setColor(color); }
 	void setCollision(bool hasCollision) { m_hasCollision = hasCollision; };
-	sf::Vector2f getScaledTextureSize() const { return {(float)m_texture.getSize().x * getScale().x, (float)m_texture.getSize().y * getScale().y}; };
+	sf::Vector2f getScaledTextureSize() const { return {(float)m_texture->getSize().x * getScale().x, (float)m_texture->getSize().y * getScale().y}; };
 protected:
     std::shared_ptr<sf::Texture> loadTexture(const std::string &pathToTexture, const sf::IntRect textureRect = sf::IntRect())
 	{
@@ -38,7 +38,7 @@ protected:
 
  private:
     std::unique_ptr<sf::Sprite> m_sprite;
-    sf::Texture m_texture;
+    std::shared_ptr<sf::Texture> m_texture;
 	bool m_hasCollision;
 };
 

@@ -28,8 +28,8 @@ add_executable(Alpha-Squadron main.cpp
         Header/Scene.h
         Source/Enemy.cpp
         Header/Enemy.h
-        Source/WindowHandler.cpp
-        Header/WindowHandler.h
+        Source/Window.cpp
+        Header/Window.h
         Source/Player.cpp
         Header/Player.h
         Source/ScrollingBackground.cpp
@@ -44,6 +44,9 @@ add_executable(Alpha-Squadron main.cpp
         Header/DataCache.h
         Source/Character.cpp
         Header/Character.h
+        Source/TextEntity.cpp
+        Header/TextEntity.h
+        Header/Font.h
 )
 
 # Link the SFML libraries

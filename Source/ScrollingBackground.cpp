@@ -8,7 +8,7 @@ ScrollingBackground::ScrollingBackground(std::vector<std::string>&& backgroundTe
 {
 	m_backgroundPaths = std::move(backgroundTexturePaths);
 	m_currentBackgroundIndex = -1;
-	m_windowSize = WindowHandler::getSize();
+	m_windowSize = Window::getSize();
 
 	m_textureA = loadNextTexture();
 	m_textureB = loadNextTexture();

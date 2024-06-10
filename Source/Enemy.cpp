@@ -29,7 +29,7 @@ void Enemy::update(float deltaTime)
 	Entity::update(deltaTime);
 
 	sf::Vector2f offset;
-	auto windowSize = WindowHandler::getSize();
+	auto windowSize = Window::getSize();
 
 	if(goUp)
 	{

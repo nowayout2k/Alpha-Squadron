@@ -16,7 +16,7 @@
 Player::Player() : Character(true, "../Assets/Textures/AircraftSpriteSheet.png", sf::IntRect(240, 298, 52, 12))
 {
     setScale(4.0f, 4.0f);
-    sf::Vector2u windowSize = WindowHandler::getSize();
+    sf::Vector2u windowSize = Window::getSize();
     setPosition(0, (float)windowSize.y / 2.f);
 }
 
@@ -27,7 +27,7 @@ void Player::update(float deltaTime)
 		m_fireCooldownRemaining -= deltaTime;
     sf::Vector2f offset = handleInput(deltaTime);
     move(offset);
-	handleAnimation(deltaTime, offset);
+	handleAnimation(deltaTime);
 }
 
 sf::Vector2f Player::handleInput(float deltaTime)
@@ -61,7 +61,7 @@ sf::Vector2f Player::handleInput(float deltaTime)
 
 void Player::adjustOffsetToWindow(sf::Vector2f& offset)
 {
-    sf::Vector2u windowSize = WindowHandler::getSize();
+    sf::Vector2u windowSize = Window::getSize();
     sf::FloatRect windowBounds(0.f, 0.f, static_cast<float>(windowSize.x), static_cast<float>(windowSize.y));
 
     sf::FloatRect playerBounds = getGlobalBounds();

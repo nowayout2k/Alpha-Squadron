@@ -18,7 +18,7 @@ Bullet::Bullet(Entity* owner, sf::Vector2f spawnPos, sf::Vector2f velocity) : m_
 
 void Bullet::update(float deltaTime)
 {
-	sf::Vector2u windowSize = WindowHandler::getSize();
+	sf::Vector2u windowSize = Window::getSize();
 	move(m_velocity*deltaTime);
 	auto position = getPosition();
 	if(position.x > (float)windowSize.x || position.y > (float)windowSize.y || position.x <= 0 || position.y <= 0 || !m_owner)

@@ -2,13 +2,13 @@
 // Created by Johnnie Otis on 5/26/24.
 //
 
-#ifndef ALPHA_SQUADRON_HEADER_WINDOWHANDLER_H_
-#define ALPHA_SQUADRON_HEADER_WINDOWHANDLER_H_
+#ifndef ALPHA_SQUADRON_HEADER_WINDOW_H_
+#define ALPHA_SQUADRON_HEADER_WINDOW_H_
 
 #include <SFML/Window.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 
-class WindowHandler
+class Window
 {
 public:
 	static sf::RenderWindow& createWindow(const sf::VideoMode& mode, const std::string& title, sf::Uint32 style);
@@ -18,4 +18,4 @@ public:
 };
 
 
-#endif //ALPHA_SQUADRON_HEADER_WINDOWHANDLER_H_
+#endif //ALPHA_SQUADRON_HEADER_WINDOW_H_
