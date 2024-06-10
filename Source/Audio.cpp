@@ -2,17 +2,18 @@
 // Created by Johnnie Otis on 5/26/24.
 //
 
-#include "../Header/AudioManager.h"
+#include "../Header/Audio.h"
 #include "../Header/Logger.h"
+#include "../Header/DataCache.h"
 #include <SFML/Audio.hpp>
 #include <iostream>
 
 
-sf::Sound AudioManager::m_sound;
-sf::Music AudioManager::m_music;
-sf::SoundBuffer AudioManager::m_buffer;
+sf::Sound Audio::m_sound;
+sf::Music Audio::m_music;
+std::shared_ptr<sf::SoundBuffer> Audio::m_buffer;
 
-void AudioManager::playSound(SoundEffectType soundEffectType, float volume)
+void Audio::playSound(SoundEffectType soundEffectType, float volume)
 {
 	std::string pathToFile;
 	switch (soundEffectType)
@@ -28,15 +29,16 @@ void AudioManager::playSound(SoundEffectType soundEffectType, float volume)
 		return;
 	}
 
-	if (!m_buffer.loadFromFile(pathToFile))
+	m_buffer = DataCache::getSoundBuffer(pathToFile);
+	if (!m_buffer.get())
 		return;
 
-	m_sound.setBuffer(m_buffer);
+	m_sound.setBuffer(*m_buffer.get());
 	m_sound.setVolume(volume);
 	m_sound.play();
 
 }
-void AudioManager::playMusic(MusicType musicType, float volume)
+void Audio::playMusic(MusicType musicType, float volume)
 {
 	std::string pathToFile;
 	switch (musicType)
@@ -51,6 +53,7 @@ void AudioManager::playMusic(MusicType musicType, float volume)
 
 	if (!m_music.openFromFile(pathToFile))
 		return;
+
 	m_music.setLoop(true);
 	m_music.setVolume(volume);
 	m_music.play();

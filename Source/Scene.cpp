@@ -2,40 +2,39 @@
 // Created by Johnnie Otis on 5/30/24.
 //
 
-#include <SFML/Window/Keyboard.hpp>
-#include "../Header/GameManager.h"
+#include "../Header/Scene.h"
 #include "../Header/Enemy.h"
 #include "../Header/Player.h"
 #include "../Header/ScrollingBackground.h"
-#include "../Header/AudioManager.h"
+#include "../Header/Audio.h"
 
-std::vector<std::unique_ptr<Entity>> GameManager::m_entities;
-std::vector<std::unique_ptr<Entity>> GameManager::m_pendingEntities;
+std::vector<std::unique_ptr<Entity>> Scene::m_entities;
+std::vector<std::unique_ptr<Entity>> Scene::m_pendingEntities;
 
-GameManager::GameManager()
+Scene::Scene()
 {
-	levelSetup();
+	setup();
 }
 
-void GameManager::restart()
+void Scene::restart()
 {
-	levelSetup();
+	setup();
 }
 
-void GameManager::levelSetup()
+void Scene::setup()
 {
 	m_entities.clear();
 	m_pendingEntities.clear();
-	auto windowSize = WindowManager::getSize();
+	auto windowSize = WindowHandler::getSize();
 	addEntity(std::make_unique<SpriteEntity>(false, "../Assets/Textures/sky.png"));
 	addEntity(std::make_unique<ScrollingBackground>(std::vector<std::string>{"../Assets/Textures/house1.png", "../Assets/Textures/house1.png", "../Assets/Textures/house1.png"}));
 	addEntity(std::make_unique<Player>());
 	addEntity(std::make_unique<Enemy>(true, sf::Vector2f((float)windowSize.x-500, (float)windowSize.y+100)));
 	addEntity(std::make_unique<Enemy>(true, sf::Vector2f((float)windowSize.x-100, (float)windowSize.y+100)));
-	AudioManager::playMusic(MusicType::Level1, 10);
+	Audio::playMusic(MusicType::Level1, 10);
 }
 
-void GameManager::update(float deltaTime)
+void Scene::update(float deltaTime)
 {
 	for (auto& entity : m_pendingEntities)
 	{
@@ -73,7 +72,7 @@ void GameManager::update(float deltaTime)
 	}
 	if (!hasEnemy)
 	{
-		auto windowSize = WindowManager::getSize();
+		auto windowSize = WindowHandler::getSize();
 		addEntity(std::make_unique<Enemy>(true, sf::Vector2f((float)windowSize.x-500, (float)windowSize.y+100)));
 		addEntity(std::make_unique<Enemy>(true, sf::Vector2f((float)windowSize.x-100, (float)windowSize.y+100)));
 	}
@@ -81,7 +80,7 @@ void GameManager::update(float deltaTime)
 	handleCollisions();
 }
 
-void GameManager::render(sf::RenderWindow &window)
+void Scene::render(sf::RenderWindow &window)
 {
     for (const auto& entity : m_entities)
     {
@@ -91,7 +90,7 @@ void GameManager::render(sf::RenderWindow &window)
     }
 }
 
-void GameManager::handleCollisions()
+void Scene::handleCollisions()
 {
     for (const auto& entity : m_entities)
     {

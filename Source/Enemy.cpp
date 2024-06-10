@@ -5,10 +5,9 @@
 #include "../Header/Enemy.h"
 #include "../Header/Player.h"
 #include "../Header/Bullet.h"
-#include "../Header/GameManager.h"
-#include "../Header/Utility.h"
+#include "../Header/Scene.h"
 
-Enemy::Enemy(bool hasCollision, sf::Vector2f position) : SpriteEntity(hasCollision, "../Assets/Textures/EnemiesSpriteSheet.png",
+Enemy::Enemy(bool hasCollision, sf::Vector2f position) : Character(hasCollision, "../Assets/Textures/EnemiesSpriteSheet.png",
                                                sf::IntRect(70, 200, 25, 12))
 {
     setScale(sf::Vector2f(-4,4));
@@ -30,7 +29,7 @@ void Enemy::update(float deltaTime)
 	Entity::update(deltaTime);
 
 	sf::Vector2f offset;
-	auto windowSize = WindowManager::getSize();
+	auto windowSize = WindowHandler::getSize();
 
 	if(goUp)
 	{
@@ -54,7 +53,7 @@ void Enemy::update(float deltaTime)
 	}
 	else
 	{
-		fireBullet(offset);
+		fireBullet(offset, sf::Vector2f(-1000, 0));
 	}
 
 	move(offset);
@@ -67,19 +66,12 @@ void Enemy::collision(const Entity* other)
 	const auto* bullet = dynamic_cast<const Bullet*>(other);
     if (player && player->hasCollision())
 	{
-		m_health-=50;
+		takeDamage(m_health);
 	}
 	else if (bullet && bullet->hasCollision())
 	{
 		const auto* playerOwner = dynamic_cast<const Player*>(bullet->getOwner());
 		if(playerOwner)
-			m_health-=50;
+			takeDamage(50);
 	}
-}
-
-void Enemy::fireBullet(sf::Vector2f offset)
-{
-	auto spawnPos = getPosition() + offset;
-	GameManager::addEntity(std::move(std::make_unique<Bullet>(this, spawnPos, sf::Vector2f(-1000, 0))));
-	m_fireCooldownRemaining = FIRE_COOLDOWN_TIME;
 }

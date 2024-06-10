@@ -9,6 +9,9 @@
 
 class DrawableEntity : public Entity, public sf::Transformable, public sf::Drawable
 {
+ public:
+	DrawableEntity() = default;
+	virtual ~DrawableEntity() = default;
  protected:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override
 	{

@@ -7,20 +7,16 @@
 
 #include "SpriteEntity.h"
 #include "Entity.h"
+#include "Character.h"
 
-class Enemy : public SpriteEntity
+class Enemy : public Character
 {
 public:
-    Enemy(bool hasCollision, sf::Vector2f position);
+	explicit Enemy(bool hasCollision, sf::Vector2f position);
     void update(float deltaTime) override;
     void collision(const Entity* other) override;
-	void fireBullet(sf::Vector2f offset);
 private:
     sf::Texture m_texture;
-	int m_health;
-	float m_fireCooldownRemaining;
-	const float FIRE_COOLDOWN_TIME = 2.0f;
 };
-
 
 #endif //ALPHA_SQUADRON_HEADER_ENEMY_H_

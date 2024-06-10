@@ -14,6 +14,7 @@
 class Entity
 {
  public:
+	virtual ~Entity() = default;
     virtual void update(float deltaTime) { if(!m_isActive) return; };
 	bool isActive() const { return m_isActive; };
 	bool isDestroyPending() { return m_isDestroyPending; }

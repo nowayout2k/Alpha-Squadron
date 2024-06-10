@@ -14,23 +14,22 @@ set(SFML_DIR "C:/Users/Johnnie/Documents/SFML-2.6.1-VS/lib/cmake/SFML")
 find_package(SFML COMPONENTS system window graphics network audio REQUIRED)
 
 add_executable(Alpha-Squadron main.cpp
-        Source/AudioManager.cpp
-        Header/AudioManager.h
+        Source/Audio.cpp
+        Header/Audio.h
         Source/Network.cpp
         Header/Network.h
         Source/Logger.cpp
         Header/Logger.h
-        Source/Utility.cpp
         Header/Utility.h
         Header/LogType.h
         Header/Entity.h
         Header/SpriteEntity.h
-        Source/GameManager.cpp
-        Header/GameManager.h
+        Source/Scene.cpp
+        Header/Scene.h
         Source/Enemy.cpp
         Header/Enemy.h
-        Source/WindowManager.cpp
-        Header/WindowManager.h
+        Source/WindowHandler.cpp
+        Header/WindowHandler.h
         Source/Player.cpp
         Header/Player.h
         Source/ScrollingBackground.cpp
@@ -41,6 +40,10 @@ add_executable(Alpha-Squadron main.cpp
         Header/DrawableData.h
         Source/Bullet.cpp
         Header/Bullet.h
+        Source/DataCache.cpp
+        Header/DataCache.h
+        Source/Character.cpp
+        Header/Character.h
 )
 
 # Link the SFML libraries

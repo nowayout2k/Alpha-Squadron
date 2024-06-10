@@ -16,15 +16,15 @@ public:
     void update(float deltaTime) override;
  private:
 
-	bool loadNextTexture(sf::Texture& texture);
+	std::shared_ptr<sf::Texture> loadNextTexture();
 	void swapCurrentTexture();
 	std::vector<std::string> m_backgroundPaths;
 	int m_currentBackgroundIndex;
 	sf::Vector2u m_windowSize;
 
-	sf::Texture m_textureA;
-	sf::Texture m_textureB;
-	sf::Texture* m_currentTexture;
+	std::shared_ptr<sf::Texture> m_textureA;
+	std::shared_ptr<sf::Texture> m_textureB;
+	std::shared_ptr<sf::Texture> m_currentTexture;
 
 	std::unique_ptr<sf::Sprite> m_spriteA;
 	std::unique_ptr<sf::Sprite> m_spriteB;

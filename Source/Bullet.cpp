@@ -3,7 +3,7 @@
 //
 
 #include "../Header/Bullet.h"
-#include "../Header/AudioManager.h"
+#include "../Header/Audio.h"
 #include "../Header/Enemy.h"
 #include "../Header/Player.h"
 
@@ -13,12 +13,12 @@ Bullet::Bullet(Entity* owner, sf::Vector2f spawnPos, sf::Vector2f velocity) : m_
 {
 	setScale(4.0f, 4.0f);
 	setPosition(spawnPos);
-	AudioManager::playSound(SoundEffectType::Shoot1, 10);
+	Audio::playSound(SoundEffectType::Shoot1, 10);
 }
 
 void Bullet::update(float deltaTime)
 {
-	sf::Vector2u windowSize = WindowManager::getSize();
+	sf::Vector2u windowSize = WindowHandler::getSize();
 	move(m_velocity*deltaTime);
 	auto position = getPosition();
 	if(position.x > (float)windowSize.x || position.y > (float)windowSize.y || position.x <= 0 || position.y <= 0 || !m_owner)

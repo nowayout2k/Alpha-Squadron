@@ -5,22 +5,19 @@
 #include <SFML/Window/Keyboard.hpp>
 #include "../Header/Player.h"
 #include "../Header/Enemy.h"
-#include "../Header/AudioManager.h"
-#include "../Header/Utility.h"
+#include "../Header/Audio.h"
 #include "../Header/Bullet.h"
-#include "../Header/GameManager.h"
+#include "../Header/Scene.h"
 
-#define M_PI 3.14159265358979323846
+#define DAMAGE_FLASH_TIME 4.0f
+#define DAMAGE_INVINCIBILITY_TIME .3f
+#define FIRE_COOLDOWN_TIME 0.2f
 
-Player::Player() : SpriteEntity(true, "../Assets/Textures/AircraftSpriteSheet.png", sf::IntRect(240, 298, 52, 12))
+Player::Player() : Character(true, "../Assets/Textures/AircraftSpriteSheet.png", sf::IntRect(240, 298, 52, 12))
 {
     setScale(4.0f, 4.0f);
-    sf::Vector2u windowSize = WindowManager::getSize();
+    sf::Vector2u windowSize = WindowHandler::getSize();
     setPosition(0, (float)windowSize.y / 2.f);
-	m_timeSinceDamage = 0;
-	m_isBeingDamaged = false;
-	m_health = 100;
-	m_fireCooldownRemaining = 0;
 }
 
 void Player::update(float deltaTime)
@@ -30,7 +27,6 @@ void Player::update(float deltaTime)
 		m_fireCooldownRemaining -= deltaTime;
     sf::Vector2f offset = handleInput(deltaTime);
     move(offset);
-
 	handleAnimation(deltaTime, offset);
 }
 
@@ -58,14 +54,14 @@ sf::Vector2f Player::handleInput(float deltaTime)
 	adjustOffsetToWindow(offset);
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-		fireBullet(offset);
+		fireBullet(offset, sf::Vector2f(1000, 0));
 
     return offset;
 }
 
 void Player::adjustOffsetToWindow(sf::Vector2f& offset)
 {
-    sf::Vector2u windowSize = WindowManager::getSize();
+    sf::Vector2u windowSize = WindowHandler::getSize();
     sf::FloatRect windowBounds(0.f, 0.f, static_cast<float>(windowSize.x), static_cast<float>(windowSize.y));
 
     sf::FloatRect playerBounds = getGlobalBounds();
@@ -76,50 +72,6 @@ void Player::adjustOffsetToWindow(sf::Vector2f& offset)
         offset.x = 0.f;
     if (playerBounds.top < windowBounds.top || playerBounds.top + playerBounds.height > windowBounds.height)
         offset.y = 0.f;
-}
-
-void Player::fireBullet(sf::Vector2f offset)
-{
-	if(m_fireCooldownRemaining > 0)
-		return;
-
-	auto spawnPos = getPosition() + offset + sf::Vector2f (getScaledTextureSize().x, getScaledTextureSize().y/2);
-	GameManager::addEntity(std::move(std::make_unique<Bullet>(this, spawnPos, sf::Vector2f(1000, 0))));
-	m_fireCooldownRemaining = FIRE_COOLDOWN_TIME;
-}
-
-void Player::startDamageAnimation()
-{
-	m_timeSinceDamage = 0;
-	m_isBeingDamaged = true;
-}
-
-void Player::handleAnimation(float deltaTime, sf::Vector2f offset)
-{
-	updateColor(deltaTime);
-}
-
-void Player::updateColor(float deltaTime)
-{
-	if(m_isBeingDamaged)
-	{
-		m_timeSinceDamage += deltaTime;
-		Logger::Log(Verbose, "Damage Timer = " + std::to_string(m_timeSinceDamage));
-		if(m_timeSinceDamage > DAMAGE_FLASH_TIME)
-		{
-			setColor(sf::Color::White);
-			m_isBeingDamaged = false;
-		}
-		else
-		{
-			float phase = fmod(m_timeSinceDamage, 1.0f);
-			float t = 0.5 * (1.0f + std::cos(phase * 2.0f * M_PI));
-			float c = Utility::lerp(0, 255, t);
-			setColor(sf::Color(255,c,c,255));
-		}
-
-		setCollision(m_timeSinceDamage > DAMAGE_INVINCIBILITY_TIME);
-	}
 }
 
 void Player::collision(const Entity* other)
@@ -138,17 +90,3 @@ void Player::collision(const Entity* other)
 		takeDamage(10);
 	}
 }
-
-void Player::takeDamage(int health)
-{
-	m_health -= health;
-	if(m_isBeingDamaged || m_health <= 0)
-	{
-		destroy();
-		return;
-	}
-	setColor(sf::Color::Red);
-	AudioManager::playSound(SoundEffectType::Collect, 10);
-	startDamageAnimation();
-}
-

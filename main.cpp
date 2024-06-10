@@ -2,18 +2,30 @@
 #include <SFML/Graphics.hpp>
 #include "Header/Logger.h"
 #include "Header/Entity.h"
-#include "Header/GameManager.h"
-#include "Header/WindowManager.h"
+#include "Header/Scene.h"
+#include "Header/WindowHandler.h"
 
 int main()
 {
-	sf::RenderWindow& window = WindowManager::createWindow(sf::VideoMode(1920, 1080), "Alpha Squadron", sf::Style::None);
-    GameManager gameManager;
+	sf::RenderWindow& window = WindowHandler::createWindow(sf::VideoMode(1740,1000), "Alpha Squadron", sf::Style::None);
+    Scene gameManager;
 
     sf::Clock clock;
+	float timeElapsed = 0;
+	int frameCount = 0;
 
     while (window.isOpen())
     {
+		frameCount++;
+		timeElapsed += clock.getElapsedTime().asSeconds();
+
+		if(timeElapsed>=1)
+		{
+			Logger::Log(Verbose, "FPS: " + std::to_string(frameCount));
+			frameCount = 0;
+			timeElapsed = 0;
+		}
+
 		sf::Event event;
         while (window.pollEvent(event))
         {
