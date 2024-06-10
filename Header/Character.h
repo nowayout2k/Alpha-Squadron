@@ -15,12 +15,13 @@ class Character : public SpriteEntity
 	void update(float deltaTime) override = 0;
 	void collision(const Entity* other) override = 0;
  protected:
-	virtual void handleAnimation(float deltaTime, sf::Vector2f offset);
+	virtual void handleAnimation(float deltaTime);
+	void handleDamageAnimation(float deltaTime);
 	virtual void fireBullet(sf::Vector2f offset, sf::Vector2f velocity);
 	virtual void takeDamage(int health);
 
 	float m_timeSinceDamage;
-	bool m_isBeingDamaged;
+	bool m_isDamageAnimationActive;
 	int m_health;
 	float m_fireCooldownRemaining;
 };
