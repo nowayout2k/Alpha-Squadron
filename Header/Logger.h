@@ -9,7 +9,7 @@
 class Logger
 {
 public:
-    static void Log(LogType logType, const std::string& message);
+    static void log(LogType logType, const std::string& message);
 };
 
 #endif //ALPHA_SQUADRON_HEADER_LOGGER_H_

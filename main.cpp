@@ -10,21 +10,11 @@ int main()
 	sf::RenderWindow& window = Window::createWindow(sf::VideoMode(1740,1000), "Alpha Squadron", sf::Style::None);
     Scene gameManager;
 
-    sf::Clock clock;
-	float timeElapsed = 0;
-	int frameCount = 0;
+	sf::Clock clock;
 
     while (window.isOpen())
     {
-		frameCount++;
-		timeElapsed += clock.getElapsedTime().asSeconds();
-
-		if(timeElapsed>=1)
-		{
-			Logger::Log(Verbose, "FPS: " + std::to_string(frameCount));
-			frameCount = 0;
-			timeElapsed = 0;
-		}
+		Window::update(clock.getElapsedTime().asSeconds());
 
 		sf::Event event;
         while (window.pollEvent(event))
@@ -34,17 +24,17 @@ int main()
 
 			if (event.type == sf::Event::Resized)
 			{
-				Logger::Log(LogType::Verbose,"Window resized to " + std::to_string(event.size.width) + "x" + std::to_string(event.size.height));
+				Logger::log(LogType::Verbose,"Window resized to " + std::to_string(event.size.width) + "x" + std::to_string(event.size.height));
 			}
 
 			if (event.type == sf::Event::LostFocus)
 			{
-				Logger::Log(LogType::Verbose,"Window lost focus");
+				Logger::log(LogType::Verbose,"Window lost focus");
 			}
 
 			if (event.type == sf::Event::GainedFocus)
 			{
-				Logger::Log(LogType::Verbose,"Window gained focus");
+				Logger::log(LogType::Verbose,"Window gained focus");
 			}
 			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Key::Escape)
 				return 0;
@@ -61,7 +51,7 @@ int main()
 					continue;
         }
 		gameManager.update(clock.restart().asSeconds());
-        window.clear();
+		window.clear();
 		gameManager.render(window);
         window.display();
     }

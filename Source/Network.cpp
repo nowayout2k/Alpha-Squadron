@@ -21,8 +21,8 @@ std::string Network::sendRequest(const std::string& hostUrl, const std::string& 
 	sf::Http::Request request(uri);
 	sf::Http::Response response = http.sendRequest(request);
 
-	Logger::Log(LogType::Verbose, "Status: " + std::to_string(response.getStatus()));
-	Logger::Log(LogType::Verbose, "Response body: " + response.getBody());
+	Logger::log(LogType::Verbose, "Status: " + std::to_string(response.getStatus()));
+	Logger::log(LogType::Verbose, "Response body: " + response.getBody());
 	return response.getBody();
 }
 
@@ -45,6 +45,8 @@ sf::Socket::Status Network::receiveData()
 
     sf::Socket::Status status = m_socket.receive(data, 100, received, sender, port);
 
-	Logger::Log(LogType::Verbose,  "Received " + std::to_string(received) + " bytes from " + sender.toString() + " on port " + std::to_string(port));
+	Logger::log(LogType::Verbose,
+		"Received " + std::to_string(received) + " bytes from " + sender.toString() + " on port "
+			+ std::to_string(port));
     return status;
 }

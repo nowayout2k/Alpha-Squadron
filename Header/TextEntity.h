@@ -6,17 +6,26 @@
 #define ALPHA_SQUADRON_HEADER_TEXTENTITY_H_
 
 #include <SFML/Graphics/Text.hpp>
-#include "DrawableEntity.h"
 #include "Font.h"
+#include "Entity.h"
+#include "DataCache.h"
 
-class TextEntity : public DrawableEntity
+class TextEntity : public sf::Text, public Entity
 {
  public:
-	TextEntity(Font font, std::string text, unsigned int pixelSize, sf::Color color, sf::Text::Style style, sf::Vector2f position);
+	TextEntity(Font font, std::string text, unsigned int pixelSize, sf::Color color, sf::Text::Style style, sf::Vector2f position)
+	{
+		m_font = DataCache::getFont(font);
+		setFont(*m_font.get());
+		setString(text);
+		setCharacterSize(pixelSize);
+		setFillColor(color);
+		setStyle(style);
+		setPosition(position);
+	}
  protected:
 
  private:
-	std::unique_ptr<sf::Text> m_text;
 	std::shared_ptr<sf::Font> m_font;
 };
 

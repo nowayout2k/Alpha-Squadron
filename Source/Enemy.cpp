@@ -6,6 +6,7 @@
 #include "../Header/Player.h"
 #include "../Header/Bullet.h"
 #include "../Header/Scene.h"
+#include "../Header/Window.h"
 
 Enemy::Enemy(bool hasCollision, sf::Vector2f position) : Character(hasCollision, "../Assets/Textures/EnemiesSpriteSheet.png",
                                                sf::IntRect(70, 200, 25, 12))

@@ -6,6 +6,7 @@
 #include "../Header/Audio.h"
 #include "../Header/Enemy.h"
 #include "../Header/Player.h"
+#include "../Header/Window.h"
 
 Bullet::Bullet(Entity* owner, sf::Vector2f spawnPos, sf::Vector2f velocity) : m_velocity(velocity), m_owner(owner), SpriteEntity(true,
 	"../Assets/Textures/AircraftSpriteSheet.png",

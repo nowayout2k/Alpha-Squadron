@@ -25,7 +25,7 @@ void Audio::playSound(SoundEffectType soundEffectType, float volume)
 		pathToFile = "../Assets/SFX/shoot1.wav";
 		break;
 	default:
-		Logger::Log(Error, "Sound Effect Type is unknown!");
+		Logger::log(Error, "Sound Effect Type is unknown!");
 		return;
 	}
 
@@ -47,7 +47,7 @@ void Audio::playMusic(MusicType musicType, float volume)
 		pathToFile = "../Assets/Music/U.N. Squadron (SNES)_ Mission 1 - Front line base.mp3";
 		break;
 	default:
-		Logger::Log(Error, "Music Type is unknown!");
+		Logger::log(Error, "Music Type is unknown!");
 		return;
 	}
 

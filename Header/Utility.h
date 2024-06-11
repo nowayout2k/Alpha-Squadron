@@ -13,13 +13,14 @@ public:
 	{
 		m_clock.restart();
 		sf::Time elapsed = m_clock.getElapsedTime();
-		Logger::Log(LogType::Test, message + " Stopwatch Started!");
+		Logger::log(LogType::Test, message + " Stopwatch Started!");
 	}
 
 	static void endStopwatch(std::string message)
 	{
 		sf::Time elapsed = m_clock.getElapsedTime();
-		Logger::Log(LogType::Test, message + " Stopwatch stopped at: " + std::to_string(elapsed.asSeconds()) + " seconds");
+		Logger::log(LogType::Test,
+			message + " Stopwatch stopped at: " + std::to_string(elapsed.asSeconds()) + " seconds");
 	}
 
 	static float lerp(float a, float b, float t)

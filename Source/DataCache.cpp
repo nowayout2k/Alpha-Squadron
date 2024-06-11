@@ -17,21 +17,29 @@ std::shared_ptr<sf::Texture> DataCache::getTexture(const std::string path, const
 	if(m_textureCache.find(hashString) != m_textureCache.end())
 		return m_textureCache[hashString];
 
-	m_textureCache[hashString] = std::make_shared<sf::Texture>();
+	try
+	{
+		m_textureCache[hashString] = std::make_shared<sf::Texture>();
+	}
+	catch (const std::overflow_error& e)
+	{
+		Logger::log(Verbose, "Overflow error!");
+	}
+
 	auto texture = m_textureCache[hashString];
 
 	if(textureRect == sf::IntRect())
 	{
 		if (!texture->loadFromFile(path))
 		{
-			Logger::Log(LogType::Error, "Texture not found at: " + path);
+			Logger::log(LogType::Error, "Texture not found at: " + path);
 		}
 	}
 	else
 	{
 		if (!texture->loadFromFile(path, textureRect))
 		{
-			Logger::Log(LogType::Error, "Texture not found at: " + path);
+			Logger::log(LogType::Error, "Texture not found at: " + path);
 		}
 	}
 
@@ -63,7 +71,7 @@ std::shared_ptr<sf::SoundBuffer> DataCache::getSoundBuffer(const std::string pat
 
 	if (!soundBuffer->loadFromFile(path))
 	{
-		Logger::Log(LogType::Error, "Sound not found at: " + path);
+		Logger::log(LogType::Error, "Sound not found at: " + path);
 	}
 
 	return soundBuffer;
@@ -103,7 +111,7 @@ std::shared_ptr<sf::Font> DataCache::getFont(const Font font)
 
 	if (!fontBuffer->loadFromFile(fontName))
 	{
-		Logger::Log(LogType::Error, "Font name not found: " + fontName);
+		Logger::log(LogType::Error, "Font name not found: " + fontName);
 	}
 
 	return fontBuffer;

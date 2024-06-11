@@ -3,6 +3,7 @@
 //
 
 #include "../Header/ScrollingBackground.h"
+#include "../Header/Window.h"
 
 ScrollingBackground::ScrollingBackground(std::vector<std::string>&& backgroundTexturePaths)
 {
@@ -17,9 +18,6 @@ ScrollingBackground::ScrollingBackground(std::vector<std::string>&& backgroundTe
 
 	m_spriteA = std::make_unique<sf::Sprite>(*m_textureA.get());
 	m_spriteB = std::make_unique<sf::Sprite>(*m_textureB.get());
-
-	addDrawable(m_spriteA.get(), false);
-	addDrawable(m_spriteB.get(), false);
 
 	m_spriteA->setScale((float)m_windowSize.x/(float)m_textureA->getSize().x, (float)m_windowSize.y/(float)m_textureA->getSize().y);
 	m_spriteB->setScale((float)m_windowSize.x/(float)m_textureB->getSize().x, (float)m_windowSize.y/(float)m_textureB->getSize().y);

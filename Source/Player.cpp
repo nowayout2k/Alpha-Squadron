@@ -8,6 +8,7 @@
 #include "../Header/Audio.h"
 #include "../Header/Bullet.h"
 #include "../Header/Scene.h"
+#include "../Header/Window.h"
 
 #define DAMAGE_FLASH_TIME 4.0f
 #define DAMAGE_INVINCIBILITY_TIME .3f

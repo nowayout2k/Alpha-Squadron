@@ -36,15 +36,12 @@ add_executable(Alpha-Squadron main.cpp
         Header/ScrollingBackground.h
         Header/SoundEffectType.h
         Header/MusicType.h
-        Header/DrawableEntity.h
-        Header/DrawableData.h
         Source/Bullet.cpp
         Header/Bullet.h
         Source/DataCache.cpp
         Header/DataCache.h
         Source/Character.cpp
         Header/Character.h
-        Source/TextEntity.cpp
         Header/TextEntity.h
         Header/Font.h
 )

@@ -5,7 +5,7 @@
 #include <iostream>
 #include "../Header/Logger.h"
 
-void Logger::Log(LogType logType, const std::string& message)
+void Logger::log(LogType logType, const std::string& message)
 {
     switch (logType)
     {
