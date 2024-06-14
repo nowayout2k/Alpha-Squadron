@@ -2,13 +2,13 @@
 // Created by Johnnie Otis on 6/8/24.
 //
 
-#include "../Header/Bullet.h"
+#include "../Header/Projectile.h"
 #include "../Header/Audio.h"
 #include "../Header/Enemy.h"
 #include "../Header/Player.h"
 #include "../Header/Window.h"
 
-Bullet::Bullet(Entity* owner, sf::Vector2f spawnPos, sf::Vector2f velocity) : m_velocity(velocity), m_owner(owner), SpriteEntity(true,
+Projectile::Projectile(Entity* owner, sf::Vector2f spawnPos, sf::Vector2f velocity) : m_velocity(velocity), m_owner(owner), SpriteEntity(true,
 	"../Assets/Textures/AircraftSpriteSheet.png",
 	sf::IntRect(376, 108, 10, 12))
 {
@@ -17,7 +17,7 @@ Bullet::Bullet(Entity* owner, sf::Vector2f spawnPos, sf::Vector2f velocity) : m_
 	Audio::playSound(SoundEffectType::Shoot1, 10);
 }
 
-void Bullet::update(float deltaTime)
+void Projectile::update(float deltaTime)
 {
 	sf::Vector2u windowSize = Window::getSize();
 	move(m_velocity*deltaTime);
@@ -26,7 +26,7 @@ void Bullet::update(float deltaTime)
 		destroy();
 }
 
-void Bullet::collision(const Entity* other)
+void Projectile::collision(const Entity* other)
 {
 	if(!m_owner || m_owner->isDestroyPending())
 		destroy();

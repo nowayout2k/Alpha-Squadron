@@ -6,7 +6,7 @@
 #include "../Header/Player.h"
 #include "../Header/Enemy.h"
 #include "../Header/Audio.h"
-#include "../Header/Bullet.h"
+#include "../Header/Projectile.h"
 #include "../Header/Scene.h"
 #include "../Header/Window.h"
 
@@ -79,7 +79,7 @@ void Player::collision(const Entity* other)
 {
 	SpriteEntity::collision(other);
     const auto* enemy = dynamic_cast<const Enemy*>(other);
-	const auto* bullet = dynamic_cast<const Bullet*>(other);
+	const auto* bullet = dynamic_cast<const Projectile*>(other);
 	if (bullet && bullet->hasCollision())
 	{
 		const auto* enemyOwner = dynamic_cast<const Enemy*>(bullet->getOwner());

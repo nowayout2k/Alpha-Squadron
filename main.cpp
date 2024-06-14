@@ -4,17 +4,17 @@
 #include "Header/Entity.h"
 #include "Header/Scene.h"
 #include "Header/Window.h"
+#include "Header/Debug.h"
 
 int main()
 {
 	sf::RenderWindow& window = Window::createWindow(sf::VideoMode(1740,1000), "Alpha Squadron", sf::Style::None);
     Scene gameManager;
-
+	Debug::init();
 	sf::Clock clock;
 
     while (window.isOpen())
     {
-		Window::update(clock.getElapsedTime().asSeconds());
 
 		sf::Event event;
         while (window.pollEvent(event))
@@ -39,6 +39,9 @@ int main()
 			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Key::Escape)
 				return 0;
 
+			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Key::F)
+				Debug::toggleFps();
+
             if (event.type == sf::Event::JoystickConnected ||
 				event.type == sf::Event::JoystickDisconnected ||
 				event.type == sf::Event::JoystickMoved ||
@@ -50,9 +53,12 @@ int main()
 				event.type == sf::Event::MouseWheelMoved)
 					continue;
         }
-		gameManager.update(clock.restart().asSeconds());
+		auto deltaTime = clock.restart().asSeconds();
+		gameManager.update(deltaTime);
+		Debug::update(deltaTime);
 		window.clear();
 		gameManager.render(window);
+		Debug::render(window);
         window.display();
     }
     return 0;

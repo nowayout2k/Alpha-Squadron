@@ -4,7 +4,7 @@
 
 #include "../Header/Character.h"
 #include "../Header/Audio.h"
-#include "../Header/Bullet.h"
+#include "../Header/Projectile.h"
 #include "../Header/Scene.h"
 #include "../Header/Utility.h"
 
@@ -42,7 +42,7 @@ void Character::fireBullet(sf::Vector2f offset, sf::Vector2f velocity)
 		return;
 
 	auto spawnPos = getPosition() + offset + sf::Vector2f(getScaledTextureSize().x, getScaledTextureSize().y/2);
-	Scene::addEntity(std::move(std::make_unique<Bullet>(this, spawnPos, velocity)));
+	Scene::addEntity(std::move(std::make_unique<Projectile>(this, spawnPos, velocity)));
 	m_fireCooldownRemaining = FIRE_COOLDOWN_TIME;
 }
 

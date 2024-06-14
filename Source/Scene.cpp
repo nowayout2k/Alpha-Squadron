@@ -30,7 +30,6 @@ void Scene::setup()
 	auto windowSize = Window::getSize();
 	addEntity(std::make_unique<SpriteEntity>(false, "../Assets/Textures/sky.png"));
 	addEntity(std::make_unique<ScrollingBackground>(std::vector<std::string>{"../Assets/Textures/house1.png", "../Assets/Textures/house1.png", "../Assets/Textures/house1.png"}));
-	addEntity(std::make_unique<TextEntity>(Font::Gamer, "Test", 80, sf::Color::Black, sf::Text::Style::Regular, sf::Vector2f(5, 0)));
 	addEntity(std::make_unique<Player>());
 	addEntity(std::make_unique<Enemy>(true, sf::Vector2f((float)windowSize.x-500, (float)windowSize.y+100)));
 	addEntity(std::make_unique<Enemy>(true, sf::Vector2f((float)windowSize.x-100, (float)windowSize.y+100)));
@@ -56,10 +55,6 @@ void Scene::update(float deltaTime)
 		auto player = dynamic_cast<Player*>(it->get());
 		if(player)
 			hasPlayer = true;
-
-		auto text = dynamic_cast<TextEntity*>(it->get());
-		if(text)
-			text->setString(Window::getFps());
 
 		if ((*it)->isDestroyPending())
 		{

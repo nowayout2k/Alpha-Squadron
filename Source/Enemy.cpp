@@ -4,7 +4,7 @@
 
 #include "../Header/Enemy.h"
 #include "../Header/Player.h"
-#include "../Header/Bullet.h"
+#include "../Header/Projectile.h"
 #include "../Header/Scene.h"
 #include "../Header/Window.h"
 
@@ -64,7 +64,7 @@ void Enemy::collision(const Entity* other)
 {
 	SpriteEntity::collision(other);
     const auto* player = dynamic_cast<const Player*>(other);
-	const auto* bullet = dynamic_cast<const Bullet*>(other);
+	const auto* bullet = dynamic_cast<const Projectile*>(other);
     if (player && player->hasCollision())
 	{
 		takeDamage(m_health);
