@@ -8,7 +8,6 @@
 #include "../Header/ScrollingBackground.h"
 #include "../Header/Audio.h"
 #include "../Header/GameText.h"
-#include "../Header/Window.h"
 #include "../Header/Game.h"
 
 std::vector<std::unique_ptr<Entity>> Scene::m_entities;
@@ -16,7 +15,7 @@ std::vector<std::unique_ptr<Entity>> Scene::m_pendingEntities;
 
 Scene::Scene()
 {
-	setup();
+
 }
 
 void Scene::restart()

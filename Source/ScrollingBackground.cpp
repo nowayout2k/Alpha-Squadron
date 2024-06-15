@@ -3,7 +3,6 @@
 //
 
 #include "../Header/ScrollingBackground.h"
-#include "../Header/Window.h"
 #include "../Header/Game.h"
 
 ScrollingBackground::ScrollingBackground(std::vector<std::string>&& backgroundTexturePaths)

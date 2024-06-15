@@ -5,7 +5,7 @@
 #ifndef ALPHA_SQUADRON_HEADER_UTILITY_H_
 #define ALPHA_SQUADRON_HEADER_UTILITY_H_
 #include <SFML/System/Clock.hpp>
-#include "Logger.h"
+#include "Debug.h"
 class Utility
 {
 public:
@@ -13,13 +13,13 @@ public:
 	{
 		m_clock.restart();
 		sf::Time elapsed = m_clock.getElapsedTime();
-		Logger::log(LogType::Test, message + " Stopwatch Started!");
+		Debug::log(LogType::Test, message + " Stopwatch Started!");
 	}
 
 	static void endStopwatch(std::string message)
 	{
 		sf::Time elapsed = m_clock.getElapsedTime();
-		Logger::log(LogType::Test,
+		Debug::log(LogType::Test,
 			message + " Stopwatch stopped at: " + std::to_string(elapsed.asSeconds()) + " seconds");
 	}
 

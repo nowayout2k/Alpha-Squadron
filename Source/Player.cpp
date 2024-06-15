@@ -8,7 +8,6 @@
 #include "../Header/Audio.h"
 #include "../Header/Projectile.h"
 #include "../Header/Scene.h"
-#include "../Header/Window.h"
 #include "../Header/Game.h"
 
 #define DAMAGE_FLASH_TIME 4.0f

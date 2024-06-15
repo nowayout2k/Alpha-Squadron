@@ -18,8 +18,6 @@ add_executable(Alpha-Squadron main.cpp
         Header/Audio.h
         Source/Network.cpp
         Header/Network.h
-        Source/Logger.cpp
-        Header/Logger.h
         Header/Utility.h
         Header/LogType.h
         Header/Entity.h
@@ -28,8 +26,6 @@ add_executable(Alpha-Squadron main.cpp
         Header/Scene.h
         Source/Enemy.cpp
         Header/Enemy.h
-        Source/Window.cpp
-        Header/Window.h
         Source/Player.cpp
         Header/Player.h
         Source/ScrollingBackground.cpp
