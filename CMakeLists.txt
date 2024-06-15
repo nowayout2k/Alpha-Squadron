@@ -44,6 +44,7 @@ add_executable(Alpha-Squadron main.cpp
         Source/Debug.cpp
         Source/Game.cpp
         Header/Game.h
+        Header/TextureTypes.h
 )
 
 # Link the SFML libraries

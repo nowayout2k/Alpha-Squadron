@@ -16,6 +16,7 @@ class Entity
 {
  public:
 	virtual ~Entity() = default;
+	virtual void loadResources() = 0;
     virtual void update(float deltaTime) = 0;
 	virtual void render(sf::RenderWindow& renderWindow, sf::RenderStates states) = 0;
 	virtual void collision(const Entity* other) = 0;

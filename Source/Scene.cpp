@@ -13,11 +13,6 @@
 std::vector<std::unique_ptr<Entity>> Scene::m_entities;
 std::vector<std::unique_ptr<Entity>> Scene::m_pendingEntities;
 
-Scene::Scene()
-{
-
-}
-
 void Scene::restart()
 {
 	setup();
@@ -28,18 +23,29 @@ void Scene::setup()
 	m_entities.clear();
 	m_pendingEntities.clear();
 	auto windowSize = Game::getWindowSize();
-	addEntity(std::make_unique<GameSprite>(false, "../Assets/Textures/sky.png"));
-	addEntity(std::make_unique<ScrollingBackground>(std::vector<std::string>{"../Assets/Textures/house1.png", "../Assets/Textures/house1.png", "../Assets/Textures/house1.png"}));
-	addEntity(std::make_unique<Player>());
-	addEntity(std::make_unique<Enemy>(true, sf::Vector2f((float)windowSize.x-500, (float)windowSize.y+100)));
-	addEntity(std::make_unique<Enemy>(true, sf::Vector2f((float)windowSize.x-100, (float)windowSize.y+100)));
-	Audio::playMusic(MusicType::Level1, 10);
+	m_entities.push_back(std::make_unique<GameSprite>(false, TextureType::SmoggySky));
+	m_entities.push_back(std::make_unique<ScrollingBackground>(std::vector<TextureType>{TextureType::DecayedBuildings1, TextureType::DecayedBuildings1, TextureType::DecayedBuildings1}));
+	m_entities.push_back(std::make_unique<Player>());
+	m_entities.push_back(std::make_unique<Enemy>(true, sf::Vector2f((float)windowSize.x-500, (float)windowSize.y+100)));
+	m_entities.push_back(std::make_unique<Enemy>(true, sf::Vector2f((float)windowSize.x-100, (float)windowSize.y+100)));
+	Audio::playMusic(MusicType::UNSquadronLevel1, 10);
+
+	loadResources();
+}
+
+void Scene::loadResources()
+{
+	for (auto& entity : m_entities)
+	{
+		entity->loadResources();
+	}
 }
 
 void Scene::update(float deltaTime)
 {
 	for (auto& entity : m_pendingEntities)
 	{
+		entity->loadResources();
 		m_entities.push_back(std::move(entity));
 	}
 	m_pendingEntities.clear();

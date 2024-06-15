@@ -14,7 +14,7 @@
 #define DAMAGE_INVINCIBILITY_TIME .3f
 #define FIRE_COOLDOWN_TIME 0.2f
 
-Player::Player() : Character(true, "../Assets/Textures/AircraftSpriteSheet.png", sf::IntRect(240, 298, 52, 12))
+Player::Player() : Character(true, TextureType::AircraftSpriteSheet, sf::IntRect(240, 298, 52, 12))
 {
 	m_sprite.setScale(4.0f, 4.0f);
     sf::Vector2u windowSize = Game::getWindowSize();

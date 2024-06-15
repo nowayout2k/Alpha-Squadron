@@ -7,7 +7,8 @@
 
 enum MusicType
 {
-	Level1,
+	UNSquadronLevel1,
+	UNSquadronMenu
 };
 
 #endif //ALPHA_SQUADRON_HEADER_MUSICTYPE_H_

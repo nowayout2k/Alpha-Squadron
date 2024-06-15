@@ -10,7 +10,7 @@
 class Character : public GameSprite
 {
  public:
-	explicit Character(const bool hasCollision, const std::string& pathToTexture, const sf::IntRect textureRect = sf::IntRect());
+	explicit Character(const bool hasCollision, const TextureType textureType, const sf::IntRect textureRect = sf::IntRect());
 	virtual ~Character() override = default;
 	void update(float deltaTime) override = 0;
  protected:

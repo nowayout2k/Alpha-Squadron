@@ -5,7 +5,7 @@
 #ifndef ALPHA_SQUADRON_HEADER_FONT_H_
 #define ALPHA_SQUADRON_HEADER_FONT_H_
 
-enum Font
+enum FontType
 {
 	Gamer
 };

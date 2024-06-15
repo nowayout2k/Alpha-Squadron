@@ -2,31 +2,48 @@
 // Created by Johnnie Otis on 6/9/24.
 //
 
-#include "../Header/DataCache.h"
 #include "../Header/Debug.h"
 
 std::unordered_map<std::string, std::unique_ptr<sf::Texture>> DataCache::m_textureCache;
-std::unordered_map<std::string, std::unique_ptr<sf::SoundBuffer>> DataCache::m_soundCache;
-std::unordered_map<std::string, std::unique_ptr<sf::Font>> DataCache::m_fontCache;
+std::unordered_map<SoundEffectType, std::unique_ptr<sf::SoundBuffer>> DataCache::m_soundCache;
+std::unordered_map<FontType, std::unique_ptr<sf::Font>> DataCache::m_fontCache;
 
-sf::Texture* DataCache::getTexture(const std::string path, const sf::IntRect textureRect)
+sf::Texture* DataCache::getTexture(const TextureType textureType, const sf::IntRect textureRect)
 {
-	auto hashString = path + std::to_string(textureRect.left) + std::to_string(textureRect.top) +
-							std::to_string(textureRect.width) + std::to_string(textureRect.height);
-
-	if(m_textureCache.find(hashString) != m_textureCache.end())
-		return m_textureCache[hashString].get();
-
-	try
+	std::string path;
+	switch (textureType)
 	{
-		m_textureCache[hashString] = std::make_unique<sf::Texture>();
-	}
-	catch (const std::overflow_error& e)
-	{
-		Debug::log(Verbose, "Overflow error!");
+	case TextureType::AircraftSpriteSheet :
+		path = "../Assets/Textures/AircraftSpriteSheet.png";
+		break;
+	case TextureType::Coin :
+		path = "../Assets/Textures/Coin.png";
+		break;
+	case TextureType::DecayedBuildings1 :
+		path = "../Assets/Textures/house1.png";
+		break;
+	case TextureType::DecayedBuildings2 :
+		path = "../Assets/Textures/house2.png";
+		break;
+	case TextureType::DecayedBuildings3 :
+		path = "../Assets/Textures/house3.png";
+		break;
+	case TextureType::EnemiesSpriteSheet :
+		path = "../Assets/Textures/EnemiesSpriteSheet.png";
+		break;
+	case TextureType::SmoggySky :
+		path = "../Assets/Textures/sky.png";
+		break;
 	}
 
-	auto texture = m_textureCache[hashString].get();
+	std::string hash = path + std::to_string(textureRect.left) + std::to_string(textureRect.top) + std::to_string(textureRect.width) + std::to_string(textureRect.height);
+
+	if(m_textureCache.find(hash) != m_textureCache.end())
+		return m_textureCache[hash].get();
+
+	m_textureCache[hash] = std::make_unique<sf::Texture>();
+
+	auto texture = m_textureCache[hash].get();
 
 	if(textureRect == sf::IntRect())
 	{
@@ -46,13 +63,30 @@ sf::Texture* DataCache::getTexture(const std::string path, const sf::IntRect tex
 	return texture;
 }
 
-sf::SoundBuffer* DataCache::getSoundBuffer(const std::string path)
+sf::SoundBuffer* DataCache::getSoundBuffer(const SoundEffectType soundType)
 {
-	if(m_soundCache.find(path) != m_soundCache.end())
-		return m_soundCache[path].get();
+	std::string path;
 
-	m_soundCache[path] = std::make_unique<sf::SoundBuffer>();
-	auto soundBuffer = m_soundCache[path].get();
+	switch(soundType)
+	{
+	case SoundEffectType::Collect :
+		path = "../Assets/SFX/Collect.wav";;
+		break;
+	case SoundEffectType::Shoot1 :
+		path = "../Assets/SFX/Shoot1.wav";
+		break;
+	case SoundEffectType::UNSquadronPositiveSelection :
+		path = "../Assets/SFX/UNSquadronStart.wav";
+		break;
+	default:
+		Debug::log(Error, "Sound Effect Type is unknown!");
+		return nullptr;
+	}
+	if(m_soundCache.find(soundType) != m_soundCache.end())
+		return m_soundCache[soundType].get();
+
+	m_soundCache[soundType] = std::make_unique<sf::SoundBuffer>();
+	auto soundBuffer = m_soundCache[soundType].get();
 
 	if (!soundBuffer->loadFromFile(path))
 	{
@@ -62,22 +96,21 @@ sf::SoundBuffer* DataCache::getSoundBuffer(const std::string path)
 	return soundBuffer;
 }
 
-sf::Font* DataCache::getFont(const Font font)
+sf::Font* DataCache::getFont(const FontType fontType)
 {
 	std::string fontName;
-	switch(font)
+	switch(fontType)
 	{
-	case Font::Gamer:
+	case FontType::Gamer:
 		fontName = "../Assets/Fonts/Gamer.ttf";
 		break;
-
 	}
 
-	if(m_fontCache.find(fontName) != m_fontCache.end())
-		return m_fontCache[fontName].get();
+	if(m_fontCache.find(fontType) != m_fontCache.end())
+		return m_fontCache[fontType].get();
 
-	m_fontCache[fontName] = std::make_unique<sf::Font>();
-	auto fontBuffer = m_fontCache[fontName].get();
+	m_fontCache[fontType] = std::make_unique<sf::Font>();
+	auto fontBuffer = m_fontCache[fontType].get();
 
 	if (!fontBuffer->loadFromFile(fontName))
 	{

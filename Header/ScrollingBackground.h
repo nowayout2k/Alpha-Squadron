@@ -11,16 +11,17 @@
  class ScrollingBackground : public Entity
 {
 public:
-    explicit ScrollingBackground(std::vector<std::string>&& backgroundTexturePaths);
+    explicit ScrollingBackground(std::vector<TextureType>&& textureTypes);
     void update(float deltaTime) override;
 	void render(sf::RenderWindow& renderWindow, sf::RenderStates states) override;
 	void collision(const Entity* other) override { return; }
 	bool isColliding(const sf::Rect<float>& bounds) const override { return false; }
 	sf::Rect<float> getGlobalBounds() override;
+	void loadResources() override;
  private:
 	sf::Texture* loadNextTexture();
 	void swapCurrentTexture();
-	std::vector<std::string> m_backgroundPaths;
+	std::vector<TextureType> m_textureTypes;
 	int m_currentBackgroundIndex;
 	sf::Vector2u m_windowSize;
 

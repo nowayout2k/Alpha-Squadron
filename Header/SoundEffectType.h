@@ -8,7 +8,8 @@
 enum SoundEffectType
 {
 	Collect,
-	Shoot1
+	Shoot1,
+	UNSquadronPositiveSelection
 };
 
 #endif //ALPHA_SQUADRON_HEADER_SOUNDEFFECTTYPE_H_

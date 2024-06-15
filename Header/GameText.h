@@ -13,11 +13,9 @@
 class GameText : public Entity
 {
  public:
-	GameText(Font font, std::string text, unsigned int pixelSize, sf::Color color, sf::Text::Style style, sf::Vector2f position)
-		: Entity(false)
+	GameText(FontType fontType, std::string text, unsigned int pixelSize, sf::Color color, sf::Text::Style style, sf::Vector2f position)
+		: m_fontType(fontType), Entity(false)
 	{
-		m_font = DataCache::getFont(font);
-		m_text.setFont(*m_font);
 		m_text.setString(text);
 		m_text.setCharacterSize(pixelSize);
 		m_text.setFillColor(color);
@@ -34,6 +32,12 @@ class GameText : public Entity
 		renderWindow.draw(m_text, states);
 	}
 
+	void loadResources() override
+	{
+		m_font = DataCache::getFont(m_fontType);
+		m_text.setFont(*m_font);
+	};
+
 	void collision(const Entity* other) override { if(!hasCollision()) return; }
 	bool isColliding(const sf::Rect<float>& bounds) const override
 	{
@@ -45,6 +49,7 @@ class GameText : public Entity
  private:
 	sf::Font* m_font;
 	sf::Text m_text;
+	FontType m_fontType;
 };
 
 #endif //ALPHA_SQUADRON_HEADER_GAMETEXT_H_

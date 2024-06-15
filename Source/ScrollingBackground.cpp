@@ -5,25 +5,11 @@
 #include "../Header/ScrollingBackground.h"
 #include "../Header/Game.h"
 
-ScrollingBackground::ScrollingBackground(std::vector<std::string>&& backgroundTexturePaths)
+ScrollingBackground::ScrollingBackground(std::vector<TextureType>&& textureTypes)
 {
-	m_backgroundPaths = std::move(backgroundTexturePaths);
+	m_textureTypes = std::move(textureTypes);
 	m_currentBackgroundIndex = -1;
 	m_windowSize = Game::getWindowSize();
-
-	m_textureA = loadNextTexture();
-	m_textureB = loadNextTexture();
-
-	m_currentTexture = m_textureA;
-
-	m_spriteA = std::make_unique<sf::Sprite>(*m_textureA);
-	m_spriteB = std::make_unique<sf::Sprite>(*m_textureB);
-
-	m_spriteA->setScale((float)m_windowSize.x/(float)m_textureA->getSize().x, (float)m_windowSize.y/(float)m_textureA->getSize().y);
-	m_spriteB->setScale((float)m_windowSize.x/(float)m_textureB->getSize().x, (float)m_windowSize.y/(float)m_textureB->getSize().y);
-
-	m_spriteA->setPosition(0,0);
-	m_spriteB->setPosition((float)m_textureA->getSize().x * m_spriteA->getScale().x,0);
 }
 
 void ScrollingBackground::update(float deltaTime)
@@ -54,10 +40,10 @@ void ScrollingBackground::swapCurrentTexture()
 sf::Texture* ScrollingBackground::loadNextTexture()
 {
 	m_currentBackgroundIndex++;
-	if(m_currentBackgroundIndex >= m_backgroundPaths.size())
+	if(m_currentBackgroundIndex >= m_textureTypes.size())
 		m_currentBackgroundIndex = 0;
 
-	return DataCache::getTexture(m_backgroundPaths[m_currentBackgroundIndex]);
+	return DataCache::getTexture(m_textureTypes[m_currentBackgroundIndex]);
 }
 void ScrollingBackground::render(sf::RenderWindow& renderWindow, sf::RenderStates states)
 {
@@ -72,4 +58,20 @@ sf::Rect<float> ScrollingBackground::getGlobalBounds()
 	auto rectA = m_spriteA->getGlobalBounds();
 	auto rectB = m_spriteB->getGlobalBounds();
 	return sf::Rect<float>(rectA.left+rectB.left,rectA.top+rectB.top,rectA.width+rectB.width,rectA.height+rectB.height);
+}
+void ScrollingBackground::loadResources()
+{
+	m_textureA = loadNextTexture();
+	m_textureB = loadNextTexture();
+
+	m_currentTexture = m_textureA;
+
+	m_spriteA = std::make_unique<sf::Sprite>(*m_textureA);
+	m_spriteB = std::make_unique<sf::Sprite>(*m_textureB);
+
+	m_spriteA->setScale((float)m_windowSize.x/(float)m_textureA->getSize().x, (float)m_windowSize.y/(float)m_textureA->getSize().y);
+	m_spriteB->setScale((float)m_windowSize.x/(float)m_textureB->getSize().x, (float)m_windowSize.y/(float)m_textureB->getSize().y);
+
+	m_spriteA->setPosition(0,0);
+	m_spriteB->setPosition((float)m_textureA->getSize().x * m_spriteA->getScale().x,0);
 }

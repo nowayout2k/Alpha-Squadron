@@ -12,8 +12,8 @@
 #define DAMAGE_INVINCIBILITY_TIME .3f
 #define FIRE_COOLDOWN_TIME 0.2f
 
-Character::Character(const bool hasCollision, const std::string& pathToTexture, const sf::IntRect textureRect) :
-	GameSprite(hasCollision, pathToTexture, textureRect)
+Character::Character(const bool hasCollision, const TextureType textureType, const sf::IntRect textureRect) :
+	GameSprite(hasCollision, textureType, textureRect)
 {
 	m_timeSinceDamage = 0;
 	m_isDamageAnimationActive = false;

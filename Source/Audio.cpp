@@ -13,36 +13,25 @@ sf::SoundBuffer* Audio::m_buffer;
 
 void Audio::playSound(SoundEffectType soundEffectType, float volume)
 {
-	std::string pathToFile;
-	switch (soundEffectType)
-	{
-	case SoundEffectType::Collect:
-		pathToFile = "../Assets/SFX/Collect.wav";
-		break;
-	case SoundEffectType::Shoot1:
-		pathToFile = "../Assets/SFX/shoot1.wav";
-		break;
-	default:
-		Debug::log(Error, "Sound Effect Type is unknown!");
-		return;
-	}
-
-	m_buffer = DataCache::getSoundBuffer(pathToFile);
+	m_buffer = DataCache::getSoundBuffer(soundEffectType);
 	if (!m_buffer)
 		return;
 
 	m_sound.setBuffer(*m_buffer);
 	m_sound.setVolume(volume);
 	m_sound.play();
-
 }
+
 void Audio::playMusic(MusicType musicType, float volume)
 {
 	std::string pathToFile;
 	switch (musicType)
 	{
-	case MusicType::Level1:
-		pathToFile = "../Assets/Music/U.N. Squadron (SNES)_ Mission 1 - Front line base.mp3";
+	case MusicType::UNSquadronLevel1:
+		pathToFile = "../Assets/Music/UN Squadron Level 1.mp3";
+		break;
+	case MusicType::UNSquadronMenu:
+		pathToFile = "../Assets/Music/UN Squadron Menu.mp3";
 		break;
 	default:
 		Debug::log(Error, "Music Type is unknown!");

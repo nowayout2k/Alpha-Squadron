@@ -11,11 +11,8 @@
  class GameSprite : public Entity
 {
 public:
-	explicit GameSprite(const bool hasCollision, const std::string& pathToTexture, const sf::IntRect textureRect = sf::IntRect()) : Entity(hasCollision)
-	{
-		m_texture = loadTexture(pathToTexture, textureRect);
-		m_sprite.setTexture(*m_texture);
-	}
+	explicit GameSprite(const bool hasCollision, const TextureType textureType, const sf::IntRect textureRect = sf::IntRect())
+					: m_textureType(textureType), m_textureRect(textureRect), Entity(hasCollision){}
 	virtual ~GameSprite() override = default;
     void update(float deltaTime) override {}
 	void render(sf::RenderWindow& renderWindow, sf::RenderStates states) override
@@ -38,15 +35,17 @@ public:
 	};
 	sf::Rect<float> getGlobalBounds() override { return m_sprite.getGlobalBounds(); }
 	sf::Vector2f getScaledTextureSize() const { return {(float)m_texture->getSize().x * m_sprite.getScale().x, (float)m_texture->getSize().y * m_sprite.getScale().y}; };
-
-protected:
-    sf::Texture* loadTexture(const std::string &pathToTexture, const sf::IntRect textureRect = sf::IntRect())
+	void loadResources() override
 	{
-		return DataCache::getTexture(pathToTexture, textureRect);
-	}
+		m_texture = DataCache::getTexture(m_textureType, m_textureRect);
+		m_sprite.setTexture(*m_texture);
+	};
+protected:
 	 sf::Sprite m_sprite;
  private:
     sf::Texture* m_texture;
+	TextureType m_textureType;
+	sf::IntRect m_textureRect;
  };
 
 #endif //ALPHA_SQUADRON_HEADER_SPRITE ENTITY_H_

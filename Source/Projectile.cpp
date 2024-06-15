@@ -8,8 +8,9 @@
 #include "../Header/Player.h"
 #include "../Header/Game.h"
 
-Projectile::Projectile(Entity* owner, sf::Vector2f spawnPos, sf::Vector2f velocity) : m_velocity(velocity), m_owner(owner), GameSprite(true,
-	"../Assets/Textures/AircraftSpriteSheet.png",
+Projectile::Projectile(Entity* owner, sf::Vector2f spawnPos, sf::Vector2f velocity) : m_velocity(velocity), m_owner(owner),
+	GameSprite(true,
+	TextureType::AircraftSpriteSheet,
 	sf::IntRect(376, 108, 10, 12))
 {
 	m_sprite.setScale(4.0f, 4.0f);
@@ -28,10 +29,11 @@ void Projectile::update(float deltaTime)
 
 void Projectile::collision(const Entity* other)
 {
+	GameSprite::collision(other);
+
 	if(!m_owner || m_owner->isDestroyPending())
 		destroy();
 
-	GameSprite::collision(other);
 	auto enemy = dynamic_cast<const Enemy*>(other);
 	auto player = dynamic_cast<const Player*>(other);
 
@@ -42,4 +44,9 @@ void Projectile::collision(const Entity* other)
 	{
 		destroy();
 	}
+}
+
+void Projectile::render(sf::RenderWindow& renderWindow, sf::RenderStates states)
+{
+	GameSprite::render(renderWindow, states);
 }
