@@ -9,6 +9,7 @@
 #include "../Header/Projectile.h"
 #include "../Header/Scene.h"
 #include "../Header/Window.h"
+#include "../Header/Game.h"
 
 #define DAMAGE_FLASH_TIME 4.0f
 #define DAMAGE_INVINCIBILITY_TIME .3f
@@ -16,18 +17,20 @@
 
 Player::Player() : Character(true, "../Assets/Textures/AircraftSpriteSheet.png", sf::IntRect(240, 298, 52, 12))
 {
-    setScale(4.0f, 4.0f);
-    sf::Vector2u windowSize = Window::getSize();
-    setPosition(0, (float)windowSize.y / 2.f);
+	m_sprite.setScale(4.0f, 4.0f);
+    sf::Vector2u windowSize = Game::getWindowSize();
+	m_sprite.setPosition(0, (float)windowSize.y / 2.f);
 }
 
 void Player::update(float deltaTime)
 {
-	SpriteEntity::update(deltaTime);
+	if(!isActive())
+		return;
+
 	if(m_fireCooldownRemaining > 0)
 		m_fireCooldownRemaining -= deltaTime;
     sf::Vector2f offset = handleInput(deltaTime);
-    move(offset);
+	m_sprite.move(offset);
 	handleAnimation(deltaTime);
 }
 
@@ -62,10 +65,10 @@ sf::Vector2f Player::handleInput(float deltaTime)
 
 void Player::adjustOffsetToWindow(sf::Vector2f& offset)
 {
-    sf::Vector2u windowSize = Window::getSize();
+    sf::Vector2u windowSize = Game::getWindowSize();
     sf::FloatRect windowBounds(0.f, 0.f, static_cast<float>(windowSize.x), static_cast<float>(windowSize.y));
 
-    sf::FloatRect playerBounds = getGlobalBounds();
+    sf::FloatRect playerBounds = m_sprite.getGlobalBounds();
     playerBounds.left += offset.x;
     playerBounds.top += offset.y;
 
@@ -77,7 +80,7 @@ void Player::adjustOffsetToWindow(sf::Vector2f& offset)
 
 void Player::collision(const Entity* other)
 {
-	SpriteEntity::collision(other);
+	GameSprite::collision(other);
     const auto* enemy = dynamic_cast<const Enemy*>(other);
 	const auto* bullet = dynamic_cast<const Projectile*>(other);
 	if (bullet && bullet->hasCollision())

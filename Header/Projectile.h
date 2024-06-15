@@ -5,9 +5,9 @@
 #ifndef ALPHA_SQUADRON_HEADER_PROJECTILE_H_
 #define ALPHA_SQUADRON_HEADER_PROJECTILE_H_
 
-#include "SpriteEntity.h"
+#include "GameSprite.h"
 
-class Projectile : public SpriteEntity
+class Projectile : public GameSprite
 {
  public:
 	explicit Projectile(Entity* owner, sf::Vector2f spawnPos, sf::Vector2f velocity);

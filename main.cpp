@@ -3,15 +3,16 @@
 #include "Header/Logger.h"
 #include "Header/Entity.h"
 #include "Header/Scene.h"
-#include "Header/Window.h"
 #include "Header/Debug.h"
+#include "Header/Game.h"
 
 int main()
 {
-	sf::RenderWindow& window = Window::createWindow(sf::VideoMode(1740,1000), "Alpha Squadron", sf::Style::None);
-    Scene gameManager;
+	sf::RenderWindow& window = Game::createWindow(sf::VideoMode(1740,1000), "Alpha Squadron", sf::Style::None);
+    Scene scene;
 	Debug::init();
 	sf::Clock clock;
+	sf::RenderStates states;
 
     while (window.isOpen())
     {
@@ -54,10 +55,10 @@ int main()
 					continue;
         }
 		auto deltaTime = clock.restart().asSeconds();
-		gameManager.update(deltaTime);
+		scene.update(deltaTime);
 		Debug::update(deltaTime);
 		window.clear();
-		gameManager.render(window);
+		scene.render(window, states);
 		Debug::render(window);
         window.display();
     }

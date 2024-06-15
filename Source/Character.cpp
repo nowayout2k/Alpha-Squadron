@@ -13,7 +13,7 @@
 #define FIRE_COOLDOWN_TIME 0.2f
 
 Character::Character(const bool hasCollision, const std::string& pathToTexture, const sf::IntRect textureRect) :
-						SpriteEntity(hasCollision, pathToTexture, textureRect)
+	GameSprite(hasCollision, pathToTexture, textureRect)
 {
 	m_timeSinceDamage = 0;
 	m_isDamageAnimationActive = false;
@@ -29,7 +29,7 @@ void Character::takeDamage(int health)
 		destroy();
 		return;
 	}
-	setColor(sf::Color::Red);
+	m_sprite.setColor(sf::Color::Red);
 	Audio::playSound(SoundEffectType::Collect, 10);
 	m_timeSinceDamage = 0;
 	m_isDamageAnimationActive = true;
@@ -41,7 +41,7 @@ void Character::fireBullet(sf::Vector2f offset, sf::Vector2f velocity)
 	if(m_fireCooldownRemaining > 0)
 		return;
 
-	auto spawnPos = getPosition() + offset + sf::Vector2f(getScaledTextureSize().x, getScaledTextureSize().y/2);
+	auto spawnPos = m_sprite.getPosition() + offset + sf::Vector2f(getScaledTextureSize().x, getScaledTextureSize().y/2);
 	Scene::addEntity(std::move(std::make_unique<Projectile>(this, spawnPos, velocity)));
 	m_fireCooldownRemaining = FIRE_COOLDOWN_TIME;
 }
@@ -58,7 +58,7 @@ void Character::handleDamageAnimation(float deltaTime)
 		m_timeSinceDamage += deltaTime;
 		if(m_timeSinceDamage > DAMAGE_FLASH_TIME)
 		{
-			setColor(sf::Color::White);
+			m_sprite.setColor(sf::Color::White);
 			m_isDamageAnimationActive = false;
 		}
 		else
@@ -66,7 +66,7 @@ void Character::handleDamageAnimation(float deltaTime)
 			float phase = fmod(m_timeSinceDamage, 1.0f);
 			float t = 0.5 * (1.0f + std::cos(phase * 2.0f * M_PI));
 			float c = Utility::lerp(0, 255, t);
-			setColor(sf::Color(255,c,c,255));
+			m_sprite.setColor(sf::Color(255,c,c,255));
 		}
 		setCollision(m_timeSinceDamage > DAMAGE_INVINCIBILITY_TIME);
 	}

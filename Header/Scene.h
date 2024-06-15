@@ -7,7 +7,7 @@
 
 
 #include <SFML/Graphics/RenderWindow.hpp>
-#include "SpriteEntity.h"
+#include "GameSprite.h"
 #include "Entity.h"
 
 class Scene
@@ -18,7 +18,7 @@ public:
 
 	void restart();
 	void update(float deltaTime);
-	void render(sf::RenderWindow& window);
+	void render(sf::RenderWindow& window, sf::RenderStates states);
 	Scene();
 private:
 	void setup();

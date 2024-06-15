@@ -6,13 +6,13 @@
 #include "../Header/Player.h"
 #include "../Header/Projectile.h"
 #include "../Header/Scene.h"
-#include "../Header/Window.h"
+#include "../Header/Game.h"
 
 Enemy::Enemy(bool hasCollision, sf::Vector2f position) : Character(hasCollision, "../Assets/Textures/EnemiesSpriteSheet.png",
                                                sf::IntRect(70, 200, 25, 12))
 {
-    setScale(sf::Vector2f(-4,4));
-    setPosition(position);
+    m_sprite.setScale(sf::Vector2f(-4,4));
+	m_sprite.setPosition(position);
 	m_health = 100;
 	m_fireCooldownRemaining = 4;
 }
@@ -21,27 +21,28 @@ bool goUp = true;
 
 void Enemy::update(float deltaTime)
 {
+	if(!isActive())
+		return;
+
 	if(m_health <= 0)
 	{
 		destroy();
 		return;
 	}
 
-	Entity::update(deltaTime);
-
 	sf::Vector2f offset;
-	auto windowSize = Window::getSize();
+	auto windowSize = Game::getWindowSize();
 
 	if(goUp)
 	{
-		if(getPosition().y <= 0)
+		if(m_sprite.getPosition().y <= 0)
 			goUp = false;
 		offset = sf::Vector2f(0, -500);
 
 	}
 	else
 	{
-		if(getPosition().y >= windowSize.y)
+		if(m_sprite.getPosition().y >= windowSize.y)
 			goUp = true;
 		offset = sf::Vector2f(0, 500);
 	}
@@ -57,12 +58,12 @@ void Enemy::update(float deltaTime)
 		fireBullet(offset, sf::Vector2f(-1000, 0));
 	}
 
-	move(offset);
+	m_sprite.move(offset);
 }
 
 void Enemy::collision(const Entity* other)
 {
-	SpriteEntity::collision(other);
+	GameSprite::collision(other);
     const auto* player = dynamic_cast<const Player*>(other);
 	const auto* bullet = dynamic_cast<const Projectile*>(other);
     if (player && player->hasCollision())

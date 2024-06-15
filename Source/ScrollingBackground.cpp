@@ -4,12 +4,13 @@
 
 #include "../Header/ScrollingBackground.h"
 #include "../Header/Window.h"
+#include "../Header/Game.h"
 
 ScrollingBackground::ScrollingBackground(std::vector<std::string>&& backgroundTexturePaths)
 {
 	m_backgroundPaths = std::move(backgroundTexturePaths);
 	m_currentBackgroundIndex = -1;
-	m_windowSize = Window::getSize();
+	m_windowSize = Game::getWindowSize();
 
 	m_textureA = loadNextTexture();
 	m_textureB = loadNextTexture();
@@ -58,4 +59,18 @@ std::shared_ptr<sf::Texture> ScrollingBackground::loadNextTexture()
 		m_currentBackgroundIndex = 0;
 
 	return DataCache::getTexture(m_backgroundPaths[m_currentBackgroundIndex]);
+}
+void ScrollingBackground::render(sf::RenderWindow& renderWindow, sf::RenderStates states)
+{
+	if(isActive())
+	{
+		renderWindow.draw(*m_spriteA, states);
+		renderWindow.draw(*m_spriteB, states);
+	}
+}
+sf::Rect<float> ScrollingBackground::getGlobalBounds()
+{
+	auto rectA = m_spriteA->getGlobalBounds();
+	auto rectB = m_spriteB->getGlobalBounds();
+	return sf::Rect<float>(rectA.left+rectB.left,rectA.top+rectB.top,rectA.width+rectB.width,rectA.height+rectB.height);
 }

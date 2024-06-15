@@ -6,7 +6,7 @@
 #define ALPHA_SQUADRON_HEADER_PLAYER_H_
 
 
-#include "SpriteEntity.h"
+#include "GameSprite.h"
 #include "Entity.h"
 #include "Character.h"
 

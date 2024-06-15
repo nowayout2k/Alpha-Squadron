@@ -7,8 +7,9 @@
 #include "../Header/Player.h"
 #include "../Header/ScrollingBackground.h"
 #include "../Header/Audio.h"
-#include "../Header/TextEntity.h"
+#include "../Header/GameText.h"
 #include "../Header/Window.h"
+#include "../Header/Game.h"
 
 std::vector<std::unique_ptr<Entity>> Scene::m_entities;
 std::vector<std::unique_ptr<Entity>> Scene::m_pendingEntities;
@@ -27,8 +28,8 @@ void Scene::setup()
 {
 	m_entities.clear();
 	m_pendingEntities.clear();
-	auto windowSize = Window::getSize();
-	addEntity(std::make_unique<SpriteEntity>(false, "../Assets/Textures/sky.png"));
+	auto windowSize = Game::getWindowSize();
+	addEntity(std::make_unique<GameSprite>(false, "../Assets/Textures/sky.png"));
 	addEntity(std::make_unique<ScrollingBackground>(std::vector<std::string>{"../Assets/Textures/house1.png", "../Assets/Textures/house1.png", "../Assets/Textures/house1.png"}));
 	addEntity(std::make_unique<Player>());
 	addEntity(std::make_unique<Enemy>(true, sf::Vector2f((float)windowSize.x-500, (float)windowSize.y+100)));
@@ -74,7 +75,7 @@ void Scene::update(float deltaTime)
 	}
 	if (!hasEnemy)
 	{
-		auto windowSize = Window::getSize();
+		auto windowSize = Game::getWindowSize();
 		addEntity(std::make_unique<Enemy>(true, sf::Vector2f((float)windowSize.x-500, (float)windowSize.y+100)));
 		addEntity(std::make_unique<Enemy>(true, sf::Vector2f((float)windowSize.x-100, (float)windowSize.y+100)));
 	}
@@ -82,13 +83,11 @@ void Scene::update(float deltaTime)
 	handleCollisions();
 }
 
-void Scene::render(sf::RenderWindow &window)
+void Scene::render(sf::RenderWindow &window, sf::RenderStates states)
 {
     for (const auto& entity : m_entities)
     {
-		auto drawableEntity = dynamic_cast<sf::Drawable*>(entity.get());
-		if(drawableEntity)
-			window.draw(*drawableEntity);
+		entity->render(window, states);
     }
 }
 
@@ -104,12 +103,10 @@ void Scene::handleCollisions()
             if(other->isDestroyPending() && entity == other)
                 continue;
 
-            auto spriteEntity = dynamic_cast<SpriteEntity*>(entity.get());
-            auto spriteEntityOther = dynamic_cast<SpriteEntity*>(other.get());
-            if(spriteEntity && spriteEntity->hasCollision() && spriteEntityOther && spriteEntityOther->hasCollision() &&
-				spriteEntity->isColliding(spriteEntityOther->getGlobalBounds()))
+            if(entity && entity->hasCollision() && other && other->hasCollision() &&
+				entity->isColliding(other->getGlobalBounds()))
             {
-				spriteEntity->collision(other.get());
+				entity->collision(other.get());
             }
         }
     }

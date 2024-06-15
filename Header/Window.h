@@ -11,10 +11,7 @@
 class Window
 {
 public:
-	static sf::RenderWindow& createWindow(const sf::VideoMode& mode, const std::string& title, sf::Uint32 style);
-    static sf::Vector2u getSize() { return m_window.getSize(); };
- private:
-	static sf::RenderWindow m_window;
+
 };
 
 

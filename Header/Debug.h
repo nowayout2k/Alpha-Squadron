@@ -7,7 +7,7 @@
 
 #include <string>
 #include <SFML/Graphics/Text.hpp>
-#include "TextEntity.h"
+#include "GameText.h"
 
 class Debug
 {

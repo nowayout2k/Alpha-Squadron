@@ -7,21 +7,22 @@
 #include "../Header/Enemy.h"
 #include "../Header/Player.h"
 #include "../Header/Window.h"
+#include "../Header/Game.h"
 
-Projectile::Projectile(Entity* owner, sf::Vector2f spawnPos, sf::Vector2f velocity) : m_velocity(velocity), m_owner(owner), SpriteEntity(true,
+Projectile::Projectile(Entity* owner, sf::Vector2f spawnPos, sf::Vector2f velocity) : m_velocity(velocity), m_owner(owner), GameSprite(true,
 	"../Assets/Textures/AircraftSpriteSheet.png",
 	sf::IntRect(376, 108, 10, 12))
 {
-	setScale(4.0f, 4.0f);
-	setPosition(spawnPos);
+	m_sprite.setScale(4.0f, 4.0f);
+	m_sprite.setPosition(spawnPos);
 	Audio::playSound(SoundEffectType::Shoot1, 10);
 }
 
 void Projectile::update(float deltaTime)
 {
-	sf::Vector2u windowSize = Window::getSize();
-	move(m_velocity*deltaTime);
-	auto position = getPosition();
+	sf::Vector2u windowSize = Game::getWindowSize();
+	m_sprite.move(m_velocity*deltaTime);
+	auto position = m_sprite.getPosition();
 	if(position.x > (float)windowSize.x || position.y > (float)windowSize.y || position.x <= 0 || position.y <= 0 || !m_owner)
 		destroy();
 }
@@ -31,7 +32,7 @@ void Projectile::collision(const Entity* other)
 	if(!m_owner || m_owner->isDestroyPending())
 		destroy();
 
-	SpriteEntity::collision(other);
+	GameSprite::collision(other);
 	auto enemy = dynamic_cast<const Enemy*>(other);
 	auto player = dynamic_cast<const Player*>(other);
 

@@ -23,7 +23,7 @@ add_executable(Alpha-Squadron main.cpp
         Header/Utility.h
         Header/LogType.h
         Header/Entity.h
-        Header/SpriteEntity.h
+        Header/GameSprite.h
         Source/Scene.cpp
         Header/Scene.h
         Source/Enemy.cpp
@@ -42,7 +42,7 @@ add_executable(Alpha-Squadron main.cpp
         Header/DataCache.h
         Source/Character.cpp
         Header/Character.h
-        Header/TextEntity.h
+        Header/GameText.h
         Header/Font.h
         Header/Debug.h
         Source/Debug.cpp

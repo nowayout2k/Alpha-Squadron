@@ -6,21 +6,17 @@
 #define ALPHA_SQUADRON_HEADER_SCROLLINGBACKGROUND_H_
 
 
-#include "SpriteEntity.h"
+#include "GameSprite.h"
 
- class ScrollingBackground : public sf::Drawable, public sf::Transformable, public Entity
+ class ScrollingBackground : public Entity
 {
 public:
     explicit ScrollingBackground(std::vector<std::string>&& backgroundTexturePaths);
     void update(float deltaTime) override;
-	 void draw(sf::RenderTarget& target, sf::RenderStates states) const override
-	 {
-		 if(isActive())
-		 {
-			 target.draw(*m_spriteA, states.transform *= getTransform());
-			 target.draw(*m_spriteB, states.transform *= getTransform());
-		 }
-	 };
+	void render(sf::RenderWindow& renderWindow, sf::RenderStates states) override;
+	void collision(const Entity* other) override { return; }
+	bool isColliding(const sf::Rect<float>& bounds) const override { return false; }
+	sf::Rect<float> getGlobalBounds() override;
  private:
 	std::shared_ptr<sf::Texture> loadNextTexture();
 	void swapCurrentTexture();

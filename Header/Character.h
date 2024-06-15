@@ -4,16 +4,15 @@
 
 #ifndef ALPHA_SQUADRON_HEADER_CHARACTER_H_
 #define ALPHA_SQUADRON_HEADER_CHARACTER_H_
-#include "SpriteEntity.h"
+#include "GameSprite.h"
 #include "Entity.h"
 
-class Character : public SpriteEntity
+class Character : public GameSprite
 {
  public:
 	explicit Character(const bool hasCollision, const std::string& pathToTexture, const sf::IntRect textureRect = sf::IntRect());
 	virtual ~Character() override = default;
 	void update(float deltaTime) override = 0;
-	void collision(const Entity* other) override = 0;
  protected:
 	virtual void handleAnimation(float deltaTime);
 	void handleDamageAnimation(float deltaTime);
