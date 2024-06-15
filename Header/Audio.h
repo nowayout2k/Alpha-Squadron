@@ -19,7 +19,7 @@ class Audio
  private:
 	static sf::Sound m_sound;
 	static sf::Music m_music;
-	static std::shared_ptr<sf::SoundBuffer> m_buffer;
+	static sf::SoundBuffer* m_buffer;
 };
 
 

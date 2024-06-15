@@ -5,7 +5,7 @@
 #include "../Header/Game.h"
 #include "../Header/Debug.h"
 
-#define FRAME_RATE_LIMIT 120.0f
+#define FRAME_RATE_LIMIT 60.0f
 #define TIME_STEP_MAX 1.0f/FRAME_RATE_LIMIT
 
 sf::RenderWindow Game::m_window;

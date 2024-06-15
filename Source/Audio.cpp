@@ -9,7 +9,7 @@
 
 sf::Sound Audio::m_sound;
 sf::Music Audio::m_music;
-std::shared_ptr<sf::SoundBuffer> Audio::m_buffer;
+sf::SoundBuffer* Audio::m_buffer;
 
 void Audio::playSound(SoundEffectType soundEffectType, float volume)
 {
@@ -28,10 +28,10 @@ void Audio::playSound(SoundEffectType soundEffectType, float volume)
 	}
 
 	m_buffer = DataCache::getSoundBuffer(pathToFile);
-	if (!m_buffer.get())
+	if (!m_buffer)
 		return;
 
-	m_sound.setBuffer(*m_buffer.get());
+	m_sound.setBuffer(*m_buffer);
 	m_sound.setVolume(volume);
 	m_sound.play();
 

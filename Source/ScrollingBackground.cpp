@@ -16,8 +16,8 @@ ScrollingBackground::ScrollingBackground(std::vector<std::string>&& backgroundTe
 
 	m_currentTexture = m_textureA;
 
-	m_spriteA = std::make_unique<sf::Sprite>(*m_textureA.get());
-	m_spriteB = std::make_unique<sf::Sprite>(*m_textureB.get());
+	m_spriteA = std::make_unique<sf::Sprite>(*m_textureA);
+	m_spriteB = std::make_unique<sf::Sprite>(*m_textureB);
 
 	m_spriteA->setScale((float)m_windowSize.x/(float)m_textureA->getSize().x, (float)m_windowSize.y/(float)m_textureA->getSize().y);
 	m_spriteB->setScale((float)m_windowSize.x/(float)m_textureB->getSize().x, (float)m_windowSize.y/(float)m_textureB->getSize().y);
@@ -51,7 +51,7 @@ void ScrollingBackground::swapCurrentTexture()
 		m_currentTexture = m_textureA;
 }
 
-std::shared_ptr<sf::Texture> ScrollingBackground::loadNextTexture()
+sf::Texture* ScrollingBackground::loadNextTexture()
 {
 	m_currentBackgroundIndex++;
 	if(m_currentBackgroundIndex >= m_backgroundPaths.size())

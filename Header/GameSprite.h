@@ -40,13 +40,13 @@ public:
 	sf::Vector2f getScaledTextureSize() const { return {(float)m_texture->getSize().x * m_sprite.getScale().x, (float)m_texture->getSize().y * m_sprite.getScale().y}; };
 
 protected:
-    std::shared_ptr<sf::Texture> loadTexture(const std::string &pathToTexture, const sf::IntRect textureRect = sf::IntRect())
+    sf::Texture* loadTexture(const std::string &pathToTexture, const sf::IntRect textureRect = sf::IntRect())
 	{
 		return DataCache::getTexture(pathToTexture, textureRect);
 	}
 	 sf::Sprite m_sprite;
  private:
-    std::shared_ptr<sf::Texture> m_texture;
+    sf::Texture* m_texture;
  };
 
 #endif //ALPHA_SQUADRON_HEADER_SPRITE ENTITY_H_

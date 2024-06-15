@@ -17,7 +17,7 @@ class GameText : public Entity
 		: Entity(false)
 	{
 		m_font = DataCache::getFont(font);
-		m_text.setFont(*m_font.get());
+		m_text.setFont(*m_font);
 		m_text.setString(text);
 		m_text.setCharacterSize(pixelSize);
 		m_text.setFillColor(color);
@@ -43,7 +43,7 @@ class GameText : public Entity
 		return m_text.getGlobalBounds().intersects(bounds);
 	}
  private:
-	std::shared_ptr<sf::Font> m_font;
+	sf::Font* m_font;
 	sf::Text m_text;
 };
 
