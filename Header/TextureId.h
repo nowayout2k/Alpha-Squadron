@@ -2,9 +2,9 @@
 // Created by Johnnie Otis on 6/15/24.
 //
 
-#ifndef ALPHA_SQUADRON_HEADER_TEXTURETYPES_H_
-#define ALPHA_SQUADRON_HEADER_TEXTURETYPES_H_
-enum TextureType
+#ifndef ALPHA_SQUADRON_HEADER_TEXTUREID_H_
+#define ALPHA_SQUADRON_HEADER_TEXTUREID_H_
+enum TextureId
 {
 	SmoggySky,
 	DecayedBuildings1,
@@ -14,4 +14,4 @@ enum TextureType
 	EnemiesSpriteSheet,
 	Coin,
 };
-#endif //ALPHA_SQUADRON_HEADER_TEXTURETYPES_H_
+#endif //ALPHA_SQUADRON_HEADER_TEXTUREID_H_

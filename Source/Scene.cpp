@@ -23,12 +23,12 @@ void Scene::setup()
 	m_entities.clear();
 	m_pendingEntities.clear();
 	auto windowSize = Game::getWindowSize();
-	m_entities.push_back(std::make_unique<GameSprite>(false, TextureType::SmoggySky));
-	m_entities.push_back(std::make_unique<ScrollingBackground>(std::vector<TextureType>{TextureType::DecayedBuildings1, TextureType::DecayedBuildings1, TextureType::DecayedBuildings1}));
+	m_entities.push_back(std::make_unique<GameSprite>(false, TextureId::SmoggySky));
+	m_entities.push_back(std::make_unique<ScrollingBackground>(std::vector<TextureId>{ TextureId::DecayedBuildings1, TextureId::DecayedBuildings1, TextureId::DecayedBuildings1}));
 	m_entities.push_back(std::make_unique<Player>());
 	m_entities.push_back(std::make_unique<Enemy>(true, sf::Vector2f((float)windowSize.x-500, (float)windowSize.y+100)));
 	m_entities.push_back(std::make_unique<Enemy>(true, sf::Vector2f((float)windowSize.x-100, (float)windowSize.y+100)));
-	Audio::playMusic(MusicType::UNSquadronLevel1, 10);
+	Audio::playMusic(MusicId::UNSquadronLevel1, 10);
 
 	loadResources();
 }

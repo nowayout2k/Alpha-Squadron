@@ -6,12 +6,12 @@
 #define ALPHA_SQUADRON_HEADER_SPRITE_ENTITY_H_
 
 #include "Entity.h"
-#include "DataCache.h"
+#include "ResourceCache.h"
 
  class GameSprite : public Entity
 {
 public:
-	explicit GameSprite(const bool hasCollision, const TextureType textureType, const sf::IntRect textureRect = sf::IntRect())
+	explicit GameSprite(const bool hasCollision, const TextureId textureType, const sf::IntRect textureRect = sf::IntRect())
 					: m_textureType(textureType), m_textureRect(textureRect), Entity(hasCollision){}
 	virtual ~GameSprite() override = default;
     void update(float deltaTime) override {}
@@ -37,14 +37,14 @@ public:
 	sf::Vector2f getScaledTextureSize() const { return {(float)m_texture->getSize().x * m_sprite.getScale().x, (float)m_texture->getSize().y * m_sprite.getScale().y}; };
 	void loadResources() override
 	{
-		m_texture = DataCache::getTexture(m_textureType, m_textureRect);
+		m_texture = ResourceCache::getTexture(m_textureType, m_textureRect);
 		m_sprite.setTexture(*m_texture);
 	};
 protected:
 	 sf::Sprite m_sprite;
  private:
     sf::Texture* m_texture;
-	TextureType m_textureType;
+	TextureId m_textureType;
 	sf::IntRect m_textureRect;
  };
 

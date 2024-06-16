@@ -10,12 +10,12 @@
 
 Projectile::Projectile(Entity* owner, sf::Vector2f spawnPos, sf::Vector2f velocity) : m_velocity(velocity), m_owner(owner),
 	GameSprite(true,
-	TextureType::AircraftSpriteSheet,
+	TextureId::AircraftSpriteSheet,
 	sf::IntRect(376, 108, 10, 12))
 {
 	m_sprite.setScale(4.0f, 4.0f);
 	m_sprite.setPosition(spawnPos);
-	Audio::playSound(SoundEffectType::Shoot1, 10);
+	Audio::playSound(SoundFxId::Shoot1, 10);
 }
 
 void Projectile::update(float deltaTime)

@@ -10,7 +10,6 @@
 #include <string>
 #include <SFML/Graphics/Text.hpp>
 #include "GameText.h"
-#include "LogType.h"
 
 class Debug
 {
@@ -24,7 +23,9 @@ class Debug
 	}
 	static void update(float deltaTime);
 	static void render(sf::RenderWindow &window, sf::RenderStates states);
-	static void log(LogType logType, const std::string& message);
+	static void log(const std::string& message);
+	static void logWarning(const std::string& message);
+	static void logError(std::exception exception);
  private:
 #if DEBUGGING_ENABLED
 	static bool m_fpsVisible;

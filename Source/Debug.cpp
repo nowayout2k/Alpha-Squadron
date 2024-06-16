@@ -17,7 +17,7 @@ int Debug::m_framesSinceLastFpsUpdate = 0;
 void Debug::init()
 {
 #if DEBUGGING_ENABLED
-	m_fpsText.setFont(*DataCache::getFont(FontType::Gamer));
+	m_fpsText.setFont(*ResourceCache::getFont(FontId::Gamer));
 	m_fpsText.setPosition(sf::Vector2f());
 	m_fpsText.setStyle(sf::Text::Bold | sf::Text::Underlined);
 	m_fpsText.setCharacterSize(100);
@@ -41,24 +41,25 @@ void Debug::update(float deltaTime)
 #endif
 }
 
-void Debug::log(LogType logType, const std::string& message)
+void Debug::logError(std::exception exception)
 {
 #if DEBUGGING_ENABLED
-	switch (logType)
-	{
-	case Error:
-		std::cout << "ERROR: " << message << std::endl;
-		break;
-	case Verbose:
-		std::cout << "LOG: " << message << std::endl;
-		break;
-	case Warning:
-		std::cout << "WARNING: " << message << std::endl;
-		break;
-	case Test:
-		std::cout << "TEST: " << message << std::endl;
-		break;
-	}
+	std::cout << "***** ERROR! " << exception.what() << "*****" << std::endl;
+	throw exception;
+#endif
+}
+
+void Debug::log(const std::string& message)
+{
+#if DEBUGGING_ENABLED
+	std::cout << "LOG: " << message << std::endl;
+#endif
+}
+
+void Debug::logWarning(const std::string& message)
+{
+#if DEBUGGING_ENABLED
+	std::cout << "-----WARNING: " << message << "-----" << std::endl;
 #endif
 }
 

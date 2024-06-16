@@ -8,14 +8,14 @@
 #include <SFML/Audio/Music.hpp>
 #include <SFML/Audio/Sound.hpp>
 #include <SFML/Audio/SoundBuffer.hpp>
-#include "SoundEffectType.h"
-#include "MusicType.h"
+#include "SoundFxId.h"
+#include "MusicId.h"
 
 class Audio
 {
  public:
-	static void playSound(SoundEffectType soundType, float volume = 100);
-	static void playMusic(MusicType musicType, float volume = 100);
+	static void playSound(SoundFxId soundType, float volume = 100);
+	static void playMusic(MusicId musicType, float volume = 100);
  private:
 	static sf::Sound m_sound;
 	static sf::Music m_music;

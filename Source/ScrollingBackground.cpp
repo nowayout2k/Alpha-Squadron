@@ -5,7 +5,7 @@
 #include "../Header/ScrollingBackground.h"
 #include "../Header/Game.h"
 
-ScrollingBackground::ScrollingBackground(std::vector<TextureType>&& textureTypes)
+ScrollingBackground::ScrollingBackground(std::vector<TextureId>&& textureTypes)
 {
 	m_textureTypes = std::move(textureTypes);
 	m_currentBackgroundIndex = -1;
@@ -43,7 +43,7 @@ sf::Texture* ScrollingBackground::loadNextTexture()
 	if(m_currentBackgroundIndex >= m_textureTypes.size())
 		m_currentBackgroundIndex = 0;
 
-	return DataCache::getTexture(m_textureTypes[m_currentBackgroundIndex]);
+	return ResourceCache::getTexture(m_textureTypes[m_currentBackgroundIndex]);
 }
 void ScrollingBackground::render(sf::RenderWindow& renderWindow, sf::RenderStates states)
 {

@@ -6,14 +6,14 @@
 #define ALPHA_SQUADRON_HEADER_GAMETEXT_H_
 
 #include <SFML/Graphics/Text.hpp>
-#include "Font.h"
+#include "FontId.h"
 #include "Entity.h"
-#include "DataCache.h"
+#include "ResourceCache.h"
 
 class GameText : public Entity
 {
  public:
-	GameText(FontType fontType, std::string text, unsigned int pixelSize, sf::Color color, sf::Text::Style style, sf::Vector2f position)
+	GameText(FontId fontType, std::string text, unsigned int pixelSize, sf::Color color, sf::Text::Style style, sf::Vector2f position)
 		: m_fontType(fontType), Entity(false)
 	{
 		m_text.setString(text);
@@ -34,7 +34,7 @@ class GameText : public Entity
 
 	void loadResources() override
 	{
-		m_font = DataCache::getFont(m_fontType);
+		m_font = ResourceCache::getFont(m_fontType);
 		m_text.setFont(*m_font);
 	};
 
@@ -49,7 +49,7 @@ class GameText : public Entity
  private:
 	sf::Font* m_font;
 	sf::Text m_text;
-	FontType m_fontType;
+	FontId m_fontType;
 };
 
 #endif //ALPHA_SQUADRON_HEADER_GAMETEXT_H_

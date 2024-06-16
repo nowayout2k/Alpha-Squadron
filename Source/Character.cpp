@@ -12,7 +12,7 @@
 #define DAMAGE_INVINCIBILITY_TIME .3f
 #define FIRE_COOLDOWN_TIME 0.2f
 
-Character::Character(const bool hasCollision, const TextureType textureType, const sf::IntRect textureRect) :
+Character::Character(const bool hasCollision, const TextureId textureType, const sf::IntRect textureRect) :
 	GameSprite(hasCollision, textureType, textureRect)
 {
 	m_timeSinceDamage = 0;
@@ -30,7 +30,7 @@ void Character::takeDamage(int health)
 		return;
 	}
 	m_sprite.setColor(sf::Color::Red);
-	Audio::playSound(SoundEffectType::Collect, 10);
+	Audio::playSound(SoundFxId::Collect, 10);
 	m_timeSinceDamage = 0;
 	m_isDamageAnimationActive = true;
 }

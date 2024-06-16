@@ -43,17 +43,17 @@ void Game::processEvents()
 
 		if (event.type == sf::Event::Resized)
 		{
-			Debug::log(LogType::Verbose,"Window resized to " + std::to_string(event.size.width) + "x" + std::to_string(event.size.height));
+			Debug::log("Window resized to " + std::to_string(event.size.width) + "x" + std::to_string(event.size.height));
 		}
 
 		if (event.type == sf::Event::LostFocus)
 		{
-			Debug::log(LogType::Verbose,"Window lost focus");
+			Debug::log("Window lost focus");
 		}
 
 		if (event.type == sf::Event::GainedFocus)
 		{
-			Debug::log(LogType::Verbose,"Window gained focus");
+			Debug::log("Window gained focus");
 		}
 
 		if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Key::F)
