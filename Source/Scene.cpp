@@ -15,7 +15,12 @@ std::vector<std::unique_ptr<Entity>> Scene::m_pendingEntities;
 
 void Scene::restart()
 {
+	Audio::stopMusic();
+	ResourceManager::clearFontCache();
+	ResourceManager::clearSoundBufferCache();
+	ResourceManager::clearTextureCache();
 	setup();
+	Debug::log("Restarting game.....");
 }
 
 void Scene::setup()
@@ -30,7 +35,7 @@ void Scene::setup()
 	m_entities.push_back(std::make_unique<Enemy>(true, sf::Vector2f((float)windowSize.x-100, (float)windowSize.y+100)));
 	Audio::playMusic(MusicId::UNSquadronLevel1, 10);
 
-	loadResources();
+ 	loadResources();
 }
 
 void Scene::loadResources()

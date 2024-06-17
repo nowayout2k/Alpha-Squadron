@@ -2,8 +2,8 @@
 // Created by Johnnie Otis on 5/26/24.
 //
 
-#ifndef ALPHA_SQUADRON_HEADER_NETWORK_H_
-#define ALPHA_SQUADRON_HEADER_NETWORK_H_
+#ifndef NETWORK_H_
+#define NETWORK_H_
 
 #include <SFML/Network/UdpSocket.hpp>
 #include <future>
@@ -45,4 +45,4 @@ private:
 };
 
 
-#endif //ALPHA_SQUADRON_HEADER_NETWORK_H_
+#endif //NETWORK_H_

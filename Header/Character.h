@@ -2,10 +2,9 @@
 // Created by Johnnie Otis on 6/9/24.
 //
 
-#ifndef ALPHA_SQUADRON_HEADER_CHARACTER_H_
-#define ALPHA_SQUADRON_HEADER_CHARACTER_H_
-#include "GameSprite.h"
-#include "Entity.h"
+#ifndef CHARACTER_H_
+#define CHARACTER_H_
+#include "../Header/GameSprite.h"
 
 class Character : public GameSprite
 {
@@ -25,4 +24,4 @@ class Character : public GameSprite
 	float m_fireCooldownRemaining;
 };
 
-#endif //ALPHA_SQUADRON_HEADER_CHARACTER_H_
+#endif //CHARACTER_H_

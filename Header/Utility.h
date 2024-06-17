@@ -2,10 +2,9 @@
 // Created by Johnnie on 5/27/2024.
 //
 
-#ifndef ALPHA_SQUADRON_HEADER_UTILITY_H_
-#define ALPHA_SQUADRON_HEADER_UTILITY_H_
+#ifndef UTILITY_H_
+#define UTILITY_H_
 #include <SFML/System/Clock.hpp>
-#include "Debug.h"
 class Utility
 {
 public:
@@ -13,13 +12,11 @@ public:
 	{
 		m_clock.restart();
 		sf::Time elapsed = m_clock.getElapsedTime();
-		Debug::log(message + " Stopwatch Started!");
 	}
 
 	static void endStopwatch(std::string message)
 	{
 		sf::Time elapsed = m_clock.getElapsedTime();
-		Debug::log(message + " Stopwatch stopped at: " + std::to_string(elapsed.asSeconds()) + " seconds");
 	}
 
 	static float lerp(float a, float b, float t)
@@ -41,4 +38,4 @@ sf::Thread::launch: Creates and launches a new thread.
 sf::Thread::wait: Waits for a thread to finish executing.
  */
 };
-#endif //ALPHA_SQUADRON_HEADER_UTILITY_H_
+#endif //UTILITY_H_

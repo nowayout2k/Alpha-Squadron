@@ -26,11 +26,12 @@ void Character::takeDamage(int health)
 	m_health -= health;
 	if(m_isDamageAnimationActive || m_health <= 0)
 	{
+		Audio::playSound(SoundFxId::Explosion, 50);
 		destroy();
 		return;
 	}
 	m_sprite.setColor(sf::Color::Red);
-	Audio::playSound(SoundFxId::Collect, 10);
+	Audio::playSound(SoundFxId::Damage, 50);
 	m_timeSinceDamage = 0;
 	m_isDamageAnimationActive = true;
 }

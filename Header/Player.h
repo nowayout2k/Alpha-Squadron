@@ -2,8 +2,8 @@
 // Created by Johnnie Otis on 6/2/24.
 //
 
-#ifndef ALPHA_SQUADRON_HEADER_PLAYER_H_
-#define ALPHA_SQUADRON_HEADER_PLAYER_H_
+#ifndef PLAYER_H_
+#define PLAYER_H_
 
 
 #include "GameSprite.h"
@@ -22,4 +22,4 @@ private:
     void adjustOffsetToWindow(sf::Vector2f& offset);
 };
 
-#endif //ALPHA_SQUADRON_HEADER_PLAYER_H_
+#endif //PLAYER_H_

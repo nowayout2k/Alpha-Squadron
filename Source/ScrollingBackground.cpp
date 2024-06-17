@@ -43,7 +43,7 @@ sf::Texture* ScrollingBackground::loadNextTexture()
 	if(m_currentBackgroundIndex >= m_textureTypes.size())
 		m_currentBackgroundIndex = 0;
 
-	return ResourceCache::getTexture(m_textureTypes[m_currentBackgroundIndex]);
+	return ResourceManager::loadResource(m_textureTypes[m_currentBackgroundIndex], sf::Rect<int>());
 }
 void ScrollingBackground::render(sf::RenderWindow& renderWindow, sf::RenderStates states)
 {

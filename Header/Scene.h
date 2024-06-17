@@ -2,11 +2,9 @@
 // Created by Johnnie Otis on 5/30/24.
 //
 
-#ifndef ALPHA_SQUADRON_GAMEMANAGER_H
-#define ALPHA_SQUADRON_GAMEMANAGER_H
+#ifndef SCENE_H_
+#define SCENE_H_
 
-
-#include <SFML/Graphics/RenderWindow.hpp>
 #include "GameSprite.h"
 #include "Entity.h"
 
@@ -29,4 +27,4 @@ private:
 };
 
 
-#endif //ALPHA_SQUADRON_GAMEMANAGER_H
+#endif //SCENE_H_

@@ -2,13 +2,12 @@
 // Created by Johnnie Otis on 6/10/24.
 //
 
-#ifndef ALPHA_SQUADRON_HEADER_GAMETEXT_H_
-#define ALPHA_SQUADRON_HEADER_GAMETEXT_H_
+#ifndef GAMETEXT_H_
+#define GAMETEXT_H_
 
 #include <SFML/Graphics/Text.hpp>
-#include "FontId.h"
 #include "Entity.h"
-#include "ResourceCache.h"
+#include "ResourceManager.h"
 
 class GameText : public Entity
 {
@@ -34,7 +33,7 @@ class GameText : public Entity
 
 	void loadResources() override
 	{
-		m_font = ResourceCache::getFont(m_fontType);
+		m_font = ResourceManager::loadResource(m_fontType);
 		m_text.setFont(*m_font);
 	};
 
@@ -52,4 +51,4 @@ class GameText : public Entity
 	FontId m_fontType;
 };
 
-#endif //ALPHA_SQUADRON_HEADER_GAMETEXT_H_
+#endif //GAMETEXT_H_

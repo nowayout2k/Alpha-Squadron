@@ -2,6 +2,7 @@
 // Created by Johnnie Otis on 6/13/24.
 //
 
+#include <SFML/Window/Event.hpp>
 #include "../Header/Game.h"
 #include "../Header/Debug.h"
 

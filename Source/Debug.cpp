@@ -3,11 +3,12 @@
 //
 
 #include "../Header/Debug.h"
+#include "../Header/GameText.h"
+#include <iostream>
+#include <string>
+
 
 #if DEBUGGING_ENABLED
-#include <SFML/Graphics/RenderWindow.hpp>
-#include <iostream>
-
 bool Debug::m_fpsVisible = false;
 sf::Text Debug::m_fpsText;
 float Debug::m_timeSinceLastFpsUpdate = 0;
@@ -17,7 +18,7 @@ int Debug::m_framesSinceLastFpsUpdate = 0;
 void Debug::init()
 {
 #if DEBUGGING_ENABLED
-	m_fpsText.setFont(*ResourceCache::getFont(FontId::Gamer));
+	m_fpsText.setFont(*ResourceManager::loadResource(FontId::Gamer));
 	m_fpsText.setPosition(sf::Vector2f());
 	m_fpsText.setStyle(sf::Text::Bold | sf::Text::Underlined);
 	m_fpsText.setCharacterSize(100);

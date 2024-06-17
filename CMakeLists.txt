@@ -33,8 +33,6 @@ add_executable(Alpha-Squadron main.cpp
         Header/MusicId.h
         Source/Projectile.cpp
         Header/Projectile.h
-        Source/ResourceCache.cpp
-        Header/ResourceCache.h
         Source/Character.cpp
         Header/Character.h
         Header/GameText.h
@@ -44,6 +42,9 @@ add_executable(Alpha-Squadron main.cpp
         Source/Game.cpp
         Header/Game.h
         Header/TextureId.h
+        Source/ResourceManager.cpp
+        Header/ResourceManager.h
+        Header/Cache.h
 )
 
 # Link the SFML libraries

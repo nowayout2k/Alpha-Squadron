@@ -2,17 +2,17 @@
 // Created by Johnnie Otis on 5/30/24.
 //
 
-#ifndef ALPHA_SQUADRON_HEADER_SPRITE_ENTITY_H_
-#define ALPHA_SQUADRON_HEADER_SPRITE_ENTITY_H_
+#ifndef GAMESPRITE_H_
+#define GAMESPRITE_H_
 
 #include "Entity.h"
-#include "ResourceCache.h"
+#include "ResourceManager.h"
 
- class GameSprite : public Entity
+class GameSprite : public Entity
 {
 public:
 	explicit GameSprite(const bool hasCollision, const TextureId textureType, const sf::IntRect textureRect = sf::IntRect())
-					: m_textureType(textureType), m_textureRect(textureRect), Entity(hasCollision){}
+					: m_textureId(textureType), m_textureRect(textureRect), Entity(hasCollision){}
 	virtual ~GameSprite() override = default;
     void update(float deltaTime) override {}
 	void render(sf::RenderWindow& renderWindow, sf::RenderStates states) override
@@ -37,14 +37,14 @@ public:
 	sf::Vector2f getScaledTextureSize() const { return {(float)m_texture->getSize().x * m_sprite.getScale().x, (float)m_texture->getSize().y * m_sprite.getScale().y}; };
 	void loadResources() override
 	{
-		m_texture = ResourceCache::getTexture(m_textureType, m_textureRect);
+		m_texture = ResourceManager::loadResource(m_textureId, m_textureRect);
 		m_sprite.setTexture(*m_texture);
 	};
 protected:
 	 sf::Sprite m_sprite;
  private:
     sf::Texture* m_texture;
-	TextureId m_textureType;
+	TextureId m_textureId;
 	sf::IntRect m_textureRect;
  };
 

@@ -2,8 +2,8 @@
 // Created by Johnnie Otis on 6/15/24.
 //
 
-#ifndef ALPHA_SQUADRON_HEADER_TEXTUREID_H_
-#define ALPHA_SQUADRON_HEADER_TEXTUREID_H_
+#ifndef TEXTUREID_H_
+#define TEXTUREID_H_
 enum TextureId
 {
 	SmoggySky,
@@ -14,4 +14,4 @@ enum TextureId
 	EnemiesSpriteSheet,
 	Coin,
 };
-#endif //ALPHA_SQUADRON_HEADER_TEXTUREID_H_
+#endif //TEXTUREID_H_

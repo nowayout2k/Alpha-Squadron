@@ -2,25 +2,27 @@
 // Created by Johnnie Otis on 5/26/24.
 //
 
-#ifndef ALPHA_SQUADRON_HEADER_AUDIO_H_
-#define ALPHA_SQUADRON_HEADER_AUDIO_H_
+#ifndef AUDIO_H_
+#define AUDIO_H_
 
 #include <SFML/Audio/Music.hpp>
 #include <SFML/Audio/Sound.hpp>
 #include <SFML/Audio/SoundBuffer.hpp>
-#include "SoundFxId.h"
-#include "MusicId.h"
+#include "../Header/SoundFxId.h"
+#include "../Header/MusicId.h"
+#include <queue>
 
 class Audio
 {
  public:
 	static void playSound(SoundFxId soundType, float volume = 100);
 	static void playMusic(MusicId musicType, float volume = 100);
+	static void stopMusic();
+	static std::string getMusicPath(MusicId musicId);
  private:
-	static sf::Sound m_sound;
+	static std::vector<sf::Sound> m_sounds;
 	static sf::Music m_music;
-	static sf::SoundBuffer* m_buffer;
 };
 
 
-#endif //ALPHA_SQUADRON_HEADER_AUDIO_H_
+#endif //AUDIO_H_

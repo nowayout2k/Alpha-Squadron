@@ -2,10 +2,9 @@
 // Created by Johnnie Otis on 6/13/24.
 //
 
-#ifndef ALPHA_SQUADRON_HEADER_GAME_H_
-#define ALPHA_SQUADRON_HEADER_GAME_H_
-#include <SFML/Window.hpp>
-#include <SFML/Graphics/RenderWindow.hpp>
+#ifndef GAME_H_
+#define GAME_H_
+
 #include "Scene.h"
 
 class Game
@@ -25,4 +24,4 @@ class Game
 	Scene m_scene;
 };
 
-#endif //ALPHA_SQUADRON_HEADER_GAME_H_
+#endif //GAME_H_

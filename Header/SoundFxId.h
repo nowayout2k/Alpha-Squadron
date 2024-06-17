@@ -2,14 +2,16 @@
 // Created by Johnnie Otis on 6/2/24.
 //
 
-#ifndef ALPHA_SQUADRON_HEADER_SOUNDFXID_H_
-#define ALPHA_SQUADRON_HEADER_SOUNDFXID_H_
+#ifndef SOUNDFXID_H_
+#define SOUNDFXID_H_
 
 enum SoundFxId
 {
 	Collect,
 	Shoot1,
+	Damage,
+	Explosion,
 	UNSquadronPositiveSelection
 };
 
-#endif //ALPHA_SQUADRON_HEADER_SOUNDFXID_H_
+#endif //SOUNDFXID_H_

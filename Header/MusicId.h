@@ -2,8 +2,8 @@
 // Created by Johnnie Otis on 6/2/24.
 //
 
-#ifndef ALPHA_SQUADRON_HEADER_MUSICID_H_
-#define ALPHA_SQUADRON_HEADER_MUSICID_H_
+#ifndef MUSICID_H_
+#define MUSICID_H_
 
 enum MusicId
 {
@@ -11,4 +11,4 @@ enum MusicId
 	UNSquadronMenu
 };
 
-#endif //ALPHA_SQUADRON_HEADER_MUSICID_H_
+#endif //MUSICID_H_

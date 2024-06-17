@@ -2,8 +2,8 @@
 // Created by Johnnie Otis on 6/8/24.
 //
 
-#ifndef ALPHA_SQUADRON_HEADER_PROJECTILE_H_
-#define ALPHA_SQUADRON_HEADER_PROJECTILE_H_
+#ifndef PROJECTILE_H_
+#define PROJECTILE_H_
 
 #include "GameSprite.h"
 
@@ -20,4 +20,4 @@ class Projectile : public GameSprite
 	sf::Vector2f m_velocity;
 };
 
-#endif //ALPHA_SQUADRON_HEADER_PROJECTILE_H_
+#endif //PROJECTILE_H_

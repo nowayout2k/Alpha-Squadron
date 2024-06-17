@@ -2,8 +2,8 @@
 // Created by Johnnie Otis on 6/1/24.
 //
 
-#ifndef ALPHA_SQUADRON_HEADER_ENEMY_H_
-#define ALPHA_SQUADRON_HEADER_ENEMY_H_
+#ifndef ENEMY_H_
+#define ENEMY_H_
 
 #include "GameSprite.h"
 #include "Entity.h"
@@ -19,4 +19,4 @@ private:
     sf::Texture m_texture;
 };
 
-#endif //ALPHA_SQUADRON_HEADER_ENEMY_H_
+#endif //ENEMY_H_
