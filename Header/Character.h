@@ -11,7 +11,6 @@ class Character : public GameSprite
  public:
 	explicit Character(const bool hasCollision, const TextureId textureType, const sf::IntRect textureRect = sf::IntRect());
 	virtual ~Character() override = default;
-	void update(float deltaTime) override = 0;
  protected:
 	virtual void handleAnimation(float deltaTime);
 	void handleDamageAnimation(float deltaTime);

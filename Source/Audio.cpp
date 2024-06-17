@@ -7,7 +7,7 @@
 #include <SFML/Audio.hpp>
 #include "../Header/ResourceManager.h"
 
-std::vector<sf::Sound> Audio::m_sounds;
+std::list<PooledSound> Audio::m_sounds;
 sf::Music Audio::m_music;
 
 #define POOL_MAX_SIZE 10
@@ -18,24 +18,29 @@ void Audio::playSound(SoundFxId soundFxId, float volume)
 	if (!buffer)
 		return;
 
-	m_sounds.push_back(sf::Sound());
-	sf::Sound& sound = m_sounds.back();
-	sound.setBuffer(*buffer);
-	sound.setVolume(volume);
-	sound.play();
-
+	PooledSound* availableSound = nullptr;
 	if(m_sounds.size() > POOL_MAX_SIZE)
 	{
-		for (auto itr = m_sounds.begin(); itr != m_sounds.end();)
+		for (auto& pooledSound : m_sounds )
 		{
-			if(itr->getStatus() == sf::Sound::Status::Stopped)
-				itr = m_sounds.erase(itr);
-			else
-				++itr;
+			if(pooledSound.sound.getStatus() == sf::Sound::Status::Stopped)
+				pooledSound.isAvailable = true;
+
+			if(pooledSound.isAvailable)
+				availableSound = &pooledSound;
 		}
 	}
-}
 
+	if(!availableSound)
+	{
+		m_sounds.push_back(PooledSound());
+		availableSound = &m_sounds.back();
+	}
+
+	availableSound->sound.setBuffer(*buffer);
+	availableSound->sound.setVolume(volume);
+	availableSound->sound.play();
+}
 
 void Audio::playMusic(MusicId musicId, float volume)
 {

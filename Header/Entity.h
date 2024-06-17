@@ -11,13 +11,24 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/System/Vector3.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
+#include "IComponent.h"
 
+//TODO: Explore using a component based system
 class Entity
 {
  public:
 	virtual ~Entity() = default;
 	virtual void loadResources() = 0;
-    virtual void update(float deltaTime) = 0;
+    virtual void update(float deltaTime)
+	{
+		if(!isActive())
+			return;
+
+		for (auto& component: m_components)
+		{
+			component.update(deltaTime);
+		}
+	}
 	virtual void render(sf::RenderWindow& renderWindow, sf::RenderStates states) = 0;
 	virtual void collision(const Entity* other) = 0;
 	virtual bool isColliding(const sf::Rect<float>& bounds) const = 0;
@@ -39,6 +50,7 @@ protected:
 	bool m_isActive;
 	bool m_isDestroyPending;
 	bool m_hasCollision;
+	std::vector<IComponent> m_components;
 };
 
 #endif //ENTITY_H_

@@ -10,7 +10,8 @@
 #include <SFML/Audio/SoundBuffer.hpp>
 #include "../Header/SoundFxId.h"
 #include "../Header/MusicId.h"
-#include <queue>
+#include "PooledSound.h"
+#include <list>
 
 class Audio
 {
@@ -20,7 +21,7 @@ class Audio
 	static void stopMusic();
 	static std::string getMusicPath(MusicId musicId);
  private:
-	static std::vector<sf::Sound> m_sounds;
+	static std::list<PooledSound> m_sounds;
 	static sf::Music m_music;
 };
 
