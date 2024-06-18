@@ -45,7 +45,6 @@ add_executable(Alpha-Squadron main.cpp
         Source/ResourceManager.cpp
         Header/ResourceManager.h
         Header/Cache.h
-        Header/IComponent.h
         Header/PooledSound.h
 )
 
