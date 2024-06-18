@@ -2,8 +2,8 @@
 // Created by Johnnie Otis on 6/2/24.
 //
 
-#ifndef JET_H_
-#define JET_H_
+#ifndef PLAYER_H_
+#define PLAYER_H_
 
 
 #include "GameSprite.h"
@@ -11,10 +11,10 @@
 #include "Character.h"
 
 
-class Jet : public Character
+class Player : public Character
 {
 public:
-    explicit Jet();
+    explicit Player();
     void update(float deltaTime) override;
     void collision(const Entity* other) override;
 private:
@@ -22,4 +22,4 @@ private:
     void adjustOffsetToWindow(sf::Vector2f& offset);
 };
 
-#endif //JET_H_
+#endif //PLAYER_H_

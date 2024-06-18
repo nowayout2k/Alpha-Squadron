@@ -3,8 +3,8 @@
 //
 
 #include "../Header/Scene.h"
-#include "../Header/Helicopter.h"
-#include "../Header/Jet.h"
+#include "../Header/Enemy.h"
+#include "../Header/Player.h"
 #include "../Header/ScrollingBackground.h"
 #include "../Header/Audio.h"
 #include "../Header/GameText.h"
@@ -30,9 +30,9 @@ void Scene::setup()
 	auto windowSize = Game::getWindowSize();
 	m_entities.push_back(std::make_unique<GameSprite>(false, TextureId::SmoggySky));
 	m_entities.push_back(std::make_unique<ScrollingBackground>(std::vector<TextureId>{ TextureId::DecayedBuildings1, TextureId::DecayedBuildings1, TextureId::DecayedBuildings1}));
-	m_entities.push_back(std::make_unique<Jet>());
-	m_entities.push_back(std::make_unique<Helicopter>(true, sf::Vector2f((float)windowSize.x-500, (float)windowSize.y+100)));
-	m_entities.push_back(std::make_unique<Helicopter>(true, sf::Vector2f((float)windowSize.x-100, (float)windowSize.y+100)));
+	m_entities.push_back(std::make_unique<Player>());
+	m_entities.push_back(std::make_unique<Enemy>(true, sf::Vector2f((float)windowSize.x-500, (float)windowSize.y+100)));
+	m_entities.push_back(std::make_unique<Enemy>(true, sf::Vector2f((float)windowSize.x-100, (float)windowSize.y+100)));
 	Audio::playMusic(MusicId::UNSquadronLevel1, 10);
 
  	loadResources();
@@ -59,11 +59,11 @@ void Scene::update(float deltaTime)
 	bool hasPlayer = false;
 	for (auto it = m_entities.begin(); it != m_entities.end();)
 	{
-		auto enemy = dynamic_cast<Helicopter*>(it->get());
+		auto enemy = dynamic_cast<Enemy*>(it->get());
 		if (enemy)
 			hasEnemy = true;
 
-		auto player = dynamic_cast<Jet*>(it->get());
+		auto player = dynamic_cast<Player*>(it->get());
 		if(player)
 			hasPlayer = true;
 
@@ -86,8 +86,8 @@ void Scene::update(float deltaTime)
 	if (!hasEnemy)
 	{
 		auto windowSize = Game::getWindowSize();
-		addEntity(std::make_unique<Helicopter>(true, sf::Vector2f((float)windowSize.x-500, (float)windowSize.y+100)));
-		addEntity(std::make_unique<Helicopter>(true, sf::Vector2f((float)windowSize.x-100, (float)windowSize.y+100)));
+		addEntity(std::make_unique<Enemy>(true, sf::Vector2f((float)windowSize.x-500, (float)windowSize.y+100)));
+		addEntity(std::make_unique<Enemy>(true, sf::Vector2f((float)windowSize.x-100, (float)windowSize.y+100)));
 	}
 
 	handleCollisions();

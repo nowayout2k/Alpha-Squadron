@@ -3,8 +3,8 @@
 //
 
 #include <SFML/Window/Keyboard.hpp>
-#include "../Header/Jet.h"
-#include "../Header/Helicopter.h"
+#include "../Header/Player.h"
+#include "../Header/Enemy.h"
 #include "../Header/Audio.h"
 #include "../Header/Projectile.h"
 #include "../Header/Scene.h"
@@ -14,14 +14,14 @@
 #define DAMAGE_INVINCIBILITY_TIME .3f
 #define FIRE_COOLDOWN_TIME 0.2f
 
-Jet::Jet() : Character(true, TextureId::AircraftSpriteSheet, sf::IntRect(240, 298, 52, 12))
+Player::Player() : Character(true, TextureId::AircraftSpriteSheet, sf::IntRect(240, 298, 52, 12))
 {
 	m_sprite.setScale(4.0f, 4.0f);
     sf::Vector2u windowSize = Game::getWindowSize();
 	m_sprite.setPosition(0, (float)windowSize.y / 2.f);
 }
 
-void Jet::update(float deltaTime)
+void Player::update(float deltaTime)
 {
 	Character::update(deltaTime);
 
@@ -32,7 +32,7 @@ void Jet::update(float deltaTime)
 	handleAnimation(deltaTime);
 }
 
-sf::Vector2f Jet::handleInput(float deltaTime)
+sf::Vector2f Player::handleInput(float deltaTime)
 {
     sf::Vector2f offset(0.f, 0.f);
 
@@ -61,7 +61,7 @@ sf::Vector2f Jet::handleInput(float deltaTime)
     return offset;
 }
 
-void Jet::adjustOffsetToWindow(sf::Vector2f& offset)
+void Player::adjustOffsetToWindow(sf::Vector2f& offset)
 {
     sf::Vector2u windowSize = Game::getWindowSize();
     sf::FloatRect windowBounds(0.f, 0.f, static_cast<float>(windowSize.x), static_cast<float>(windowSize.y));
@@ -76,14 +76,14 @@ void Jet::adjustOffsetToWindow(sf::Vector2f& offset)
         offset.y = 0.f;
 }
 
-void Jet::collision(const Entity* other)
+void Player::collision(const Entity* other)
 {
 	GameSprite::collision(other);
-    const auto* enemy = dynamic_cast<const Helicopter*>(other);
+    const auto* enemy = dynamic_cast<const Enemy*>(other);
 	const auto* bullet = dynamic_cast<const Projectile*>(other);
 	if (bullet && bullet->hasCollision())
 	{
-		const auto* enemyOwner = dynamic_cast<const Helicopter*>(bullet->getOwner());
+		const auto* enemyOwner = dynamic_cast<const Enemy*>(bullet->getOwner());
 		if(enemyOwner)
 			takeDamage(20);
 	}

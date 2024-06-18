@@ -23,10 +23,10 @@ add_executable(Alpha-Squadron main.cpp
         Header/GameSprite.h
         Source/Scene.cpp
         Header/Scene.h
-        Source/Helicopter.cpp
-        Header/Helicopter.h
-        Source/Jet.cpp
-        Header/Jet.h
+        Source/Enemy.cpp
+        Header/Enemy.h
+        Source/Player.cpp
+        Header/Player.h
         Source/ScrollingBackground.cpp
         Header/ScrollingBackground.h
         Header/SoundFxId.h

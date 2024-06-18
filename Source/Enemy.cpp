@@ -2,13 +2,13 @@
 // Created by Johnnie Otis on 6/1/24.
 //
 
-#include "../Header/Helicopter.h"
-#include "../Header/Jet.h"
+#include "../Header/Enemy.h"
+#include "../Header/Player.h"
 #include "../Header/Projectile.h"
 #include "../Header/Scene.h"
 #include "../Header/Game.h"
 
-Helicopter::Helicopter(bool hasCollision, sf::Vector2f position) : Character(hasCollision, TextureId::EnemiesSpriteSheet,
+Enemy::Enemy(bool hasCollision, sf::Vector2f position) : Character(hasCollision, TextureId::EnemiesSpriteSheet,
                                                sf::IntRect(70, 200, 25, 12))
 {
     m_sprite.setScale(sf::Vector2f(-4,4));
@@ -19,7 +19,7 @@ Helicopter::Helicopter(bool hasCollision, sf::Vector2f position) : Character(has
 
 bool goUp = true;
 
-void Helicopter::update(float deltaTime)
+void Enemy::update(float deltaTime)
 {
 	Character::update(deltaTime);
 
@@ -60,10 +60,10 @@ void Helicopter::update(float deltaTime)
 	m_sprite.move(offset);
 }
 
-void Helicopter::collision(const Entity* other)
+void Enemy::collision(const Entity* other)
 {
 	GameSprite::collision(other);
-    const auto* player = dynamic_cast<const Jet*>(other);
+    const auto* player = dynamic_cast<const Player*>(other);
 	const auto* bullet = dynamic_cast<const Projectile*>(other);
     if (player && player->hasCollision())
 	{
@@ -71,7 +71,7 @@ void Helicopter::collision(const Entity* other)
 	}
 	else if (bullet && bullet->hasCollision())
 	{
-		const auto* playerOwner = dynamic_cast<const Jet*>(bullet->getOwner());
+		const auto* playerOwner = dynamic_cast<const Player*>(bullet->getOwner());
 		if(playerOwner)
 			takeDamage(50);
 	}
