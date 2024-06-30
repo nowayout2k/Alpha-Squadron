@@ -46,6 +46,7 @@ add_executable(Alpha-Squadron main.cpp
         Header/ResourceManager.h
         Header/Cache.h
         Header/PooledSound.h
+        Header/EntityType.h
 )
 
 # Link the SFML libraries
