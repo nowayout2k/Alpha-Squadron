@@ -13,7 +13,7 @@ class GameText : public Entity
 {
  public:
 	GameText(FontId fontType, std::string text, unsigned int pixelSize, sf::Color color, sf::Text::Style style, sf::Vector2f position)
-		: m_fontType(fontType), Entity(false)
+		: m_fontType(fontType), Entity(EntityType::UI, false)
 	{
 		m_text.setString(text);
 		m_text.setCharacterSize(pixelSize);

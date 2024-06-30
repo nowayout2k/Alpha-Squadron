@@ -9,7 +9,7 @@
 #include "../Header/Game.h"
 
 Projectile::Projectile(Entity* owner, sf::Vector2f spawnPos, sf::Vector2f velocity) : m_velocity(velocity), m_owner(owner),
-	GameSprite(true,
+	GameSprite(EntityType::Projectile, true,
 	TextureId::AircraftSpriteSheet,
 	sf::IntRect(376, 108, 10, 12))
 {

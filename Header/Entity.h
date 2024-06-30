@@ -11,6 +11,7 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/System/Vector3.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
+#include "EntityType.h"
 
 //TODO: Explore using a component based system
 class Entity
@@ -31,9 +32,10 @@ class Entity
 	bool hasCollision() const { return m_hasCollision; }
 	bool isActive() const { return m_isActive; };
 	bool isDestroyPending() { return m_isDestroyPending; }
+	EntityType getEntityType() const { return m_entityType; };
 protected:
-	Entity(bool hasCollision) : m_isActive(true), m_isDestroyPending(false), m_hasCollision(hasCollision) {}
-	Entity() : m_isActive(true), m_isDestroyPending(false), m_hasCollision(false) {}
+	Entity(EntityType entityType, bool hasCollision) : m_entityType(entityType), m_isActive(true), m_isDestroyPending(false), m_hasCollision(hasCollision) {}
+	Entity(EntityType entityType) : m_entityType(entityType), m_isActive(true), m_isDestroyPending(false), m_hasCollision(false) {}
 	void setCollision(bool hasCollision) { m_hasCollision = hasCollision; };
 	virtual void destroy()
 	{
@@ -41,6 +43,7 @@ protected:
 		m_isDestroyPending = true;
 	}
  private:
+	EntityType m_entityType;
 	bool m_isActive;
 	bool m_isDestroyPending;
 	bool m_hasCollision;

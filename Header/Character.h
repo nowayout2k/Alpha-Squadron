@@ -9,7 +9,7 @@
 class Character : public GameSprite
 {
  public:
-	explicit Character(const bool hasCollision, const TextureId textureType, const sf::IntRect textureRect = sf::IntRect());
+	explicit Character(EntityType entityType, const bool hasCollision, const TextureId textureType, const sf::IntRect textureRect = sf::IntRect());
 	virtual ~Character() override = default;
  protected:
 	virtual void handleAnimation(float deltaTime);

@@ -28,7 +28,7 @@ void Scene::setup()
 	m_entities.clear();
 	m_pendingEntities.clear();
 	auto windowSize = Game::getWindowSize();
-	m_entities.push_back(std::make_unique<GameSprite>(false, TextureId::SmoggySky));
+	m_entities.push_back(std::make_unique<GameSprite>(EntityType::Background, false, TextureId::SmoggySky));
 	m_entities.push_back(std::make_unique<ScrollingBackground>(std::vector<TextureId>{ TextureId::DecayedBuildings1, TextureId::DecayedBuildings1, TextureId::DecayedBuildings1}));
 	m_entities.push_back(std::make_unique<Player>());
 	m_entities.push_back(std::make_unique<Enemy>(true, sf::Vector2f((float)windowSize.x-500, (float)windowSize.y+100)));

@@ -8,7 +8,7 @@
 #include "../Header/Scene.h"
 #include "../Header/Game.h"
 
-Enemy::Enemy(bool hasCollision, sf::Vector2f position) : Character(hasCollision, TextureId::EnemiesSpriteSheet,
+Enemy::Enemy(bool hasCollision, sf::Vector2f position) : Character(EntityType::Enemy, hasCollision, TextureId::EnemiesSpriteSheet,
                                                sf::IntRect(70, 200, 25, 12))
 {
     m_sprite.setScale(sf::Vector2f(-4,4));

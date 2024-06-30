@@ -11,8 +11,8 @@
 class GameSprite : public Entity
 {
 public:
-	explicit GameSprite(const bool hasCollision, const TextureId textureType, const sf::IntRect textureRect = sf::IntRect())
-					: m_textureId(textureType), m_textureRect(textureRect), Entity(hasCollision){}
+	explicit GameSprite(EntityType entityType, const bool hasCollision, const TextureId textureType, const sf::IntRect textureRect = sf::IntRect())
+					: m_textureId(textureType), m_textureRect(textureRect), Entity(entityType, hasCollision){}
 	virtual ~GameSprite() override = default;
     void update(float deltaTime) override {}
 	void render(sf::RenderWindow& renderWindow, sf::RenderStates states) override

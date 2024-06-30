@@ -5,7 +5,7 @@
 #include "../Header/ScrollingBackground.h"
 #include "../Header/Game.h"
 
-ScrollingBackground::ScrollingBackground(std::vector<TextureId>&& textureTypes)
+ScrollingBackground::ScrollingBackground(std::vector<TextureId>&& textureTypes) : Entity(EntityType::Background)
 {
 	m_textureTypes = std::move(textureTypes);
 	m_currentBackgroundIndex = -1;

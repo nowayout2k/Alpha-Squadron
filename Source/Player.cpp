@@ -4,7 +4,6 @@
 
 #include <SFML/Window/Keyboard.hpp>
 #include "../Header/Player.h"
-#include "../Header/Enemy.h"
 #include "../Header/Audio.h"
 #include "../Header/Projectile.h"
 #include "../Header/Scene.h"
@@ -14,7 +13,7 @@
 #define DAMAGE_INVINCIBILITY_TIME .3f
 #define FIRE_COOLDOWN_TIME 0.2f
 
-Player::Player() : Character(true, TextureId::AircraftSpriteSheet, sf::IntRect(240, 298, 52, 12))
+Player::Player() : Character(EntityType::Player, true, TextureId::AircraftSpriteSheet, sf::IntRect(240, 298, 52, 12))
 {
 	m_sprite.setScale(4.0f, 4.0f);
     sf::Vector2u windowSize = Game::getWindowSize();
@@ -79,16 +78,21 @@ void Player::adjustOffsetToWindow(sf::Vector2f& offset)
 void Player::collision(const Entity* other)
 {
 	GameSprite::collision(other);
-    const auto* enemy = dynamic_cast<const Enemy*>(other);
-	const auto* bullet = dynamic_cast<const Projectile*>(other);
-	if (bullet && bullet->hasCollision())
-	{
-		const auto* enemyOwner = dynamic_cast<const Enemy*>(bullet->getOwner());
-		if(enemyOwner)
-			takeDamage(20);
-	}
-    if (enemy && enemy->hasCollision())
+
+	if(other->getEntityType() == EntityType::Enemy)
 	{
 		takeDamage(10);
+	}
+	else if(other->getEntityType() == EntityType::Projectile)
+	{
+		const auto* projectile = static_cast<const Projectile*>(other);
+		if(projectile == nullptr)
+		{
+			Debug::logError(std::logic_error("Entity set as Projectile type, but is not."));
+			return;
+		}
+
+		if(projectile->getOwner()->getEntityType() == EntityType::Enemy)
+			takeDamage(20);
 	}
 }
