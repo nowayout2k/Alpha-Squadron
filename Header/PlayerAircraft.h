@@ -2,19 +2,19 @@
 // Created by Johnnie Otis on 6/2/24.
 //
 
-#ifndef PLAYER_H_
-#define PLAYER_H_
+#ifndef PLAYERAIRCRAFT_H_
+#define PLAYERAIRCRAFT_H_
 
 
 #include "GameSprite.h"
 #include "Entity.h"
-#include "Character.h"
+#include "Aircraft.h"
 
 
-class Player : public Character
+class PlayerAircraft : public Aircraft
 {
 public:
-    explicit Player();
+    explicit PlayerAircraft();
     void update(float deltaTime) override;
     void collision(const Entity* other) override;
 private:
@@ -22,4 +22,4 @@ private:
     void adjustOffsetToWindow(sf::Vector2f& offset);
 };
 
-#endif //PLAYER_H_
+#endif //PLAYERAIRCRAFT_H_

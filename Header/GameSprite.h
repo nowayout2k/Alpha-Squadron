@@ -11,16 +11,14 @@
 class GameSprite : public Entity
 {
 public:
-	explicit GameSprite(EntityType entityType, const bool hasCollision, const TextureId textureType, const sf::IntRect textureRect = sf::IntRect())
-					: m_textureId(textureType), m_textureRect(textureRect), Entity(entityType, hasCollision){}
+	explicit GameSprite(EntityType entityType, const bool hasCollision, const TextureId textureType,
+		const sf::IntRect textureRect = sf::IntRect()) : m_textureId(textureType),
+		m_textureRect(textureRect), Entity(entityType, hasCollision){}
 	virtual ~GameSprite() override = default;
     void update(float deltaTime) override {}
-	void render(sf::RenderWindow& renderWindow, sf::RenderStates states) override
+	void render(sf::RenderTarget& renderTarget, sf::RenderStates states) const override
 	{
-		if(!isActive())
-			return;
-
-		renderWindow.draw(m_sprite, states);
+		renderTarget.draw(m_sprite, states);
 	}
 	void collision(const Entity* other) override
 	{
@@ -34,16 +32,20 @@ public:
 		return m_sprite.getGlobalBounds().intersects(bounds);
 	};
 	sf::Rect<float> getGlobalBounds() override { return m_sprite.getGlobalBounds(); }
-	sf::Vector2f getScaledTextureSize() const { return {(float)m_texture->getSize().x * m_sprite.getScale().x, (float)m_texture->getSize().y * m_sprite.getScale().y}; };
+	sf::Vector2f getScaledTextureSize() const
+	{
+		return {
+			(float)m_sprite.getTexture()->getSize().x * m_sprite.getScale().x,
+			(float)m_sprite.getTexture()->getSize().y * m_sprite.getScale().y
+		};
+	};
 	void loadResources() override
 	{
-		m_texture = ResourceManager::loadResource(m_textureId, m_textureRect);
-		m_sprite.setTexture(*m_texture);
+		m_sprite.setTexture(ResourceManager::loadResource(m_textureId, m_textureRect));
 	};
 protected:
 	 sf::Sprite m_sprite;
  private:
-    sf::Texture* m_texture;
 	TextureId m_textureId;
 	sf::IntRect m_textureRect;
  };

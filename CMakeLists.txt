@@ -23,18 +23,18 @@ add_executable(Alpha-Squadron main.cpp
         Header/GameSprite.h
         Source/Scene.cpp
         Header/Scene.h
-        Source/Enemy.cpp
-        Header/Enemy.h
-        Source/Player.cpp
-        Header/Player.h
+        Source/EnemyAircraft.cpp
+        Header/EnemyAircraft.h
+        Source/PlayerAircraft.cpp
+        Header/PlayerAircraft.h
         Source/ScrollingBackground.cpp
         Header/ScrollingBackground.h
         Header/SoundFxId.h
         Header/MusicId.h
         Source/Projectile.cpp
         Header/Projectile.h
-        Source/Character.cpp
-        Header/Character.h
+        Source/Aircraft.cpp
+        Header/Aircraft.h
         Header/GameText.h
         Header/FontId.h
         Header/Debug.h
@@ -47,6 +47,8 @@ add_executable(Alpha-Squadron main.cpp
         Header/Cache.h
         Header/PooledSound.h
         Header/EntityType.h
+        Source/WorldNode.cpp
+        Header/WorldNode.h
 )
 
 # Link the SFML libraries

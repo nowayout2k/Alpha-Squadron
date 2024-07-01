@@ -24,17 +24,16 @@ class GameText : public Entity
 	}
 
 	virtual void update(float deltaTime) override { if(!isActive()) return; }
-	virtual void render(sf::RenderWindow& renderWindow, sf::RenderStates states) override
+	virtual void render(sf::RenderTarget& renderTarget, sf::RenderStates states) const override
 	{
 		if(!isActive())
 			return;
-		renderWindow.draw(m_text, states);
+		renderTarget.draw(m_text, states);
 	}
 
 	void loadResources() override
 	{
-		m_font = ResourceManager::loadResource(m_fontType);
-		m_text.setFont(*m_font);
+		m_text.setFont(ResourceManager::loadResource(m_fontType));
 	};
 
 	void collision(const Entity* other) override { if(!hasCollision()) return; }
@@ -46,7 +45,6 @@ class GameText : public Entity
 		return m_text.getGlobalBounds().intersects(bounds);
 	}
  private:
-	sf::Font* m_font;
 	sf::Text m_text;
 	FontId m_fontType;
 };

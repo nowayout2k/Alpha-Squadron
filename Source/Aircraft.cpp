@@ -2,7 +2,7 @@
 // Created by Johnnie Otis on 6/9/24.
 //
 
-#include "../Header/Character.h"
+#include "../Header/Aircraft.h"
 #include "../Header/Audio.h"
 #include "../Header/Projectile.h"
 #include "../Header/Scene.h"
@@ -12,7 +12,7 @@
 #define DAMAGE_INVINCIBILITY_TIME .3f
 #define FIRE_COOLDOWN_TIME 0.2f
 
-Character::Character(EntityType entityType, const bool hasCollision, const TextureId textureType, const sf::IntRect textureRect) :
+Aircraft::Aircraft(EntityType entityType, const bool hasCollision, const TextureId textureType, const sf::IntRect textureRect) :
 	GameSprite(entityType, hasCollision, textureType, textureRect)
 {
 	m_timeSinceDamage = 0;
@@ -21,7 +21,7 @@ Character::Character(EntityType entityType, const bool hasCollision, const Textu
 	m_fireCooldownRemaining = 0;
 }
 
-void Character::takeDamage(int health)
+void Aircraft::takeDamage(int health)
 {
 	m_health -= health;
 	if(m_isDamageAnimationActive || m_health <= 0)
@@ -37,7 +37,7 @@ void Character::takeDamage(int health)
 }
 
 
-void Character::fireBullet(sf::Vector2f offset, sf::Vector2f velocity)
+void Aircraft::fireBullet(sf::Vector2f offset, sf::Vector2f velocity)
 {
 	if(m_fireCooldownRemaining > 0)
 		return;
@@ -47,12 +47,12 @@ void Character::fireBullet(sf::Vector2f offset, sf::Vector2f velocity)
 	m_fireCooldownRemaining = FIRE_COOLDOWN_TIME;
 }
 
-void Character::handleAnimation(float deltaTime)
+void Aircraft::handleAnimation(float deltaTime)
 {
 	handleDamageAnimation(deltaTime);
 }
 
-void Character::handleDamageAnimation(float deltaTime)
+void Aircraft::handleDamageAnimation(float deltaTime)
 {
 	if(m_isDamageAnimationActive)
 	{

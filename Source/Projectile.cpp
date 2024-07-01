@@ -4,8 +4,8 @@
 
 #include "../Header/Projectile.h"
 #include "../Header/Audio.h"
-#include "../Header/Enemy.h"
-#include "../Header/Player.h"
+#include "../Header/EnemyAircraft.h"
+#include "../Header/PlayerAircraft.h"
 #include "../Header/Game.h"
 
 Projectile::Projectile(Entity* owner, sf::Vector2f spawnPos, sf::Vector2f velocity) : m_velocity(velocity), m_owner(owner),
@@ -34,19 +34,14 @@ void Projectile::collision(const Entity* other)
 	if(!m_owner || m_owner->isDestroyPending())
 		destroy();
 
-	auto enemy = dynamic_cast<const Enemy*>(other);
-	auto player = dynamic_cast<const Player*>(other);
+	auto enemy = dynamic_cast<const EnemyAircraft*>(other);
+	auto player = dynamic_cast<const PlayerAircraft*>(other);
 
-	auto enemyOwner = dynamic_cast<const Enemy*>(m_owner);
-	auto playerOwner= dynamic_cast<const Player*>(m_owner);
+	auto enemyOwner = dynamic_cast<const EnemyAircraft*>(m_owner);
+	auto playerOwner= dynamic_cast<const PlayerAircraft*>(m_owner);
 
 	if(player && !playerOwner || enemy && !enemyOwner)
 	{
 		destroy();
 	}
-}
-
-void Projectile::render(sf::RenderWindow& renderWindow, sf::RenderStates states)
-{
-	GameSprite::render(renderWindow, states);
 }

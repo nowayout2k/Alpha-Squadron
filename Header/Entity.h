@@ -12,9 +12,10 @@
 #include <SFML/System/Vector3.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include "EntityType.h"
+#include "WorldNode.h"
 
 //TODO: Explore using a component based system
-class Entity
+class Entity : public WorldNode
 {
  public:
 	virtual ~Entity() = default;
@@ -24,29 +25,28 @@ class Entity
 		if(!isActive())
 			return;
 	}
-	virtual void render(sf::RenderWindow& renderWindow, sf::RenderStates states) = 0;
 	virtual void collision(const Entity* other) = 0;
 	virtual bool isColliding(const sf::Rect<float>& bounds) const = 0;
 	virtual sf::Rect<float> getGlobalBounds() = 0;
-	void setActive(bool isActive) { m_isActive = isActive; };
 	bool hasCollision() const { return m_hasCollision; }
-	bool isActive() const { return m_isActive; };
 	bool isDestroyPending() { return m_isDestroyPending; }
 	EntityType getEntityType() const { return m_entityType; };
+	void setVelocity(sf::Vector2f velocity) { m_velocity = velocity; }
+	void setVelocity(float x, float y) { m_velocity.x = x; m_velocity.y = y; }
+	sf::Vector2f getVelocity() const { return m_velocity; }
 protected:
-	Entity(EntityType entityType, bool hasCollision) : m_entityType(entityType), m_isActive(true), m_isDestroyPending(false), m_hasCollision(hasCollision) {}
-	Entity(EntityType entityType) : m_entityType(entityType), m_isActive(true), m_isDestroyPending(false), m_hasCollision(false) {}
+	Entity(EntityType entityType, bool hasCollision) : m_velocity(sf::Vector2f(0,0)), m_entityType(entityType), m_isDestroyPending(false), m_hasCollision(hasCollision) {}
+	Entity(EntityType entityType) : m_velocity(sf::Vector2f(0,0)), m_entityType(entityType), m_isDestroyPending(false), m_hasCollision(false) {}
 	void setCollision(bool hasCollision) { m_hasCollision = hasCollision; };
 	virtual void destroy()
 	{
-		m_isActive = false;
 		m_isDestroyPending = true;
 	}
  private:
 	EntityType m_entityType;
-	bool m_isActive;
 	bool m_isDestroyPending;
 	bool m_hasCollision;
+	sf::Vector2f m_velocity;
 };
 
 #endif //ENTITY_H_

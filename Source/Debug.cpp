@@ -18,7 +18,7 @@ int Debug::m_framesSinceLastFpsUpdate = 0;
 void Debug::init()
 {
 #if DEBUGGING_ENABLED
-	m_fpsText.setFont(*ResourceManager::loadResource(FontId::Gamer));
+	m_fpsText.setFont(ResourceManager::loadResource(FontId::Gamer));
 	m_fpsText.setPosition(sf::Vector2f());
 	m_fpsText.setStyle(sf::Text::Bold | sf::Text::Underlined);
 	m_fpsText.setCharacterSize(100);

@@ -16,9 +16,9 @@
 class ResourceManager
 {
  public:
-	static sf::Font* loadResource(FontId fontId);
-	static sf::SoundBuffer* loadResource(SoundFxId soundFxId);
-	static sf::Texture* loadResource(TextureId textureId, sf::Rect<int> textureRect);
+	static sf::Font& loadResource(FontId fontId);
+	static sf::SoundBuffer& loadResource(SoundFxId soundFxId);
+	static sf::Texture& loadResource(TextureId textureId, sf::Rect<int> textureRect);
 	static void clearFontCache() { m_fontCache.clear(); }
 	static void clearSoundBufferCache() { m_soundBufferCache.clear(); }
 	static void clearTextureCache() { m_textureCache.clear(); }

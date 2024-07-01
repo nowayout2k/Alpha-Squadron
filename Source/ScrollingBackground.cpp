@@ -43,14 +43,14 @@ sf::Texture* ScrollingBackground::loadNextTexture()
 	if(m_currentBackgroundIndex >= m_textureTypes.size())
 		m_currentBackgroundIndex = 0;
 
-	return ResourceManager::loadResource(m_textureTypes[m_currentBackgroundIndex], sf::Rect<int>());
+	return &ResourceManager::loadResource(m_textureTypes[m_currentBackgroundIndex], sf::Rect<int>());
 }
-void ScrollingBackground::render(sf::RenderWindow& renderWindow, sf::RenderStates states)
+void ScrollingBackground::render(sf::RenderTarget& renderTarget, sf::RenderStates states) const
 {
 	if(isActive())
 	{
-		renderWindow.draw(*m_spriteA, states);
-		renderWindow.draw(*m_spriteB, states);
+		renderTarget.draw(*m_spriteA, states);
+		renderTarget.draw(*m_spriteB, states);
 	}
 }
 sf::Rect<float> ScrollingBackground::getGlobalBounds()

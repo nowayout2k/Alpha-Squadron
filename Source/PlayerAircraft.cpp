@@ -3,7 +3,7 @@
 //
 
 #include <SFML/Window/Keyboard.hpp>
-#include "../Header/Player.h"
+#include "../Header/PlayerAircraft.h"
 #include "../Header/Audio.h"
 #include "../Header/Projectile.h"
 #include "../Header/Scene.h"
@@ -13,16 +13,16 @@
 #define DAMAGE_INVINCIBILITY_TIME .3f
 #define FIRE_COOLDOWN_TIME 0.2f
 
-Player::Player() : Character(EntityType::Player, true, TextureId::AircraftSpriteSheet, sf::IntRect(240, 298, 52, 12))
+PlayerAircraft::PlayerAircraft() : Aircraft(EntityType::Player, true, TextureId::AircraftSpriteSheet, sf::IntRect(240, 298, 52, 12))
 {
 	m_sprite.setScale(4.0f, 4.0f);
     sf::Vector2u windowSize = Game::getWindowSize();
 	m_sprite.setPosition(0, (float)windowSize.y / 2.f);
 }
 
-void Player::update(float deltaTime)
+void PlayerAircraft::update(float deltaTime)
 {
-	Character::update(deltaTime);
+	Aircraft::update(deltaTime);
 
 	if(m_fireCooldownRemaining > 0)
 		m_fireCooldownRemaining -= deltaTime;
@@ -31,7 +31,7 @@ void Player::update(float deltaTime)
 	handleAnimation(deltaTime);
 }
 
-sf::Vector2f Player::handleInput(float deltaTime)
+sf::Vector2f PlayerAircraft::handleInput(float deltaTime)
 {
     sf::Vector2f offset(0.f, 0.f);
 
@@ -60,7 +60,7 @@ sf::Vector2f Player::handleInput(float deltaTime)
     return offset;
 }
 
-void Player::adjustOffsetToWindow(sf::Vector2f& offset)
+void PlayerAircraft::adjustOffsetToWindow(sf::Vector2f& offset)
 {
     sf::Vector2u windowSize = Game::getWindowSize();
     sf::FloatRect windowBounds(0.f, 0.f, static_cast<float>(windowSize.x), static_cast<float>(windowSize.y));
@@ -75,7 +75,7 @@ void Player::adjustOffsetToWindow(sf::Vector2f& offset)
         offset.y = 0.f;
 }
 
-void Player::collision(const Entity* other)
+void PlayerAircraft::collision(const Entity* other)
 {
 	GameSprite::collision(other);
 

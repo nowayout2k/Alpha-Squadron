@@ -13,7 +13,7 @@
 public:
     explicit ScrollingBackground(std::vector<TextureId>&& textureTypes);
     void update(float deltaTime) override;
-	void render(sf::RenderWindow& renderWindow, sf::RenderStates states) override;
+	virtual void render(sf::RenderTarget& renderTarget, sf::RenderStates states) const override;
 	void collision(const Entity* other) override { return; }
 	bool isColliding(const sf::Rect<float>& bounds) const override { return false; }
 	sf::Rect<float> getGlobalBounds() override;

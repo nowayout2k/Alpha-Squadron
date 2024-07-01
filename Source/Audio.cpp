@@ -14,10 +14,7 @@ sf::Music Audio::m_music;
 
 void Audio::playSound(SoundFxId soundFxId, float volume)
 {
-	sf::SoundBuffer* buffer = ResourceManager::loadResource(soundFxId);
-	if (!buffer)
-		return;
-
+	sf::SoundBuffer& buffer = ResourceManager::loadResource(soundFxId);
 	PooledSound* availableSound = nullptr;
 	if(m_sounds.size() > POOL_MAX_SIZE)
 	{
@@ -37,7 +34,7 @@ void Audio::playSound(SoundFxId soundFxId, float volume)
 		availableSound = &m_sounds.back();
 	}
 
-	availableSound->sound.setBuffer(*buffer);
+	availableSound->sound.setBuffer(buffer);
 	availableSound->sound.setVolume(volume);
 	availableSound->sound.play();
 }
