@@ -5,7 +5,7 @@
 #include "../Header/EnemyAircraft.h"
 #include "../Header/PlayerAircraft.h"
 #include "../Header/Projectile.h"
-#include "../Header/Scene.h"
+#include "../Header/World.h"
 #include "../Header/Game.h"
 
 EnemyAircraft::EnemyAircraft(bool hasCollision, sf::Vector2f position) : Aircraft(EntityType::Enemy, hasCollision, TextureId::EnemiesSpriteSheet,
@@ -29,24 +29,23 @@ void EnemyAircraft::update(float deltaTime)
 		return;
 	}
 
-	sf::Vector2f offset;
-	auto windowSize = Game::getWindowSize();
-
+	sf::Vector2f velocity;
+	sf::Vector2u windowSize = Game::getWindowSize();
+	sf::FloatRect windowBounds(0.f, 0.f, static_cast<float>(windowSize.x), static_cast<float>(windowSize.y));
+    auto globalBounds = getGlobalBounds();
+	auto pos = getPosition();
 	if(goUp)
 	{
-		if(m_sprite.getPosition().y <= 0)
+		if(pos.y > windowBounds.height - globalBounds.height)
 			goUp = false;
-		offset = sf::Vector2f(0, -500);
-
+		velocity = sf::Vector2f(0, 500);
 	}
 	else
 	{
-		if(m_sprite.getPosition().y >= windowSize.y)
+		if(pos.y < -windowBounds.height)
 			goUp = true;
-		offset = sf::Vector2f(0, 500);
+		velocity = sf::Vector2f(0, -500);
 	}
-
-	offset *= deltaTime;
 
 	if(m_fireCooldownRemaining > 0)
 	{
@@ -54,10 +53,10 @@ void EnemyAircraft::update(float deltaTime)
 	}
 	else
 	{
-		fireBullet(offset, sf::Vector2f(-1000, 0));
+		fireBullet(sf::Vector2f(-m_sprite.getLocalBounds().width, -m_sprite.getLocalBounds().height), sf::Vector2f(-1000, 0));
 	}
 
-	m_sprite.move(offset);
+	setVelocity(velocity);
 }
 
 void EnemyAircraft::collision(const Entity* other)

@@ -20,11 +20,6 @@ class Entity : public WorldNode
  public:
 	virtual ~Entity() = default;
 	virtual void loadResources() = 0;
-    virtual void update(float deltaTime)
-	{
-		if(!isActive())
-			return;
-	}
 	virtual void collision(const Entity* other) = 0;
 	virtual bool isColliding(const sf::Rect<float>& bounds) const = 0;
 	virtual sf::Rect<float> getGlobalBounds() = 0;
@@ -34,14 +29,12 @@ class Entity : public WorldNode
 	void setVelocity(sf::Vector2f velocity) { m_velocity = velocity; }
 	void setVelocity(float x, float y) { m_velocity.x = x; m_velocity.y = y; }
 	sf::Vector2f getVelocity() const { return m_velocity; }
+	void update(float deltaTime) override { move(m_velocity * deltaTime); }
 protected:
 	Entity(EntityType entityType, bool hasCollision) : m_velocity(sf::Vector2f(0,0)), m_entityType(entityType), m_isDestroyPending(false), m_hasCollision(hasCollision) {}
 	Entity(EntityType entityType) : m_velocity(sf::Vector2f(0,0)), m_entityType(entityType), m_isDestroyPending(false), m_hasCollision(false) {}
 	void setCollision(bool hasCollision) { m_hasCollision = hasCollision; };
-	virtual void destroy()
-	{
-		m_isDestroyPending = true;
-	}
+	virtual void destroy() { m_isDestroyPending = true; }
  private:
 	EntityType m_entityType;
 	bool m_isDestroyPending;

@@ -2,7 +2,7 @@
 // Created by Johnnie Otis on 5/30/24.
 //
 
-#include "../Header/Scene.h"
+#include "../Header/World.h"
 #include "../Header/EnemyAircraft.h"
 #include "../Header/PlayerAircraft.h"
 #include "../Header/ScrollingBackground.h"
@@ -10,10 +10,10 @@
 #include "../Header/GameText.h"
 #include "../Header/Game.h"
 
-std::vector<std::unique_ptr<Entity>> Scene::m_entities;
-std::vector<std::unique_ptr<Entity>> Scene::m_pendingEntities;
+std::vector<std::unique_ptr<Entity>> World::m_entities;
+std::vector<std::unique_ptr<Entity>> World::m_pendingEntities;
 
-void Scene::restart()
+void World::restart()
 {
 	Audio::stopMusic();
 	ResourceManager::clearFontCache();
@@ -23,7 +23,7 @@ void Scene::restart()
 	Debug::log("Restarting game.....");
 }
 
-void Scene::setup()
+void World::setup()
 {
 	m_entities.clear();
 	m_pendingEntities.clear();
@@ -38,7 +38,7 @@ void Scene::setup()
  	loadResources();
 }
 
-void Scene::loadResources()
+void World::loadResources()
 {
 	for (auto& entity : m_entities)
 	{
@@ -46,7 +46,7 @@ void Scene::loadResources()
 	}
 }
 
-void Scene::update(float deltaTime)
+void World::update(float deltaTime)
 {
 	for (auto& entity : m_pendingEntities)
 	{
@@ -73,7 +73,7 @@ void Scene::update(float deltaTime)
 		}
 		else
 		{
-			(*it)->update(deltaTime);
+			(*it)->updateState(deltaTime);
 			++it;
 		}
 	}
@@ -93,15 +93,15 @@ void Scene::update(float deltaTime)
 	handleCollisions();
 }
 
-void Scene::render(sf::RenderWindow &window, sf::RenderStates states)
+void World::render(sf::RenderWindow &window, sf::RenderStates states)
 {
     for (const auto& entity : m_entities)
     {
-		entity->render(window, states);
+		entity->renderState(window, states);
     }
 }
 
-void Scene::handleCollisions()
+void World::handleCollisions()
 {
     for (const auto& entity : m_entities)
     {

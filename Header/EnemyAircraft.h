@@ -16,7 +16,6 @@ public:
     void update(float deltaTime) override;
     void collision(const Entity* other) override;
 private:
-    sf::Texture m_texture;
 };
 
 #endif //ENEMYAIRCRAFT_H_

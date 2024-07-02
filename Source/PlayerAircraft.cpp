@@ -6,7 +6,7 @@
 #include "../Header/PlayerAircraft.h"
 #include "../Header/Audio.h"
 #include "../Header/Projectile.h"
-#include "../Header/Scene.h"
+#include "../Header/World.h"
 #include "../Header/Game.h"
 
 #define DAMAGE_FLASH_TIME 4.0f
@@ -23,56 +23,54 @@ PlayerAircraft::PlayerAircraft() : Aircraft(EntityType::Player, true, TextureId:
 void PlayerAircraft::update(float deltaTime)
 {
 	Aircraft::update(deltaTime);
-
+	adjustToWindow();
 	if(m_fireCooldownRemaining > 0)
 		m_fireCooldownRemaining -= deltaTime;
-    sf::Vector2f offset = handleInput(deltaTime);
-	m_sprite.move(offset);
+	setVelocity(handleInput(deltaTime));
 	handleAnimation(deltaTime);
 }
 
 sf::Vector2f PlayerAircraft::handleInput(float deltaTime)
 {
-    sf::Vector2f offset(0.f, 0.f);
+    sf::Vector2f velocity(0.f, 0.f);
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-        offset.y -= 800.f;
+		velocity.y -= 800.f;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-        offset.y += 800.f;
+		velocity.y += 800.f;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-        offset.x -= 800.f;
+		velocity.x -= 800.f;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-        offset.x += 800.f;
+		velocity.x += 800.f;
 
-    if (offset.x != 0.f && offset.y != 0.f)
+    if (velocity.x != 0.f && velocity.y != 0.f)
     {
-        offset.x /= std::sqrt(2.f);
-        offset.y /= std::sqrt(2.f);
+		velocity.x /= std::sqrt(2.f);
+		velocity.y /= std::sqrt(2.f);
     }
 
-	offset *= deltaTime;
-
-	adjustOffsetToWindow(offset);
-
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-		fireBullet(offset, sf::Vector2f(1000, 0));
+		fireBullet(sf::Vector2f(0, 0), sf::Vector2f(1000, 0));
 
-    return offset;
+    return velocity;
 }
 
-void PlayerAircraft::adjustOffsetToWindow(sf::Vector2f& offset)
+void PlayerAircraft::adjustToWindow()
 {
+	auto pos = getPosition();
     sf::Vector2u windowSize = Game::getWindowSize();
     sf::FloatRect windowBounds(0.f, 0.f, static_cast<float>(windowSize.x), static_cast<float>(windowSize.y));
+	auto globalBounds = getGlobalBounds();
+    if (pos.x < windowBounds.left)
+		pos.x = 0.f;
+    if (pos.x > windowBounds.left + windowBounds.width - globalBounds.width)
+		pos.x = windowBounds.left + windowBounds.width - globalBounds.width;
+	if (pos.y < -windowBounds.height/2)
+		pos.y = -windowBounds.height/2;
+	if (pos.y > windowBounds.height/2 - globalBounds.height)
+		pos.y = windowBounds.height/2 - globalBounds.height;
 
-    sf::FloatRect playerBounds = m_sprite.getGlobalBounds();
-    playerBounds.left += offset.x;
-    playerBounds.top += offset.y;
-
-    if (playerBounds.left < windowBounds.left || playerBounds.left + playerBounds.width > windowBounds.width)
-        offset.x = 0.f;
-    if (playerBounds.top < windowBounds.top || playerBounds.top + playerBounds.height > windowBounds.height)
-        offset.y = 0.f;
+	setPosition(pos);
 }
 
 void PlayerAircraft::collision(const Entity* other)

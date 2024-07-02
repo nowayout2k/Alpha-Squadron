@@ -19,7 +19,7 @@ public:
     void collision(const Entity* other) override;
 private:
     sf::Vector2f handleInput(float deltaTime);
-    void adjustOffsetToWindow(sf::Vector2f& offset);
+    void adjustToWindow();
 };
 
 #endif //PLAYERAIRCRAFT_H_

@@ -5,7 +5,7 @@
 #ifndef GAME_H_
 #define GAME_H_
 
-#include "Scene.h"
+#include "World.h"
 
 class Game
 {
@@ -21,7 +21,7 @@ class Game
 
  private:
 	static sf::RenderWindow m_window;
-	Scene m_scene;
+	World m_scene;
 };
 
 #endif //GAME_H_

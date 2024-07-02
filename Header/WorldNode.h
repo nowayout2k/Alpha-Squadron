@@ -16,7 +16,11 @@ class WorldNode : public sf::Transformable, public sf::Drawable
 	SmartNode detachNode(const WorldNode& node);
 	void setActive(bool isActive) { m_isActive = isActive; }
 	bool isActive() const { return m_isActive; };
-	virtual void render(sf::RenderTarget& renderTarget, sf::RenderStates states) const { if(!isActive())return; }
+	virtual void updateState(float deltaTime);
+	virtual void renderState(sf::RenderTarget& renderTarget, sf::RenderStates states) const;
+ protected:
+	virtual void update(float deltaTime) = 0;
+	virtual void render(sf::RenderTarget& renderTarget, sf::RenderStates states) const = 0;
  private:
 	WorldNode(const WorldNode&) = delete;
 	WorldNode& operator=(const WorldNode& other) = delete;

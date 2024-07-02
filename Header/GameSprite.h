@@ -15,7 +15,7 @@ public:
 		const sf::IntRect textureRect = sf::IntRect()) : m_textureId(textureType),
 		m_textureRect(textureRect), Entity(entityType, hasCollision){}
 	virtual ~GameSprite() override = default;
-    void update(float deltaTime) override {}
+
 	void render(sf::RenderTarget& renderTarget, sf::RenderStates states) const override
 	{
 		renderTarget.draw(m_sprite, states);
@@ -24,13 +24,13 @@ public:
 	{
 		if(!hasCollision())
 			return;
-	};
+	}
 	bool isColliding(const sf::Rect<float>& bounds) const override
 	{
 		if(!hasCollision())
 			return false;
 		return m_sprite.getGlobalBounds().intersects(bounds);
-	};
+	}
 	sf::Rect<float> getGlobalBounds() override { return m_sprite.getGlobalBounds(); }
 	sf::Vector2f getScaledTextureSize() const
 	{
@@ -38,11 +38,11 @@ public:
 			(float)m_sprite.getTexture()->getSize().x * m_sprite.getScale().x,
 			(float)m_sprite.getTexture()->getSize().y * m_sprite.getScale().y
 		};
-	};
+	}
 	void loadResources() override
 	{
 		m_sprite.setTexture(ResourceManager::loadResource(m_textureId, m_textureRect));
-	};
+	}
 protected:
 	 sf::Sprite m_sprite;
  private:

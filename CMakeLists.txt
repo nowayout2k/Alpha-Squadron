@@ -21,8 +21,8 @@ add_executable(Alpha-Squadron main.cpp
         Header/Utility.h
         Header/Entity.h
         Header/GameSprite.h
-        Source/Scene.cpp
-        Header/Scene.h
+        Source/World.cpp
+        Header/World.h
         Source/EnemyAircraft.cpp
         Header/EnemyAircraft.h
         Source/PlayerAircraft.cpp
@@ -49,6 +49,7 @@ add_executable(Alpha-Squadron main.cpp
         Header/EntityType.h
         Source/WorldNode.cpp
         Header/WorldNode.h
+        Header/Layer.h
 )
 
 # Link the SFML libraries

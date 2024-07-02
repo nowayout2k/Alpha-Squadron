@@ -5,7 +5,7 @@
 #include "../Header/Aircraft.h"
 #include "../Header/Audio.h"
 #include "../Header/Projectile.h"
-#include "../Header/Scene.h"
+#include "../Header/World.h"
 #include "../Header/Utility.h"
 
 #define DAMAGE_FLASH_TIME 4.0f
@@ -43,7 +43,7 @@ void Aircraft::fireBullet(sf::Vector2f offset, sf::Vector2f velocity)
 		return;
 
 	auto spawnPos = m_sprite.getPosition() + offset + sf::Vector2f(getScaledTextureSize().x, getScaledTextureSize().y/2);
-	Scene::addEntity(std::move(std::make_unique<Projectile>(this, spawnPos, velocity)));
+	World::addEntity(std::move(std::make_unique<Projectile>(this, spawnPos, velocity)));
 	m_fireCooldownRemaining = FIRE_COOLDOWN_TIME;
 }
 

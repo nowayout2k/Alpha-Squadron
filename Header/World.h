@@ -2,16 +2,16 @@
 // Created by Johnnie Otis on 5/30/24.
 //
 
-#ifndef SCENE_H_
-#define SCENE_H_
+#ifndef WORLD_H_
+#define WORLD_H_
 
 #include "GameSprite.h"
 #include "Entity.h"
 
-class Scene
+class World
 {
 public:
-	Scene() {};
+	World() {};
 
 	template<typename T, typename = std::enable_if_t<std::is_base_of<Entity, T>::value>>
 	static void addEntity(std::unique_ptr<T>&& entity) { m_pendingEntities.push_back(std::move(entity)); }
@@ -27,4 +27,4 @@ private:
 };
 
 
-#endif //SCENE_H_
+#endif //WORLD_H_

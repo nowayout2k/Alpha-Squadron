@@ -4,6 +4,33 @@
 #include "../Header/WorldNode.h"
 #include "../Header/Debug.h"
 
+void WorldNode::renderState(sf::RenderTarget& target, sf::RenderStates states) const
+{
+	states.transform *= getTransform();
+	render(target, states);
+	for (const SmartNode& child : m_children)
+	{
+		child->render(target, states);
+	}
+}
+
+void WorldNode::draw(sf::RenderTarget& target, sf::RenderStates states) const
+{
+	draw(target, states);
+}
+
+void WorldNode::updateState(float deltaTime)
+{
+	if(!isActive())
+		return;
+
+	update(deltaTime);
+	for (const SmartNode& child : m_children)
+	{
+		child->update(deltaTime);
+	}
+}
+
 void WorldNode::attachNode(WorldNode::SmartNode child)
 {
 	child->m_parent = this;
@@ -20,14 +47,4 @@ WorldNode::SmartNode WorldNode::detachNode(const WorldNode& node)
 	result->m_parent = nullptr;
 	m_children.erase(found);
 	return result;
-}
-
-void WorldNode::draw(sf::RenderTarget& target, sf::RenderStates states) const
-{
-	states.transform *= getTransform();
-	render(target, states);
-	for (const SmartNode& child : m_children)
-	{
-		child->draw(target, states);
-	}
 }
