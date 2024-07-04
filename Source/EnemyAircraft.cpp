@@ -11,8 +11,8 @@
 EnemyAircraft::EnemyAircraft(bool hasCollision, sf::Vector2f position) : Aircraft(EntityType::Enemy, hasCollision, TextureId::EnemiesSpriteSheet,
                                                sf::IntRect(70, 200, 25, 12))
 {
-    m_sprite.setScale(sf::Vector2f(-4,4));
-	m_sprite.setPosition(position);
+    setScale(sf::Vector2f(-4,4));
+	setPosition(position);
 	m_health = 100;
 	m_fireCooldownRemaining = 4;
 }
@@ -32,17 +32,16 @@ void EnemyAircraft::update(float deltaTime)
 	sf::Vector2f velocity;
 	sf::Vector2u windowSize = Game::getWindowSize();
 	sf::FloatRect windowBounds(0.f, 0.f, static_cast<float>(windowSize.x), static_cast<float>(windowSize.y));
-    auto globalBounds = getGlobalBounds();
 	auto pos = getPosition();
 	if(goUp)
 	{
-		if(pos.y > windowBounds.height - globalBounds.height)
+		if(pos.y > windowBounds.height)
 			goUp = false;
 		velocity = sf::Vector2f(0, 500);
 	}
 	else
 	{
-		if(pos.y < -windowBounds.height)
+		if(pos.y < 0)
 			goUp = true;
 		velocity = sf::Vector2f(0, -500);
 	}
@@ -53,7 +52,7 @@ void EnemyAircraft::update(float deltaTime)
 	}
 	else
 	{
-		fireBullet(sf::Vector2f(-m_sprite.getLocalBounds().width, -m_sprite.getLocalBounds().height), sf::Vector2f(-1000, 0));
+		fireBullet(getPosition(), sf::Vector2f(-1000, 0));
 	}
 
 	setVelocity(velocity);
@@ -62,16 +61,21 @@ void EnemyAircraft::update(float deltaTime)
 void EnemyAircraft::collision(const Entity* other)
 {
 	GameSprite::collision(other);
-    const auto* player = dynamic_cast<const PlayerAircraft*>(other);
-	const auto* bullet = dynamic_cast<const Projectile*>(other);
-    if (player && player->hasCollision())
+
+	if(other->getEntityType() == EntityType::Player)
 	{
 		takeDamage(m_health);
 	}
-	else if (bullet && bullet->hasCollision())
+	else if(other->getEntityType() == EntityType::Projectile)
 	{
-		const auto* playerOwner = dynamic_cast<const PlayerAircraft*>(bullet->getOwner());
-		if(playerOwner)
+		const auto* projectile = static_cast<const Projectile*>(other);
+		if(projectile == nullptr)
+		{
+			Debug::logError(std::logic_error("Entity set as Projectile type, but is not."));
+			return;
+		}
+
+		if(projectile->getOwner()->getEntityType() == EntityType::Player)
 			takeDamage(50);
 	}
 }

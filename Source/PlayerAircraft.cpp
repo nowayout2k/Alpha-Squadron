@@ -15,9 +15,9 @@
 
 PlayerAircraft::PlayerAircraft() : Aircraft(EntityType::Player, true, TextureId::AircraftSpriteSheet, sf::IntRect(240, 298, 52, 12))
 {
-	m_sprite.setScale(4.0f, 4.0f);
+	setScale(4.0f, 4.0f);
     sf::Vector2u windowSize = Game::getWindowSize();
-	m_sprite.setPosition(0, (float)windowSize.y / 2.f);
+	setPosition(0, (float)windowSize.y / 2.f);
 }
 
 void PlayerAircraft::update(float deltaTime)
@@ -50,7 +50,7 @@ sf::Vector2f PlayerAircraft::handleInput(float deltaTime)
     }
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-		fireBullet(sf::Vector2f(0, 0), sf::Vector2f(1000, 0));
+		fireBullet(getPosition(), sf::Vector2f(1000, 0));
 
     return velocity;
 }
@@ -65,10 +65,10 @@ void PlayerAircraft::adjustToWindow()
 		pos.x = 0.f;
     if (pos.x > windowBounds.left + windowBounds.width - globalBounds.width)
 		pos.x = windowBounds.left + windowBounds.width - globalBounds.width;
-	if (pos.y < -windowBounds.height/2)
-		pos.y = -windowBounds.height/2;
-	if (pos.y > windowBounds.height/2 - globalBounds.height)
-		pos.y = windowBounds.height/2 - globalBounds.height;
+	if (pos.y < 0)
+		pos.y = 0;
+	if (pos.y > windowBounds.height - globalBounds.height)
+		pos.y = windowBounds.height - globalBounds.height;
 
 	setPosition(pos);
 }

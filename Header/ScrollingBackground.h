@@ -16,7 +16,7 @@ public:
 	virtual void render(sf::RenderTarget& renderTarget, sf::RenderStates states) const override;
 	void collision(const Entity* other) override { return; }
 	bool isColliding(const sf::Rect<float>& bounds) const override { return false; }
-	sf::Rect<float> getGlobalBounds() override;
+	sf::Rect<float> getGlobalBounds() const override;
 	void loadResources() override;
  private:
 	sf::Texture* loadNextTexture();

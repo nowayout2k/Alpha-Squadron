@@ -14,7 +14,7 @@ class Aircraft : public GameSprite
  protected:
 	virtual void handleAnimation(float deltaTime);
 	void handleDamageAnimation(float deltaTime);
-	virtual void fireBullet(sf::Vector2f offset, sf::Vector2f velocity);
+	virtual void fireBullet(sf::Vector2f position, sf::Vector2f velocity);
 	virtual void takeDamage(int health);
 
 	float m_timeSinceDamage;

@@ -110,7 +110,7 @@ void World::handleCollisions()
 
         for (const auto& other : m_entities)
         {
-            if(other->isDestroyPending() && entity == other)
+            if(other->isDestroyPending() || entity == other)
                 continue;
 
             if(entity && entity->hasCollision() && other && other->hasCollision() &&

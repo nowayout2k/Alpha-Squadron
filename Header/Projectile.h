@@ -16,7 +16,6 @@ class Projectile : public GameSprite
 	const Entity* getOwner() const { return m_owner;};
  private:
 	Entity* m_owner;
-	sf::Vector2f m_velocity;
 };
 
 #endif //PROJECTILE_H_

@@ -30,19 +30,20 @@ void Aircraft::takeDamage(int health)
 		destroy();
 		return;
 	}
-	m_sprite.setColor(sf::Color::Red);
+	setColor(sf::Color::Red);
 	Audio::playSound(SoundFxId::Damage, 50);
 	m_timeSinceDamage = 0;
 	m_isDamageAnimationActive = true;
 }
 
 
-void Aircraft::fireBullet(sf::Vector2f offset, sf::Vector2f velocity)
+void Aircraft::fireBullet(sf::Vector2f pos, sf::Vector2f velocity)
 {
 	if(m_fireCooldownRemaining > 0)
 		return;
 
-	auto spawnPos = m_sprite.getPosition() + offset + sf::Vector2f(getScaledTextureSize().x, getScaledTextureSize().y/2);
+	auto offset = sf::Vector2f(getScaledTextureSize().x, getScaledTextureSize().y/2);
+	auto spawnPos = velocity.x < 0 ? pos - offset: pos +  offset;
 	World::addEntity(std::move(std::make_unique<Projectile>(this, spawnPos, velocity)));
 	m_fireCooldownRemaining = FIRE_COOLDOWN_TIME;
 }
@@ -59,7 +60,7 @@ void Aircraft::handleDamageAnimation(float deltaTime)
 		m_timeSinceDamage += deltaTime;
 		if(m_timeSinceDamage > DAMAGE_FLASH_TIME)
 		{
-			m_sprite.setColor(sf::Color::White);
+			setColor(sf::Color::White);
 			m_isDamageAnimationActive = false;
 		}
 		else
@@ -67,7 +68,7 @@ void Aircraft::handleDamageAnimation(float deltaTime)
 			float phase = fmod(m_timeSinceDamage, 1.0f);
 			float t = 0.5 * (1.0f + std::cos(phase * 2.0f * M_PI));
 			float c = Utility::lerp(0, 255, t);
-			m_sprite.setColor(sf::Color(255,c,c,255));
+			setColor(sf::Color(255,c,c,255));
 		}
 		setCollision(m_timeSinceDamage > DAMAGE_INVINCIBILITY_TIME);
 	}

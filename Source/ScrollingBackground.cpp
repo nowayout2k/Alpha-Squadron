@@ -53,7 +53,7 @@ void ScrollingBackground::render(sf::RenderTarget& renderTarget, sf::RenderState
 		renderTarget.draw(*m_spriteB, states);
 	}
 }
-sf::Rect<float> ScrollingBackground::getGlobalBounds()
+sf::Rect<float> ScrollingBackground::getGlobalBounds() const
 {
 	auto rectA = m_spriteA->getGlobalBounds();
 	auto rectB = m_spriteB->getGlobalBounds();

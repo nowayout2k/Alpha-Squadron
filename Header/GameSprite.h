@@ -20,32 +20,44 @@ public:
 	{
 		renderTarget.draw(m_sprite, states);
 	}
+
 	void collision(const Entity* other) override
 	{
 		if(!hasCollision())
 			return;
 	}
+
 	bool isColliding(const sf::Rect<float>& bounds) const override
 	{
 		if(!hasCollision())
 			return false;
-		return m_sprite.getGlobalBounds().intersects(bounds);
+
+		return getGlobalBounds().intersects(bounds);
 	}
-	sf::Rect<float> getGlobalBounds() override { return m_sprite.getGlobalBounds(); }
+
+	sf::Rect<float> getGlobalBounds() const override
+	{
+		sf::FloatRect bounds = m_sprite.getGlobalBounds();
+		return getTransform().transformRect(bounds);
+	}
+
 	sf::Vector2f getScaledTextureSize() const
 	{
 		return {
-			(float)m_sprite.getTexture()->getSize().x * m_sprite.getScale().x,
-			(float)m_sprite.getTexture()->getSize().y * m_sprite.getScale().y
+			(float)getGlobalBounds().width,
+			(float)getGlobalBounds().height,
 		};
 	}
 	void loadResources() override
 	{
 		m_sprite.setTexture(ResourceManager::loadResource(m_textureId, m_textureRect));
 	}
-protected:
-	 sf::Sprite m_sprite;
+	void setColor(sf::Color color)
+	{
+		m_sprite.setColor(color);
+	}
  private:
+	sf::Sprite m_sprite;
 	TextureId m_textureId;
 	sf::IntRect m_textureRect;
  };

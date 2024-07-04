@@ -8,21 +8,23 @@
 #include "../Header/PlayerAircraft.h"
 #include "../Header/Game.h"
 
-Projectile::Projectile(Entity* owner, sf::Vector2f spawnPos, sf::Vector2f velocity) : m_velocity(velocity), m_owner(owner),
+Projectile::Projectile(Entity* owner, sf::Vector2f spawnPos, sf::Vector2f velocity) : m_owner(owner),
 	GameSprite(EntityType::Projectile, true,
 	TextureId::AircraftSpriteSheet,
 	sf::IntRect(376, 108, 10, 12))
 {
-	m_sprite.setScale(4.0f, 4.0f);
-	m_sprite.setPosition(spawnPos);
+	setVelocity(velocity);
+	setScale(4.0f, 4.0f);
+	setPosition(spawnPos);
 	Audio::playSound(SoundFxId::Shoot1, 10);
 }
 
 void Projectile::update(float deltaTime)
 {
+	GameSprite::update(deltaTime);
+
 	sf::Vector2u windowSize = Game::getWindowSize();
-	m_sprite.move(m_velocity*deltaTime);
-	auto position = m_sprite.getPosition();
+	auto position = getPosition();
 	if(position.x > (float)windowSize.x || position.y > (float)windowSize.y || position.x <= 0 || position.y <= 0 || !m_owner)
 		destroy();
 }

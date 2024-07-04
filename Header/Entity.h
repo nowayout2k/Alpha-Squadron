@@ -22,7 +22,7 @@ class Entity : public WorldNode
 	virtual void loadResources() = 0;
 	virtual void collision(const Entity* other) = 0;
 	virtual bool isColliding(const sf::Rect<float>& bounds) const = 0;
-	virtual sf::Rect<float> getGlobalBounds() = 0;
+	virtual sf::Rect<float> getGlobalBounds() const = 0;
 	bool hasCollision() const { return m_hasCollision; }
 	bool isDestroyPending() { return m_isDestroyPending; }
 	EntityType getEntityType() const { return m_entityType; };
