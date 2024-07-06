@@ -10,30 +10,46 @@
 std::list<PooledSound> Audio::m_sounds;
 sf::Music Audio::m_music;
 
-#define POOL_MAX_SIZE 10
+#define POOL_RESIZE_LIMIT 10
 
 void Audio::playSound(SoundFxId soundFxId, float volume)
 {
 	sf::SoundBuffer& buffer = ResourceManager::loadResource(soundFxId);
 	PooledSound* availableSound = nullptr;
-	if(m_sounds.size() > POOL_MAX_SIZE)
-	{
-		for (auto& pooledSound : m_sounds )
-		{
-			if(pooledSound.sound.getStatus() == sf::Sound::Status::Stopped)
-				pooledSound.isAvailable = true;
 
-			if(pooledSound.isAvailable)
-				availableSound = &pooledSound;
+	//Set finished sounds to available
+	for (auto& pooledSound : m_sounds)
+	{
+		if(!pooledSound.isAvailable && pooledSound.sound.getStatus() == sf::Sound::Status::Stopped)
+		{
+			pooledSound.isAvailable = true;
 		}
 	}
 
+	//find an available sound
+	for (auto& pooledSound : m_sounds )
+	{
+		if(pooledSound.isAvailable)
+		{
+			availableSound = &pooledSound;
+			break;
+		}
+	}
+
+	//if no sounds are available, add a new sound
 	if(!availableSound)
 	{
 		m_sounds.push_back(PooledSound());
 		availableSound = &m_sounds.back();
 	}
 
+	if(m_sounds.size() > POOL_RESIZE_LIMIT)
+	{
+		Debug::logWarning("Audio pool limit reached. Cannot play sound!");
+		return;
+	}
+
+	availableSound->isAvailable = false;
 	availableSound->sound.setBuffer(buffer);
 	availableSound->sound.setVolume(volume);
 	availableSound->sound.play();
