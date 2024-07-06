@@ -8,7 +8,7 @@
 #include "../Header/PlayerAircraft.h"
 #include "../Header/Game.h"
 
-Projectile::Projectile(Entity* owner, sf::Vector2f spawnPos, sf::Vector2f velocity) : m_owner(owner),
+Projectile::Projectile(EntityType owner, sf::Vector2f spawnPos, sf::Vector2f velocity) : m_ownerType(owner),
 	GameSprite(EntityType::Projectile, true,
 	TextureId::AircraftSpriteSheet,
 	sf::IntRect(376, 108, 10, 12))
@@ -25,7 +25,7 @@ void Projectile::update(float deltaTime)
 
 	sf::Vector2u windowSize = Game::getWindowSize();
 	auto position = getPosition();
-	if(position.x > (float)windowSize.x || position.y > (float)windowSize.y || position.x <= 0 || position.y <= 0 || !m_owner)
+	if(position.x > (float)windowSize.x || position.y > (float)windowSize.y || position.x <= 0 || position.y <= 0 || m_ownerType == EntityType::None)
 		destroy();
 }
 
@@ -33,16 +33,8 @@ void Projectile::collision(const Entity* other)
 {
 	GameSprite::collision(other);
 
-	if(!m_owner || m_owner->isDestroyPending())
-		destroy();
-
-	auto enemy = dynamic_cast<const EnemyAircraft*>(other);
-	auto player = dynamic_cast<const PlayerAircraft*>(other);
-
-	auto enemyOwner = dynamic_cast<const EnemyAircraft*>(m_owner);
-	auto playerOwner= dynamic_cast<const PlayerAircraft*>(m_owner);
-
-	if(player && !playerOwner || enemy && !enemyOwner)
+	if(m_ownerType == EntityType::None || (other->getEntityType() == EntityType::Player && m_ownerType != EntityType::Player) ||
+		(other->getEntityType() == EntityType::Enemy && m_ownerType != EntityType::Enemy))
 	{
 		destroy();
 	}

@@ -90,7 +90,7 @@ void PlayerAircraft::collision(const Entity* other)
 			return;
 		}
 
-		if(projectile->getOwner()->getEntityType() == EntityType::Enemy)
+		if(projectile->getOwnerType() == EntityType::Enemy)
 			takeDamage(20);
 	}
 }

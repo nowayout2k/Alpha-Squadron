@@ -75,7 +75,7 @@ void EnemyAircraft::collision(const Entity* other)
 			return;
 		}
 
-		if(projectile->getOwner()->getEntityType() == EntityType::Player)
+		if(projectile->getOwnerType() == EntityType::Player)
 			takeDamage(50);
 	}
 }
