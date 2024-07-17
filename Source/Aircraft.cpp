@@ -44,7 +44,7 @@ void Aircraft::fireBullet(sf::Vector2f pos, sf::Vector2f velocity)
 
 	auto offset = sf::Vector2f(getScaledTextureSize().x, getScaledTextureSize().y/2);
 	auto spawnPos = velocity.x < 0 ? pos - offset: pos +  offset;
-	World::addEntity(std::move(std::make_unique<Projectile>(getEntityType(), spawnPos, velocity)));
+	//World::addEntity(std::move(std::make_unique<Projectile>(getEntityType(), spawnPos, velocity)));
 	m_fireCooldownRemaining = FIRE_COOLDOWN_TIME;
 }
 

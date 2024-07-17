@@ -39,14 +39,13 @@ void Audio::playSound(SoundFxId soundFxId, float volume)
 	//if no sounds are available, add a new sound
 	if(!availableSound)
 	{
+		if(m_sounds.size() > POOL_RESIZE_LIMIT)
+		{
+			Debug::logWarning("Audio pool limit reached. Cannot play sound!");
+			return;
+		}
 		m_sounds.push_back(PooledSound());
 		availableSound = &m_sounds.back();
-	}
-
-	if(m_sounds.size() > POOL_RESIZE_LIMIT)
-	{
-		Debug::logWarning("Audio pool limit reached. Cannot play sound!");
-		return;
 	}
 
 	availableSound->isAvailable = false;

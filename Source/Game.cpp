@@ -4,21 +4,20 @@
 
 #include <SFML/Window/Event.hpp>
 #include "../Header/Game.h"
-#include "../Header/Debug.h"
 
 #define FRAME_RATE_LIMIT 60.0f
 #define TIME_STEP_MAX 1.0f/FRAME_RATE_LIMIT
 
-sf::RenderWindow Game::m_window;
+Game::Game()
+{
+	createWindow(sf::VideoMode(1740,1000), "Alpha Squadron", sf::Style::None);
+	m_world = std::make_unique<World>(m_window);
+}
 
 void Game::run()
 {
-	createWindow(sf::VideoMode(1740,1000), "Alpha Squadron", sf::Style::None);
 	Debug::init();
-
-	m_scene.setup();
 	sf::Clock clock;
-	sf::RenderStates states;
 	float timeStep = 0;
 
 	while (m_window.isOpen())
@@ -30,7 +29,7 @@ void Game::run()
 			processEvents();
 			update(TIME_STEP_MAX);
 		}
-		render(m_window, states);
+		render();
 	}
 }
 
@@ -76,17 +75,17 @@ void Game::update(float deltaTime)
 {
 	Debug::update(deltaTime);
 
-	m_scene.update(deltaTime);
+	m_world->update(deltaTime);
 }
-void Game::render(sf::RenderWindow &window, sf::RenderStates states)
+void Game::render()
 {
-	window.clear();
+	sf::RenderStates states;
+	m_window.clear();
 
-	m_scene.render(window, states);
+	m_world->render(m_window, states);
+	Debug::render(m_window, states);
 
-	Debug::render(window, states);
-
-	window.display();
+	m_window.display();
 
 }
 

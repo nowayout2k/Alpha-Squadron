@@ -12,8 +12,8 @@ class GameSprite : public Entity
 {
 public:
 	explicit GameSprite(EntityType entityType, const bool hasCollision, const TextureId textureType,
-		const sf::IntRect textureRect = sf::IntRect()) : m_textureId(textureType),
-		m_textureRect(textureRect), Entity(entityType, hasCollision){}
+		const sf::IntRect textureRect = sf::IntRect(), bool repeatTexture = false) : m_textureId(textureType),
+		m_textureRect(textureRect), m_repeatTexture(repeatTexture), Entity(entityType, hasCollision){}
 	virtual ~GameSprite() override = default;
 
 	void render(sf::RenderTarget& renderTarget, sf::RenderStates states) const override
@@ -48,18 +48,24 @@ public:
 			(float)getGlobalBounds().height,
 		};
 	}
+
 	void loadResources() override
 	{
-		m_sprite.setTexture(ResourceManager::loadResource(m_textureId, m_textureRect));
+		auto& tex = ResourceManager::loadResource(m_textureId, m_textureRect);
+		tex.setRepeated(m_repeatTexture);
+		m_sprite.setTexture(tex);
 	}
+
 	void setColor(sf::Color color)
 	{
 		m_sprite.setColor(color);
 	}
+
  private:
 	sf::Sprite m_sprite;
 	TextureId m_textureId;
 	sf::IntRect m_textureRect;
+	bool m_repeatTexture;
  };
 
 #endif //ALPHA_SQUADRON_HEADER_SPRITE ENTITY_H_

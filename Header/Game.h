@@ -10,18 +10,16 @@
 class Game
 {
  public:
-	Game() {};
-	void createWindow(const sf::VideoMode& mode, const std::string& title, sf::Uint32 style);
-	static sf::Vector2u getWindowSize() { return m_window.getSize(); };
-	int getScreenSection() { return 1; };
+	Game();
 	void update(float deltaTime);
-	void render(sf::RenderWindow &window, sf::RenderStates states);
+	void render();
 	void processEvents();
 	void run();
-
  private:
-	static sf::RenderWindow m_window;
-	World m_scene;
+	void createWindow(const sf::VideoMode& mode, const std::string& title, sf::Uint32 style);
+
+	sf::RenderWindow m_window;
+	std::unique_ptr<World> m_world;
 };
 
 #endif //GAME_H_

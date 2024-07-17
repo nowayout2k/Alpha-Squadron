@@ -10,8 +10,22 @@ void WorldNode::renderState(sf::RenderTarget& target, sf::RenderStates states) c
 	render(target, states);
 	for (const SmartNode& child : m_children)
 	{
-		child->render(target, states);
+		child->renderState(target, states);
 	}
+}
+
+sf::Transform WorldNode::getWorldTransform() const
+{
+	sf::Transform transform = sf::Transform::Identity;
+	for (const WorldNode* node = this; node != nullptr; node = node->m_parent)
+		transform = node->getTransform() * transform;
+
+	return transform;
+}
+
+sf::Vector2f WorldNode::getWorldPosition() const
+{
+	return getWorldTransform() * sf::Vector2f();
 }
 
 void WorldNode::draw(sf::RenderTarget& target, sf::RenderStates states) const
@@ -27,7 +41,7 @@ void WorldNode::updateState(float deltaTime)
 	update(deltaTime);
 	for (const SmartNode& child : m_children)
 	{
-		child->update(deltaTime);
+		child->updateState(deltaTime);
 	}
 }
 
@@ -47,4 +61,13 @@ WorldNode::SmartNode WorldNode::detachNode(const WorldNode& node)
 	result->m_parent = nullptr;
 	m_children.erase(found);
 	return result;
+}
+
+void WorldNode::loadStateResources()
+{
+	loadResources();
+	for (const SmartNode& child : m_children)
+	{
+		child->loadStateResources();
+	}
 }

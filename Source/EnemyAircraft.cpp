@@ -29,21 +29,18 @@ void EnemyAircraft::update(float deltaTime)
 		return;
 	}
 
-	sf::Vector2f velocity;
-	sf::Vector2u windowSize = Game::getWindowSize();
-	sf::FloatRect windowBounds(0.f, 0.f, static_cast<float>(windowSize.x), static_cast<float>(windowSize.y));
 	auto pos = getPosition();
 	if(goUp)
 	{
-		if(pos.y > windowBounds.height)
+		if(pos.y > 1000)
 			goUp = false;
-		velocity = sf::Vector2f(0, 500);
+		setVelocity(0, 500);
 	}
 	else
 	{
 		if(pos.y < 0)
 			goUp = true;
-		velocity = sf::Vector2f(0, -500);
+		setVelocity(0, -500);
 	}
 
 	if(m_fireCooldownRemaining > 0)
@@ -55,7 +52,7 @@ void EnemyAircraft::update(float deltaTime)
 		fireBullet(getPosition(), sf::Vector2f(-1000, 0));
 	}
 
-	setVelocity(velocity);
+
 }
 
 void EnemyAircraft::collision(const Entity* other)

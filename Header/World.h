@@ -7,23 +7,30 @@
 
 #include "GameSprite.h"
 #include "Entity.h"
+#include "Aircraft.h"
+#include "Layer.h"
+#include "EmptyWorldNode.h"
 
 class World
 {
 public:
-	World() {};
-
-	template<typename T, typename = std::enable_if_t<std::is_base_of<Entity, T>::value>>
-	static void addEntity(std::unique_ptr<T>&& entity) { m_pendingEntities.push_back(std::move(entity)); }
+	explicit World(sf::RenderWindow& window);
 	void restart();
 	void update(float deltaTime);
-	void render(sf::RenderWindow& window, sf::RenderStates states);
+	void render(sf::RenderWindow &window, sf::RenderStates states);
+private:
 	void setup();
 	void loadResources();
-private:
 	static void handleCollisions();
-	static std::vector<std::unique_ptr<Entity>> m_entities;
-	static std::vector<std::unique_ptr<Entity>> m_pendingEntities;
+
+	sf::RenderWindow& m_window;
+	sf::View m_worldView;
+	EmptyWorldNode m_worldGraph;
+	std::array<WorldNode*, Layer::LayerCount> m_worldLayers;
+	sf::FloatRect m_worldBounds;
+	sf::Vector2f m_spawnPosition;
+	float m_scrollSpeed;
+	Aircraft* m_playerAircraft;
 };
 
 

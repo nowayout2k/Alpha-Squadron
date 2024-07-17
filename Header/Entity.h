@@ -19,7 +19,7 @@ class Entity : public WorldNode
 {
  public:
 	virtual ~Entity() = default;
-	virtual void loadResources() = 0;
+	virtual void loadResources() override = 0;
 	virtual void collision(const Entity* other) = 0;
 	virtual bool isColliding(const sf::Rect<float>& bounds) const = 0;
 	virtual sf::Rect<float> getGlobalBounds() const = 0;

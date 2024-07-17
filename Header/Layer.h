@@ -10,7 +10,7 @@ enum Layer
 	Background = 0,
 	Foreground = 1,
 	Collision = 2,
-	Count = 3
+	LayerCount = 3
 };
 
 #endif //LAYER_H_

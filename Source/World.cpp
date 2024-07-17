@@ -5,13 +5,18 @@
 #include "../Header/World.h"
 #include "../Header/EnemyAircraft.h"
 #include "../Header/PlayerAircraft.h"
-#include "../Header/ScrollingBackground.h"
 #include "../Header/Audio.h"
 #include "../Header/GameText.h"
-#include "../Header/Game.h"
 
-std::vector<std::unique_ptr<Entity>> World::m_entities;
-std::vector<std::unique_ptr<Entity>> World::m_pendingEntities;
+World::World(sf::RenderWindow& window) : m_window(window), m_worldView(window.getDefaultView()),
+			m_worldBounds(0.0f,0.0f,2000.0f,m_worldView.getSize().y),
+			m_spawnPosition(0, m_worldView.getSize().y/2),
+			m_playerAircraft(nullptr), m_scrollSpeed(1.0f)
+{
+	setup();
+	loadResources();
+	//m_worldView.setCenter(m_spawnPosition);
+}
 
 void World::restart()
 {
@@ -25,69 +30,76 @@ void World::restart()
 
 void World::setup()
 {
-	m_entities.clear();
-	m_pendingEntities.clear();
-	auto windowSize = Game::getWindowSize();
-	m_entities.push_back(std::make_unique<GameSprite>(EntityType::Background, false, TextureId::SmoggySky));
-	m_entities.push_back(std::make_unique<ScrollingBackground>(std::vector<TextureId>{ TextureId::DecayedBuildings1, TextureId::DecayedBuildings1, TextureId::DecayedBuildings1}));
-	m_entities.push_back(std::make_unique<PlayerAircraft>());
-	m_entities.push_back(std::make_unique<EnemyAircraft>(true, sf::Vector2f((float)windowSize.x-500, (float)windowSize.y+100)));
-	m_entities.push_back(std::make_unique<EnemyAircraft>(true, sf::Vector2f((float)windowSize.x-100, (float)windowSize.y+100)));
-	Audio::playMusic(MusicId::UNSquadronLevel1, 10);
+	for (int i = 0; i < LayerCount; ++i)
+	{
+		WorldNode::SmartNode layer(new EmptyWorldNode());
+		m_worldLayers[i] = layer.get();
+		m_worldGraph.attachNode(std::move(layer));
+	}
 
- 	loadResources();
+	std::unique_ptr<GameSprite> backgroundSprite(
+		new GameSprite(EntityType::Background,
+			false,
+			TextureId::Coin,
+			sf::IntRect(m_worldBounds),
+			true));
+	backgroundSprite->setPosition(m_worldBounds.left,m_worldBounds.top);
+	m_worldLayers[Background]->attachNode(std::move(backgroundSprite));
+
+	std::unique_ptr<Aircraft> player(new PlayerAircraft());
+	m_playerAircraft = player.get();
+	m_playerAircraft->setPosition(m_spawnPosition);
+	//m_playerAircraft->setVelocity(m_scrollSpeed, 40.f);
+
+	m_worldLayers[Collision]->attachNode(std::move(player));
+	std::unique_ptr<WorldNode> enemy1(new EnemyAircraft(true,
+		sf::Vector2f((float)m_worldBounds.getSize().x-500, (float)m_worldBounds.getSize().y+100)));
+	m_worldLayers[Collision]->attachNode(std::move(enemy1));
+
+	std::unique_ptr<WorldNode> enemy2(new EnemyAircraft(true,
+		sf::Vector2f((float)m_worldBounds.getSize().x-500, (float)m_worldBounds.getSize().y+100)));
+	m_worldLayers[Collision]->attachNode(std::move(enemy2));
+	Audio::playMusic(MusicId::UNSquadronLevel1, 10);
 }
 
 void World::loadResources()
 {
-	for (auto& entity : m_entities)
-	{
-		entity->loadResources();
-	}
+	m_worldGraph.loadStateResources();
 }
-
+float totalMovement = 0;
 void World::update(float deltaTime)
 {
-	for (auto& entity : m_pendingEntities)
+	totalMovement += m_scrollSpeed * deltaTime;
+	m_worldView.move(m_scrollSpeed * deltaTime, 0.0f);
+	m_worldGraph.updateState(deltaTime);
+
+	sf::Vector2f position = m_playerAircraft->getPosition();
+
+	sf::Rect<float> bounds;
+	bounds.left = totalMovement;
+	bounds.top = 0;
+	bounds.width = m_worldView.getSize().x;
+	bounds.height = m_worldView.getSize().y;
+
+	if (position.x <= bounds.left)
 	{
-		entity->loadResources();
-		m_entities.push_back(std::move(entity));
+		position = sf::Vector2f(bounds.left, position.y);
+		m_playerAircraft->setPosition(position);
 	}
-	m_pendingEntities.clear();
-
-	bool hasEnemy = false;
-	bool hasPlayer = false;
-	for (auto it = m_entities.begin(); it != m_entities.end();)
+	else if (position.x > bounds.left + bounds.width - m_playerAircraft->getScaledTextureSize().x)
 	{
-		auto enemy = dynamic_cast<EnemyAircraft*>(it->get());
-		if (enemy)
-			hasEnemy = true;
-
-		auto player = dynamic_cast<PlayerAircraft*>(it->get());
-		if(player)
-			hasPlayer = true;
-
-		if ((*it)->isDestroyPending())
-		{
-			it = m_entities.erase(it);
-		}
-		else
-		{
-			(*it)->updateState(deltaTime);
-			++it;
-		}
+		position = sf::Vector2f(bounds.left + bounds.width - m_playerAircraft->getScaledTextureSize().x, position.y);
+		m_playerAircraft->setPosition(position);
 	}
-
-	if(!hasPlayer)
+	if (position.y <= bounds.top)
 	{
-		restart();
-		return;
+		position = sf::Vector2f(position.x, bounds.top);
+		m_playerAircraft->setPosition(position);
 	}
-	if (!hasEnemy)
+	else if (position.y > bounds.top + bounds.height - m_playerAircraft->getScaledTextureSize().y)
 	{
-		auto windowSize = Game::getWindowSize();
-		addEntity(std::make_unique<EnemyAircraft>(true, sf::Vector2f((float)windowSize.x-500, (float)windowSize.y+100)));
-		addEntity(std::make_unique<EnemyAircraft>(true, sf::Vector2f((float)windowSize.x-100, (float)windowSize.y+100)));
+		position = sf::Vector2f(position.x, bounds.top + bounds.height - m_playerAircraft->getScaledTextureSize().y);
+		m_playerAircraft->setPosition(position);
 	}
 
 	handleCollisions();
@@ -95,15 +107,13 @@ void World::update(float deltaTime)
 
 void World::render(sf::RenderWindow &window, sf::RenderStates states)
 {
-    for (const auto& entity : m_entities)
-    {
-		entity->renderState(window, states);
-    }
+	window.setView(m_worldView);
+	m_worldGraph.renderState(window, states);
 }
 
 void World::handleCollisions()
 {
-    for (const auto& entity : m_entities)
+    /*for (const auto& entity : m_entities)
     {
 		if(entity->isDestroyPending())
 			continue;
@@ -119,6 +129,6 @@ void World::handleCollisions()
 				entity->collision(other.get());
             }
         }
-    }
+    }*/
 }
 

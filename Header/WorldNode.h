@@ -9,8 +9,8 @@
 
 class WorldNode : public sf::Transformable, public sf::Drawable
 {
-	typedef std::unique_ptr<WorldNode> SmartNode;
  public:
+	typedef std::unique_ptr<WorldNode> SmartNode;
 	explicit WorldNode() : m_isActive(true) {}
 	void attachNode(SmartNode node);
 	SmartNode detachNode(const WorldNode& node);
@@ -18,9 +18,13 @@ class WorldNode : public sf::Transformable, public sf::Drawable
 	bool isActive() const { return m_isActive; };
 	virtual void updateState(float deltaTime);
 	virtual void renderState(sf::RenderTarget& renderTarget, sf::RenderStates states) const;
+	sf::Vector2f getWorldPosition() const;
+	virtual void loadStateResources();
  protected:
+	sf::Transform getWorldTransform() const;
 	virtual void update(float deltaTime) = 0;
 	virtual void render(sf::RenderTarget& renderTarget, sf::RenderStates states) const = 0;
+	virtual void loadResources() = 0;
  private:
 	WorldNode(const WorldNode&) = delete;
 	WorldNode& operator=(const WorldNode& other) = delete;

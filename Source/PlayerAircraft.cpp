@@ -6,8 +6,6 @@
 #include "../Header/PlayerAircraft.h"
 #include "../Header/Audio.h"
 #include "../Header/Projectile.h"
-#include "../Header/World.h"
-#include "../Header/Game.h"
 
 #define DAMAGE_FLASH_TIME 4.0f
 #define DAMAGE_INVINCIBILITY_TIME .3f
@@ -16,14 +14,12 @@
 PlayerAircraft::PlayerAircraft() : Aircraft(EntityType::Player, true, TextureId::AircraftSpriteSheet, sf::IntRect(240, 298, 52, 12))
 {
 	setScale(4.0f, 4.0f);
-    sf::Vector2u windowSize = Game::getWindowSize();
-	setPosition(0, (float)windowSize.y / 2.f);
 }
 
 void PlayerAircraft::update(float deltaTime)
 {
 	Aircraft::update(deltaTime);
-	adjustToWindow();
+
 	if(m_fireCooldownRemaining > 0)
 		m_fireCooldownRemaining -= deltaTime;
 	setVelocity(handleInput(deltaTime));
@@ -53,24 +49,6 @@ sf::Vector2f PlayerAircraft::handleInput(float deltaTime)
 		fireBullet(getPosition(), sf::Vector2f(1000, 0));
 
     return velocity;
-}
-
-void PlayerAircraft::adjustToWindow()
-{
-	auto pos = getPosition();
-    sf::Vector2u windowSize = Game::getWindowSize();
-    sf::FloatRect windowBounds(0.f, 0.f, static_cast<float>(windowSize.x), static_cast<float>(windowSize.y));
-	auto globalBounds = getGlobalBounds();
-    if (pos.x < windowBounds.left)
-		pos.x = 0.f;
-    if (pos.x > windowBounds.left + windowBounds.width - globalBounds.width)
-		pos.x = windowBounds.left + windowBounds.width - globalBounds.width;
-	if (pos.y < 0)
-		pos.y = 0;
-	if (pos.y > windowBounds.height - globalBounds.height)
-		pos.y = windowBounds.height - globalBounds.height;
-
-	setPosition(pos);
 }
 
 void PlayerAircraft::collision(const Entity* other)
