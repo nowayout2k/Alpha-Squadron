@@ -11,11 +11,10 @@
 World::World(sf::RenderWindow& window) : m_window(window), m_worldView(window.getDefaultView()),
 			m_worldBounds(0.0f,0.0f,2000.0f,m_worldView.getSize().y),
 			m_spawnPosition(0, m_worldView.getSize().y/2),
-			m_playerAircraft(nullptr), m_scrollSpeed(1.0f)
+			m_playerAircraft(nullptr), m_scrollSpeed(50.0f), m_totalMovement(0)
 {
 	setup();
 	loadResources();
-	//m_worldView.setCenter(m_spawnPosition);
 }
 
 void World::restart()
@@ -41,15 +40,16 @@ void World::setup()
 		new GameSprite(EntityType::Background,
 			false,
 			TextureId::Coin,
-			sf::IntRect(m_worldBounds),
+			sf::IntRect(),
 			true));
 	backgroundSprite->setPosition(m_worldBounds.left,m_worldBounds.top);
+	backgroundSprite->setScale(5,1);
 	m_worldLayers[Background]->attachNode(std::move(backgroundSprite));
 
 	std::unique_ptr<Aircraft> player(new PlayerAircraft());
 	m_playerAircraft = player.get();
 	m_playerAircraft->setPosition(m_spawnPosition);
-	//m_playerAircraft->setVelocity(m_scrollSpeed, 40.f);
+	m_playerAircraft->setVelocity(m_scrollSpeed, 0);
 
 	m_worldLayers[Collision]->attachNode(std::move(player));
 	std::unique_ptr<WorldNode> enemy1(new EnemyAircraft(true,
@@ -66,40 +66,40 @@ void World::loadResources()
 {
 	m_worldGraph.loadStateResources();
 }
-float totalMovement = 0;
+
 void World::update(float deltaTime)
 {
-	totalMovement += m_scrollSpeed * deltaTime;
-	m_worldView.move(m_scrollSpeed * deltaTime, 0.0f);
 	m_worldGraph.updateState(deltaTime);
 
 	sf::Vector2f position = m_playerAircraft->getPosition();
 
-	sf::Rect<float> bounds;
-	bounds.left = totalMovement;
-	bounds.top = 0;
-	bounds.width = m_worldView.getSize().x;
-	bounds.height = m_worldView.getSize().y;
+	if (position.x <= m_totalMovement)
+	{
+		position = sf::Vector2f(m_totalMovement, position.y);
+	}
+	else if (position.x > m_totalMovement + m_worldView.getSize().x - m_playerAircraft->getGlobalBounds().width)
+	{
+		position = sf::Vector2f(m_totalMovement + m_worldView.getSize().x - m_playerAircraft->getGlobalBounds().width, position.y);
+	}
+	if (position.y <= 0)
+	{
+		position = sf::Vector2f(position.x, 0);
+	}
+	else if (position.y > 0 + m_worldView.getSize().y - m_playerAircraft->getGlobalBounds().height)
+	{
+		position = sf::Vector2f(position.x, 0 + m_worldView.getSize().y - m_playerAircraft->getGlobalBounds().height);
+	}
 
-	if (position.x <= bounds.left)
+	m_playerAircraft->setPosition(position);
+
+	if(m_totalMovement < m_worldBounds.width - m_worldView.getSize().x)
 	{
-		position = sf::Vector2f(bounds.left, position.y);
-		m_playerAircraft->setPosition(position);
-	}
-	else if (position.x > bounds.left + bounds.width - m_playerAircraft->getScaledTextureSize().x)
-	{
-		position = sf::Vector2f(bounds.left + bounds.width - m_playerAircraft->getScaledTextureSize().x, position.y);
-		m_playerAircraft->setPosition(position);
-	}
-	if (position.y <= bounds.top)
-	{
-		position = sf::Vector2f(position.x, bounds.top);
-		m_playerAircraft->setPosition(position);
-	}
-	else if (position.y > bounds.top + bounds.height - m_playerAircraft->getScaledTextureSize().y)
-	{
-		position = sf::Vector2f(position.x, bounds.top + bounds.height - m_playerAircraft->getScaledTextureSize().y);
-		m_playerAircraft->setPosition(position);
+		m_totalMovement += m_scrollSpeed * deltaTime;
+		m_worldView.move(m_scrollSpeed * deltaTime, 0.0f);
+		if(m_playerAircraft->getVelocity().x == 0)
+		{
+			m_playerAircraft->setVelocity(m_scrollSpeed, m_playerAircraft->getVelocity().y);
+		}
 	}
 
 	handleCollisions();

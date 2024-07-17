@@ -6,6 +6,7 @@
 #define CACHE_H_
 
 #include <iostream>
+#include <unordered_map>
 #include "Debug.h"
 
 template <typename T>

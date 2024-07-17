@@ -11,6 +11,7 @@
 #define DAMAGE_FLASH_TIME 4.0f
 #define DAMAGE_INVINCIBILITY_TIME .3f
 #define FIRE_COOLDOWN_TIME 0.2f
+#define M_PI 3.14159265359
 
 Aircraft::Aircraft(EntityType entityType, const bool hasCollision, const TextureId textureType, const sf::IntRect textureRect) :
 	GameSprite(entityType, hasCollision, textureType, textureRect)
@@ -42,7 +43,7 @@ void Aircraft::fireBullet(sf::Vector2f pos, sf::Vector2f velocity)
 	if(m_fireCooldownRemaining > 0)
 		return;
 
-	auto offset = sf::Vector2f(getScaledTextureSize().x, getScaledTextureSize().y/2);
+	auto offset = sf::Vector2f(getGlobalBounds().width, getGlobalBounds().height/2);
 	auto spawnPos = velocity.x < 0 ? pos - offset: pos +  offset;
 	//World::addEntity(std::move(std::make_unique<Projectile>(getEntityType(), spawnPos, velocity)));
 	m_fireCooldownRemaining = FIRE_COOLDOWN_TIME;

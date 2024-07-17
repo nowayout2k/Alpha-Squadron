@@ -41,14 +41,6 @@ public:
 		return getTransform().transformRect(bounds);
 	}
 
-	sf::Vector2f getScaledTextureSize() const
-	{
-		return {
-			(float)getGlobalBounds().width,
-			(float)getGlobalBounds().height,
-		};
-	}
-
 	void loadResources() override
 	{
 		auto& tex = ResourceManager::loadResource(m_textureId, m_textureRect);

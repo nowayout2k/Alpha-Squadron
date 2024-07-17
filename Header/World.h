@@ -5,6 +5,7 @@
 #ifndef WORLD_H_
 #define WORLD_H_
 
+#include <array>
 #include "GameSprite.h"
 #include "Entity.h"
 #include "Aircraft.h"
@@ -30,6 +31,7 @@ private:
 	sf::FloatRect m_worldBounds;
 	sf::Vector2f m_spawnPosition;
 	float m_scrollSpeed;
+	float m_totalMovement;
 	Aircraft* m_playerAircraft;
 };
 
