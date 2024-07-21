@@ -29,6 +29,11 @@ void Projectile::update(float deltaTime)
 		destroy();*/
 }
 
+void Projectile::render(sf::RenderTarget& renderTarget, sf::RenderStates states) const
+{
+	GameSprite::render(renderTarget, states);
+}
+
 void Projectile::collision(const Entity* other)
 {
 	GameSprite::collision(other);

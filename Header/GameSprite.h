@@ -12,8 +12,9 @@ class GameSprite : public Entity
 {
 public:
 	explicit GameSprite(EntityType entityType, const bool hasCollision, const TextureId textureType,
-		const sf::IntRect textureRect = sf::IntRect(), bool repeatTexture = false) : m_textureId(textureType),
-		m_textureRect(textureRect), m_repeatTexture(repeatTexture), Entity(entityType, hasCollision){}
+		const sf::IntRect textureArea = sf::IntRect(), const sf::IntRect textureRect = sf::IntRect(), bool repeatTexture = false)
+		: m_textureId(textureType), m_textureArea(textureArea), m_repeatTexture(repeatTexture), m_textureRect(textureRect),
+		Entity(entityType, hasCollision){}
 	virtual ~GameSprite() override = default;
 
 	void render(sf::RenderTarget& renderTarget, sf::RenderStates states) const override
@@ -43,9 +44,11 @@ public:
 
 	void loadResources() override
 	{
-		auto& tex = ResourceManager::loadResource(m_textureId, m_textureRect);
+		auto& tex = ResourceManager::loadResource(m_textureId, m_textureArea);
 		tex.setRepeated(m_repeatTexture);
 		m_sprite.setTexture(tex);
+		if(m_textureRect != sf::IntRect())
+			m_sprite.setTextureRect(m_textureRect);
 	}
 
 	void setColor(sf::Color color)
@@ -56,6 +59,7 @@ public:
  private:
 	sf::Sprite m_sprite;
 	TextureId m_textureId;
+	sf::IntRect m_textureArea;
 	sf::IntRect m_textureRect;
 	bool m_repeatTexture;
  };

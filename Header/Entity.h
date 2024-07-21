@@ -29,7 +29,7 @@ class Entity : public WorldNode
 	void setVelocity(sf::Vector2f velocity) { m_velocity = velocity; }
 	void setVelocity(float x, float y) { m_velocity.x = x; m_velocity.y = y; }
 	sf::Vector2f getVelocity() const { return m_velocity; }
-	void update(float deltaTime) override { move(m_velocity * deltaTime); }
+	void update(float deltaTime) override { if(isActive()) move(m_velocity * deltaTime); }
 protected:
 	Entity(EntityType entityType, bool hasCollision) : m_velocity(sf::Vector2f(0,0)), m_entityType(entityType), m_isDestroyPending(false), m_hasCollision(hasCollision) {}
 	Entity(EntityType entityType) : m_velocity(sf::Vector2f(0,0)), m_entityType(entityType), m_isDestroyPending(false), m_hasCollision(false) {}

@@ -18,11 +18,11 @@ sf::SoundBuffer& ResourceManager::loadResource(SoundFxId soundFxId)
 	return m_soundBufferCache.load(std::to_string(soundFxId), getSoundPath(soundFxId));
 }
 
-sf::Texture& ResourceManager::loadResource(TextureId textureId, sf::Rect<int> textureRect)
+sf::Texture& ResourceManager::loadResource(TextureId textureId, sf::Rect<int> area)
 {
 	std::string path = getTexturePath(textureId);
-	std::string hash = path + std::to_string(textureRect.left) + std::to_string(textureRect.top) + std::to_string(textureRect.width) + std::to_string(textureRect.height);
-	return m_textureCache.load(hash, path, textureRect);
+	std::string hash = path + std::to_string(area.left) + std::to_string(area.top) + std::to_string(area.width) + std::to_string(area.height);
+	return m_textureCache.load(hash, path, area);
 }
 
 std::string ResourceManager::getTexturePath(TextureId textureId)

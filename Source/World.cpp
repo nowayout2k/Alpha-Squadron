@@ -3,13 +3,13 @@
 //
 
 #include "../Header/World.h"
-#include "../Header/EnemyAircraft.h"
 #include "../Header/PlayerAircraft.h"
 #include "../Header/Audio.h"
 #include "../Header/GameText.h"
+#include "../Header/Projectile.h"
 
 World::World(sf::RenderWindow& window) : m_window(window), m_worldView(window.getDefaultView()),
-			m_worldBounds(0.0f,0.0f,2000.0f,m_worldView.getSize().y),
+			m_worldBounds(0.0f,0.0f,10000.0f,m_worldView.getSize().y),
 			m_spawnPosition(0, m_worldView.getSize().y/2),
 			m_playerAircraft(nullptr), m_scrollSpeed(50.0f), m_totalMovement(0)
 {
@@ -36,29 +36,41 @@ void World::setup()
 		m_worldGraph.attachNode(std::move(layer));
 	}
 
-	std::unique_ptr<GameSprite> backgroundSprite(
+	std::unique_ptr<GameSprite> backgroundSkySprite(
 		new GameSprite(EntityType::Background,
 			false,
-			TextureId::Coin,
+			TextureId::SmoggySky,
 			sf::IntRect(),
+			sf::IntRect(0,0,m_worldBounds.width, m_worldView.getSize().y),
 			true));
-	backgroundSprite->setPosition(m_worldBounds.left,m_worldBounds.top);
-	backgroundSprite->setScale(5,1);
-	m_worldLayers[Background]->attachNode(std::move(backgroundSprite));
+	backgroundSkySprite->setPosition(m_worldBounds.left,m_worldBounds.top);
+	m_worldLayers[Background]->attachNode(std::move(backgroundSkySprite));
+
+	std::unique_ptr<GameSprite> backgroundBuildingsSprite(
+		new GameSprite(EntityType::Background,
+			false,
+			TextureId::DecayedBuildings1,
+			sf::IntRect(),
+			sf::IntRect(0,0,m_worldBounds.width,m_worldView.getSize().y),
+			true));
+	backgroundBuildingsSprite->setPosition(m_worldBounds.left,m_worldBounds.top);
+	m_worldLayers[Background]->attachNode(std::move(backgroundBuildingsSprite));
 
 	std::unique_ptr<Aircraft> player(new PlayerAircraft());
 	m_playerAircraft = player.get();
 	m_playerAircraft->setPosition(m_spawnPosition);
 	m_playerAircraft->setVelocity(m_scrollSpeed, 0);
-
+	m_playerAircraft->setScale(4.0, 4.0);
 	m_worldLayers[Collision]->attachNode(std::move(player));
-	std::unique_ptr<WorldNode> enemy1(new EnemyAircraft(true,
+
+	/*std::unique_ptr<WorldNode> enemy1(new EnemyAircraft(true,
 		sf::Vector2f((float)m_worldBounds.getSize().x-500, (float)m_worldBounds.getSize().y+100)));
 	m_worldLayers[Collision]->attachNode(std::move(enemy1));
 
 	std::unique_ptr<WorldNode> enemy2(new EnemyAircraft(true,
 		sf::Vector2f((float)m_worldBounds.getSize().x-500, (float)m_worldBounds.getSize().y+100)));
-	m_worldLayers[Collision]->attachNode(std::move(enemy2));
+	m_worldLayers[Collision]->attachNode(std::move(enemy2));*/
+
 	Audio::playMusic(MusicId::UNSquadronLevel1, 10);
 }
 
@@ -71,6 +83,31 @@ void World::update(float deltaTime)
 {
 	m_worldGraph.updateState(deltaTime);
 
+	sf::Vector2f velocity(0.f, 0.f);
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+		velocity.y -= 800.f;
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+		velocity.y += 800.f;
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+		velocity.x -= 800.f;
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+		velocity.x += 800.f;
+
+	if (velocity.x != 0.f && velocity.y != 0.f)
+	{
+		velocity.x /= std::sqrt(2.f);
+		velocity.y /= std::sqrt(2.f);
+	}
+
+	m_playerAircraft->setVelocity(velocity);
+
+	WorldNode::SmartNode pro = nullptr;
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+	{
+		pro = m_playerAircraft->fireBullet(sf::Vector2f(1000, 0));
+	}
+
 	sf::Vector2f position = m_playerAircraft->getPosition();
 
 	if (position.x <= m_totalMovement)
@@ -81,6 +118,7 @@ void World::update(float deltaTime)
 	{
 		position = sf::Vector2f(m_totalMovement + m_worldView.getSize().x - m_playerAircraft->getGlobalBounds().width, position.y);
 	}
+
 	if (position.y <= 0)
 	{
 		position = sf::Vector2f(position.x, 0);
@@ -103,11 +141,17 @@ void World::update(float deltaTime)
 	}
 
 	handleCollisions();
+
+	if(pro != nullptr)
+	{
+		pro->loadStateResources();
+		m_worldLayers[Layer::Collision]->attachNode(std::move(pro));
+	}
 }
 
 void World::render(sf::RenderWindow &window, sf::RenderStates states)
 {
-	window.setView(m_worldView);
+	m_window.setView(m_worldView);
 	m_worldGraph.renderState(window, states);
 }
 
@@ -131,4 +175,5 @@ void World::handleCollisions()
         }
     }*/
 }
+
 

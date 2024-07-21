@@ -11,10 +11,9 @@
 EnemyAircraft::EnemyAircraft(bool hasCollision, sf::Vector2f position) : Aircraft(EntityType::Enemy, hasCollision, TextureId::EnemiesSpriteSheet,
                                                sf::IntRect(70, 200, 25, 12))
 {
-    setScale(sf::Vector2f(-4,4));
+    setScale(sf::Vector2f(-1,1));
 	setPosition(position);
-	m_health = 100;
-	m_fireCooldownRemaining = 4;
+	setHealth(100);
 }
 
 bool goUp = true;
@@ -23,7 +22,7 @@ void EnemyAircraft::update(float deltaTime)
 {
 	Aircraft::update(deltaTime);
 
-	if(m_health <= 0)
+	if(getHealth() <= 0)
 	{
 		destroy();
 		return;
@@ -43,16 +42,7 @@ void EnemyAircraft::update(float deltaTime)
 		setVelocity(0, -500);
 	}
 
-	if(m_fireCooldownRemaining > 0)
-	{
-		m_fireCooldownRemaining -= deltaTime;
-	}
-	else
-	{
-		fireBullet(getPosition(), sf::Vector2f(-1000, 0));
-	}
-
-
+	fireBullet(sf::Vector2f(-1000, 0));
 }
 
 void EnemyAircraft::collision(const Entity* other)
@@ -61,7 +51,7 @@ void EnemyAircraft::collision(const Entity* other)
 
 	if(other->getEntityType() == EntityType::Player)
 	{
-		takeDamage(m_health);
+		takeDamage(getHealth());
 	}
 	else if(other->getEntityType() == EntityType::Projectile)
 	{

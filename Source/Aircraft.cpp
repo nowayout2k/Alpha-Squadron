@@ -11,7 +11,9 @@
 #define DAMAGE_FLASH_TIME 4.0f
 #define DAMAGE_INVINCIBILITY_TIME .3f
 #define FIRE_COOLDOWN_TIME 0.2f
-#define M_PI 3.14159265359
+#ifndef M_PI
+	#define M_PI 3.14159265359
+#endif
 
 Aircraft::Aircraft(EntityType entityType, const bool hasCollision, const TextureId textureType, const sf::IntRect textureRect) :
 	GameSprite(entityType, hasCollision, textureType, textureRect)
@@ -38,15 +40,17 @@ void Aircraft::takeDamage(int health)
 }
 
 
-void Aircraft::fireBullet(sf::Vector2f pos, sf::Vector2f velocity)
+WorldNode::SmartNode Aircraft::fireBullet(sf::Vector2f velocity)
 {
 	if(m_fireCooldownRemaining > 0)
-		return;
+		return nullptr;
 
 	auto offset = sf::Vector2f(getGlobalBounds().width, getGlobalBounds().height/2);
-	auto spawnPos = velocity.x < 0 ? pos - offset: pos +  offset;
-	//World::addEntity(std::move(std::make_unique<Projectile>(getEntityType(), spawnPos, velocity)));
+	float sign = velocity.x < 0 ? -1 : 1;
+	auto worldPos = getWorldPosition();
+	auto pro = std::make_unique<Projectile>(getEntityType(), worldPos + offset * sign, velocity);
 	m_fireCooldownRemaining = FIRE_COOLDOWN_TIME;
+	return std::move(pro);
 }
 
 void Aircraft::handleAnimation(float deltaTime)
@@ -73,4 +77,11 @@ void Aircraft::handleDamageAnimation(float deltaTime)
 		}
 		setCollision(m_timeSinceDamage > DAMAGE_INVINCIBILITY_TIME);
 	}
+}
+
+void Aircraft::update(float deltaTime)
+{
+	Entity::update(deltaTime);
+	if(m_fireCooldownRemaining > 0)
+		m_fireCooldownRemaining -= deltaTime;
 }

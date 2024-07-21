@@ -41,6 +41,11 @@ void WorldNode::updateState(float deltaTime)
 	update(deltaTime);
 	for (const SmartNode& child : m_children)
 	{
+		if(child == nullptr)
+		{
+			Debug::logWarning("Child node is null!");
+			continue;
+		}
 		child->updateState(deltaTime);
 	}
 }

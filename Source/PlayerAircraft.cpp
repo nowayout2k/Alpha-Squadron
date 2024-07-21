@@ -13,42 +13,13 @@
 
 PlayerAircraft::PlayerAircraft() : Aircraft(EntityType::Player, true, TextureId::AircraftSpriteSheet, sf::IntRect(240, 298, 52, 12))
 {
-	setScale(4.0f, 4.0f);
+	setScale(1.0f, 1.0f);
 }
 
 void PlayerAircraft::update(float deltaTime)
 {
 	Aircraft::update(deltaTime);
-
-	if(m_fireCooldownRemaining > 0)
-		m_fireCooldownRemaining -= deltaTime;
-	setVelocity(handleInput(deltaTime));
 	handleAnimation(deltaTime);
-}
-
-sf::Vector2f PlayerAircraft::handleInput(float deltaTime)
-{
-    sf::Vector2f velocity(0.f, 0.f);
-
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-		velocity.y -= 800.f;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-		velocity.y += 800.f;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-		velocity.x -= 800.f;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-		velocity.x += 800.f;
-
-    if (velocity.x != 0.f && velocity.y != 0.f)
-    {
-		velocity.x /= std::sqrt(2.f);
-		velocity.y /= std::sqrt(2.f);
-    }
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-		fireBullet(getPosition(), sf::Vector2f(1000, 0));
-
-    return velocity;
 }
 
 void PlayerAircraft::collision(const Entity* other)
