@@ -2,7 +2,6 @@
 // Created by Johnnie Otis on 6/2/24.
 //
 
-#include <SFML/Window/Keyboard.hpp>
 #include "../Header/PlayerAircraft.h"
 #include "../Header/Audio.h"
 #include "../Header/Projectile.h"

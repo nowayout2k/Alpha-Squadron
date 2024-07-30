@@ -16,7 +16,7 @@ Game::Game()
 
 void Game::run()
 {
-	Debug::init();
+	Debug::init(m_world.get());
 	sf::Clock clock;
 	float timeStep = 0;
 

@@ -14,7 +14,7 @@ Projectile::Projectile(EntityType owner, sf::Vector2f spawnPos, sf::Vector2f vel
 	sf::IntRect(376, 108, 10, 12))
 {
 	setVelocity(velocity);
-	setScale(4.0f, 4.0f);
+	setScale(1.0f, 1.0f);
 	setPosition(spawnPos);
 	Audio::playSound(SoundFxId::Shoot1, 10);
 }

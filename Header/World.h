@@ -20,6 +20,8 @@ public:
 	void update(float deltaTime);
 	void render(sf::RenderWindow &window, sf::RenderStates states);
 private:
+	friend class Debug;
+
 	void setup();
 	void loadResources();
 	static void handleCollisions();
@@ -31,7 +33,7 @@ private:
 	sf::FloatRect m_worldBounds;
 	sf::Vector2f m_spawnPosition;
 	float m_scrollSpeed;
-	float m_totalMovement;
+	sf::Vector2f m_viewPositionOffset;
 	Aircraft* m_playerAircraft;
 };
 
