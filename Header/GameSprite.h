@@ -11,11 +11,13 @@
 class GameSprite : public Entity
 {
 public:
-	explicit GameSprite(EntityType entityType, const bool hasCollision, const TextureId textureType,
+	explicit GameSprite(const bool hasCollision, const TextureId textureType,
 		const sf::IntRect textureArea = sf::IntRect(), const sf::IntRect textureRect = sf::IntRect(), bool repeatTexture = false)
 		: m_textureId(textureType), m_textureArea(textureArea), m_repeatTexture(repeatTexture), m_textureRect(textureRect),
-		Entity(entityType, hasCollision){}
+		Entity(hasCollision){}
 	virtual ~GameSprite() override = default;
+
+	virtual unsigned int getNodeType() const override { return Entity::getNodeType() | (unsigned int)NodeType::Sprite; }
 
 	void render(sf::RenderTarget& renderTarget, sf::RenderStates states) const override
 	{

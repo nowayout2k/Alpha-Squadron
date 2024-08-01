@@ -3,7 +3,7 @@
 //
 
 #include "../Header/World.h"
-#include "../Header/PlayerAircraft.h"
+#include "../Header/Tomcat.h"
 #include "../Header/Audio.h"
 #include "../Header/GameText.h"
 
@@ -36,7 +36,7 @@ void World::setup()
 	}
 
 	std::unique_ptr<GameSprite> backgroundSkySprite(
-		new GameSprite(EntityType::Background,
+		new GameSprite(
 			false,
 			TextureId::SmoggySky,
 			sf::IntRect(),
@@ -46,7 +46,7 @@ void World::setup()
 	m_worldLayers[Background]->attachNode(std::move(backgroundSkySprite));
 
 	std::unique_ptr<GameSprite> backgroundBuildingsSprite(
-		new GameSprite(EntityType::Background,
+		new GameSprite(
 			false,
 			TextureId::DecayedBuildings1,
 			sf::IntRect(),
@@ -55,7 +55,7 @@ void World::setup()
 	backgroundBuildingsSprite->setPosition(m_worldBounds.left,m_worldBounds.top);
 	m_worldLayers[Background]->attachNode(std::move(backgroundBuildingsSprite));
 
-	std::unique_ptr<Aircraft> player(new PlayerAircraft());
+	std::unique_ptr<Aircraft> player(new Tomcat());
 	m_playerAircraft = player.get();
 	m_playerAircraft->setPosition(m_spawnPosition);
 	m_playerAircraft->setVelocity(m_scrollSpeed, 0);

@@ -4,12 +4,12 @@
 
 #include "../Header/Projectile.h"
 #include "../Header/Audio.h"
-#include "../Header/EnemyAircraft.h"
-#include "../Header/PlayerAircraft.h"
+#include "../Header/Chopper.h"
+#include "../Header/Tomcat.h"
 #include "../Header/Game.h"
 
-Projectile::Projectile(EntityType owner, sf::Vector2f spawnPos, sf::Vector2f velocity) : m_ownerType(owner),
-	GameSprite(EntityType::Projectile, true,
+Projectile::Projectile(NodeType owner, sf::Vector2f spawnPos, sf::Vector2f velocity) : m_ownerType(owner),
+																					   GameSprite(true,
 	TextureId::AircraftSpriteSheet,
 	sf::IntRect(376, 108, 10, 12))
 {
@@ -25,7 +25,7 @@ void Projectile::update(float deltaTime)
 
 	/*sf::Vector2u windowSize = World::getView();
 	auto position = getPosition();
-	if(position.x > (float)windowSize.x || position.y > (float)windowSize.y || position.x <= 0 || position.y <= 0 || m_ownerType == EntityType::None)
+	if(position.x > (float)windowSize.x || position.y > (float)windowSize.y || position.x <= 0 || position.y <= 0 || m_ownerType == NodeType::None)
 		destroy();*/
 }
 
@@ -38,8 +38,8 @@ void Projectile::collision(const Entity* other)
 {
 	GameSprite::collision(other);
 
-	if(m_ownerType == EntityType::None || (other->getEntityType() == EntityType::Player && m_ownerType != EntityType::Player) ||
-		(other->getEntityType() == EntityType::Enemy && m_ownerType != EntityType::Enemy))
+	if(m_ownerType == NodeType::None || (other->getNodeType() & (unsigned int)NodeType::Player > 0 && m_ownerType != NodeType::Player) ||
+		(other->getNodeType() & (unsigned int)NodeType::Enemy > 0 && m_ownerType != NodeType::Enemy))
 	{
 		destroy();
 	}

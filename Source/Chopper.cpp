@@ -2,14 +2,15 @@
 // Created by Johnnie Otis on 6/1/24.
 //
 
-#include "../Header/EnemyAircraft.h"
-#include "../Header/PlayerAircraft.h"
+#include "../Header/Chopper.h"
+#include "../Header/Tomcat.h"
 #include "../Header/Projectile.h"
 #include "../Header/World.h"
 #include "../Header/Game.h"
 
-EnemyAircraft::EnemyAircraft(bool hasCollision, sf::Vector2f position) : Aircraft(EntityType::Enemy, hasCollision, TextureId::EnemiesSpriteSheet,
-                                               sf::IntRect(70, 200, 25, 12))
+Chopper::Chopper(bool hasCollision, sf::Vector2f position, NodeType nodeType) : Aircraft(hasCollision, TextureId::EnemiesSpriteSheet,
+                                               sf::IntRect(70, 200, 25, 12)),
+											   m_nodeType(Aircraft::getNodeType() | (unsigned int)nodeType)
 {
     setScale(sf::Vector2f(-1,1));
 	setPosition(position);
@@ -18,7 +19,7 @@ EnemyAircraft::EnemyAircraft(bool hasCollision, sf::Vector2f position) : Aircraf
 
 bool goUp = true;
 
-void EnemyAircraft::update(float deltaTime)
+void Chopper::update(float deltaTime)
 {
 	Aircraft::update(deltaTime);
 
@@ -45,15 +46,15 @@ void EnemyAircraft::update(float deltaTime)
 	fireBullet(sf::Vector2f(-1000, 0));
 }
 
-void EnemyAircraft::collision(const Entity* other)
+void Chopper::collision(const Entity* other)
 {
 	GameSprite::collision(other);
 
-	if(other->getEntityType() == EntityType::Player)
+	if(other->getNodeType() & (unsigned int)NodeType::Player > 0)
 	{
 		takeDamage(getHealth());
 	}
-	else if(other->getEntityType() == EntityType::Projectile)
+	else if(other->getNodeType() & (unsigned int)NodeType::Projectile > 0)
 	{
 		const auto* projectile = static_cast<const Projectile*>(other);
 		if(projectile == nullptr)
@@ -62,7 +63,7 @@ void EnemyAircraft::collision(const Entity* other)
 			return;
 		}
 
-		if(projectile->getOwnerType() == EntityType::Player)
+		if(projectile->getOwnerType() == NodeType::Player)
 			takeDamage(50);
 	}
 }

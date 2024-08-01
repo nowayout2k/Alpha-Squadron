@@ -13,7 +13,7 @@ class GameText : public Entity
 {
  public:
 	GameText(FontId fontType, std::string text, unsigned int pixelSize, sf::Color color, sf::Text::Style style, sf::Vector2f position)
-		: m_fontType(fontType), Entity(EntityType::UI, false)
+		: m_fontType(fontType), Entity(false)
 	{
 		m_text.setString(text);
 		m_text.setCharacterSize(pixelSize);
@@ -22,6 +22,8 @@ class GameText : public Entity
 		m_text.setPosition(position);
 		m_text.getGlobalBounds();
 	}
+
+	virtual unsigned int getNodeType() const override { return Entity::getNodeType() | (unsigned int)NodeType::Text; }
 
 	virtual void update(float deltaTime) override { if(!isActive()) return; }
 	virtual void render(sf::RenderTarget& renderTarget, sf::RenderStates states) const override

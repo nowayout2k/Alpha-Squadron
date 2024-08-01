@@ -17,7 +17,7 @@ class Game
 	void run();
  private:
 	void createWindow(const sf::VideoMode& mode, const std::string& title, sf::Uint32 style);
-
+	bool m_isPaused;
 	sf::RenderWindow m_window;
 	std::unique_ptr<World> m_world;
 };

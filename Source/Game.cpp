@@ -27,7 +27,8 @@ void Game::run()
 		{
 			timeStep -= TIME_STEP_MAX;
 			processEvents();
-			update(TIME_STEP_MAX);
+			if(!m_isPaused)
+				update(TIME_STEP_MAX);
 		}
 		render();
 	}
@@ -49,11 +50,13 @@ void Game::processEvents()
 		if (event.type == sf::Event::LostFocus)
 		{
 			Debug::log("Window lost focus");
+			m_isPaused = true;
 		}
 
 		if (event.type == sf::Event::GainedFocus)
 		{
 			Debug::log("Window gained focus");
+			m_isPaused = false;
 		}
 
 		if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Key::F)

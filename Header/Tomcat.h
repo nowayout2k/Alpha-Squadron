@@ -2,8 +2,8 @@
 // Created by Johnnie Otis on 6/2/24.
 //
 
-#ifndef PLAYERAIRCRAFT_H_
-#define PLAYERAIRCRAFT_H_
+#ifndef TOMCAT_H_
+#define TOMCAT_H_
 
 
 #include "GameSprite.h"
@@ -11,14 +11,16 @@
 #include "Aircraft.h"
 
 
-class PlayerAircraft : public Aircraft
+class Tomcat : public Aircraft
 {
 public:
-    explicit PlayerAircraft();
+    explicit Tomcat(NodeType nodeType = NodeType::None);
     void update(float deltaTime) override;
     void collision(const Entity* other) override;
-private:
+	virtual unsigned int getNodeType() const override { return m_nodeType; }
+ private:
     sf::Vector2f handleInput(float deltaTime);
+	unsigned int m_nodeType;
 };
 
-#endif //PLAYERAIRCRAFT_H_
+#endif //TOMCAT_H_

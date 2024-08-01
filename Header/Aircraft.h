@@ -9,7 +9,7 @@
 class Aircraft : public GameSprite
 {
  public:
-	explicit Aircraft(EntityType entityType, const bool hasCollision, const TextureId textureType, const sf::IntRect textureRect = sf::IntRect());
+	explicit Aircraft(const bool hasCollision, const TextureId textureType, const sf::IntRect textureRect = sf::IntRect());
 	virtual ~Aircraft() override = default;
 	int getHealth() { return m_health; }
 	virtual WorldNode::SmartNode fireBullet(sf::Vector2f velocity);
@@ -19,6 +19,7 @@ class Aircraft : public GameSprite
 	virtual void takeDamage(int health);
 	virtual void update(float deltaTime) override;
 	void setHealth(int health) { m_health = health; }
+	virtual unsigned int getNodeType() const override { return GameSprite::getNodeType() | (unsigned int)NodeType::Aircraft; }
  private:
 	float m_timeSinceDamage;
 	bool m_isDamageAnimationActive;

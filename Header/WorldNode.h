@@ -6,11 +6,13 @@
 #define WORLDNODE_H_
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include "NodeType.h"
 
 class WorldNode : public sf::Transformable, public sf::Drawable
 {
  public:
 	typedef std::unique_ptr<WorldNode> SmartNode;
+
 	explicit WorldNode() : m_isActive(true) {}
 	void attachNode(SmartNode node);
 	SmartNode detachNode(const WorldNode& node);
@@ -20,6 +22,7 @@ class WorldNode : public sf::Transformable, public sf::Drawable
 	virtual void renderState(sf::RenderTarget& renderTarget, sf::RenderStates states) const;
 	sf::Vector2f getWorldPosition() const;
 	virtual void loadStateResources();
+	virtual unsigned int getNodeType() const { return (unsigned int)NodeType::World; }
  protected:
 	sf::Transform getWorldTransform() const;
 	virtual void update(float deltaTime) = 0;

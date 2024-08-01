@@ -15,8 +15,8 @@
 	#define M_PI 3.14159265359
 #endif
 
-Aircraft::Aircraft(EntityType entityType, const bool hasCollision, const TextureId textureType, const sf::IntRect textureRect) :
-	GameSprite(entityType, hasCollision, textureType, textureRect)
+Aircraft::Aircraft(const bool hasCollision, const TextureId textureType, const sf::IntRect textureRect) :
+	GameSprite(hasCollision, textureType, textureRect)
 {
 	m_timeSinceDamage = 0;
 	m_isDamageAnimationActive = false;
@@ -48,7 +48,7 @@ WorldNode::SmartNode Aircraft::fireBullet(sf::Vector2f velocity)
 	auto offset = sf::Vector2f(getGlobalBounds().width, getGlobalBounds().height/2);
 	float sign = velocity.x < 0 ? -1 : 1;
 	auto worldPos = getWorldPosition();
-	auto pro = std::make_unique<Projectile>(getEntityType(), worldPos + offset * sign, velocity);
+	auto pro = std::make_unique<Projectile>((NodeType)getNodeType(), worldPos + offset * sign, velocity);
 	m_fireCooldownRemaining = FIRE_COOLDOWN_TIME;
 	return std::move(pro);
 }

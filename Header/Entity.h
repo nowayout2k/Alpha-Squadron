@@ -11,7 +11,7 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/System/Vector3.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
-#include "EntityType.h"
+#include "NodeType.h"
 #include "WorldNode.h"
 
 //TODO: Explore using a component based system
@@ -25,18 +25,18 @@ class Entity : public WorldNode
 	virtual sf::Rect<float> getGlobalBounds() const = 0;
 	bool hasCollision() const { return m_hasCollision; }
 	bool isDestroyPending() { return m_isDestroyPending; }
-	EntityType getEntityType() const { return m_entityType; };
 	void setVelocity(sf::Vector2f velocity) { m_velocity = velocity; }
 	void setVelocity(float x, float y) { m_velocity.x = x; m_velocity.y = y; }
 	sf::Vector2f getVelocity() const { return m_velocity; }
 	void update(float deltaTime) override { if(isActive()) move(m_velocity * deltaTime); }
+	virtual unsigned int getNodeType() const override { return WorldNode::getNodeType() | (unsigned int)NodeType::Entity; }
 protected:
-	Entity(EntityType entityType, bool hasCollision) : m_velocity(sf::Vector2f(0,0)), m_entityType(entityType), m_isDestroyPending(false), m_hasCollision(hasCollision) {}
-	Entity(EntityType entityType) : m_velocity(sf::Vector2f(0,0)), m_entityType(entityType), m_isDestroyPending(false), m_hasCollision(false) {}
+	Entity(bool hasCollision) : m_velocity(sf::Vector2f(0,0)), m_isDestroyPending(false), m_hasCollision(hasCollision) {}
+	Entity() : m_velocity(sf::Vector2f(0,0)), m_isDestroyPending(false), m_hasCollision(false) {}
 	void setCollision(bool hasCollision) { m_hasCollision = hasCollision; };
 	virtual void destroy() { m_isDestroyPending = true; }
  private:
-	EntityType m_entityType;
+
 	bool m_isDestroyPending;
 	bool m_hasCollision;
 	sf::Vector2f m_velocity;

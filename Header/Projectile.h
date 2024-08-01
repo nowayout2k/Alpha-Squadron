@@ -10,13 +10,13 @@
 class Projectile : public GameSprite
 {
  public:
-	explicit Projectile(EntityType owner, sf::Vector2f spawnPos, sf::Vector2f velocity);
+	explicit Projectile(NodeType owner, sf::Vector2f spawnPos, sf::Vector2f velocity);
 	void update(float deltaTime) override;
 	void render(sf::RenderTarget& renderTarget, sf::RenderStates states) const override;
 	void collision(const Entity* other) override;
-	const EntityType getOwnerType() const { return m_ownerType;};
+	const NodeType getOwnerType() const { return m_ownerType;};
  private:
-	EntityType m_ownerType;
+	NodeType m_ownerType;
 };
 
 #endif //PROJECTILE_H_
