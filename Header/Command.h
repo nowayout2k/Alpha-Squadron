@@ -8,6 +8,8 @@
 
 struct Command
 {
+	Command();
 	std::function<void(WorldNode&, float)> action;
+	unsigned int category;
 };
 #endif //COMMAND_H_
