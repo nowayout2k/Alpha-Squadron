@@ -8,7 +8,7 @@
 #define FRAME_RATE_LIMIT 60.0f
 #define TIME_STEP_MAX 1.0f/FRAME_RATE_LIMIT
 
-Game::Game()
+Game::Game() : m_isPaused(false)
 {
 	createWindow(sf::VideoMode(1740,1000), "Alpha Squadron", sf::Style::None);
 	m_world = std::make_unique<World>(m_window);
