@@ -38,8 +38,8 @@ void Projectile::collision(const Entity* other)
 {
 	GameSprite::collision(other);
 
-	if(m_ownerType == NodeType::None || (other->getNodeType() & (unsigned int)NodeType::Player > 0 && m_ownerType != NodeType::Player) ||
-		(other->getNodeType() & (unsigned int)NodeType::Enemy > 0 && m_ownerType != NodeType::Enemy))
+	if(m_ownerType == NodeType::None || ((other->getNodeType() & (unsigned int)NodeType::Player) > 0 && m_ownerType != NodeType::Player) ||
+		((other->getNodeType() & (unsigned int)NodeType::Enemy) > 0 && m_ownerType != NodeType::Enemy))
 	{
 		destroy();
 	}

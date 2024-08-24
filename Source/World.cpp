@@ -10,7 +10,7 @@
 World::World(sf::RenderWindow& window) : m_window(window), m_worldView(window.getDefaultView()),
 			m_worldBounds(0.0f,0.0f,10000.0f,m_worldView.getSize().y),
 			m_spawnPosition(0, m_worldView.getSize().y/2),
-			m_playerAircraft(nullptr), m_scrollSpeed(50.0f), m_viewPositionOffset(0,0)
+			m_playerAircraft(nullptr), m_scrollSpeed(50.0f), m_viewPositionOffset(0,0), m_commandQueue()
 {
 	setup();
 	loadResources();
@@ -72,9 +72,12 @@ void World::loadResources()
 
 void World::update(float deltaTime)
 {
+	while (!m_commandQueue.isEmpty())
+		m_worldGraph.onCommand(m_commandQueue.pop(), deltaTime);
+
 	m_worldGraph.updateState(deltaTime);
 
-	sf::Vector2f velocity(0.f, 0.f);
+	/*sf::Vector2f velocity(0.f, 0.f);
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 		velocity.y -= 800.f;
@@ -126,18 +129,18 @@ void World::update(float deltaTime)
 		}
 	}
 
-	WorldNode::SmartNode pro = nullptr;
+	WorldNode::SmartNode projectile = nullptr;
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
 	{
-		pro = m_playerAircraft->fireBullet(sf::Vector2f(1000, 0));
+		projectile = m_playerAircraft->fireBullet(sf::Vector2f(1000, 0));
 	}
 
-	if(pro != nullptr)
+	if(projectile != nullptr)
 	{
-		pro->setScale(4.0,4.0);
-		pro->loadStateResources();
-		m_worldLayers[Layer::Collision]->attachNode(std::move(pro));
-	}
+		projectile->setScale(4.0,4.0);
+		projectile->loadStateResources();
+		m_worldLayers[Layer::Collision]->attachNode(std::move(projectile));
+	}*/
 
 	handleCollisions();
 }
@@ -168,5 +171,6 @@ void World::handleCollisions()
         }
     }*/
 }
+
 
 

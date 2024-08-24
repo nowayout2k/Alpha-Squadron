@@ -8,6 +8,8 @@
 #include <SFML/Graphics.hpp>
 #include "NodeType.h"
 
+class Command;
+
 class WorldNode : public sf::Transformable, public sf::Drawable
 {
  public:
@@ -24,6 +26,7 @@ class WorldNode : public sf::Transformable, public sf::Drawable
 	sf::Vector2f getWorldPosition() const;
 	virtual void loadStateResources();
 	virtual unsigned int getNodeType() const { return (unsigned int)NodeType::World; }
+	void onCommand(const Command& command, float deltaTime);
  protected:
 	sf::Transform getWorldTransform() const;
 	virtual void update(float deltaTime) = 0;

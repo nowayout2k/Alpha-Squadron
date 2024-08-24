@@ -3,6 +3,7 @@
 //
 #include "../Header/WorldNode.h"
 #include "../Header/Debug.h"
+#include "../Header/Command.h"
 
 void WorldNode::renderState(sf::RenderTarget& target, sf::RenderStates states) const
 {
@@ -75,4 +76,11 @@ void WorldNode::loadStateResources()
 	{
 		child->loadStateResources();
 	}
+}
+void WorldNode::onCommand(const Command& command, float deltaTime)
+{
+	if (command.category & getNodeType())
+		command.action(*this, deltaTime);
+	for(auto& child : m_children)
+		child->onCommand(command, deltaTime);
 }

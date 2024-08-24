@@ -6,11 +6,13 @@
 #define WORLD_H_
 
 #include <array>
+#include <queue>
 #include "GameSprite.h"
 #include "Entity.h"
 #include "Aircraft.h"
 #include "Layer.h"
 #include "EmptyWorldNode.h"
+#include "CommandQueue.h"
 
 class World
 {
@@ -19,6 +21,7 @@ public:
 	void restart();
 	void update(float deltaTime);
 	void render(sf::RenderWindow &window, sf::RenderStates states);
+	CommandQueue& getCommandQueue() { return m_commandQueue; }
 private:
 	friend class Debug;
 
@@ -35,6 +38,7 @@ private:
 	float m_scrollSpeed;
 	sf::Vector2f m_viewPositionOffset;
 	Aircraft* m_playerAircraft;
+	CommandQueue m_commandQueue;
 };
 
 

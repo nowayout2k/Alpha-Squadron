@@ -13,6 +13,7 @@ class Aircraft : public GameSprite
 	virtual ~Aircraft() override = default;
 	int getHealth() { return m_health; }
 	virtual WorldNode::SmartNode fireBullet(sf::Vector2f velocity);
+	void accelerate(sf::Vector2f velocity) { setVelocity(getVelocity() + velocity); }
  protected:
 	virtual void handleAnimation(float deltaTime);
 	void handleDamageAnimation(float deltaTime);

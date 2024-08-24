@@ -50,11 +50,11 @@ void Chopper::collision(const Entity* other)
 {
 	GameSprite::collision(other);
 
-	if(other->getNodeType() & (unsigned int)NodeType::Player > 0)
+	if((other->getNodeType() & (unsigned int)NodeType::Player) > 0)
 	{
 		takeDamage(getHealth());
 	}
-	else if(other->getNodeType() & (unsigned int)NodeType::Projectile > 0)
+	else if((other->getNodeType() & (unsigned int)NodeType::Projectile) > 0)
 	{
 		const auto* projectile = static_cast<const Projectile*>(other);
 		if(projectile == nullptr)

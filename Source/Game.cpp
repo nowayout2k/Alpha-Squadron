@@ -26,7 +26,7 @@ void Game::run()
 		while (timeStep > TIME_STEP_MAX)
 		{
 			timeStep -= TIME_STEP_MAX;
-			processEvents();
+			processInput();
 			if(!m_isPaused)
 				update(TIME_STEP_MAX);
 		}
@@ -34,46 +34,6 @@ void Game::run()
 	}
 }
 
-void Game::processEvents()
-{
-	sf::Event event;
-	while (m_window.pollEvent(event))
-	{
-		if (event.type == sf::Event::Closed || event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Key::Escape)
-			m_window.close();
-
-		if (event.type == sf::Event::Resized)
-		{
-			Debug::log("Window resized to " + std::to_string(event.size.width) + "x" + std::to_string(event.size.height));
-		}
-
-		if (event.type == sf::Event::LostFocus)
-		{
-			Debug::log("Window lost focus");
-			m_isPaused = true;
-		}
-
-		if (event.type == sf::Event::GainedFocus)
-		{
-			Debug::log("Window gained focus");
-			m_isPaused = false;
-		}
-
-		if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Key::F)
-			Debug::toggleFps();
-
-		if (event.type == sf::Event::JoystickConnected ||
-			event.type == sf::Event::JoystickDisconnected ||
-			event.type == sf::Event::JoystickMoved ||
-			event.type == sf::Event::TouchMoved ||
-			event.type == sf::Event::SensorChanged ||
-			event.type == sf::Event::TextEntered ||
-			event.type == sf::Event::MouseWheelScrolled ||
-			event.type == sf::Event::MouseMoved ||
-			event.type == sf::Event::MouseWheelMoved)
-			continue;
-	}
-}
 void Game::update(float deltaTime)
 {
 	Debug::update(deltaTime);
@@ -100,4 +60,30 @@ void Game::createWindow(const sf::VideoMode& mode, const std::string& title, sf:
 	m_window.setMouseCursorVisible(false);
 	m_window.setVerticalSyncEnabled(false);
 	m_window.setActive(true);
+}
+
+void Game::processInput()
+{
+	CommandQueue& commands = m_world->getCommandQueue();
+	sf::Event event;
+	while (m_window.pollEvent(event))
+	{
+		m_player.handleEvent(event, commands);
+
+		if (event.type == sf::Event::Closed || event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Key::Escape)
+			m_window.close();
+
+		if (event.type == sf::Event::LostFocus)
+		{
+			Debug::log("Window lost focus");
+			m_isPaused = true;
+		}
+
+		if (event.type == sf::Event::GainedFocus)
+		{
+			Debug::log("Window gained focus");
+			m_isPaused = false;
+		}
+	}
+	m_player.handleRealtimeInput(commands);
 }
