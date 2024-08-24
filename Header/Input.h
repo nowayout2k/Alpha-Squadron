@@ -8,9 +8,21 @@
 #include "CommandQueue.h"
 #include "Aircraft.h"
 
-class Player
+class Input
 {
  public:
+	enum ActionType
+	{
+		AccelerateNegX,
+		AcceleratePosX,
+		AccelerateNegY,
+		AcceleratePosY
+	};
+	Input();
+	void assignKey(ActionType actionType, sf::Keyboard::Key key);
+
+	sf::Keyboard::Key getAssignedKey(ActionType actionType) const;
+
 	void handleEvent(const sf::Event& event, CommandQueue& commands);
 	void handleRealtimeInput(CommandQueue& commands);
 
@@ -26,13 +38,21 @@ class Player
 
 	struct AircraftMover
 	{
-		AircraftMover(float vx, float vy) : velocity(vx, vy){}
+		AircraftMover(float vx, float vy) : m_velocity(vx, vy){}
 		void operator() (Aircraft& aircraft, float dt) const
 		{
-			aircraft.accelerate(velocity);
+			aircraft.accelerate(m_velocity);
 		}
-		sf::Vector2f velocity;
+		sf::Vector2f m_velocity;
 	};
+ private:
+	static bool isRealtimeAction(ActionType actionType);
+ private:
+	std::map<sf::Keyboard::Key, ActionType> m_keyBinding;
+	std::map<ActionType, Command> m_actionBinding;
+
+	static std::vector<ActionType> m_realTimeActionTypes;
+	const float m_playerSpeed = 800.f;
 };
 
 #endif //PLAYER_H_

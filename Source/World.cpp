@@ -55,7 +55,7 @@ void World::setup()
 	backgroundBuildingsSprite->setPosition(m_worldBounds.left,m_worldBounds.top);
 	m_worldLayers[Background]->attachNode(std::move(backgroundBuildingsSprite));
 
-	std::unique_ptr<Aircraft> player(new Tomcat());
+	std::unique_ptr<Aircraft> player(new Tomcat(NodeType::Player));
 	m_playerAircraft = player.get();
 	m_playerAircraft->setPosition(m_spawnPosition);
 	m_playerAircraft->setVelocity(m_scrollSpeed, 0);
@@ -72,75 +72,28 @@ void World::loadResources()
 
 void World::update(float deltaTime)
 {
+	m_worldView.move(m_scrollSpeed * deltaTime, 0.f);
+	m_playerAircraft->setVelocity(0,0);
+
 	while (!m_commandQueue.isEmpty())
 		m_worldGraph.onCommand(m_commandQueue.pop(), deltaTime);
 
+	sf::Vector2f velocity = m_playerAircraft->getVelocity();
+	if (velocity.x != 0.f && velocity.y != 0.f)
+		m_playerAircraft->setVelocity(velocity / std::sqrt(2.f));
+
+	m_playerAircraft->accelerate(m_scrollSpeed, 0.f);
+
 	m_worldGraph.updateState(deltaTime);
 
-	/*sf::Vector2f velocity(0.f, 0.f);
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-		velocity.y -= 800.f;
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-		velocity.y += 800.f;
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-		velocity.x -= 800.f;
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-		velocity.x += 800.f;
-
-	if (velocity.x != 0.f && velocity.y != 0.f)
-	{
-		velocity.x /= std::sqrt(2.f);
-		velocity.y /= std::sqrt(2.f);
-	}
-
-	m_playerAircraft->setVelocity(velocity);
-
+	sf::FloatRect viewBounds(m_worldView.getCenter() - m_worldView.getSize() / 2.f,m_worldView.getSize());
+	const auto spriteBounds = m_playerAircraft->getGlobalBounds();
 	sf::Vector2f position = m_playerAircraft->getPosition();
-
-	if (position.x <= m_viewPositionOffset.x)
-	{
-		position = sf::Vector2f(m_viewPositionOffset.x, position.y);
-	}
-	else if (position.x > m_viewPositionOffset.x + m_worldView.getSize().x - m_playerAircraft->getGlobalBounds().width)
-	{
-		position = sf::Vector2f(m_viewPositionOffset.x + m_worldView.getSize().x - m_playerAircraft->getGlobalBounds().width, position.y);
-	}
-
-	if (position.y <= 0)
-	{
-		position = sf::Vector2f(position.x, 0);
-	}
-	else if (position.y > 0 + m_worldView.getSize().y - m_playerAircraft->getGlobalBounds().height)
-	{
-		position = sf::Vector2f(position.x, 0 + m_worldView.getSize().y - m_playerAircraft->getGlobalBounds().height);
-	}
-
+	position.x = std::max(position.x, viewBounds.left + 0);
+	position.x = std::min(position.x, viewBounds.left + viewBounds.width - spriteBounds.width);
+	position.y = std::max(position.y, viewBounds.top + 0);
+	position.y = std::min(position.y, viewBounds.top + viewBounds.height - spriteBounds.height);
 	m_playerAircraft->setPosition(position);
-
-	if(m_viewPositionOffset.x < m_worldBounds.width - m_worldView.getSize().x)
-	{
-		auto viewMovementThisFrame = m_scrollSpeed * deltaTime;
-		m_viewPositionOffset += sf::Vector2f(viewMovementThisFrame, 0);
-		m_worldView.move(viewMovementThisFrame, 0.0f);
-		if(m_playerAircraft->getVelocity().x == 0)
-		{
-			m_playerAircraft->setVelocity(m_scrollSpeed, m_playerAircraft->getVelocity().y);
-		}
-	}
-
-	WorldNode::SmartNode projectile = nullptr;
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-	{
-		projectile = m_playerAircraft->fireBullet(sf::Vector2f(1000, 0));
-	}
-
-	if(projectile != nullptr)
-	{
-		projectile->setScale(4.0,4.0);
-		projectile->loadStateResources();
-		m_worldLayers[Layer::Collision]->attachNode(std::move(projectile));
-	}*/
 
 	handleCollisions();
 }

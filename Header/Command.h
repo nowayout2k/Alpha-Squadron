@@ -5,11 +5,13 @@
 #ifndef COMMAND_H_
 #define COMMAND_H_
 #include "WorldNode.h"
+#include <functional>
 
 struct Command
 {
-	Command() {};
+ public:
+	Command() = default;
 	std::function<void(WorldNode&, float)> action;
-	unsigned int category;
+	unsigned int nodeType = 0;
 };
 #endif //COMMAND_H_

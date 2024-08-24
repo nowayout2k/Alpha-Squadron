@@ -25,7 +25,7 @@ void Projectile::update(float deltaTime)
 
 	/*sf::Vector2u windowSize = World::getView();
 	auto position = getPosition();
-	if(position.x > (float)windowSize.x || position.y > (float)windowSize.y || position.x <= 0 || position.y <= 0 || m_ownerType == NodeType::None)
+	if(position.x > (float)windowSize.x || position.y > (float)windowSize.y || position.x <= 0 || position.y <= 0 || m_ownerType == nodeType::None)
 		destroy();*/
 }
 

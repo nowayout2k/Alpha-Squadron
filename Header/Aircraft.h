@@ -14,6 +14,7 @@ class Aircraft : public GameSprite
 	int getHealth() { return m_health; }
 	virtual WorldNode::SmartNode fireBullet(sf::Vector2f velocity);
 	void accelerate(sf::Vector2f velocity) { setVelocity(getVelocity() + velocity); }
+	void accelerate(float x, float y) { setVelocity(getVelocity() + sf::Vector2f(x,y)); }
  protected:
 	virtual void handleAnimation(float deltaTime);
 	void handleDamageAnimation(float deltaTime);

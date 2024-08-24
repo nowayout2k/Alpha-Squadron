@@ -6,7 +6,7 @@
 #define GAME_H_
 
 #include "World.h"
-#include "Player.h"
+#include "Input.h"
 
 class Game
 {
@@ -21,7 +21,7 @@ class Game
 	bool m_isPaused;
 	sf::RenderWindow m_window;
 	std::unique_ptr<World> m_world;
-	Player m_player;
+	Input m_player;
 };
 
 #endif //GAME_H_

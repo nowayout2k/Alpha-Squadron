@@ -79,7 +79,7 @@ void WorldNode::loadStateResources()
 }
 void WorldNode::onCommand(const Command& command, float deltaTime)
 {
-	if (command.category & getNodeType())
+	if (command.nodeType & getNodeType())
 		command.action(*this, deltaTime);
 	for(auto& child : m_children)
 		child->onCommand(command, deltaTime);

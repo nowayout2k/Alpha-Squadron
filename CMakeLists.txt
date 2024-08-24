@@ -51,8 +51,8 @@ add_executable(Alpha-Squadron main.cpp
         Header/EmptyWorldNode.h
         Header/Command.h
         Header/CommandQueue.h
-        Source/Player.cpp
-        Header/Player.h
+        Source/Input.cpp
+        Header/Input.h
 )
 
 # Link the SFML libraries
