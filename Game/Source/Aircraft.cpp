@@ -3,10 +3,10 @@
 //
 
 #include "../Header/Aircraft.h"
-#include "../Header/Audio.h"
-#include "../Header/Projectile.h"
-#include "../Header/World.h"
-#include "../Header/Utility.h"
+#include "../../Engine/Header/Audio.h"
+#include "../../Engine/Header/Projectile.h"
+#include "../../Engine/Header/World.h"
+#include "../../Engine/Header/Utility.h"
 
 #define DAMAGE_FLASH_TIME 4.0f
 #define DAMAGE_INVINCIBILITY_TIME .3f

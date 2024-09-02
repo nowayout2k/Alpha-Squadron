@@ -8,8 +8,8 @@
 #include <SFML/Audio/Music.hpp>
 #include <SFML/Audio/Sound.hpp>
 #include <SFML/Audio/SoundBuffer.hpp>
-#include "../Header/SoundFxId.h"
-#include "../Header/MusicId.h"
+#include "../../Game/Header/SoundFxId.h"
+#include "../../Game/Header/MusicId.h"
 #include "PooledSound.h"
 #include <list>
 

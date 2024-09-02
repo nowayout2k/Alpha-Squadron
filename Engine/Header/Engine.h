@@ -2,16 +2,16 @@
 // Created by Johnnie Otis on 6/13/24.
 //
 
-#ifndef GAME_H_
-#define GAME_H_
+#ifndef ENGINE_H_
+#define ENGINE_H_
 
 #include "World.h"
 #include "Input.h"
 
-class Game
+class Engine
 {
  public:
-	Game();
+	Engine();
 	void update(float deltaTime);
 	void render();
 	void processInput();
@@ -24,4 +24,4 @@ class Game
 	Input m_player;
 };
 
-#endif //GAME_H_
+#endif //ENGINE_H_

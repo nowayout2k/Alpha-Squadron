@@ -2,7 +2,7 @@
 // Created by Johnnie Otis on 6/16/24.
 //
 
-#include "../Header/ResourceManager.h"
+#include "../../Game/Header/ResourceManager.h"
 
 Cache<sf::Texture> ResourceManager::m_textureCache;
 Cache<sf::SoundBuffer> ResourceManager::m_soundBufferCache;

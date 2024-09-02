@@ -3,18 +3,18 @@
 //
 
 #include <SFML/Window/Event.hpp>
-#include "../Header/Game.h"
+#include "../Header/Engine.h"
 
 #define FRAME_RATE_LIMIT 60.0f
 #define TIME_STEP_MAX 1.0f/FRAME_RATE_LIMIT
 
-Game::Game() : m_isPaused(false)
+Engine::Engine() : m_isPaused(false)
 {
 	createWindow(sf::VideoMode(1740,1000), "Alpha Squadron", sf::Style::None);
 	m_world = std::make_unique<World>(m_window);
 }
 
-void Game::run()
+void Engine::run()
 {
 	Debug::init(m_world.get());
 	sf::Clock clock;
@@ -34,13 +34,13 @@ void Game::run()
 	}
 }
 
-void Game::update(float deltaTime)
+void Engine::update(float deltaTime)
 {
 	Debug::update(deltaTime);
 
 	m_world->update(deltaTime);
 }
-void Game::render()
+void Engine::render()
 {
 	sf::RenderStates states;
 	m_window.clear();
@@ -52,7 +52,7 @@ void Game::render()
 
 }
 
-void Game::createWindow(const sf::VideoMode& mode, const std::string& title, sf::Uint32 style)
+void Engine::createWindow(const sf::VideoMode& mode, const std::string& title, sf::Uint32 style)
 {
 	m_window.create(mode, title, style);
 	m_window.setFramerateLimit(FRAME_RATE_LIMIT);
@@ -62,7 +62,7 @@ void Game::createWindow(const sf::VideoMode& mode, const std::string& title, sf:
 	m_window.setActive(true);
 }
 
-void Game::processInput()
+void Engine::processInput()
 {
 	CommandQueue& commands = m_world->getCommandQueue();
 	sf::Event event;

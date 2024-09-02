@@ -3,10 +3,8 @@
 //
 
 #include "../Header/Chopper.h"
-#include "../Header/Tomcat.h"
-#include "../Header/Projectile.h"
-#include "../Header/World.h"
-#include "../Header/Game.h"
+#include "../../Engine/Header/Projectile.h"
+#include "../../Engine/Header/World.h"
 
 Chopper::Chopper(bool hasCollision, sf::Vector2f position, NodeType nodeType) : Aircraft(hasCollision, TextureId::EnemiesSpriteSheet,
                                                sf::IntRect(70, 200, 25, 12)),

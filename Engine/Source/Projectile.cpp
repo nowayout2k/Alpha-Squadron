@@ -4,9 +4,7 @@
 
 #include "../Header/Projectile.h"
 #include "../Header/Audio.h"
-#include "../Header/Chopper.h"
-#include "../Header/Tomcat.h"
-#include "../Header/Game.h"
+#include "../Header/Engine.h"
 
 Projectile::Projectile(NodeType owner, sf::Vector2f spawnPos, sf::Vector2f velocity) : m_ownerType(owner),
 																					   GameSprite(true,

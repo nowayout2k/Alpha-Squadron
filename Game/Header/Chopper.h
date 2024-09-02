@@ -5,8 +5,9 @@
 #ifndef CHOPPER_H_
 #define CHOPPER_H_
 
-#include "GameSprite.h"
-#include "Entity.h"
+
+#include "../../Engine/Header/GameSprite.h"
+#include "../../Engine/Header/Entity.h"
 #include "Aircraft.h"
 
 class Chopper : public Aircraft

@@ -1,11 +1,11 @@
-#include "Header/Game.h"
+#include "Engine/Header/Engine.h"
 
 int main()
 {
 	try
 	{
-		Game game;
-		game.run();
+		Engine engine;
+		engine.run();
 	}
 	catch (std::exception& e)
 	{
