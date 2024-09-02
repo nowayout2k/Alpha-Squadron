@@ -55,6 +55,9 @@ add_executable(Alpha-Squadron main.cpp
         Engine/Header/Input.h
         Engine/Source/StateStack.cpp
         Engine/Header/StateStack.h
+        Engine/Source/State.cpp
+        Engine/Header/State.h
+        Engine/Header/StateIdentifiers.h
 )
 
 # Link the SFML libraries
