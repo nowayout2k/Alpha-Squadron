@@ -1,9 +1,9 @@
 //
 // Created by Johnnie Otis on 6/30/24.
 //
-#include "../Header/WorldNode.h"
-#include "../Header/Debug.h"
-#include "../Header/Command.h"
+#include "WorldNode.h"
+#include "Debug.h"
+#include "Command.h"
 
 void WorldNode::renderState(sf::RenderTarget& target, sf::RenderStates states) const
 {

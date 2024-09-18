@@ -2,10 +2,10 @@
 // Created by Johnnie Otis on 5/30/24.
 //
 
-#include "../Header/World.h"
-#include "../../Game/Header/Tomcat.h"
-#include "../Header/Audio.h"
-#include "../Header/GameText.h"
+#include "World.h"
+#include "../Game/Tomcat.h"
+#include "Audio.h"
+#include "GameText.h"
 
 World::World(sf::RenderWindow& window) : m_window(window), m_worldView(window.getDefaultView()),
 			m_worldBounds(0.0f,0.0f,10000.0f,m_worldView.getSize().y),

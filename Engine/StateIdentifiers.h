@@ -7,8 +7,9 @@
 
 enum StateId
 {
-	Game,
+	Title,
 	Menu,
+	Game,
 	Pause
 };
 

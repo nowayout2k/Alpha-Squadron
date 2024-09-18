@@ -6,7 +6,7 @@
 #define GAMESPRITE_H_
 
 #include "Entity.h"
-#include "../../Game/Header/ResourceManager.h"
+#include "../Game/ResourceManager.h"
 
 class GameSprite : public Entity
 {

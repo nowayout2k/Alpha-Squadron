@@ -1,8 +1,8 @@
 //
 // Created by Johnnie Otis on 9/2/24.
 //
+#include "StateStack.h"
 
-#include "../Header/StateStack.h"
 StateStack::StateStack(State::Context context)
 {
 

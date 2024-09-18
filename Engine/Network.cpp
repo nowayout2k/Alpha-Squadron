@@ -2,8 +2,8 @@
 // Created by Johnnie Otis on 5/26/24.
 //
 
-#include "../Header/Network.h"
-#include "../Header/Debug.h"
+#include "Network.h"
+#include "Debug.h"
 #include <SFML/Network.hpp>
 #include <iostream>
 

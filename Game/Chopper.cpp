@@ -2,9 +2,9 @@
 // Created by Johnnie Otis on 6/1/24.
 //
 
-#include "../Header/Chopper.h"
-#include "../../Engine/Header/Projectile.h"
-#include "../../Engine/Header/World.h"
+#include "Chopper.h"
+#include "../Engine/Projectile.h"
+#include "../Engine/World.h"
 
 Chopper::Chopper(bool hasCollision, sf::Vector2f position, NodeType nodeType) : Aircraft(hasCollision, TextureId::EnemiesSpriteSheet,
                                                sf::IntRect(70, 200, 25, 12)),

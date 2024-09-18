@@ -5,9 +5,10 @@
 #ifndef STATE_H_
 #define STATE_H_
 
-#include "../Header/StateStack.h"
-#include "../Header/StateIdentifiers.h"
-#include "../Header/Input.h"
+#include "StateIdentifiers.h"
+#include "Input.h"
+
+class StateStack;
 
 class State
 {

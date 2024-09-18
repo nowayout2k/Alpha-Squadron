@@ -2,9 +2,9 @@
 // Created by Johnnie Otis on 6/8/24.
 //
 
-#include "../Header/Projectile.h"
-#include "../Header/Audio.h"
-#include "../Header/Engine.h"
+#include "Projectile.h"
+#include "Audio.h"
+#include "Engine.h"
 
 Projectile::Projectile(NodeType owner, sf::Vector2f spawnPos, sf::Vector2f velocity) : m_ownerType(owner),
 																					   GameSprite(true,

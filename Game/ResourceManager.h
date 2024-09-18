@@ -10,8 +10,8 @@
 #include <SFML/Graphics/Texture.hpp>
 #include "SoundFxId.h"
 #include "TextureId.h"
-#include "../../Engine/Header/Cache.h"
-#include "../../Engine/Header/FontId.h"
+#include "../Engine/Cache.h"
+#include "../Engine/FontId.h"
 
 class ResourceManager
 {

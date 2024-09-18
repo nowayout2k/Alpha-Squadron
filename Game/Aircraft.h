@@ -5,7 +5,7 @@
 #ifndef AIRCRAFT_H_
 #define AIRCRAFT_H_
 
-#include "../../Engine/Header/GameSprite.h"
+#include "../Engine/GameSprite.h"
 
 class Aircraft : public GameSprite
 {

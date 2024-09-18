@@ -2,11 +2,11 @@
 // Created by Johnnie Otis on 6/9/24.
 //
 
-#include "../Header/Aircraft.h"
-#include "../../Engine/Header/Audio.h"
-#include "../../Engine/Header/Projectile.h"
-#include "../../Engine/Header/World.h"
-#include "../../Engine/Header/Utility.h"
+#include "Aircraft.h"
+#include "../Engine/Audio.h"
+#include "../Engine/Projectile.h"
+#include "../Engine/World.h"
+#include "../Engine/Utility.h"
 
 #define DAMAGE_FLASH_TIME 4.0f
 #define DAMAGE_INVINCIBILITY_TIME .3f

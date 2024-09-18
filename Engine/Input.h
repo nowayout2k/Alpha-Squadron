@@ -6,7 +6,7 @@
 #define PLAYER_H_
 
 #include "CommandQueue.h"
-#include "../../Game/Header/Aircraft.h"
+#include "../Game/Aircraft.h"
 
 class Input
 {

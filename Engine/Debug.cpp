@@ -2,11 +2,11 @@
 // Created by Johnnie Otis on 6/11/24.
 //
 
-#include "../Header/Debug.h"
-#include "../Header/GameText.h"
+#include "Debug.h"
+#include "GameText.h"
 #include <iostream>
 #include <string>
-#include "../Header/World.h"
+#include "World.h"
 
 #if DEBUGGING_ENABLED
 bool Debug::m_fpsVisible = false;

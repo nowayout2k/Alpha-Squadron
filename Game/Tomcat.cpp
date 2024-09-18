@@ -2,9 +2,9 @@
 // Created by Johnnie Otis on 6/2/24.
 //
 
-#include "../Header/Tomcat.h"
-#include "../../Engine/Header/Audio.h"
-#include "../../Engine/Header/Projectile.h"
+#include "Tomcat.h"
+#include "../Engine/Audio.h"
+#include "../Engine/Projectile.h"
 
 #define DAMAGE_FLASH_TIME 4.0f
 #define DAMAGE_INVINCIBILITY_TIME .3f

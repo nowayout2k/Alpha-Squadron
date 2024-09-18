@@ -2,7 +2,9 @@
 // Created by Johnnie Otis on 9/2/24.
 //
 
-#include "../Header/State.h"
+#include "State.h"
+#include "StateStack.h"
+
 State::State(StateStack& stack, State::Context context)
 {
 

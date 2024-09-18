@@ -3,7 +3,7 @@
 //
 
 #include <SFML/Window/Event.hpp>
-#include "../Header/Engine.h"
+#include "Engine.h"
 
 #define FRAME_RATE_LIMIT 60.0f
 #define TIME_STEP_MAX 1.0f/FRAME_RATE_LIMIT

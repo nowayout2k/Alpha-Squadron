@@ -2,7 +2,7 @@
 // Created by Johnnie Otis on 8/12/24.
 //
 
-#include "../Header/Input.h"
+#include "Input.h"
 
 std::vector<Input::ActionType> Input::m_realTimeActionTypes;
 
