@@ -23,7 +23,7 @@ void StateStack::popState()
 {
 
 }
-void StateStack::update(sf::Time dt)
+void StateStack::update(float dt)
 {
 
 }
