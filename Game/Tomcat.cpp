@@ -26,11 +26,11 @@ void Tomcat::collision(const Entity* other)
 {
 	GameSprite::collision(other);
 
-	if(other->getNodeType() & (unsigned int)NodeType::Enemy > 0)
+	if((other->getNodeType() & (unsigned int)NodeType::Enemy) > 0)
 	{
 		takeDamage(10);
 	}
-	else if(other->getNodeType() == (unsigned int)NodeType::Projectile > 0)
+	else if((other->getNodeType() & (unsigned int)NodeType::Projectile) > 0)
 	{
 		const auto* projectile = static_cast<const Projectile*>(other);
 		if(projectile == nullptr)

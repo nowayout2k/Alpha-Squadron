@@ -21,7 +21,7 @@ class StateStack : private sf::NonCopyable
 	explicit StateStack(State::Context context);
 	template <typename T>
 	void registerState(StateId stateId);
-	void update(sf::Time dt);
+	void update(float dt);
 	void draw();
 	void handleEvent(const sf::Event& event);
 	void pushState(StateId stateId);
