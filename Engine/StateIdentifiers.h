@@ -7,6 +7,7 @@
 
 enum StateId
 {
+	None,
 	Title,
 	Menu,
 	Game,

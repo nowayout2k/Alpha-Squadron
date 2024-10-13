@@ -14,15 +14,14 @@ class World;
 class Debug
 {
  public:
-	static void init(World* world);
+	static void init();
 	static void toggleFps();
 	static void update(float deltaTime);
-	static void render(sf::RenderWindow &window, sf::RenderStates states);
+	static void render(sf::RenderWindow &window);
 	static void log(const std::string& message);
 	static void logWarning(const std::string& message);
 	static void logError(std::exception exception);
  private:
-	static World* m_world;
 #if DEBUGGING_ENABLED
 	static bool m_fpsVisible;
 	static sf::Text m_fpsText;

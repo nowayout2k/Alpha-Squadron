@@ -8,10 +8,10 @@
 #include <SFML/Audio/SoundBuffer.hpp>
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/Texture.hpp>
-#include "SoundFxId.h"
-#include "TextureId.h"
-#include "../Engine/Cache.h"
-#include "../Engine/FontId.h"
+#include "../Game/SoundFxId.h"
+#include "../Game/TextureId.h"
+#include "Cache.h"
+#include "FontId.h"
 
 class ResourceManager
 {
@@ -19,6 +19,7 @@ class ResourceManager
 	static sf::Font& loadResource(FontId fontId);
 	static sf::SoundBuffer& loadResource(SoundFxId soundFxId);
 	static sf::Texture& loadResource(TextureId textureId, sf::Rect<int> textureRect);
+	static sf::Texture& loadResource(TextureId textureId);
 	static void clearFontCache() { m_fontCache.clear(); }
 	static void clearSoundBufferCache() { m_soundBufferCache.clear(); }
 	static void clearTextureCache() { m_textureCache.clear(); }

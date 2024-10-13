@@ -24,6 +24,14 @@ public:
 		t = std::clamp(t, 0.0f, 1.0f);
 		return a + (b - a) * t;
 	}
+
+	template <typename T>
+	static void centerOrigin(T& object)
+	{
+		static_assert(std::is_base_of<sf::Drawable, T>::value, "Object must be drawable");
+		sf::FloatRect bounds = object.getLocalBounds();
+		object.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
+	}
 private:
     static sf::Clock m_clock;
 

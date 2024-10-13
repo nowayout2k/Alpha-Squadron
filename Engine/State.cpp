@@ -1,31 +1,18 @@
 //
-// Created by Johnnie Otis on 9/2/24.
+// Created by Johnnie Otis on 10/12/24.
 //
-
 #include "State.h"
 #include "StateStack.h"
 
-State::State(StateStack& stack, State::Context context)
-{
-
-}
-State::~State()
-{
-
-}
 void State::requestStackPush(StateId stateId)
 {
-
+	m_stack->pushState(stateId);
 }
 void State::requestStackPop()
 {
-
+	m_stack->popState();
 }
 void State::requestStateClear()
 {
-
-}
-State::Context State::getContext() const
-{
-	return State::Context();
+	m_stack->clearStates();
 }

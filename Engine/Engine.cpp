@@ -4,19 +4,25 @@
 
 #include <SFML/Window/Event.hpp>
 #include "Engine.h"
+#include "State.h"
+#include "TitleState.h"
+#include "MenuState.h"
+#include "GameState.h"
+#include "PauseState.h"
 
 #define FRAME_RATE_LIMIT 60.0f
 #define TIME_STEP_MAX 1.0f/FRAME_RATE_LIMIT
 
-Engine::Engine() : m_isPaused(false)
+Engine::Engine() : m_isPaused(false), m_stateStack(State::Context(m_window, m_input))
 {
 	createWindow(sf::VideoMode(1740,1000), "Alpha Squadron", sf::Style::None);
-	m_world = std::make_unique<World>(m_window);
+	registerStates();
+	m_stateStack.pushState(StateId::Title);
 }
 
 void Engine::run()
 {
-	Debug::init(m_world.get());
+	Debug::init();
 	sf::Clock clock;
 	float timeStep = 0;
 
@@ -37,17 +43,14 @@ void Engine::run()
 void Engine::update(float deltaTime)
 {
 	Debug::update(deltaTime);
-
-	m_world->update(deltaTime);
+	m_stateStack.update(deltaTime);
 }
 void Engine::render()
 {
-	sf::RenderStates states;
+
 	m_window.clear();
-
-	m_world->render(m_window, states);
-	Debug::render(m_window, states);
-
+	m_stateStack.render();
+	Debug::render(m_window);
 	m_window.display();
 
 }
@@ -64,13 +67,13 @@ void Engine::createWindow(const sf::VideoMode& mode, const std::string& title, s
 
 void Engine::processInput()
 {
-	CommandQueue& commands = m_world->getCommandQueue();
+
 	sf::Event event;
 	while (m_window.pollEvent(event))
 	{
-		m_player.handleEvent(event, commands);
+		m_stateStack.handleEvent(event);
 
-		if (event.type == sf::Event::Closed || event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Key::Escape)
+		if (event.type == sf::Event::Closed || m_stateStack.isEmpty() || event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Key::Escape)
 			m_window.close();
 
 		if (event.type == sf::Event::LostFocus)
@@ -85,5 +88,12 @@ void Engine::processInput()
 			m_isPaused = false;
 		}
 	}
-	m_player.handleRealtimeInput(commands);
+}
+
+void Engine::registerStates()
+{
+	m_stateStack.registerState<TitleState>(StateId::Title);
+	m_stateStack.registerState<MenuState>(StateId::Menu);
+	m_stateStack.registerState<GameState>(StateId::Game);
+	m_stateStack.registerState<PauseState>(StateId::Pause);
 }

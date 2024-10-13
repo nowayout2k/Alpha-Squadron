@@ -2,7 +2,7 @@
 // Created by Johnnie Otis on 6/16/24.
 //
 
-#include "../Game/ResourceManager.h"
+#include "ResourceManager.h"
 
 Cache<sf::Texture> ResourceManager::m_textureCache;
 Cache<sf::SoundBuffer> ResourceManager::m_soundBufferCache;
@@ -23,6 +23,11 @@ sf::Texture& ResourceManager::loadResource(TextureId textureId, sf::Rect<int> ar
 	std::string path = getTexturePath(textureId);
 	std::string hash = path + std::to_string(area.left) + std::to_string(area.top) + std::to_string(area.width) + std::to_string(area.height);
 	return m_textureCache.load(hash, path, area);
+}
+
+sf::Texture& ResourceManager::loadResource(TextureId textureId)
+{
+	return loadResource(textureId, sf::Rect<int>());
 }
 
 std::string ResourceManager::getTexturePath(TextureId textureId)

@@ -13,12 +13,10 @@ bool Debug::m_fpsVisible = false;
 sf::Text Debug::m_fpsText;
 float Debug::m_timeSinceLastFpsUpdate = 0;
 int Debug::m_framesSinceLastFpsUpdate = 0;
-World* Debug::m_world = nullptr;
 #endif
 
-void Debug::init(World* world)
+void Debug::init()
 {
-	m_world = world;
 #if DEBUGGING_ENABLED
 	m_fpsText.setFont(ResourceManager::loadResource(FontId::Gamer));
 	m_fpsText.setPosition(sf::Vector2f());
@@ -34,10 +32,9 @@ void Debug::update(float deltaTime)
 #if DEBUGGING_ENABLED
 	m_framesSinceLastFpsUpdate++;
 	m_timeSinceLastFpsUpdate += deltaTime;
-	auto view = m_world->m_worldView;
-	if(m_fpsVisible && m_world)
+	if(m_fpsVisible)
 	{
-		m_fpsText.setPosition(m_world->m_viewPositionOffset);
+		m_fpsText.setPosition(sf::Vector2f(0,0));
 	}
 	if(m_timeSinceLastFpsUpdate > 1)
 	{
@@ -70,11 +67,15 @@ void Debug::logWarning(const std::string& message)
 #endif
 }
 
-void Debug::render(sf::RenderWindow& window, sf::RenderStates states)
+void Debug::render(sf::RenderWindow& window)
 {
 #if DEBUGGING_ENABLED
 	if(m_fpsVisible)
-		window.draw(m_fpsText);
+	{
+		sf::RenderStates states;
+		window.draw(m_fpsText,states);
+	}
+
 #endif
 }
 void Debug::toggleFps()

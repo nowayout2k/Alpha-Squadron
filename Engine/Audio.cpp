@@ -5,7 +5,7 @@
 #include "Audio.h"
 #include "Debug.h"
 #include <SFML/Audio.hpp>
-#include "../Game/ResourceManager.h"
+#include "ResourceManager.h"
 
 std::list<PooledSound> Audio::m_sounds;
 sf::Music Audio::m_music;

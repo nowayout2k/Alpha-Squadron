@@ -7,7 +7,7 @@
 
 #include <SFML/Graphics/Text.hpp>
 #include "Entity.h"
-#include "../Game/ResourceManager.h"
+#include "ResourceManager.h"
 
 class GameText : public Entity
 {

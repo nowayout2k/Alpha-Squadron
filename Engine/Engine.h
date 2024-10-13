@@ -7,6 +7,7 @@
 
 #include "World.h"
 #include "Input.h"
+#include "StateStack.h"
 
 class Engine
 {
@@ -16,12 +17,13 @@ class Engine
 	void render();
 	void processInput();
 	void run();
+	void registerStates();
  private:
 	void createWindow(const sf::VideoMode& mode, const std::string& title, sf::Uint32 style);
 	bool m_isPaused;
 	sf::RenderWindow m_window;
-	std::unique_ptr<World> m_world;
-	Input m_player;
+	Input m_input;
+	StateStack m_stateStack;
 };
 
 #endif //ENGINE_H_

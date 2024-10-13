@@ -37,11 +37,11 @@ add_executable(Alpha-Squadron main.cpp
         Engine/FontId.h
         Engine/Debug.h
         Engine/Debug.cpp
-        Engine/Game.cpp
+        Engine/Engine.cpp
         Engine/Engine.h
         Game/TextureId.h
         Engine/ResourceManager.cpp
-        Game/ResourceManager.h
+        Engine/ResourceManager.h
         Engine/Cache.h
         Engine/PooledSound.h
         Engine/NodeType.h
@@ -55,9 +55,17 @@ add_executable(Alpha-Squadron main.cpp
         Engine/Input.h
         Engine/StateStack.cpp
         Engine/StateStack.h
-        Engine/State.cpp
         Engine/State.h
         Engine/StateIdentifiers.h
+        Engine/GameState.cpp
+        Engine/GameState.h
+        Engine/TitleState.cpp
+        Engine/TitleState.h
+        Engine/MenuState.cpp
+        Engine/MenuState.h
+        Engine/PauseState.cpp
+        Engine/PauseState.h
+        Engine/State.cpp
 )
 
 # Link the SFML libraries

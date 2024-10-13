@@ -3,48 +3,85 @@
 //
 #include "StateStack.h"
 
-StateStack::StateStack(State::Context context)
+StateStack::StateStack(State::Context context) : m_context(context)
 {
 
 }
-void StateStack::draw()
-{
 
-}
-void StateStack::handleEvent(const sf::Event& event)
-{
-
-}
 void StateStack::pushState(StateId stateId)
 {
-
+	m_pendingList.push_back(PendingChange(StackActionType::Push, stateId));
 }
+
 void StateStack::popState()
 {
-
+	m_pendingList.push_back(PendingChange(StackActionType::Pop));
 }
-void StateStack::update(float dt)
-{
 
-}
 void StateStack::clearStates()
 {
-
+	m_pendingList.push_back(PendingChange(StackActionType::Clear));
 }
+
 bool StateStack::isEmpty() const
 {
-	return false;
+	return m_stack.empty();
 }
+
+void StateStack::render()
+{
+	for(auto itr = m_stack.rbegin(); itr != m_stack.rend(); ++itr)
+	{
+		(*itr)->render();
+	}
+}
+
+void StateStack::handleEvent(const sf::Event& event)
+{
+	for(auto itr = m_stack.rbegin(); itr != m_stack.rend(); ++itr)
+	{
+		if(!(*itr)->handleEvent(event))
+			return;
+	}
+	applyPendingChanges();
+}
+
+void StateStack::update(float deltaTime)
+{
+	for(auto itr = m_stack.rbegin(); itr != m_stack.rend(); ++itr)
+	{
+		if(!(*itr)->update(deltaTime))
+			return;
+	}
+}
+
 State::Ptr StateStack::createState(StateId stateId)
 {
-	return State::Ptr();
+	auto found = m_factories.find(stateId);
+	if(found == m_factories.end())
+	{
+		Debug::logError(std::runtime_error("Unable to find the state id: " + std::to_string(stateId)));
+		return nullptr;
+	}
+	return found->second();
 }
+
 void StateStack::applyPendingChanges()
 {
-
-}
-template<typename T>
-void StateStack::registerState(StateId stateId)
-{
-
+	for(auto& change : m_pendingList)
+	{
+		switch(change.stackActionType)
+		{
+			case Push:
+				m_stack.push_back(createState(change.stateId));
+				break;
+			case Pop:
+				m_stack.pop_back();
+				break;
+			case Clear:
+				m_stack.clear();
+				break;
+		}
+	}
+	m_pendingList.clear();
 }
