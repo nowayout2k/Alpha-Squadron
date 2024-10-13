@@ -52,7 +52,7 @@ bool MenuState::handleEvent(const sf::Event& event)
 			m_optionIndex++;
 		else
 			m_optionIndex = 0;
-		
+
 		updateOptionText();
 	}
 

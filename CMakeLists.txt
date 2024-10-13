@@ -66,6 +66,10 @@ add_executable(Alpha-Squadron main.cpp
         Engine/PauseState.cpp
         Engine/PauseState.h
         Engine/State.cpp
+        Engine/LoadingState.cpp
+        Engine/LoadingState.h
+        Engine/ParallelTask.cpp
+        Engine/ParallelTask.h
 )
 
 # Link the SFML libraries
