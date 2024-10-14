@@ -48,6 +48,14 @@ std::string ResourceManager::getTexturePath(TextureId textureId)
 		return "../Assets/Textures/EnemiesSpriteSheet.png";
 	case TextureId::SmoggySky :
 		return "../Assets/Textures/sky.png";
+	case TextureId::BlueButtonIdle:
+		return "../Assets/Textures/UI/Buttons/Blank/Rect-Icon-Blue/Idle.png";
+	case TextureId::BlueButtonClicked:
+		return "../Assets/Textures/UI/Buttons/Blank/Rect-Icon-Blue/Click.png";
+	case TextureId::MagentaButtonIdle:
+		return "../Assets/Textures/UI/Buttons/Blank/Rect-Icon-Magenta/Idle.png";
+	case TextureId::MagentaButtonClicked:
+		return "../Assets/Textures/UI/Buttons/Blank/Rect-Icon-Magenta/Click.png";
 	default:
 		Debug::logError(std::logic_error("Texture Id is unknown!"));
 		return nullptr;

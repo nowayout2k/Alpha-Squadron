@@ -11,6 +11,7 @@ enum StateId
 	Title,
 	Menu,
 	Game,
+	Settings,
 	Pause
 };
 

@@ -30,7 +30,7 @@ bool StateStack::isEmpty() const
 
 void StateStack::render()
 {
-	for(auto itr = m_stack.rbegin(); itr != m_stack.rend(); ++itr)
+	for(auto itr = m_stack.begin(); itr != m_stack.end(); ++itr)
 	{
 		(*itr)->render();
 	}
@@ -53,6 +53,7 @@ void StateStack::update(float deltaTime)
 		if(!(*itr)->update(deltaTime))
 			return;
 	}
+	applyPendingChanges();
 }
 
 State::Ptr StateStack::createState(StateId stateId)

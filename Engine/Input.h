@@ -16,7 +16,8 @@ class Input
 		AccelerateNegX,
 		AcceleratePosX,
 		AccelerateNegY,
-		AcceleratePosY
+		AcceleratePosY,
+		ActionCount
 	};
 	Input();
 	void assignKey(ActionType actionType, sf::Keyboard::Key key);

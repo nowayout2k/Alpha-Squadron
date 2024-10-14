@@ -16,8 +16,6 @@ find_package(SFML COMPONENTS system window graphics network audio REQUIRED)
 add_executable(Alpha-Squadron main.cpp
         Engine/Audio.cpp
         Engine/Audio.h
-        Engine/Network.cpp
-        Engine/Network.h
         Engine/Utility.h
         Engine/Entity.h
         Engine/GameSprite.h
@@ -70,6 +68,16 @@ add_executable(Alpha-Squadron main.cpp
         Engine/LoadingState.h
         Engine/ParallelTask.cpp
         Engine/ParallelTask.h
+        Engine/Component.cpp
+        Engine/Component.h
+        Engine/Container.cpp
+        Engine/Container.h
+        Engine/Label.cpp
+        Engine/Label.h
+        Engine/Button.cpp
+        Engine/Button.h
+        Engine/SettingsState.cpp
+        Engine/SettingsState.h
 )
 
 # Link the SFML libraries

@@ -13,5 +13,9 @@ enum TextureId
 	AircraftSpriteSheet,
 	EnemiesSpriteSheet,
 	Coin,
+	BlueButtonIdle,
+	BlueButtonClicked,
+	MagentaButtonIdle,
+	MagentaButtonClicked,
 };
 #endif //TEXTUREID_H_
