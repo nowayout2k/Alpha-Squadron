@@ -96,7 +96,7 @@ sf::Keyboard::Key Input::getAssignedKey(ActionType actionType) const
 			return keyBinding.first;
 	}
 
-	Debug::logError(std::logic_error("Cannot get the assigned key because it could not be found!"));
+	Debug::logError("Cannot get the assigned key because it could not be found!");
 
 	return sf::Keyboard::Key::KeyCount;
 }

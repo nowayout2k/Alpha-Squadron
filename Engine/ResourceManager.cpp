@@ -48,6 +48,8 @@ std::string ResourceManager::getTexturePath(TextureId textureId)
 		return "../Assets/Textures/EnemiesSpriteSheet.png";
 	case TextureId::SmoggySky :
 		return "../Assets/Textures/sky.png";
+	case TextureId::Black :
+		return "../Assets/Textures/black.png";
 	case TextureId::BlueButtonIdle:
 		return "../Assets/Textures/UI/Buttons/Blank/Rect-Icon-Blue/Idle.png";
 	case TextureId::BlueButtonClicked:
@@ -57,7 +59,7 @@ std::string ResourceManager::getTexturePath(TextureId textureId)
 	case TextureId::MagentaButtonClicked:
 		return "../Assets/Textures/UI/Buttons/Blank/Rect-Icon-Magenta/Click.png";
 	default:
-		Debug::logError(std::logic_error("Texture Id is unknown!"));
+		Debug::logError("Texture Id is unknown!");
 		return nullptr;
 	}
 }
@@ -77,7 +79,7 @@ std::string ResourceManager::getSoundPath(SoundFxId soundFxId)
 	case SoundFxId::UNSquadronPositiveSelection :
 		return "../Assets/SFX/UNSquadronStart.wav";
 	default:
-		Debug::logError(std::logic_error("Sound FX Id is unknown!"));
+		Debug::logError("Sound FX Id is unknown!");
 		return nullptr;
 	}
 }
@@ -89,7 +91,7 @@ std::string ResourceManager::getFontPath(FontId fontId)
 	case FontId::Gamer:
 		return "../Assets/Fonts/Gamer.ttf";
 	default:
-		Debug::logError(std::logic_error("Font Id is unknown!"));
+		Debug::logError("Font Id is unknown!");
 		return nullptr;
 	}
 }

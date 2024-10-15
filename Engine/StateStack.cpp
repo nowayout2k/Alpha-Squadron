@@ -61,7 +61,7 @@ State::Ptr StateStack::createState(StateId stateId)
 	auto found = m_factories.find(stateId);
 	if(found == m_factories.end())
 	{
-		Debug::logError(std::runtime_error("Unable to find the state id: " + std::to_string(stateId)));
+		Debug::logError("Unable to find the state id: " + std::to_string(stateId));
 		return nullptr;
 	}
 	return found->second();

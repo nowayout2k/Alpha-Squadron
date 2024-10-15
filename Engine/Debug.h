@@ -20,7 +20,7 @@ class Debug
 	static void render(sf::RenderWindow &window);
 	static void log(const std::string& message);
 	static void logWarning(const std::string& message);
-	static void logError(std::exception exception);
+	static void logError(const std::string& message);
  private:
 #if DEBUGGING_ENABLED
 	static bool m_fpsVisible;

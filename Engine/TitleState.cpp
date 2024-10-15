@@ -6,7 +6,7 @@
 #include "Utility.h"
 
 TitleState::TitleState(StateStack& stack, State::Context context) : State(stack, context),
-						m_backgroundSprite(ResourceManager::loadResource(TextureId::SmoggySky))
+						m_backgroundSprite(ResourceManager::loadResource(TextureId::Black))
 {
 	m_text.setFont(ResourceManager::loadResource(FontId::Gamer));
 	m_text.setString("Press Any Key To Continue!");

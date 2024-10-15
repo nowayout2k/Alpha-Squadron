@@ -57,7 +57,7 @@ void Chopper::collision(const Entity* other)
 		const auto* projectile = static_cast<const Projectile*>(other);
 		if(projectile == nullptr)
 		{
-			Debug::logError(std::logic_error("Entity set as Projectile type, but is not."));
+			Debug::logError("Entity set as Projectile type, but is not.");
 			return;
 		}
 

@@ -16,8 +16,7 @@ namespace GUI
 		m_sprite.setTexture(m_normalTexture);
 		m_text.setFont(ResourceManager::loadResource(FontId::Gamer));
 		m_text.setFillColor(sf::Color::White);
-		auto dimensions = m_normalTexture.getSize() / 2u;
-		m_text.setPosition(sf::Vector2f(dimensions));
+		Utility::centerOrigin(m_sprite);
 	}
 
 	void Button::select()
@@ -67,8 +66,9 @@ namespace GUI
 		m_callback = std::move(callback);
 	}
 
-	void Button::setText(const std::string& text)
+	void Button::setText(const unsigned int size, const std::string& text)
 	{
+		m_text.setCharacterSize(size);
 		m_text.setString(text);
 		Utility::centerOrigin(m_text);
 	}

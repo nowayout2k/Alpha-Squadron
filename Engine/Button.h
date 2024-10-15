@@ -31,7 +31,7 @@ namespace GUI
 		virtual void activate() override;
 		virtual void deactivate() override;
 		void setCallback(std::function<void()> callback);
-		void setText(const std::string& text);
+		void setText(const unsigned int size, const std::string& text);
 		void setToggle(bool flag);
 	 private:
 		virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;

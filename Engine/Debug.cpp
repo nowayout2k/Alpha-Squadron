@@ -45,11 +45,10 @@ void Debug::update(float deltaTime)
 #endif
 }
 
-void Debug::logError(std::exception exception)
+void Debug::logError(const std::string& message)
 {
 #if DEBUGGING_ENABLED
-	std::cout << "***** ERROR! " << exception.what() << "*****" << std::endl;
-	throw exception;
+	std::cout << "***** ERROR! " << message << "*****" << std::endl;
 #endif
 }
 

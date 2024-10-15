@@ -3,13 +3,14 @@
 //
 
 #include "SettingsState.h"
+#include "Utility.h"
 #include <SFML/Graphics/RenderWindow.hpp>
 
 
 SettingsState::SettingsState(StateStack& stack, Context context) : State(stack, context), m_guiContainer()
 {
 	sf::Vector2f center = context.window->getView().getSize() / 2.f;
-	m_backgroundSprite.setTexture(ResourceManager::loadResource(TextureId::SmoggySky));
+	m_backgroundSprite.setTexture(ResourceManager::loadResource(TextureId::Black));
 
 	addButtonLabel(Input::AccelerateNegX, sf::Vector2f ( center.x, 100.f), "Move Left", context);
 	addButtonLabel(Input::AcceleratePosX, sf::Vector2f ( center.x, 200.f), "Move Right", context);
@@ -20,7 +21,7 @@ SettingsState::SettingsState(StateStack& stack, Context context) : State(stack, 
 
 	auto backButton = std::make_shared<GUI::Button>();
 	backButton->setPosition(center.x, 500.f);
-	backButton->setText("Back");
+	backButton->setText(24, "Back");
 	backButton->setCallback(std::bind(&SettingsState::requestStackPop, this));
 
 	m_guiContainer.pack(backButton);
@@ -71,7 +72,7 @@ void SettingsState::updateLabels()
 	for (std::size_t i = 0; i < Input::ActionCount; ++i)
 	{
 		sf::Keyboard::Key key = input.getAssignedKey(static_cast<Input::ActionType>(i));
-		m_bindingLabels[i]->setText(std::to_string(key));
+		m_bindingLabels[i]->setText(50, Utility::keyToString(key));
 	}
 }
 
@@ -79,7 +80,7 @@ void SettingsState::addButtonLabel(Input::ActionType actionType, sf::Vector2f of
 {
 	m_bindingButtons[actionType] = std::make_shared<GUI::Button>();
 	m_bindingButtons[actionType]->setPosition(offset.x, offset.y);
-	m_bindingButtons[actionType]->setText(text);
+	m_bindingButtons[actionType]->setText(24, text);
 	m_bindingButtons[actionType]->setToggle(true);
 
 	m_bindingLabels[actionType] = std::make_shared<GUI::Label>("");

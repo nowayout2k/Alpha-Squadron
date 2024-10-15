@@ -24,7 +24,9 @@ class Cache
 
 		std::unique_ptr<T> resource = std::make_unique<T>();
 		if (!resource->loadFromFile(path, param))
-			Debug::logError(std::runtime_error("Failed to load resource at " + path));
+		{
+			Debug::logError("Failed to load resource at " + path);
+		}
 
 		m_cache.insert(std::make_pair(hash, std::move(resource)));
 
@@ -39,7 +41,9 @@ class Cache
 
 		std::unique_ptr<T> resource = std::make_unique<T>();
 		if (!resource->loadFromFile(path))
-			Debug::logError(std::runtime_error("Failed to load resource at " + path));
+		{
+			Debug::logError("Failed to load resource at " + path);
+		}
 
 		m_cache.insert(std::make_pair(hash, std::move(resource)));
 

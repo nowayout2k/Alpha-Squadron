@@ -79,7 +79,7 @@ std::string Audio::getMusicPath(MusicId musicId)
 	case MusicId::UNSquadronMenu:
 		return "../Assets/Music/UN Squadron Menu.mp3";
 	default:
-		Debug::logError(std::logic_error("Music Id is unknown!"));
+		Debug::logError("Music Id is unknown!");
 		return nullptr;
 	}
 }

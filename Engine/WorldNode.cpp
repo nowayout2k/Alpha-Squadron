@@ -62,7 +62,7 @@ WorldNode::SmartNode WorldNode::detachNode(const WorldNode& node)
 	auto found = std::find_if(m_children.begin(), m_children.end(),
 		[&] (SmartNode& p) -> bool { return p.get() == &node; });
 	if(found != m_children.end())
-		Debug::logError(std::logic_error("Child is not present so it cannot be detached."));
+		Debug::logError("Child is not present so it cannot be detached.");
 	SmartNode result = std::move(*found);
 	result->m_parent = nullptr;
 	m_children.erase(found);

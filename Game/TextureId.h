@@ -7,6 +7,7 @@
 enum TextureId
 {
 	SmoggySky,
+	Black,
 	DecayedBuildings1,
 	DecayedBuildings2,
 	DecayedBuildings3,
