@@ -28,7 +28,7 @@ void World::restart()
 
 void World::setup()
 {
-	for (int i = 0; i < LayerCount; ++i)
+	for (int i = 0; i < static_cast<int>(Layer::LayerCount); ++i)
 	{
 		WorldNode::SmartNode layer(new EmptyWorldNode());
 		m_worldLayers[i] = layer.get();
@@ -43,7 +43,7 @@ void World::setup()
 			sf::IntRect(0,0,m_worldBounds.width, m_worldView.getSize().y),
 			true));
 	backgroundSkySprite->setPosition(m_worldBounds.left,m_worldBounds.top);
-	m_worldLayers[Background]->attachNode(std::move(backgroundSkySprite));
+	m_worldLayers[static_cast<int>(Layer::Background)]->attachNode(std::move(backgroundSkySprite));
 
 	std::unique_ptr<GameSprite> backgroundBuildingsSprite(
 		new GameSprite(
@@ -53,14 +53,14 @@ void World::setup()
 			sf::IntRect(0,0,m_worldBounds.width,m_worldView.getSize().y),
 			true));
 	backgroundBuildingsSprite->setPosition(m_worldBounds.left,m_worldBounds.top);
-	m_worldLayers[Background]->attachNode(std::move(backgroundBuildingsSprite));
+	m_worldLayers[static_cast<int>(Layer::Background)]->attachNode(std::move(backgroundBuildingsSprite));
 
 	std::unique_ptr<Aircraft> player(new Tomcat(NodeType::Player));
 	m_playerAircraft = player.get();
 	m_playerAircraft->setPosition(m_spawnPosition);
 	m_playerAircraft->setVelocity(m_scrollSpeed, 0);
 	m_playerAircraft->setScale(4.0, 4.0);
-	m_worldLayers[Collision]->attachNode(std::move(player));
+	m_worldLayers[static_cast<int>(Layer::Collision)]->attachNode(std::move(player));
 
 	Audio::playMusic(MusicId::UNSquadronLevel1, 10);
 }

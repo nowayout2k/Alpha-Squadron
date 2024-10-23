@@ -8,6 +8,19 @@
 #include "CommandQueue.h"
 #include "../Game/Aircraft.h"
 
+
+
+struct AircraftMover
+{
+	AircraftMover(float vx, float vy) : m_velocity(vx, vy){}
+	void operator() (Aircraft& aircraft, float dt) const
+	{
+		aircraft.accelerate(m_velocity * aircraft.getMaxSpeed());
+	}
+ private:
+	sf::Vector2f m_velocity;
+};
+
 class Input
 {
  public:
@@ -26,26 +39,6 @@ class Input
 
 	void handleEvent(const sf::Event& event, CommandQueue& commands);
 	void handleRealtimeInput(CommandQueue& commands);
-
-	template <typename GameObject, typename Function>
-	std::function<void(WorldNode&, float)> derivedAction(Function fn)
-	{
-		return [=] (WorldNode& node, float dt)
-		{
-		  //assert(dynamic_cast<GameObject*>(&node) != nullptr);
-		  fn(static_cast<GameObject&>(node), dt);
-		};
-	}
-
-	struct AircraftMover
-	{
-		AircraftMover(float vx, float vy) : m_velocity(vx, vy){}
-		void operator() (Aircraft& aircraft, float dt) const
-		{
-			aircraft.accelerate(m_velocity);
-		}
-		sf::Vector2f m_velocity;
-	};
  private:
 	static bool isRealtimeAction(ActionType actionType);
  private:
@@ -53,7 +46,6 @@ class Input
 	std::map<ActionType, Command> m_actionBinding;
 
 	static std::vector<ActionType> m_realTimeActionTypes;
-	const float m_playerSpeed = 800.f;
 };
 
 #endif //PLAYER_H_

@@ -1,0 +1,28 @@
+{
+  "aircraft": [
+    {
+      "type": "Tomcat",
+      "health": 100,
+      "speed": 200.0,
+      "textureId": "AircraftSpriteSheet",
+      "textureRect": {
+        "left": 240,
+        "top": 298,
+        "width": 52,
+        "height": 12
+      }
+    },
+    {
+      "type": "Chopper",
+      "health": 20,
+      "speed": 80.0,
+      "textureId": "EnemiesSpriteSheet",
+      "textureRect": {
+        "left": 70,
+        "top": 200,
+        "width": 25,
+        "height": 12
+      }
+    }
+  ]
+}

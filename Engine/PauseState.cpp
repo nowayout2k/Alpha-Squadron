@@ -3,16 +3,16 @@
 //
 
 #include "PauseState.h"
-void PauseState::render()
+void PauseState::render(sf::RenderStates& states)
 {
 	sf::RenderWindow& window = *getContext().window;
 	window.setView(window.getDefaultView());
 	sf::RectangleShape backgroundShape;
 	backgroundShape.setFillColor(sf::Color(0, 0, 0, 150));
 	backgroundShape.setSize(sf::Vector2f(window.getSize()));
-	window.draw(backgroundShape);
-	window.draw(m_pausedText);
-	window.draw(m_instructionText);
+	window.draw(backgroundShape, states);
+	window.draw(m_pausedText, states);
+	window.draw(m_instructionText, states);
 }
 bool PauseState::update(float deltaTime)
 {
@@ -23,7 +23,7 @@ bool PauseState::handleEvent(const sf::Event& event)
 	if (event.key.code == sf::Keyboard::BackSpace)
 	{
 		requestStateClear();
-		requestStackPush(Menu);
+		requestStackPush(StateId::Menu);
 	}
 	return false;
 }

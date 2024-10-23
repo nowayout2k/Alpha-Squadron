@@ -8,6 +8,7 @@
 #include <SFML/Graphics/Text.hpp>
 #include "Entity.h"
 #include "ResourceManager.h"
+#include "Utility.h"
 
 class GameText : public Entity
 {
@@ -15,7 +16,7 @@ class GameText : public Entity
 	GameText(FontId fontType, std::string text, unsigned int pixelSize, sf::Color color, sf::Text::Style style, sf::Vector2f position)
 		: m_fontType(fontType), Entity(false)
 	{
-		m_text.setString(text);
+		setString(text);
 		m_text.setCharacterSize(pixelSize);
 		m_text.setFillColor(color);
 		m_text.setStyle(style);
@@ -25,7 +26,20 @@ class GameText : public Entity
 
 	virtual unsigned int getNodeType() const override { return Entity::getNodeType() | (unsigned int)NodeType::Text; }
 
+	virtual sf::Rect<float> getGlobalBounds() const override
+	{
+		sf::FloatRect bounds = m_text.getGlobalBounds();
+		return getTransform().transformRect(bounds);
+	}
+
+	void setString(const std::string& text)
+	{
+		m_text.setString(text);
+		Utility::centerOrigin(m_text);
+	}
+
 	virtual void update(float deltaTime) override { if(!isActive()) return; }
+
 	virtual void render(sf::RenderTarget& renderTarget, sf::RenderStates states) const override
 	{
 		if(!isActive())

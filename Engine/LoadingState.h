@@ -14,7 +14,7 @@ class LoadingState : public State
 {
  public:
 	explicit LoadingState(StateStack& stateStack, Context& context, std::function<void()> loadingTask);
-	virtual void render() override;
+	virtual void render(sf::RenderStates& states) override;
 	virtual bool update(float deltaTime) override;
 	virtual bool handleEvent(const sf::Event& event) override;
  private:

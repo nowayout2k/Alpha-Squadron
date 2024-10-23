@@ -36,7 +36,6 @@ protected:
 	void setCollision(bool hasCollision) { m_hasCollision = hasCollision; };
 	virtual void destroy() { m_isDestroyPending = true; }
  private:
-
 	bool m_isDestroyPending;
 	bool m_hasCollision;
 	sf::Vector2f m_velocity;

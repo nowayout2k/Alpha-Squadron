@@ -5,7 +5,7 @@
 #ifndef MUSICID_H_
 #define MUSICID_H_
 
-enum MusicId
+enum class MusicId
 {
 	UNSquadronLevel1,
 	UNSquadronMenu

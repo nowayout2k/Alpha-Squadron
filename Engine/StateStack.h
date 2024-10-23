@@ -26,7 +26,7 @@ class StateStack
 		};
 	}
 	void update(float deltaTime);
-	void render();
+	void render(sf::RenderStates& states);
 	void handleEvent(const sf::Event& event);
 	void pushState(StateId stateId);
 	void popState();

@@ -4,7 +4,7 @@
 
 #ifndef TEXTUREID_H_
 #define TEXTUREID_H_
-enum TextureId
+enum class TextureId
 {
 	SmoggySky,
 	Black,
@@ -18,5 +18,6 @@ enum TextureId
 	BlueButtonClicked,
 	MagentaButtonIdle,
 	MagentaButtonClicked,
+	Count
 };
 #endif //TEXTUREID_H_

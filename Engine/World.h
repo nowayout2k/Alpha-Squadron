@@ -32,7 +32,7 @@ private:
 	sf::RenderWindow& m_window;
 	sf::View m_worldView;
 	EmptyWorldNode m_worldGraph;
-	std::array<WorldNode*, Layer::LayerCount> m_worldLayers;
+	std::array<WorldNode*, static_cast<int>(Layer::LayerCount)> m_worldLayers;
 	sf::FloatRect m_worldBounds;
 	sf::Vector2f m_spawnPosition;
 	float m_scrollSpeed;

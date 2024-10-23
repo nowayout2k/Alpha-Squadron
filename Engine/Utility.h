@@ -5,6 +5,11 @@
 #ifndef UTILITY_H_
 #define UTILITY_H_
 #include <SFML/System/Clock.hpp>
+#include <SFML/Graphics.hpp>
+#include "../Game/AircraftType.h"
+#include "../Game/TextureId.h"
+#include "Debug.h"
+
 class Utility
 {
 public:
@@ -31,6 +36,54 @@ public:
 		static_assert(std::is_base_of<sf::Drawable, T>::value, "Object must be drawable");
 		sf::FloatRect bounds = object.getLocalBounds();
 		object.setOrigin(std::floor(bounds.left + bounds.width / 2.f), std::floor(bounds.top + bounds.height / 2.f));
+	}
+
+	static TextureId stringToTextureID(const std::string& str)
+	{
+		static std::unordered_map<std::string, TextureId> stringToEnumMap = {
+			{ "SmoggySky", TextureId::SmoggySky },
+			{ "Black", TextureId::Black },
+			{ "DecayedBuildings1", TextureId::DecayedBuildings1 },
+			{ "DecayedBuildings2", TextureId::DecayedBuildings2 },
+			{ "DecayedBuildings3", TextureId::DecayedBuildings3 },
+			{ "AircraftSpriteSheet", TextureId::AircraftSpriteSheet },
+			{ "EnemiesSpriteSheet", TextureId::EnemiesSpriteSheet },
+			{ "Coin", TextureId::Coin },
+			{ "BlueButtonIdle", TextureId::BlueButtonIdle },
+			{ "BlueButtonClicked", TextureId::BlueButtonClicked },
+			{ "MagentaButtonIdle", TextureId::MagentaButtonIdle },
+			{ "MagentaButtonClicked", TextureId::MagentaButtonClicked },
+		};
+
+		auto it = stringToEnumMap.find(str);
+		if (it != stringToEnumMap.end())
+		{
+			return it->second;
+		}
+		else
+		{
+			Debug::logError("Invalid aircraft type: " + str);
+			return TextureId::Count;
+		}
+	}
+
+	static AircraftType stringToAircraftType(const std::string& str)
+	{
+		static std::unordered_map<std::string, AircraftType> stringToEnumMap = {
+			{ "Tomcat", AircraftType::Tomcat },
+			{ "Chopper", AircraftType::Chopper }
+		};
+
+		auto it = stringToEnumMap.find(str);
+		if (it != stringToEnumMap.end())
+		{
+			return it->second;
+		}
+		else
+		{
+			Debug::logError("Invalid aircraft type: " + str);
+			return AircraftType::Count;
+		}
 	}
 
 	static std::string keyToString(sf::Keyboard::Key key)

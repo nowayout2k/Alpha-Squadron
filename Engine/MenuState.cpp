@@ -15,7 +15,7 @@ MenuState::MenuState(StateStack& stack, State::Context context) : State(stack, c
 	playButton->setCallback([this] ()
 	{
 		requestStackPop();
-		requestStackPush(Game);
+		requestStackPush(StateId::Game);
 	});
 
 	auto settingsButton = std::make_shared<GUI::Button>();
@@ -23,7 +23,7 @@ MenuState::MenuState(StateStack& stack, State::Context context) : State(stack, c
 	settingsButton->setText(24, "Settings");
 	settingsButton->setCallback([this] ()
 	{
-		requestStackPush(Settings);
+		requestStackPush(StateId::Settings);
 	});
 
 	auto exitButton = std::make_shared<GUI::Button>();
@@ -44,12 +44,12 @@ bool MenuState::handleEvent(const sf::Event& event)
 	m_guiContainer.handleEvent(event);
 	return true;
 }
-void MenuState::render()
+void MenuState::render(sf::RenderStates& states)
 {
 	sf::RenderWindow& window = *getContext().window;
 	window.setView(window.getDefaultView());
-	window.draw(m_backgroundSprite);
-	window.draw(m_guiContainer);
+	window.draw(m_backgroundSprite, states);
+	window.draw(m_guiContainer, states);
 }
 bool MenuState::update(float deltaTime)
 {

@@ -5,7 +5,7 @@
 #ifndef FONTID_H_
 #define FONTID_H_
 
-enum FontId
+enum class FontId
 {
 	Gamer
 };

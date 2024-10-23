@@ -15,7 +15,7 @@ class Engine
 	Engine();
 	void update(float deltaTime);
 	void render();
-	void processInput();
+	void processEvents();
 	void run();
 	void registerStates();
  private:

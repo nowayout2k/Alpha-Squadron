@@ -5,7 +5,7 @@
 #ifndef STATEIDENTIFIERS_H_
 #define STATEIDENTIFIERS_H_
 
-enum StateId
+enum class StateId
 {
 	None,
 	Title,

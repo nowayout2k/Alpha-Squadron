@@ -6,7 +6,6 @@
 #include "GameText.h"
 #include <iostream>
 #include <string>
-#include "World.h"
 
 #if DEBUGGING_ENABLED
 bool Debug::m_fpsVisible = false;
@@ -38,7 +37,8 @@ void Debug::update(float deltaTime)
 	}
 	if(m_timeSinceLastFpsUpdate > 1)
 	{
-		m_fpsText.setString(std::to_string((int)(m_framesSinceLastFpsUpdate/m_timeSinceLastFpsUpdate)));
+		auto value = std::to_string((int)(m_framesSinceLastFpsUpdate/m_timeSinceLastFpsUpdate));
+		m_fpsText.setString(value);
 		m_timeSinceLastFpsUpdate = 0;
 		m_framesSinceLastFpsUpdate = 0;
 	}
@@ -66,13 +66,17 @@ void Debug::logWarning(const std::string& message)
 #endif
 }
 
-void Debug::render(sf::RenderWindow& window)
+void Debug::render(sf::RenderWindow& window, sf::RenderStates& states)
 {
 #if DEBUGGING_ENABLED
 	if(m_fpsVisible)
 	{
-		sf::RenderStates states;
-		window.draw(m_fpsText,states);
+		sf::View currentView = window.getView();
+		sf::Vector2f viewCenter = currentView.getCenter();
+		sf::Vector2f viewSize = currentView.getSize();
+		sf::Vector2f topLeftPosition = sf::Vector2f(viewCenter.x - viewSize.x / 2, viewCenter.y - viewSize.y / 2);
+		m_fpsText.setPosition(topLeftPosition);
+		window.draw(m_fpsText, states);
 	}
 
 #endif

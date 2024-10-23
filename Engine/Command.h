@@ -14,4 +14,13 @@ struct Command
 	std::function<void(WorldNode&, float)> action;
 	unsigned int nodeType = 0;
 };
+
+template <typename GameObject, typename Function>
+std::function<void(WorldNode&, float)> derivedAction(Function fn)
+{
+	return [=] (WorldNode& node, float dt)
+	{
+	  fn(static_cast<GameObject&>(node), dt);
+	};
+}
 #endif //COMMAND_H_

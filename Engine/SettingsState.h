@@ -19,9 +19,9 @@ class SettingsState : public State
 {
  public:
 	explicit SettingsState(StateStack& stack, Context context);
-	virtual void render();
-	virtual bool update(float deltaTime);
-	virtual bool handleEvent(const sf::Event& event);
+	virtual void render(sf::RenderStates& states) override;
+	virtual bool update(float deltaTime) override;
+	virtual bool handleEvent(const sf::Event& event) override;
  private:
 	void updateLabels();
 	void addButtonLabel(Input::ActionType action, sf::Vector2f offset, const std::string& text, Context context);

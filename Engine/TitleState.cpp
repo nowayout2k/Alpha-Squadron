@@ -19,7 +19,7 @@ bool TitleState::handleEvent(const sf::Event& event)
 	if (event.type == sf::Event::KeyPressed)
 	{
 		requestStackPop();
-		requestStackPush(Menu);
+		requestStackPush(StateId::Menu);
 	}
 	return true;
 }
@@ -34,7 +34,7 @@ bool TitleState::update(float deltaTime)
 	}
 	return true;
 }
-void TitleState::render()
+void TitleState::render(sf::RenderStates& states)
 {
 	getContext().window->draw(m_backgroundSprite);
 	if(m_showText)

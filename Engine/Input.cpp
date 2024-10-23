@@ -18,22 +18,10 @@ Input::Input()
 	assignKey(AccelerateNegY, sf::Keyboard::W);
 	assignKey(AcceleratePosY, sf::Keyboard::S);
 
-	m_actionBinding[AccelerateNegX].action = [this] (WorldNode& node, float dt)
-	{
-	  	node.move(-m_playerSpeed * dt, 0.f);
-	};
-	m_actionBinding[AcceleratePosX].action = [this] (WorldNode& node, float dt)
-	{
-		node.move(m_playerSpeed * dt, 0.f);
-	};
-	m_actionBinding[AccelerateNegY].action = [this] (WorldNode& node, float dt)
-	{
-	  	node.move(0.f, -m_playerSpeed * dt);
-	};
-	m_actionBinding[AcceleratePosY].action = [this] (WorldNode& node, float dt)
-	{
-	  	node.move(0.f, m_playerSpeed * dt);
-	};
+	m_actionBinding[AccelerateNegX].action = derivedAction<Aircraft>(AircraftMover(-1,  0));
+	m_actionBinding[AcceleratePosX].action = derivedAction<Aircraft>(AircraftMover(1,  0));
+	m_actionBinding[AccelerateNegY].action = derivedAction<Aircraft>(AircraftMover( 0, -1));
+	m_actionBinding[AcceleratePosY].action = derivedAction<Aircraft>(AircraftMover( 0, 1));
 
 	for(auto& pair : m_actionBinding)
 		pair.second.nodeType = (unsigned int)NodeType::Player;
@@ -41,6 +29,12 @@ Input::Input()
 
 void Input::handleEvent(const sf::Event& event, CommandQueue& commands)
 {
+	if (event.type == sf::Event::KeyPressed)
+	{
+		auto found = m_keyBinding.find(event.key.code);
+		if (found != m_keyBinding.end() && !isRealtimeAction(found->second))
+			commands.push(m_actionBinding[found->second]);
+	}
 	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::P)
 	{
 		Command output;
@@ -66,7 +60,9 @@ void Input::handleRealtimeInput(CommandQueue& commands)
 	for(auto pair : m_keyBinding)
 	{
 		if (sf::Keyboard::isKeyPressed(pair.first) && isRealtimeAction(pair.second))
+		{
 			commands.push(m_actionBinding[pair.second]);
+		}
 	}
 }
 
@@ -103,6 +99,7 @@ sf::Keyboard::Key Input::getAssignedKey(ActionType actionType) const
 
 bool Input::isRealtimeAction(ActionType actionType)
 {
-	return std::any_of(m_realTimeActionTypes.begin(), m_realTimeActionTypes.end(), [actionType](ActionType at) { return actionType == at; });
+	bool isRealTime = std::any_of(m_realTimeActionTypes.begin(), m_realTimeActionTypes.end(), [actionType](ActionType at) { return actionType == at; });
+	return isRealTime;
 }
 

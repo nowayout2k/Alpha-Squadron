@@ -4,6 +4,17 @@ project(Alpha-Squadron)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+# Include FetchContent to manage nlohmann/json
+include(FetchContent)
+
+FetchContent_Declare(
+        nlohmann_json
+        GIT_REPOSITORY https://github.com/nlohmann/json.git
+        GIT_TAG v3.10.5  # Replace with the desired version
+)
+
+FetchContent_MakeAvailable(nlohmann_json)
+
 # Add SFML MAC
 #set(SFML_DIR "/opt/homebrew/Cellar/sfml/2.6.1/lib/cmake/SFML")
 
@@ -78,7 +89,10 @@ add_executable(Alpha-Squadron main.cpp
         Engine/Button.h
         Engine/SettingsState.cpp
         Engine/SettingsState.h
+        Game/DataTables.h
+        Game/DataTables.cpp
+        Game/AircraftType.h
 )
 
-# Link the SFML libraries
-target_link_libraries(Alpha-Squadron sfml-system sfml-window sfml-graphics sfml-network sfml-audio)
+# Link the SFML libraries and nlohmann_json
+target_link_libraries(Alpha-Squadron sfml-system sfml-window sfml-graphics sfml-network sfml-audio nlohmann_json::nlohmann_json)

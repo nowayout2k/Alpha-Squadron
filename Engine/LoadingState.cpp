@@ -27,7 +27,7 @@ bool LoadingState::update(float deltaTime)
 	if (m_parallelTask.isFinished())
 	{
 		requestStackPop();
-		requestStackPush(Game);
+		requestStackPush(StateId::Game);
 	}
 	else
 	{
@@ -43,11 +43,11 @@ void LoadingState::setCompletion(float percent)
 	m_progressBar.setSize(sf::Vector2f(m_progressBarBackground.getSize().x * percent,m_progressBar.getSize().y));
 }
 
-void LoadingState::render()
+void LoadingState::render(sf::RenderStates& states)
 {
-	getContext().window->draw(m_loadingText);
-	getContext().window->draw(m_progressBarBackground);
-	getContext().window->draw(m_progressBar);
+	getContext().window->draw(m_loadingText, states);
+	getContext().window->draw(m_progressBarBackground, states);
+	getContext().window->draw(m_progressBar, states);
 }
 
 bool LoadingState::handleEvent(const sf::Event& event)

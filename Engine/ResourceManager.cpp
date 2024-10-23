@@ -10,12 +10,12 @@ Cache<sf::Font> ResourceManager::m_fontCache;
 
 sf::Font& ResourceManager::loadResource(FontId fontId)
 {
-	return m_fontCache.load(std::to_string(fontId), getFontPath(fontId));
+	return m_fontCache.load(std::to_string(static_cast<int>(fontId)), getFontPath(fontId));
 }
 
 sf::SoundBuffer& ResourceManager::loadResource(SoundFxId soundFxId)
 {
-	return m_soundBufferCache.load(std::to_string(soundFxId), getSoundPath(soundFxId));
+	return m_soundBufferCache.load(std::to_string(static_cast<int>(soundFxId)), getSoundPath(soundFxId));
 }
 
 sf::Texture& ResourceManager::loadResource(TextureId textureId, sf::Rect<int> area)

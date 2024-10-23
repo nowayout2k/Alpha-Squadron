@@ -16,7 +16,7 @@
 
 Engine::Engine() : m_isPaused(false), m_stateStack(State::Context(m_window, m_input))
 {
-	createWindow(sf::VideoMode(1740,1000), "Alpha Squadron", sf::Style::None);
+	createWindow(sf::VideoMode(1740,1000), "Alpha Squadron", sf::Style::Resize);
 	registerStates();
 	m_stateStack.pushState(StateId::Title);
 }
@@ -33,7 +33,7 @@ void Engine::run()
 		while (timeStep > TIME_STEP_MAX)
 		{
 			timeStep -= TIME_STEP_MAX;
-			processInput();
+			processEvents();
 			if(!m_isPaused)
 				update(TIME_STEP_MAX);
 		}
@@ -48,12 +48,11 @@ void Engine::update(float deltaTime)
 }
 void Engine::render()
 {
-
+	sf::RenderStates states;
 	m_window.clear();
-	m_stateStack.render();
-	Debug::render(m_window);
+	m_stateStack.render(states);
+	Debug::render(m_window, states);
 	m_window.display();
-
 }
 
 void Engine::createWindow(const sf::VideoMode& mode, const std::string& title, sf::Uint32 style)
@@ -65,13 +64,16 @@ void Engine::createWindow(const sf::VideoMode& mode, const std::string& title, s
 	m_window.setVerticalSyncEnabled(false);
 	m_window.setActive(true);
 }
-
-void Engine::processInput()
+double eventCount = 0;
+double frame = 0;
+void Engine::processEvents()
 {
-
 	sf::Event event;
+	Debug::log("FRAME: " + std::to_string(++frame));
+	eventCount=0;
 	while (m_window.pollEvent(event))
 	{
+		Debug::log("EVENT NUMBER" + std::to_string(eventCount++));
 		m_stateStack.handleEvent(event);
 
 		if (event.type == sf::Event::Closed || m_stateStack.isEmpty() || event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Key::Escape)

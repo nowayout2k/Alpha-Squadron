@@ -23,7 +23,7 @@ class State
  public:
 	State(StateStack& stack, Context context) : m_stack(&stack), m_context(context) {}
 	virtual ~State() {};
-	virtual void render() = 0;
+	virtual void render(sf::RenderStates& states) = 0;
 	virtual bool update(float deltaTime) = 0;
 	virtual bool handleEvent(const sf::Event& event) = 0;
  protected:

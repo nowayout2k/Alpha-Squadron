@@ -27,11 +27,11 @@ SettingsState::SettingsState(StateStack& stack, Context context) : State(stack, 
 	m_guiContainer.pack(backButton);
 }
 
-void SettingsState::render()
+void SettingsState::render(sf::RenderStates& states)
 {
 	sf::RenderWindow& window = *getContext().window;
-	window.draw(m_backgroundSprite);
-	window.draw(m_guiContainer);
+	window.draw(m_backgroundSprite, states);
+	window.draw(m_guiContainer, states);
 }
 
 bool SettingsState::update(float deltaTime)

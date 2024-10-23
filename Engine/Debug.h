@@ -17,7 +17,7 @@ class Debug
 	static void init();
 	static void toggleFps();
 	static void update(float deltaTime);
-	static void render(sf::RenderWindow &window);
+	static void render(sf::RenderWindow &window, sf::RenderStates& states);
 	static void log(const std::string& message);
 	static void logWarning(const std::string& message);
 	static void logError(const std::string& message);

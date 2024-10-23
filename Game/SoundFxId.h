@@ -5,7 +5,7 @@
 #ifndef SOUNDFXID_H_
 #define SOUNDFXID_H_
 
-enum SoundFxId
+enum class SoundFxId
 {
 	Collect,
 	Shoot1,

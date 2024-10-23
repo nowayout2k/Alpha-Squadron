@@ -6,7 +6,6 @@
 #include "../Engine/Audio.h"
 #include "../Engine/Projectile.h"
 #include "../Engine/World.h"
-#include "../Engine/Utility.h"
 
 #define DAMAGE_FLASH_TIME 4.0f
 #define DAMAGE_INVINCIBILITY_TIME .3f
@@ -15,6 +14,8 @@
 	#define M_PI 3.14159265359
 #endif
 
+std::vector<AircraftData> Aircraft::m_aircraftData = LoadAircraftData("../Game/DataFiles/aircraftData.json");
+
 Aircraft::Aircraft(const bool hasCollision, const TextureId textureType, const sf::IntRect textureRect) :
 	GameSprite(hasCollision, textureType, textureRect)
 {
@@ -22,6 +23,9 @@ Aircraft::Aircraft(const bool hasCollision, const TextureId textureType, const s
 	m_isDamageAnimationActive = false;
 	m_health = 100;
 	m_fireCooldownRemaining = 0;
+	std::unique_ptr<GameText> healthDisplay(new GameText(FontId::Gamer, "", 12, sf::Color::Black, sf::Text::Style::Regular, sf::Vector2f()));
+	m_healthDisplay = healthDisplay.get();
+	attachNode(std::move(healthDisplay));
 }
 
 void Aircraft::takeDamage(int health)
@@ -82,6 +86,11 @@ void Aircraft::handleDamageAnimation(float deltaTime)
 void Aircraft::update(float deltaTime)
 {
 	Entity::update(deltaTime);
+
+	m_healthDisplay->setString(std::to_string(m_health) + " HP");
+	m_healthDisplay->setPosition(25.f, -5.f);
+	m_healthDisplay->setRotation(-getRotation());
+
 	if(m_fireCooldownRemaining > 0)
 		m_fireCooldownRemaining -= deltaTime;
 }

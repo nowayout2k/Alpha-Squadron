@@ -12,9 +12,9 @@ class MenuState : public State
 {
  public:
 	explicit MenuState(StateStack& stack, Context context);
-	virtual void render();
-	virtual bool update(float deltaTime);
-	virtual bool handleEvent(const sf::Event& event);
+	virtual void render(sf::RenderStates& states) override;
+	virtual bool update(float deltaTime) override;
+	virtual bool handleEvent(const sf::Event& event) override;
  private:
 	sf::Sprite m_backgroundSprite;
 	GUI::Container m_guiContainer;

@@ -11,9 +11,9 @@ class TitleState : public State
 {
  public:
 	TitleState(StateStack& stack, Context context);
-	virtual void render();
-	virtual bool update(float deltaTime);
-	virtual bool handleEvent(const sf::Event& event);
+	virtual void render(sf::RenderStates& states) override;
+	virtual bool update(float deltaTime) override;
+	virtual bool handleEvent(const sf::Event& event) override;
  private:
 	sf::Sprite m_backgroundSprite;
 	sf::Text m_text;

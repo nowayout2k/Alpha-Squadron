@@ -5,7 +5,7 @@
 #ifndef LAYER_H_
 #define LAYER_H_
 
-enum Layer
+enum class Layer
 {
 	Background = 0,
 	Foreground = 1,
