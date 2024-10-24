@@ -64,16 +64,12 @@ void Engine::createWindow(const sf::VideoMode& mode, const std::string& title, s
 	m_window.setVerticalSyncEnabled(false);
 	m_window.setActive(true);
 }
-double eventCount = 0;
-double frame = 0;
+
 void Engine::processEvents()
 {
 	sf::Event event;
-	Debug::log("FRAME: " + std::to_string(++frame));
-	eventCount=0;
 	while (m_window.pollEvent(event))
 	{
-		Debug::log("EVENT NUMBER" + std::to_string(eventCount++));
 		m_stateStack.handleEvent(event);
 
 		if (event.type == sf::Event::Closed || m_stateStack.isEmpty() || event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Key::Escape)

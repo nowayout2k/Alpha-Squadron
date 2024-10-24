@@ -13,10 +13,10 @@ Input::Input()
 	m_realTimeActionTypes.push_back(AccelerateNegY);
 	m_realTimeActionTypes.push_back(AcceleratePosY);
 
-	assignKey(AccelerateNegX, sf::Keyboard::A);
-	assignKey(AcceleratePosX, sf::Keyboard::D);
-	assignKey(AccelerateNegY, sf::Keyboard::W);
-	assignKey(AcceleratePosY, sf::Keyboard::S);
+	assignKey(AccelerateNegX, sf::Keyboard::Left);
+	assignKey(AcceleratePosX, sf::Keyboard::Right);
+	assignKey(AccelerateNegY, sf::Keyboard::Up);
+	assignKey(AcceleratePosY, sf::Keyboard::Down);
 
 	m_actionBinding[AccelerateNegX].action = derivedAction<Aircraft>(AircraftMover(-1,  0));
 	m_actionBinding[AcceleratePosX].action = derivedAction<Aircraft>(AircraftMover(1,  0));
