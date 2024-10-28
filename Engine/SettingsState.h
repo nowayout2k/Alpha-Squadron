@@ -6,7 +6,7 @@
 #define SETTINGSSTATE_H_
 
 #include "State.h"
-#include "Input.h"
+#include "GameplayInput.h"
 #include "Container.h"
 #include "Button.h"
 #include "Label.h"
@@ -24,11 +24,11 @@ class SettingsState : public State
 	virtual bool handleEvent(const sf::Event& event) override;
  private:
 	void updateLabels();
-	void addButtonLabel(Input::ActionType action, sf::Vector2f offset, const std::string& text, Context context);
+	void addButtonLabel(GameplayInput::ActionType action, sf::Vector2f offset, const std::string& text, Context context);
 	sf::Sprite m_backgroundSprite;
 	GUI::Container m_guiContainer;
-	std::array<GUI::Button::Ptr, Input::ActionType::ActionCount> m_bindingButtons;
-	std::array<GUI::Label::Ptr, Input::ActionType::ActionCount> m_bindingLabels;
+	std::array<GUI::Button::Ptr, GameplayInput::ActionType::ActionCount> m_bindingButtons;
+	std::array<GUI::Label::Ptr, GameplayInput::ActionType::ActionCount> m_bindingLabels;
 };
 
 #endif //SETTINGSSTATE_H_

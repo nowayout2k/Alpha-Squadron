@@ -2,11 +2,11 @@
 // Created by Johnnie Otis on 8/12/24.
 //
 
-#include "Input.h"
+#include "GameplayInput.h"
 
-std::vector<Input::ActionType> Input::m_realTimeActionTypes;
+std::vector<GameplayInput::ActionType> GameplayInput::m_realTimeActionTypes;
 
-Input::Input()
+GameplayInput::GameplayInput()
 {
 	m_realTimeActionTypes.push_back(AccelerateNegX);
 	m_realTimeActionTypes.push_back(AcceleratePosX);
@@ -27,7 +27,7 @@ Input::Input()
 		pair.second.nodeType = (unsigned int)NodeType::Player;
 }
 
-void Input::handleEvent(const sf::Event& event, CommandQueue& commands)
+void GameplayInput::handleEvent(const sf::Event& event, CommandQueue& commands)
 {
 	if (event.type == sf::Event::KeyPressed)
 	{
@@ -55,7 +55,7 @@ void Input::handleEvent(const sf::Event& event, CommandQueue& commands)
 		Debug::toggleFps();
 }
 
-void Input::handleRealtimeInput(CommandQueue& commands)
+void GameplayInput::handleRealtimeInput(CommandQueue& commands)
 {
 	for(auto pair : m_keyBinding)
 	{
@@ -66,7 +66,7 @@ void Input::handleRealtimeInput(CommandQueue& commands)
 	}
 }
 
-void Input::assignKey(ActionType actionType, sf::Keyboard::Key key)
+void GameplayInput::assignKey(ActionType actionType, sf::Keyboard::Key key)
 {
 	std::vector<sf::Keyboard::Key> keysPendingRemoval;
 	for (auto& keyBinding : m_keyBinding)
@@ -84,7 +84,7 @@ void Input::assignKey(ActionType actionType, sf::Keyboard::Key key)
 	m_keyBinding[key] = actionType;
 }
 
-sf::Keyboard::Key Input::getAssignedKey(ActionType actionType) const
+sf::Keyboard::Key GameplayInput::getAssignedKey(ActionType actionType) const
 {
 	for (auto& keyBinding : m_keyBinding)
 	{
@@ -97,7 +97,7 @@ sf::Keyboard::Key Input::getAssignedKey(ActionType actionType) const
 	return sf::Keyboard::Key::KeyCount;
 }
 
-bool Input::isRealtimeAction(ActionType actionType)
+bool GameplayInput::isRealtimeAction(ActionType actionType)
 {
 	bool isRealTime = std::any_of(m_realTimeActionTypes.begin(), m_realTimeActionTypes.end(), [actionType](ActionType at) { return actionType == at; });
 	return isRealTime;

@@ -12,10 +12,10 @@ SettingsState::SettingsState(StateStack& stack, Context context) : State(stack, 
 	sf::Vector2f center = context.window->getView().getSize() / 2.f;
 	m_backgroundSprite.setTexture(ResourceManager::loadResource(TextureId::Black));
 
-	addButtonLabel(Input::AccelerateNegX, sf::Vector2f ( center.x, 100.f), "Move Left", context);
-	addButtonLabel(Input::AcceleratePosX, sf::Vector2f ( center.x, 200.f), "Move Right", context);
-	addButtonLabel(Input::AcceleratePosY, sf::Vector2f ( center.x, 300.f), "Move Up", context);
-	addButtonLabel(Input::AccelerateNegY, sf::Vector2f ( center.x, 400.f), "Move Down", context);
+	addButtonLabel(GameplayInput::AccelerateNegX, sf::Vector2f ( center.x, 100.f), "Move Left", context);
+	addButtonLabel(GameplayInput::AcceleratePosX, sf::Vector2f ( center.x, 200.f), "Move Right", context);
+	addButtonLabel(GameplayInput::AcceleratePosY, sf::Vector2f ( center.x, 300.f), "Move Up", context);
+	addButtonLabel(GameplayInput::AccelerateNegY, sf::Vector2f ( center.x, 400.f), "Move Down", context);
 
 	updateLabels();
 
@@ -43,14 +43,14 @@ bool SettingsState::handleEvent(const sf::Event& event)
 {
 	bool isKeyBinding = false;
 
-	for (std::size_t actionType = 0; actionType < Input::ActionCount; ++actionType)
+	for (std::size_t actionType = 0; actionType < GameplayInput::ActionCount; ++actionType)
 	{
 		if (m_bindingButtons[actionType]->isActive())
 		{
 			isKeyBinding = true;
 			if (event.type == sf::Event::KeyReleased)
 			{
-				getContext().input->assignKey(static_cast<Input::ActionType>(actionType), event.key.code);
+				getContext().input->assignKey(static_cast<GameplayInput::ActionType>(actionType), event.key.code);
 				m_bindingButtons[actionType]->deactivate();
 			}
 			break;
@@ -67,16 +67,16 @@ bool SettingsState::handleEvent(const sf::Event& event)
 
 void SettingsState::updateLabels()
 {
-	Input& input = *getContext().input;
+	GameplayInput& input = *getContext().input;
 
-	for (std::size_t i = 0; i < Input::ActionCount; ++i)
+	for (std::size_t i = 0; i < GameplayInput::ActionCount; ++i)
 	{
-		sf::Keyboard::Key key = input.getAssignedKey(static_cast<Input::ActionType>(i));
+		sf::Keyboard::Key key = input.getAssignedKey(static_cast<GameplayInput::ActionType>(i));
 		m_bindingLabels[i]->setText(50, Utility::keyToString(key));
 	}
 }
 
-void SettingsState::addButtonLabel(Input::ActionType actionType, sf::Vector2f offset, const std::string& text, Context context)
+void SettingsState::addButtonLabel(GameplayInput::ActionType actionType, sf::Vector2f offset, const std::string& text, Context context)
 {
 	m_bindingButtons[actionType] = std::make_shared<GUI::Button>();
 	m_bindingButtons[actionType]->setPosition(offset.x, offset.y);

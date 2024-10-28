@@ -6,6 +6,7 @@
 #define STATESTACK_H_
 
 #include <SFML/Graphics.hpp>
+#include <unordered_set>
 #include "State.h"
 
 class StateStack
@@ -45,11 +46,14 @@ class StateStack
 	StateStack(const StateStack&);
 	StateStack& operator=(const StateStack&);
 	void applyPendingChanges();
+	bool handleRolloverKeyEvent(const sf::Event& event);
 	State::Ptr createState(StateId stateId);
 	std::vector<State::Ptr> m_stack;
 	std::vector<PendingChange> m_pendingList;
 	State::Context m_context;
 	std::map<StateId, std::function<State::Ptr()>> m_factories;
+	std::unordered_set<sf::Keyboard::Key> m_rolloverPressedKeys;
+	std::vector<sf::Keyboard::Key> m_allKeys;
 };
 
 #endif //STATESTACK_H_

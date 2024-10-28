@@ -6,7 +6,7 @@
 #define ENGINE_H_
 
 #include "World.h"
-#include "Input.h"
+#include "GameplayInput.h"
 #include "StateStack.h"
 
 class Engine
@@ -22,7 +22,7 @@ class Engine
 	void createWindow(const sf::VideoMode& mode, const std::string& title, sf::Uint32 style);
 	bool m_isPaused;
 	sf::RenderWindow m_window;
-	Input m_input;
+	GameplayInput m_input;
 	StateStack m_stateStack;
 };
 

@@ -5,7 +5,10 @@
 
 StateStack::StateStack(State::Context context) : m_context(context)
 {
-
+	for (int key = 0; key <= sf::Keyboard::KeyCount; ++key)
+	{
+		m_allKeys.push_back(static_cast<sf::Keyboard::Key>(key));
+	}
 }
 
 void StateStack::pushState(StateId stateId)
@@ -38,12 +41,33 @@ void StateStack::render(sf::RenderStates& states)
 
 void StateStack::handleEvent(const sf::Event& event)
 {
+	if(handleRolloverKeyEvent(event))
+		return;
+
 	for(auto itr = m_stack.rbegin(); itr != m_stack.rend(); ++itr)
 	{
 		if(!(*itr)->handleEvent(event))
 			return;
 	}
 	applyPendingChanges();
+}
+
+bool StateStack::handleRolloverKeyEvent(const sf::Event& event)
+{
+	if (event.type == sf::Event::KeyPressed && std::find(m_rolloverPressedKeys.begin(), m_rolloverPressedKeys.end(), event.key.code) != m_rolloverPressedKeys.end())
+	{
+		return true;
+	}
+	if (event.type == sf::Event::KeyReleased)
+	{
+		auto itr = std::find(m_rolloverPressedKeys.begin(), m_rolloverPressedKeys.end(), event.key.code);
+		if(itr != m_rolloverPressedKeys.end())
+		{
+			m_rolloverPressedKeys.erase(itr);
+			return true;
+		}
+	}
+	return false;
 }
 
 void StateStack::update(float deltaTime)
@@ -69,19 +93,29 @@ State::Ptr StateStack::createState(StateId stateId)
 
 void StateStack::applyPendingChanges()
 {
+	//capture keys pressed while transitioning
+	if(!m_pendingList.empty())
+	{
+		for (auto key : m_allKeys)
+		{
+			if(sf::Keyboard::isKeyPressed(key))
+				m_rolloverPressedKeys.insert(key);
+		}
+	}
+
 	for(auto& change : m_pendingList)
 	{
-		switch(change.stackActionType)
+		switch (change.stackActionType)
 		{
-			case Push:
-				m_stack.push_back(createState(change.stateId));
-				break;
-			case Pop:
-				m_stack.pop_back();
-				break;
-			case Clear:
-				m_stack.clear();
-				break;
+		case Push:
+			m_stack.push_back(createState(change.stateId));
+			break;
+		case Pop:
+			m_stack.pop_back();
+			break;
+		case Clear:
+			m_stack.clear();
+			break;
 		}
 	}
 	m_pendingList.clear();
