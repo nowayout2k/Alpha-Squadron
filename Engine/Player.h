@@ -21,7 +21,7 @@ struct AircraftMover
 	sf::Vector2f m_velocity;
 };
 
-class GameplayInput
+class Player
 {
  public:
 	enum ActionType
@@ -32,7 +32,7 @@ class GameplayInput
 		AcceleratePosY,
 		ActionCount
 	};
-	GameplayInput();
+	Player();
 	void assignKey(ActionType actionType, sf::Keyboard::Key key);
 
 	sf::Keyboard::Key getAssignedKey(ActionType actionType) const;

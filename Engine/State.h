@@ -6,7 +6,7 @@
 #define STATE_H_
 
 #include "StateIdentifiers.h"
-#include "GameplayInput.h"
+#include "Player.h"
 
 class StateStack;
 
@@ -16,9 +16,9 @@ class State
 	typedef std::unique_ptr<State> Ptr;
 	struct Context
 	{
-		Context(sf::RenderWindow& window, GameplayInput& input) : window(&window), input(&input){};
+		Context(sf::RenderWindow& window, Player& input) : window(&window), input(&input){};
 		sf::RenderWindow* window;
-		GameplayInput* input;
+		Player* input;
 	};
  public:
 	State(StateStack& stack, Context context) : m_stack(&stack), m_context(context) {}

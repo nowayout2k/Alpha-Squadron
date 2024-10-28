@@ -60,8 +60,8 @@ add_executable(Alpha-Squadron main.cpp
         Engine/EmptyWorldNode.h
         Engine/Command.h
         Engine/CommandQueue.h
-        Engine/GameplayInput.cpp
-        Engine/GameplayInput.h
+        Engine/Player.cpp
+        Engine/Player.h
         Engine/StateStack.cpp
         Engine/StateStack.h
         Engine/State.h

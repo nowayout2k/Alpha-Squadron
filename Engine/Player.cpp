@@ -2,11 +2,11 @@
 // Created by Johnnie Otis on 8/12/24.
 //
 
-#include "GameplayInput.h"
+#include "Player.h"
 
-std::vector<GameplayInput::ActionType> GameplayInput::m_realTimeActionTypes;
+std::vector<Player::ActionType> Player::m_realTimeActionTypes;
 
-GameplayInput::GameplayInput()
+Player::Player()
 {
 	m_realTimeActionTypes.push_back(AccelerateNegX);
 	m_realTimeActionTypes.push_back(AcceleratePosX);
@@ -27,7 +27,7 @@ GameplayInput::GameplayInput()
 		pair.second.nodeType = (unsigned int)NodeType::Player;
 }
 
-void GameplayInput::handleEvent(const sf::Event& event, CommandQueue& commands)
+void Player::handleEvent(const sf::Event& event, CommandQueue& commands)
 {
 	if (event.type == sf::Event::KeyPressed)
 	{
@@ -55,7 +55,7 @@ void GameplayInput::handleEvent(const sf::Event& event, CommandQueue& commands)
 		Debug::toggleFps();
 }
 
-void GameplayInput::handleRealtimeInput(CommandQueue& commands)
+void Player::handleRealtimeInput(CommandQueue& commands)
 {
 	for(auto pair : m_keyBinding)
 	{
@@ -66,7 +66,7 @@ void GameplayInput::handleRealtimeInput(CommandQueue& commands)
 	}
 }
 
-void GameplayInput::assignKey(ActionType actionType, sf::Keyboard::Key key)
+void Player::assignKey(ActionType actionType, sf::Keyboard::Key key)
 {
 	std::vector<sf::Keyboard::Key> keysPendingRemoval;
 	for (auto& keyBinding : m_keyBinding)
@@ -84,7 +84,7 @@ void GameplayInput::assignKey(ActionType actionType, sf::Keyboard::Key key)
 	m_keyBinding[key] = actionType;
 }
 
-sf::Keyboard::Key GameplayInput::getAssignedKey(ActionType actionType) const
+sf::Keyboard::Key Player::getAssignedKey(ActionType actionType) const
 {
 	for (auto& keyBinding : m_keyBinding)
 	{
@@ -97,7 +97,7 @@ sf::Keyboard::Key GameplayInput::getAssignedKey(ActionType actionType) const
 	return sf::Keyboard::Key::KeyCount;
 }
 
-bool GameplayInput::isRealtimeAction(ActionType actionType)
+bool Player::isRealtimeAction(ActionType actionType)
 {
 	bool isRealTime = std::any_of(m_realTimeActionTypes.begin(), m_realTimeActionTypes.end(), [actionType](ActionType at) { return actionType == at; });
 	return isRealTime;
