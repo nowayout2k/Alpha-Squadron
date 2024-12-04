@@ -9,6 +9,9 @@
 #include "../Game/AircraftType.h"
 #include "../Game/TextureId.h"
 #include "Debug.h"
+#ifndef M_PI
+#define M_PI 3.14159265359
+#endif
 
 class Utility
 {
@@ -24,10 +27,24 @@ public:
 		sf::Time elapsed = m_clock.getElapsedTime();
 	}
 
+	static float magnitude(float x, float y)
+	{
+		return std::sqrt(x * x + y * y);
+	}
+
+	static float dotProduct(const sf::Vector2f& vec1, const sf::Vector2f& vec2)
+	{
+		return vec1.x * vec2.x + vec1.y * vec2.y;
+	}
+
 	static float lerp(float a, float b, float t)
 	{
 		t = std::clamp(t, 0.0f, 1.0f);
 		return a + (b - a) * t;
+	}
+
+	static constexpr float toRadian(float degree) {
+		return degree * (M_PI / 180.f);
 	}
 
 	template <typename T>
@@ -64,6 +81,19 @@ public:
 		{
 			Debug::logError("Invalid aircraft type: " + str);
 			return TextureId::Count;
+		}
+	}
+
+	static std::string aircraftTypeToString(AircraftType aircraftType)
+	{
+		switch (aircraftType)
+		{
+		case AircraftType::Tomcat:
+			return "Tomcat";
+		case AircraftType::Chopper:
+			return "Chopper";
+		default:
+			return "Unknown";
 		}
 	}
 

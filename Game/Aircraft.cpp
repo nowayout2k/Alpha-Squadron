@@ -16,12 +16,17 @@
 
 std::vector<AircraftData> Aircraft::m_aircraftData = LoadAircraftData("../Game/DataFiles/aircraftData.json");
 
-Aircraft::Aircraft(const bool hasCollision, const TextureId textureType, const sf::IntRect textureRect) :
-	GameSprite(hasCollision, textureType, textureRect)
+Aircraft::Aircraft(const bool hasCollision, sf::Vector2f scale) : Aircraft(hasCollision)
+{
+	setScale(scale);
+}
+
+Aircraft::Aircraft(const bool hasCollision) : GameSprite(hasCollision)
 {
 	m_timeSinceDamage = 0;
+	m_travelledDistance = 0;
+	m_directionIndex = 0;
 	m_isDamageAnimationActive = false;
-	m_health = 100;
 	m_fireCooldownRemaining = 0;
 	std::unique_ptr<GameText> healthDisplay(new GameText(FontId::Gamer, "", 12, sf::Color::Black, sf::Text::Style::Regular, sf::Vector2f()));
 	m_healthDisplay = healthDisplay.get();
@@ -44,17 +49,16 @@ void Aircraft::takeDamage(int health)
 }
 
 
-WorldNode::SmartNode Aircraft::fireBullet(sf::Vector2f velocity)
+void Aircraft::fireBullet(sf::Vector2f velocity)
 {
 	if(m_fireCooldownRemaining > 0)
-		return nullptr;
+		return;
 
-	auto offset = sf::Vector2f(getGlobalBounds().width, getGlobalBounds().height/2);
-	float sign = velocity.x < 0 ? -1 : 1;
-	auto worldPos = getWorldPosition();
-	auto pro = std::make_unique<Projectile>((NodeType)getNodeType(), worldPos + offset * sign, velocity);
+	auto offset = sf::Vector2f(0, getGlobalBounds().height/2);
+	auto pro = std::make_unique<Projectile>((NodeType)getNodeType(), offset, velocity);
 	m_fireCooldownRemaining = FIRE_COOLDOWN_TIME;
-	return std::move(pro);
+	pro->loadStateResources();
+	attachNode(std::move(pro));
 }
 
 void Aircraft::handleAnimation(float deltaTime)
@@ -91,6 +95,45 @@ void Aircraft::update(float deltaTime)
 	m_healthDisplay->setPosition(25.f, -5.f);
 	m_healthDisplay->setRotation(-getRotation());
 
+
 	if(m_fireCooldownRemaining > 0)
 		m_fireCooldownRemaining -= deltaTime;
+
+	if(!(getNodeType() & static_cast<unsigned int>(NodeType::Player)) && m_directions.size() > 0)
+	{
+		float distanceToTravel = m_directions[m_directionIndex].distance;
+		if (m_travelledDistance > distanceToTravel)
+		{
+			Debug::log("Direction Index: " + std::to_string(m_directionIndex));
+			m_directionIndex = (m_directionIndex + 1) % m_directions.size();
+			m_travelledDistance = 0.f;
+		}
+		float radians = Utility::toRadian(m_directions[m_directionIndex].angle);
+		float vx = World::getScrollSpeed() + getMaxSpeed() * std::cos(radians);
+		float vy = getMaxSpeed() * std::sin(radians);
+		setVelocity(vx, vy);
+		m_travelledDistance += getMaxSpeed() * deltaTime;
+	}
+}
+
+void Aircraft::loadResources()
+{
+	Debug::log("Aircraft Type: " + Utility::aircraftTypeToString(getAircraftType()));
+	for (auto& data: m_aircraftData)
+	{
+		Debug::log("Data Aircraft Type: " + Utility::aircraftTypeToString(data.type));
+		if(data.type == getAircraftType())
+		{
+			m_health = data.health;
+			m_speed = data.speed;
+			m_directions = data.directions;
+			setTextureId(data.textureId);
+			setTextureLoadArea(data.textureLoadArea);
+			Debug::log("Found Aircraft");
+		}
+	}
+	GameSprite::loadResources();
+
+	Debug::log("scale " + std::to_string( getScale().x));
+	m_healthDisplay->setScale(getScale().x < 0 ? -1 : 1, 1);
 }

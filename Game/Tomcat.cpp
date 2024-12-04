@@ -3,17 +3,15 @@
 //
 
 #include "Tomcat.h"
-#include "../Engine/Audio.h"
 #include "../Engine/Projectile.h"
 
 #define DAMAGE_FLASH_TIME 4.0f
 #define DAMAGE_INVINCIBILITY_TIME .3f
 #define FIRE_COOLDOWN_TIME 0.2f
 
-Tomcat::Tomcat(NodeType nodeType) : Aircraft(true, TextureId::AircraftSpriteSheet, sf::IntRect(240, 298, 52, 12)),
+Tomcat::Tomcat(NodeType nodeType, sf::Vector2f scale) : Aircraft(true, scale),
 	m_nodeType(Aircraft::getNodeType() | (unsigned int)nodeType)
 {
-	setScale(1.0f, 1.0f);
 }
 
 void Tomcat::update(float deltaTime)

@@ -9,6 +9,7 @@
 #include <nlohmann/json.hpp>
 #include "../Engine/Debug.h"
 #include "../Engine/Utility.h"
+#include "Direction.h"
 
 std::vector<AircraftData> LoadAircraftData(const std::string& filename)
 {
@@ -25,25 +26,32 @@ std::vector<AircraftData> LoadAircraftData(const std::string& filename)
 	for (const auto& item : j["aircraft"])
 	{
 		AircraftData aircraft;
-		AircraftType type = Utility::stringToAircraftType(item["type"]);
-		if(type == AircraftType::Count)
+		aircraft.type = Utility::stringToAircraftType(item["type"]);
+		if(aircraft.type == AircraftType::Count)
 		{
 			Debug::logError("Index is greater than length of array! Could not parse " + filename);
 			return data;
 		}
 
 		aircraft.health = item["health"];
-		aircraft.speed = item["speed"];
-		aircraft.texture = Utility::stringToTextureID(item["textureId"]);
+		aircraft.speed = item["maxSpeed"];
+		aircraft.textureId = Utility::stringToTextureID(item["textureId"]);
+		for (auto direction : item["directions"])
+		{
+			aircraft.directions.push_back(Direction( direction["angle"], direction["distance"]));
+		}
 
-		auto left = item["textureRect"]["left"];
-		auto top = item["textureRect"]["top"];
-		auto width = item["textureRect"]["width"];
-		auto height = item["textureRect"]["height"];
+		auto left = item["textureLoadArea"]["left"];
+		auto top = item["textureLoadArea"]["top"];
+		auto width = item["textureLoadArea"]["width"];
+		auto height = item["textureLoadArea"]["height"];
 
-		aircraft.textureRect = sf::IntRect(left, top, width, height);
+		aircraft.textureLoadArea = sf::IntRect(left, top, width, height);
 
-		data[static_cast<int>(type)] = aircraft;
+		auto i = static_cast<int>(aircraft.type);
+		Debug::log("Added Data Aircraft Type: " + Utility::aircraftTypeToString(aircraft.type) + " at index: " + std::to_string(i));
+
+		data[i] = aircraft;
 	}
 
 	return data;

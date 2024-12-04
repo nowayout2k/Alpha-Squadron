@@ -5,16 +5,19 @@
 #ifndef DATATABLES_H_
 #define DATATABLES_H_
 #include <SFML/Graphics/Rect.hpp>
+#include <vector>
 #include "TextureId.h"
 #include "AircraftType.h"
+#include "Direction.h"
 
 struct AircraftData
 {
 	AircraftType type;
 	int health;
 	float speed;
-	TextureId texture;
-	sf::IntRect textureRect;
+	TextureId textureId;
+	sf::IntRect textureLoadArea;
+	std::vector<Direction> directions;
 };
 
 std::vector<AircraftData> LoadAircraftData(const std::string& filename);

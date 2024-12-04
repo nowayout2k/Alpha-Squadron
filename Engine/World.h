@@ -22,12 +22,15 @@ public:
 	void update(float deltaTime);
 	void render(sf::RenderWindow &window, sf::RenderStates states);
 	CommandQueue& getCommandQueue() { return m_commandQueue; }
+	static float getScrollSpeed() { return m_scrollSpeed; }
+
 private:
 	friend class Debug;
 
 	void setup();
 	void loadResources();
 	static void handleCollisions();
+	static float m_scrollSpeed;
 
 	sf::RenderWindow& m_window;
 	sf::View m_worldView;
@@ -35,7 +38,6 @@ private:
 	std::array<WorldNode*, static_cast<int>(Layer::LayerCount)> m_worldLayers;
 	sf::FloatRect m_worldBounds;
 	sf::Vector2f m_spawnPosition;
-	float m_scrollSpeed;
 	sf::Vector2f m_viewPositionOffset;
 	Aircraft* m_playerAircraft;
 	CommandQueue m_commandQueue;

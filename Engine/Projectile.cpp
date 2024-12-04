@@ -7,7 +7,7 @@
 #include "Engine.h"
 
 Projectile::Projectile(NodeType owner, sf::Vector2f spawnPos, sf::Vector2f velocity) : m_ownerType(owner),
-																					   GameSprite(true,
+	GameSprite(true,
 	TextureId::AircraftSpriteSheet,
 	sf::IntRect(376, 108, 10, 12))
 {
@@ -21,11 +21,12 @@ void Projectile::update(float deltaTime)
 {
 	GameSprite::update(deltaTime);
 
-	/*sf::Vector2u windowSize = World::getView();
+	sf::Vector2u windowSize = Engine::getWindow().getSize();
 	auto position = getPosition();
-	if(position.x > (float)windowSize.x || position.y > (float)windowSize.y || position.x <= 0 || position.y <= 0 || m_ownerType == nodeType::None)
-		destroy();*/
+	if(position.x > (float)windowSize.x || position.y > (float)windowSize.y || position.x <= 0 || position.y <= 0 || m_ownerType == NodeType::None)
+		destroy();
 }
+
 
 void Projectile::render(sf::RenderTarget& renderTarget, sf::RenderStates states) const
 {

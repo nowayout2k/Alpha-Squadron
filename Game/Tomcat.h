@@ -14,10 +14,11 @@
 class Tomcat : public Aircraft
 {
 public:
-    explicit Tomcat(NodeType nodeType = NodeType::None);
+    explicit Tomcat(NodeType nodeType = NodeType::None, sf::Vector2f scale = sf::Vector2f());
     void update(float deltaTime) override;
     void collision(const Entity* other) override;
 	virtual unsigned int getNodeType() const override { return m_nodeType; }
+	AircraftType getAircraftType() override { return AircraftType::Tomcat; }
  private:
     sf::Vector2f handleInput(float deltaTime);
 	unsigned int m_nodeType;

@@ -6,11 +6,14 @@
 #include "../Game/Tomcat.h"
 #include "Audio.h"
 #include "GameText.h"
+#include "../Game/Chopper.h"
+
+float World::m_scrollSpeed = 500.0f;
 
 World::World(sf::RenderWindow& window) : m_window(window), m_worldView(window.getDefaultView()),
-			m_worldBounds(0.0f,0.0f,10000.0f,m_worldView.getSize().y),
+			m_worldBounds(0.0f,0.0f,100000.0f,m_worldView.getSize().y),
 			m_spawnPosition(0, m_worldView.getSize().y/2),
-			m_playerAircraft(nullptr), m_scrollSpeed(500.0f), m_viewPositionOffset(0,0), m_commandQueue()
+			m_playerAircraft(nullptr), m_viewPositionOffset(0,0), m_commandQueue()
 {
 	setup();
 	loadResources();
@@ -55,12 +58,18 @@ void World::setup()
 	backgroundBuildingsSprite->setPosition(m_worldBounds.left,m_worldBounds.top);
 	m_worldLayers[static_cast<int>(Layer::Background)]->attachNode(std::move(backgroundBuildingsSprite));
 
-	std::unique_ptr<Aircraft> player(new Tomcat(NodeType::Player));
+	std::unique_ptr<Aircraft> player(new Tomcat(NodeType::Player, sf::Vector2f(4.0, 4.0)));
 	m_playerAircraft = player.get();
 	m_playerAircraft->setPosition(m_spawnPosition);
 	m_playerAircraft->setVelocity(m_scrollSpeed, 0);
-	m_playerAircraft->setScale(4.0, 4.0);
 	m_worldLayers[static_cast<int>(Layer::Collision)]->attachNode(std::move(player));
+
+	std::unique_ptr<Aircraft> enemy(new Chopper(true, sf::Vector2f(m_worldView.getSize().x-100, 0), NodeType::Enemy, sf::Vector2f(-4.0, 4.0)));
+	m_worldLayers[static_cast<int>(Layer::Collision)]->attachNode(std::move(enemy));
+
+	std::unique_ptr<Aircraft> enemy2(new Tomcat(NodeType::Enemy, sf::Vector2f(-4.0, 4.0)));
+	enemy2->setPosition(sf::Vector2f(m_worldView.getSize().x-200, m_worldView.getSize().y));
+	m_worldLayers[static_cast<int>(Layer::Collision)]->attachNode(std::move(enemy2));
 
 	Audio::playMusic(MusicId::UNSquadronLevel1, 10);
 }
@@ -86,20 +95,19 @@ void World::update(float deltaTime)
 	sf::Vector2f viewSize = m_worldView.getSize();
 	sf::Vector2f currentViewPosRight = sf::Vector2f(viewCenter.x + viewSize.x / 2, viewCenter.y + viewSize.y / 2);
 
-	if(currentViewPosRight.x > m_worldBounds.width * .75f)
+/*	if(currentViewPosRight.x > m_worldBounds.width * .75f)
 	{
 		float distanceToEnd = m_worldBounds.width - currentViewPosRight.x;
 		float totalSlowDownDistance = m_worldBounds.width - (m_worldBounds.width * .75f);
 		scrollSpeedFactor = distanceToEnd / totalSlowDownDistance;
 		if(scrollSpeedFactor < .2f)
 			scrollSpeedFactor = .2f;
-		Debug::log(std::to_string(scrollSpeedFactor));
-	}
+	}*/
 
 	if(currentViewPosRight.x < m_worldBounds.width)
 	{
 		m_worldView.move(m_scrollSpeed * scrollSpeedFactor * deltaTime, 0.f);
-		m_playerAircraft->accelerate(m_scrollSpeed*scrollSpeedFactor, 0.f);
+		m_playerAircraft->accelerate(m_scrollSpeed * scrollSpeedFactor, 0.f);
 	}
 
 	m_worldGraph.updateState(deltaTime);

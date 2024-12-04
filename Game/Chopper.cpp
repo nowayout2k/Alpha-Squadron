@@ -6,16 +6,12 @@
 #include "../Engine/Projectile.h"
 #include "../Engine/World.h"
 
-Chopper::Chopper(bool hasCollision, sf::Vector2f position, NodeType nodeType) : Aircraft(hasCollision, TextureId::EnemiesSpriteSheet,
-                                               sf::IntRect(70, 200, 25, 12)),
-											   m_nodeType(Aircraft::getNodeType() | (unsigned int)nodeType)
+Chopper::Chopper(bool hasCollision, sf::Vector2f position, NodeType nodeType, sf::Vector2f scale) :
+	Aircraft(hasCollision, scale),
+	m_nodeType(Aircraft::getNodeType() | (unsigned int)nodeType)
 {
-    setScale(sf::Vector2f(-1,1));
 	setPosition(position);
-	setHealth(100);
 }
-
-bool goUp = true;
 
 void Chopper::update(float deltaTime)
 {
@@ -26,22 +22,7 @@ void Chopper::update(float deltaTime)
 		destroy();
 		return;
 	}
-
-	auto pos = getPosition();
-	if(goUp)
-	{
-		if(pos.y > 1000)
-			goUp = false;
-		setVelocity(0, 500);
-	}
-	else
-	{
-		if(pos.y < 0)
-			goUp = true;
-		setVelocity(0, -500);
-	}
-
-	fireBullet(sf::Vector2f(-1000, 0));
+	fireBullet(sf::Vector2f(1000, 0));
 }
 
 void Chopper::collision(const Entity* other)

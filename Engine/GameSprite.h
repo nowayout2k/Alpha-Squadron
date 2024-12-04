@@ -11,10 +11,18 @@
 class GameSprite : public Entity
 {
 public:
-	explicit GameSprite(const bool hasCollision, const TextureId textureType,
-		const sf::IntRect textureArea = sf::IntRect(), const sf::IntRect textureRect = sf::IntRect(), bool repeatTexture = false)
-		: m_textureId(textureType), m_textureArea(textureArea), m_repeatTexture(repeatTexture), m_textureRect(textureRect),
-		Entity(hasCollision){}
+	explicit GameSprite(const bool hasCollision, const TextureId textureId,
+		const sf::IntRect textureLoadArea = sf::IntRect(), const sf::IntRect spriteTextureRegion = sf::IntRect(), bool repeatTexture = false)
+		: m_textureId(textureId), m_textureLoadArea(textureLoadArea), m_repeatTexture(repeatTexture), m_spriteTextureRegion(spriteTextureRegion),
+		  Entity(hasCollision)
+		{}
+
+	explicit GameSprite(const bool hasCollision,
+		const sf::IntRect textureLoadArea = sf::IntRect(), const sf::IntRect spriteTextureRegion = sf::IntRect(), bool repeatTexture = false)
+		: m_textureLoadArea(textureLoadArea), m_repeatTexture(repeatTexture), m_spriteTextureRegion(spriteTextureRegion),
+		  Entity(hasCollision)
+	{}
+
 	virtual ~GameSprite() override = default;
 
 	virtual unsigned int getNodeType() const override { return Entity::getNodeType() | (unsigned int)NodeType::Sprite; }
@@ -44,13 +52,13 @@ public:
 		return getTransform().transformRect(bounds);
 	}
 
-	void loadResources() override
+	virtual void loadResources() override
 	{
-		auto& tex = ResourceManager::loadResource(m_textureId, m_textureArea);
+		auto& tex = ResourceManager::loadResource(m_textureId, m_textureLoadArea);
 		tex.setRepeated(m_repeatTexture);
 		m_sprite.setTexture(tex);
-		if(m_textureRect != sf::IntRect())
-			m_sprite.setTextureRect(m_textureRect);
+		if(m_spriteTextureRegion != sf::IntRect())
+			m_sprite.setTextureRect(m_spriteTextureRegion);
 	}
 
 	void setColor(sf::Color color)
@@ -58,11 +66,15 @@ public:
 		m_sprite.setColor(color);
 	}
 
+ protected:
+	void setTextureId(TextureId textureId) { m_textureId = textureId; }
+	void setTextureLoadArea(sf::IntRect rect) { m_textureLoadArea = rect; }
+	void setSpriteTextureRegion(sf::IntRect rect) { m_spriteTextureRegion = rect; }
  private:
 	sf::Sprite m_sprite;
 	TextureId m_textureId;
-	sf::IntRect m_textureArea;
-	sf::IntRect m_textureRect;
+	sf::IntRect m_textureLoadArea;
+	sf::IntRect m_spriteTextureRegion;
 	bool m_repeatTexture;
  };
 

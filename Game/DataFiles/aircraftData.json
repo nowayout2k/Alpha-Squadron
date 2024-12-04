@@ -3,26 +3,72 @@
     {
       "type": "Tomcat",
       "health": 100,
-      "speed": 200.0,
+      "maxSpeed": 800.0,
       "textureId": "AircraftSpriteSheet",
-      "textureRect": {
+      "textureLoadArea": {
         "left": 240,
         "top": 298,
         "width": 52,
         "height": 12
-      }
+      },
+      "directions":
+      [
+        {
+          "angle": -90,
+          "distance": 512
+        },
+        {
+          "angle": 180,
+          "distance": 200
+        },
+        {
+          "angle": 0,
+          "distance": 200
+        },
+        {
+          "angle": -90,
+          "distance": 512
+        },
+        {
+          "angle": 90,
+          "distance": 512
+        },
+        {
+          "angle": 180,
+          "distance": 200
+        },
+        {
+          "angle": 0,
+          "distance": 200
+        },
+        {
+          "angle": 90,
+          "distance": 512
+        }
+      ]
     },
     {
       "type": "Chopper",
       "health": 20,
-      "speed": 80.0,
+      "maxSpeed": 400.0,
       "textureId": "EnemiesSpriteSheet",
-      "textureRect": {
+      "textureLoadArea": {
         "left": 70,
         "top": 200,
         "width": 25,
         "height": 12
-      }
+      },
+      "directions":
+      [
+        {
+          "angle": 90,
+          "distance": 1024
+        },
+        {
+          "angle": -90,
+          "distance": 1024
+        }
+      ]
     }
   ]
 }
