@@ -8,6 +8,8 @@
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Text.hpp>
 #include "Component.h"
+#include <functional>
+
 
 namespace GUI
 {

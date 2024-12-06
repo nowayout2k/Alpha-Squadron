@@ -25,10 +25,19 @@ public:
 	static float getScrollSpeed() { return m_scrollSpeed; }
 
 private:
+	struct SpawnPoint
+	{
+		SpawnPoint(AircraftType type, float x, float y) : type(type), x(x), y(y){}
+		AircraftType type;
+		float x;
+		float y;
+	};
+
 	friend class Debug;
 
 	void setup();
 	void loadResources();
+	sf::FloatRect getBattlefieldBounds() { return ; }
 	static void handleCollisions();
 	static float m_scrollSpeed;
 
@@ -37,6 +46,7 @@ private:
 	EmptyWorldNode m_worldGraph;
 	std::array<WorldNode*, static_cast<int>(Layer::LayerCount)> m_worldLayers;
 	sf::FloatRect m_worldBounds;
+	std::vector<SpawnPoint> m_enemySpawnPoints;
 	sf::Vector2f m_spawnPosition;
 	sf::Vector2f m_viewPositionOffset;
 	Aircraft* m_playerAircraft;

@@ -9,6 +9,7 @@
 #include "TextureId.h"
 #include "AircraftType.h"
 #include "Direction.h"
+#include <string>
 
 struct AircraftData
 {

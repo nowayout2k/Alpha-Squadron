@@ -58,17 +58,15 @@ void World::setup()
 	backgroundBuildingsSprite->setPosition(m_worldBounds.left,m_worldBounds.top);
 	m_worldLayers[static_cast<int>(Layer::Background)]->attachNode(std::move(backgroundBuildingsSprite));
 
-	std::unique_ptr<Aircraft> player(new Tomcat(NodeType::Player, sf::Vector2f(4.0, 4.0)));
+	std::unique_ptr<Aircraft> player(new Tomcat(true, m_spawnPosition, NodeType::Player, sf::Vector2f(4.0, 4.0)));
 	m_playerAircraft = player.get();
-	m_playerAircraft->setPosition(m_spawnPosition);
 	m_playerAircraft->setVelocity(m_scrollSpeed, 0);
 	m_worldLayers[static_cast<int>(Layer::Collision)]->attachNode(std::move(player));
 
 	std::unique_ptr<Aircraft> enemy(new Chopper(true, sf::Vector2f(m_worldView.getSize().x-100, 0), NodeType::Enemy, sf::Vector2f(-4.0, 4.0)));
 	m_worldLayers[static_cast<int>(Layer::Collision)]->attachNode(std::move(enemy));
 
-	std::unique_ptr<Aircraft> enemy2(new Tomcat(NodeType::Enemy, sf::Vector2f(-4.0, 4.0)));
-	enemy2->setPosition(sf::Vector2f(m_worldView.getSize().x-200, m_worldView.getSize().y));
+	std::unique_ptr<Aircraft> enemy2(new Tomcat(true, sf::Vector2f(m_worldView.getSize().x-200, m_worldView.getSize().y), NodeType::Enemy, sf::Vector2f(-4.0, 4.0)));
 	m_worldLayers[static_cast<int>(Layer::Collision)]->attachNode(std::move(enemy2));
 
 	Audio::playMusic(MusicId::UNSquadronLevel1, 10);

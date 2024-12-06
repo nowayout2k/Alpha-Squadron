@@ -52,6 +52,11 @@ public:
 		return getTransform().transformRect(bounds);
 	}
 
+	sf::Rect<float> getLocalBounds() const
+	{
+		return m_sprite.getLocalBounds();
+	}
+
 	virtual void loadResources() override
 	{
 		auto& tex = ResourceManager::loadResource(m_textureId, m_textureLoadArea);

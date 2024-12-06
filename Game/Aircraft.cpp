@@ -11,7 +11,7 @@
 #define DAMAGE_INVINCIBILITY_TIME .3f
 #define FIRE_COOLDOWN_TIME 0.2f
 #ifndef M_PI
-	#define M_PI 3.14159265359
+#define M_PI 3.14159265359
 #endif
 
 std::vector<AircraftData> Aircraft::m_aircraftData = LoadAircraftData("../Game/DataFiles/aircraftData.json");
@@ -49,6 +49,11 @@ void Aircraft::takeDamage(int health)
 }
 
 
+void Aircraft::handleAnimation(float deltaTime)
+{
+	handleDamageAnimation(deltaTime);
+}
+
 void Aircraft::fireBullet(sf::Vector2f velocity)
 {
 	if(m_fireCooldownRemaining > 0)
@@ -59,11 +64,6 @@ void Aircraft::fireBullet(sf::Vector2f velocity)
 	m_fireCooldownRemaining = FIRE_COOLDOWN_TIME;
 	pro->loadStateResources();
 	attachNode(std::move(pro));
-}
-
-void Aircraft::handleAnimation(float deltaTime)
-{
-	handleDamageAnimation(deltaTime);
 }
 
 void Aircraft::handleDamageAnimation(float deltaTime)
@@ -92,7 +92,8 @@ void Aircraft::update(float deltaTime)
 	Entity::update(deltaTime);
 
 	m_healthDisplay->setString(std::to_string(m_health) + " HP");
-	m_healthDisplay->setPosition(25.f, -5.f);
+	auto bounds = GameSprite::getLocalBounds();
+	m_healthDisplay->setPosition(bounds.width/2, -bounds.height/2);
 	m_healthDisplay->setRotation(-getRotation());
 
 
