@@ -9,7 +9,7 @@
 #include <nlohmann/json.hpp>
 #include "../Engine/Debug.h"
 #include "../Engine/Utility.h"
-#include "Direction.h"
+#include "AiRoutine.h"
 
 std::vector<AircraftData> LoadAircraftData(const std::string& filename)
 {
@@ -36,9 +36,12 @@ std::vector<AircraftData> LoadAircraftData(const std::string& filename)
 		aircraft.health = item["health"];
 		aircraft.speed = item["maxSpeed"];
 		aircraft.textureId = Utility::stringToTextureID(item["textureId"]);
-		for (auto direction : item["directions"])
+		aircraft.despawnDistance = item["aiDespawnDistance"];
+		aircraft.enterDirection = Utility::stringToDirection(item["aiEnterDirection"]);
+		aircraft.exitDirection = Utility::stringToDirection(item["aiExitDirection"]);
+		for (auto aiRoutine : item["aiRoutine"])
 		{
-			aircraft.directions.push_back(Direction( direction["angle"], direction["distance"]));
+			aircraft.aiRoutines.push_back(AiRoutine( aiRoutine["angle"], aiRoutine["distance"]));
 		}
 
 		auto left = item["textureLoadArea"]["left"];

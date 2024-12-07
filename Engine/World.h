@@ -23,22 +23,25 @@ public:
 	void render(sf::RenderWindow &window, sf::RenderStates states);
 	CommandQueue& getCommandQueue() { return m_commandQueue; }
 	static float getScrollSpeed() { return m_scrollSpeed; }
-
+	sf::FloatRect getViewBounds() const;
+	sf::FloatRect getBattlefieldBounds() const;
 private:
 	struct SpawnPoint
 	{
-		SpawnPoint(AircraftType type, float x, float y) : type(type), x(x), y(y){}
+		SpawnPoint(AircraftType type, float spawnDistance) : type(type), spawnDistance(spawnDistance){}
 		AircraftType type;
-		float x;
-		float y;
+		float spawnDistance;
 	};
 
 	friend class Debug;
 
 	void setup();
 	void loadResources();
-	sf::FloatRect getBattlefieldBounds() { return ; }
 	static void handleCollisions();
+	std::unique_ptr<Aircraft> createAircraft(AircraftType type, sf::Vector2f position, NodeType nodeType, sf::Vector2f scale);
+	void spawnEnemies();
+	sf::Vector2f getSpawnLocationOffset(int spawnLocation);
+	void addEnemies();
 	static float m_scrollSpeed;
 
 	sf::RenderWindow& m_window;

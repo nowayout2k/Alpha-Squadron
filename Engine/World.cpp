@@ -58,18 +58,65 @@ void World::setup()
 	backgroundBuildingsSprite->setPosition(m_worldBounds.left,m_worldBounds.top);
 	m_worldLayers[static_cast<int>(Layer::Background)]->attachNode(std::move(backgroundBuildingsSprite));
 
-	std::unique_ptr<Aircraft> player(new Tomcat(true, m_spawnPosition, NodeType::Player, sf::Vector2f(4.0, 4.0)));
+	std::unique_ptr<Aircraft> player = createAircraft(AircraftType::Tomcat, m_spawnPosition, NodeType::Player, sf::Vector2f(4.0, 4.0));
 	m_playerAircraft = player.get();
 	m_playerAircraft->setVelocity(m_scrollSpeed, 0);
 	m_worldLayers[static_cast<int>(Layer::Collision)]->attachNode(std::move(player));
 
-	std::unique_ptr<Aircraft> enemy(new Chopper(true, sf::Vector2f(m_worldView.getSize().x-100, 0), NodeType::Enemy, sf::Vector2f(-4.0, 4.0)));
-	m_worldLayers[static_cast<int>(Layer::Collision)]->attachNode(std::move(enemy));
-
-	std::unique_ptr<Aircraft> enemy2(new Tomcat(true, sf::Vector2f(m_worldView.getSize().x-200, m_worldView.getSize().y), NodeType::Enemy, sf::Vector2f(-4.0, 4.0)));
-	m_worldLayers[static_cast<int>(Layer::Collision)]->attachNode(std::move(enemy2));
+	addEnemies();
 
 	Audio::playMusic(MusicId::UNSquadronLevel1, 10);
+}
+
+void World::addEnemies()
+{
+	m_enemySpawnPoints.push_back(SpawnPoint(AircraftType::Tomcat, 2500.f));
+	m_enemySpawnPoints.push_back(SpawnPoint(AircraftType::Chopper, 2000.f));
+
+	std::sort(m_enemySpawnPoints.begin(), m_enemySpawnPoints.end(),
+		[] (SpawnPoint lhs, SpawnPoint rhs)
+		{
+		  return lhs.spawnDistance > rhs.spawnDistance;
+		});
+}
+
+void World::spawnEnemies()
+{
+	auto bounds = getBattlefieldBounds();
+
+	while (!m_enemySpawnPoints.empty() && m_enemySpawnPoints.back().spawnDistance < bounds.left + bounds.width)
+	{
+		SpawnPoint spawn = m_enemySpawnPoints.back();
+		auto enemy = createAircraft(spawn.type, sf::Vector2f(spawn.spawnDistance,0), NodeType::Enemy, sf::Vector2f(-4.0, 4.0));
+		enemy->loadStateResources();
+		m_worldLayers[static_cast<int>(Layer::Collision)]->attachNode(std::move(enemy));
+		m_enemySpawnPoints.pop_back();
+	}
+}
+
+std::unique_ptr<Aircraft> World::createAircraft(AircraftType type, sf::Vector2f position, NodeType nodeType, sf::Vector2f scale)
+{
+	switch(type)
+	{
+	case AircraftType::Chopper:
+		return std::make_unique<Chopper>(true, position, nodeType, scale);
+	case AircraftType::Tomcat:
+		return std::make_unique<Tomcat>(true, position, nodeType, scale);
+	default:
+		return nullptr;
+	}
+}
+
+sf::FloatRect World::getViewBounds() const
+{
+	return sf::FloatRect(m_worldView.getCenter() - m_worldView.getSize() / 2.f, m_worldView.getSize());
+}
+
+sf::FloatRect World::getBattlefieldBounds() const
+{
+	sf::FloatRect bounds = getViewBounds();
+	bounds.width += 100.f;
+	return bounds;
 }
 
 void World::loadResources()
@@ -106,6 +153,7 @@ void World::update(float deltaTime)
 	{
 		m_worldView.move(m_scrollSpeed * scrollSpeedFactor * deltaTime, 0.f);
 		m_playerAircraft->accelerate(m_scrollSpeed * scrollSpeedFactor, 0.f);
+		spawnEnemies();
 	}
 
 	m_worldGraph.updateState(deltaTime);

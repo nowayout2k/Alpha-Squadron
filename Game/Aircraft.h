@@ -12,8 +12,7 @@
 class Aircraft : public GameSprite
 {
  public:
-	explicit Aircraft(const bool hasCollision);
-	explicit Aircraft(const bool hasCollision, sf::Vector2f scale);
+	explicit Aircraft(const bool hasCollision, sf::Vector2f scale, sf::Vector2f position);
 	virtual ~Aircraft() override = default;
 	int getHealth() { return m_health; }
 	virtual void fireBullet(sf::Vector2f velocity);
@@ -33,13 +32,20 @@ class Aircraft : public GameSprite
  private:
 	float m_timeSinceDamage;
 	bool m_isDamageAnimationActive;
+	bool m_isMovingToStartPos;
+	bool m_isExiting;
 	int m_health;
 	int m_speed;
-	float m_travelledDistance;
-	int m_directionIndex;
+	float m_routineDistanceTravelled;
+	float m_spawnDistanceTravelled;
+	int m_routineIndex;
 	float m_fireCooldownRemaining;
 	GameText* m_healthDisplay;
-	std::vector<Direction> m_directions;
+	std::vector<AiRoutine> m_aiRoutines;
+	sf::Vector2f m_spawnPos;
+	float m_despawnDistance;
+	Direction m_enterDirection;
+	Direction m_exitDirection;
 };
 
 #endif //AIRCRAFT_H_

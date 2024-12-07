@@ -92,7 +92,8 @@ add_executable(Alpha-Squadron main.cpp
         Game/DataTables.h
         Game/DataTables.cpp
         Game/AircraftType.h
-        Game/Direction.h
+        Game/AiRoutine.h
+        Engine/Direction.h
 )
 
 # Link the SFML libraries and nlohmann_json

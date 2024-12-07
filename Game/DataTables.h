@@ -8,7 +8,8 @@
 #include <vector>
 #include "TextureId.h"
 #include "AircraftType.h"
-#include "Direction.h"
+#include "AiRoutine.h"
+#include "../Engine/Direction.h"
 #include <string>
 
 struct AircraftData
@@ -16,9 +17,12 @@ struct AircraftData
 	AircraftType type;
 	int health;
 	float speed;
+	float despawnDistance;
+	Direction enterDirection;
+	Direction exitDirection;
 	TextureId textureId;
 	sf::IntRect textureLoadArea;
-	std::vector<Direction> directions;
+	std::vector<AiRoutine> aiRoutines;
 };
 
 std::vector<AircraftData> LoadAircraftData(const std::string& filename);

@@ -11,35 +11,30 @@
         "width": 52,
         "height": 12
       },
-      "directions":
+      "aiDespawnDistance": 5400.0,
+      "aiEnterDirection": "west",
+      "aiExitDirection": "west",
+      "aiRoutine":
       [
-        {
-          "angle": -90,
-          "distance": 512
-        },
-        {
-          "angle": 180,
-          "distance": 200
-        },
-        {
-          "angle": 0,
-          "distance": 200
-        },
-        {
-          "angle": -90,
-          "distance": 512
-        },
         {
           "angle": 90,
           "distance": 512
         },
         {
+          "angle": -90,
+          "distance": 512
+        },
+        {
           "angle": 180,
-          "distance": 200
+          "distance": 100
         },
         {
           "angle": 0,
-          "distance": 200
+          "distance": 100
+        },
+        {
+          "angle": -90,
+          "distance": 512
         },
         {
           "angle": 90,
@@ -58,15 +53,26 @@
         "width": 25,
         "height": 12
       },
-      "directions":
+      "aiDespawnDistance": 5400.0,
+      "aiEnterDirection": "west",
+      "aiExitDirection": "west",
+      "aiRoutine":
       [
         {
           "angle": 90,
-          "distance": 1024
+          "distance": 512
         },
         {
           "angle": -90,
-          "distance": 1024
+          "distance": 512
+        },
+        {
+          "angle": -90,
+          "distance": 512
+        },
+        {
+          "angle": 90,
+          "distance": 512
         }
       ]
     }

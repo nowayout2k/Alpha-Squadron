@@ -9,6 +9,8 @@
 #include "../Game/AircraftType.h"
 #include "../Game/TextureId.h"
 #include "Debug.h"
+#include "Direction.h"
+
 #ifndef M_PI
 #define M_PI 3.14159265359
 #endif
@@ -30,6 +32,44 @@ public:
 	static float magnitude(float x, float y)
 	{
 		return std::sqrt(x * x + y * y);
+	}
+
+	static float getDistance(const sf::Vector2f& a, const sf::Vector2f& b)
+	{
+		return std::sqrt(std::pow(b.x - a.x, 2) + std::pow(b.y - a.y, 2));
+	}
+
+	static Direction stringToDirection(std::string s)
+	{
+		auto lowerStr = Utility::toLower(s);
+		if(lowerStr == "north")
+		{
+			return Direction::North;
+		}
+		else if(lowerStr == "south")
+		{
+			return Direction::South;
+		}
+		else if(lowerStr == "east")
+		{
+			return Direction::East;
+		}
+		else if(lowerStr == "west")
+		{
+			return Direction::West;
+		}
+		else
+		{
+			Debug::logWarning("Could not convert string " + s + " to a direction.");
+			return Direction::Count;
+		}
+	}
+
+	static std::string toLower(const std::string& str) {
+		std::string result = str;
+		std::transform(result.begin(), result.end(), result.begin(),
+			[](unsigned char c) { return std::tolower(c); });
+		return result;
 	}
 
 	static float dotProduct(const sf::Vector2f& vec1, const sf::Vector2f& vec2)

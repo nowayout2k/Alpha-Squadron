@@ -18,7 +18,7 @@ sf::RenderWindow Engine::m_window = {};
 
 Engine::Engine() : m_isPaused(false), m_stateStack(State::Context(m_window, m_input))
 {
-	createWindow(sf::VideoMode(1740,1000), "Alpha Squadron", sf::Style::Resize);
+	createWindow(sf::VideoMode(2000,1000), "Alpha Squadron", sf::Style::Resize);
 	registerStates();
 	m_stateStack.pushState(StateId::Title);
 }

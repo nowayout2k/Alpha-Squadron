@@ -9,10 +9,9 @@
 #define DAMAGE_INVINCIBILITY_TIME .3f
 #define FIRE_COOLDOWN_TIME 0.2f
 
-Tomcat::Tomcat(bool hasCollision, sf::Vector2f position, NodeType nodeType, sf::Vector2f scale) : Aircraft(hasCollision, scale),
+Tomcat::Tomcat(bool hasCollision, sf::Vector2f position, NodeType nodeType, sf::Vector2f scale) : Aircraft(hasCollision, scale, position),
 	m_nodeType(Aircraft::getNodeType() | (unsigned int)nodeType)
 {
-	setPosition(position);
 }
 
 void Tomcat::update(float deltaTime)

@@ -7,10 +7,9 @@
 #include "../Engine/World.h"
 
 Chopper::Chopper(bool hasCollision, sf::Vector2f position, NodeType nodeType, sf::Vector2f scale) :
-	Aircraft(hasCollision, scale),
+	Aircraft(hasCollision, scale, position),
 	m_nodeType(Aircraft::getNodeType() | (unsigned int)nodeType)
 {
-	setPosition(position);
 }
 
 void Chopper::update(float deltaTime)

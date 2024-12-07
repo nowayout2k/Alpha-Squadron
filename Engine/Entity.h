@@ -13,6 +13,7 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include "NodeType.h"
 #include "WorldNode.h"
+#include "Debug.h"
 
 //TODO: Explore using a component based system
 class Entity : public WorldNode
@@ -28,7 +29,7 @@ class Entity : public WorldNode
 	void setVelocity(sf::Vector2f velocity) { m_velocity = velocity; }
 	void setVelocity(float x, float y) { m_velocity.x = x; m_velocity.y = y; }
 	sf::Vector2f getVelocity() const { return m_velocity; }
-	void update(float deltaTime) override { if(isActive()) move(m_velocity * deltaTime); }
+	void update(float deltaTime) override { if(isActive()) {move(m_velocity * deltaTime);} }
 	virtual unsigned int getNodeType() const override { return WorldNode::getNodeType() | (unsigned int)NodeType::Entity; }
 protected:
 	Entity(bool hasCollision) : m_velocity(sf::Vector2f(0,0)), m_isDestroyPending(false), m_hasCollision(hasCollision) {}

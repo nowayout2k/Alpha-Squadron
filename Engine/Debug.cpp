@@ -4,6 +4,7 @@
 
 #include "Debug.h"
 #include "GameText.h"
+#include "Engine.h"
 #include <iostream>
 #include <string>
 
@@ -38,7 +39,10 @@ void Debug::update(float deltaTime)
 	if(m_timeSinceLastFpsUpdate > 1)
 	{
 		auto value = std::to_string((int)(m_framesSinceLastFpsUpdate/m_timeSinceLastFpsUpdate));
-		m_fpsText.setString(value);
+		auto& view = Engine::getWindow().getView();
+		sf::Vector2f center = view.getCenter();
+		sf::Vector2f size = view.getSize();
+		m_fpsText.setString("FPS: " + value + " POS: (x= " + std::to_string(center.x + size.x / 2.f) +  + " y= " + std::to_string(center.y) + ")");
 		m_timeSinceLastFpsUpdate = 0;
 		m_framesSinceLastFpsUpdate = 0;
 	}

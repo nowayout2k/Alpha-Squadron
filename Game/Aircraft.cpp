@@ -6,6 +6,7 @@
 #include "../Engine/Audio.h"
 #include "../Engine/Projectile.h"
 #include "../Engine/World.h"
+#include "../Engine/Engine.h"
 
 #define DAMAGE_FLASH_TIME 4.0f
 #define DAMAGE_INVINCIBILITY_TIME .3f
@@ -16,18 +17,18 @@
 
 std::vector<AircraftData> Aircraft::m_aircraftData = LoadAircraftData("../Game/DataFiles/aircraftData.json");
 
-Aircraft::Aircraft(const bool hasCollision, sf::Vector2f scale) : Aircraft(hasCollision)
+Aircraft::Aircraft(const bool hasCollision, sf::Vector2f scale, sf::Vector2f position) : GameSprite(hasCollision)
 {
-	setScale(scale);
-}
-
-Aircraft::Aircraft(const bool hasCollision) : GameSprite(hasCollision)
-{
+	m_isMovingToStartPos = true;
 	m_timeSinceDamage = 0;
-	m_travelledDistance = 0;
-	m_directionIndex = 0;
+	m_routineDistanceTravelled = 0;
+	m_spawnDistanceTravelled = 0;
+	m_routineIndex = 0;
 	m_isDamageAnimationActive = false;
 	m_fireCooldownRemaining = 0;
+	m_spawnPos = position;
+	setScale(scale);
+	setPosition(m_spawnPos);
 	std::unique_ptr<GameText> healthDisplay(new GameText(FontId::Gamer, "", 12, sf::Color::Black, sf::Text::Style::Regular, sf::Vector2f()));
 	m_healthDisplay = healthDisplay.get();
 	attachNode(std::move(healthDisplay));
@@ -96,24 +97,94 @@ void Aircraft::update(float deltaTime)
 	m_healthDisplay->setPosition(bounds.width/2, -bounds.height/2);
 	m_healthDisplay->setRotation(-getRotation());
 
-
 	if(m_fireCooldownRemaining > 0)
 		m_fireCooldownRemaining -= deltaTime;
 
-	if(!(getNodeType() & static_cast<unsigned int>(NodeType::Player)) && m_directions.size() > 0)
+	if(!(getNodeType() & static_cast<unsigned int>(NodeType::Player)))
 	{
-		float distanceToTravel = m_directions[m_directionIndex].distance;
-		if (m_travelledDistance > distanceToTravel)
+		auto pos = getPosition();
+		Debug::log("CURRENT pos x:" + std::to_string(pos.x) + " y:" + std::to_string(pos.y));
+
+		auto& view = Engine::getWindow().getView();
+		sf::Vector2f center = view.getCenter();
+		sf::Vector2f size = view.getSize();
+
+		auto viewRect = sf::FloatRect(center - size / 2.f, size);
+
+		if(viewRect.left + viewRect.width > m_spawnPos.x + m_despawnDistance)
+			m_isExiting = true;
+
+		if(m_spawnDistanceTravelled > 500)
+			m_isMovingToStartPos = false;
+
+		if(m_isMovingToStartPos)
 		{
-			Debug::log("Direction Index: " + std::to_string(m_directionIndex));
-			m_directionIndex = (m_directionIndex + 1) % m_directions.size();
-			m_travelledDistance = 0.f;
+			Debug::log("ai Enter called");
+			float vx = 0;
+			float vy = 0;
+			switch (m_enterDirection)
+			{
+			case Direction::North:
+				vx = 0;
+				vy = -getMaxSpeed();
+				break;
+			case Direction::South:
+				vx = 0;
+				vy = getMaxSpeed();
+				break;
+			case Direction::East:
+				vx = World::getScrollSpeed() + getMaxSpeed();
+				vy = 0;
+				break;
+			case Direction::West:
+				vx = World::getScrollSpeed() - getMaxSpeed();
+				vy = 0;
+				break;
+			}
+			setVelocity(sf::Vector2f(vx, vy));
+			m_spawnDistanceTravelled += getMaxSpeed() * deltaTime;
 		}
-		float radians = Utility::toRadian(m_directions[m_directionIndex].angle);
-		float vx = World::getScrollSpeed() + getMaxSpeed() * std::cos(radians);
-		float vy = getMaxSpeed() * std::sin(radians);
-		setVelocity(vx, vy);
-		m_travelledDistance += getMaxSpeed() * deltaTime;
+		else if(m_isExiting)
+		{
+			Debug::log("ai Exit called");
+			float vx = 0;
+			float vy = 0;
+			switch (m_exitDirection)
+			{
+			case Direction::North:
+				vx = 0;
+				vy = -getMaxSpeed();
+				break;
+			case Direction::South:
+				vx = 0;
+				vy = getMaxSpeed();
+				break;
+			case Direction::East:
+				vx = World::getScrollSpeed() + getMaxSpeed();
+				vy = 0;
+				break;
+			case Direction::West:
+				vx = World::getScrollSpeed() - getMaxSpeed();
+				vy = 0;
+				break;
+			}
+			setVelocity(sf::Vector2f(vx, vy));
+		}
+		else if(m_aiRoutines.size() > 0)
+		{
+			float distanceToTravel = m_aiRoutines[m_routineIndex].distance;
+			if (m_routineDistanceTravelled > distanceToTravel)
+			{
+				m_routineIndex = (m_routineIndex + 1) % m_aiRoutines.size();
+				m_routineDistanceTravelled = 0.f;
+			}
+			float radians = Utility::toRadian(m_aiRoutines[m_routineIndex].angle);
+			float vx = World::getScrollSpeed() + getMaxSpeed() * std::cos(radians);
+			float vy = getMaxSpeed() * std::sin(radians);
+			Debug::log("Set Ai Velocity to x: " + std::to_string(vx) + " Y:" +std::to_string(vy) + " sin:" +  std::to_string(std::sin(radians)) + " cos:" + std::to_string(std::cos(radians)));
+			setVelocity(sf::Vector2f(vx, vy));
+			m_routineDistanceTravelled += getMaxSpeed() * deltaTime;
+		}
 	}
 }
 
@@ -127,14 +198,42 @@ void Aircraft::loadResources()
 		{
 			m_health = data.health;
 			m_speed = data.speed;
-			m_directions = data.directions;
+			m_aiRoutines = data.aiRoutines;
+			m_despawnDistance = data.despawnDistance;
+			m_enterDirection = data.enterDirection;
+			m_exitDirection = data.exitDirection;
 			setTextureId(data.textureId);
 			setTextureLoadArea(data.textureLoadArea);
-			Debug::log("Found Aircraft");
 		}
 	}
 	GameSprite::loadResources();
 
-	Debug::log("scale " + std::to_string( getScale().x));
+	if(!(getNodeType() & static_cast<unsigned int>(NodeType::Player)))
+	{
+		float vx = 0;
+		float vy = 0;
+		switch (m_enterDirection)
+		{
+		case Direction::North:
+			vx = -100;
+			vy = 1000;
+			break;
+		case Direction::South:
+			vx = -1000;
+			vy = 500;
+			break;
+		case Direction::East:
+			vx = -1500;
+			vy = 500;
+			break;
+		case Direction::West:
+			vx = 0;
+			vy = 500;
+			break;
+		}
+		m_spawnPos = m_spawnPos + sf::Vector2f(vx, vy);
+		setPosition(m_spawnPos);
+	}
+
 	m_healthDisplay->setScale(getScale().x < 0 ? -1 : 1, 1);
 }
