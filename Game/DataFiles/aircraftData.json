@@ -3,7 +3,7 @@
     {
       "type": "Tomcat",
       "health": 100,
-      "maxSpeed": 800.0,
+      "maxSpeed": 600.0,
       "textureId": "AircraftSpriteSheet",
       "textureLoadArea": {
         "left": 240,
