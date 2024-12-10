@@ -10,6 +10,7 @@ bool GameState::update(float deltaTime)
 	getContext().input->handleRealtimeInput(commands);
 	return true;
 }
+
 void GameState::render(sf::RenderStates& states)
 {
 	m_world.render(*getContext().window, states);

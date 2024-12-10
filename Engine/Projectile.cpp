@@ -6,40 +6,59 @@
 #include "Audio.h"
 #include "Engine.h"
 
-Projectile::Projectile(NodeType owner, sf::Vector2f spawnPos, sf::Vector2f velocity) : m_ownerType(owner),
+Projectile::Projectile(NodeType ownerType, Projectile::Type projectileType) :
 	GameSprite(true,
 	TextureId::AircraftSpriteSheet,
 	sf::IntRect(376, 108, 10, 12))
 {
-	setVelocity(velocity);
 	setScale(1.0f, 1.0f);
-	setPosition(spawnPos);
 	Audio::playSound(SoundFxId::Shoot1, 10);
+	m_ownerType = ownerType;
+	m_projectileType = projectileType;
 }
 
-void Projectile::update(float deltaTime)
+void Projectile::update(float deltaTime, CommandQueue& commands)
 {
-	GameSprite::update(deltaTime);
+	GameSprite::update(deltaTime, commands);
 
-	sf::Vector2u windowSize = Engine::getWindow().getSize();
-	auto position = getPosition();
-	if(position.x > (float)windowSize.x || position.y > (float)windowSize.y || position.x <= 0 || position.y <= 0 || m_ownerType == NodeType::None)
-		destroy();
+	if (isGuided())
+	{
+		const float approachRate = 200.f;
+		sf::Vector2f newVelocity = Utility::unitVector(approachRate * deltaTime * m_targetDirection + getVelocity());
+		newVelocity *= getMaxSpeed();
+		float angle = std::atan2(newVelocity.y, newVelocity.x);
+		setRotation(Utility::toDegree(angle) + 180.f);
+		setVelocity(newVelocity);
+	}
 }
-
 
 void Projectile::render(sf::RenderTarget& renderTarget, sf::RenderStates states) const
 {
 	GameSprite::render(renderTarget, states);
 }
 
+bool Projectile::isGuided() const
+{
+	return m_projectileType == Missile;
+}
+
+void Projectile::guideTowards(sf::Vector2f position)
+{
+	if(isGuided())
+		m_targetDirection = Utility::unitVector(position - getWorldPosition());
+}
+
 void Projectile::collision(const Entity* other)
 {
 	GameSprite::collision(other);
+}
 
-	if(m_ownerType == NodeType::None || ((other->getNodeType() & (unsigned int)NodeType::Player) > 0 && m_ownerType != NodeType::Player) ||
-		((other->getNodeType() & (unsigned int)NodeType::Enemy) > 0 && m_ownerType != NodeType::Enemy))
-	{
-		destroy();
-	}
+sf::FloatRect Projectile::getBoundingRect() const
+{
+	return getWorldTransform().transformRect(getGlobalBounds());
+}
+
+float Projectile::getMaxSpeed() const
+{
+	return 900.0f;
 }

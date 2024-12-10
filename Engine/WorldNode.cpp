@@ -34,12 +34,12 @@ void WorldNode::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	draw(target, states);
 }
 
-void WorldNode::updateState(float deltaTime)
+void WorldNode::updateHierarchy(float deltaTime, CommandQueue& commands)
 {
 	if(!isActive())
 		return;
 
-	update(deltaTime);
+	update(deltaTime, commands);
 	for (const SmartNode& child : m_children)
 	{
 		if(child == nullptr)
@@ -47,7 +47,7 @@ void WorldNode::updateState(float deltaTime)
 			Debug::logWarning("Child node is null!");
 			continue;
 		}
-		child->updateState(deltaTime);
+		child->updateHierarchy(deltaTime, commands);
 	}
 }
 
@@ -69,18 +69,18 @@ WorldNode::SmartNode WorldNode::detachNode(const WorldNode& node)
 	return result;
 }
 
-void WorldNode::loadStateResources()
+void WorldNode::loadHierarchyResources()
 {
 	loadResources();
 	for (const SmartNode& child : m_children)
 	{
-		child->loadStateResources();
+		child->loadHierarchyResources();
 	}
 }
 
 void WorldNode::onCommand(const Command& command, float deltaTime)
 {
-	if (command.nodeType & getNodeType())
+	if ((command.nodeType & getNodeType()) && (command.target == this || command.target == nullptr))
 		command.action(*this, deltaTime);
 	for(auto& child : m_children)
 		child->onCommand(command, deltaTime);

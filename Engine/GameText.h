@@ -38,7 +38,7 @@ class GameText : public Entity
 		Utility::centerOrigin(m_text);
 	}
 
-	virtual void update(float deltaTime) override { if(!isActive()) return; }
+	virtual void update(float deltaTime, CommandQueue& commands) override { if(!isActive()) return; }
 
 	virtual void render(sf::RenderTarget& renderTarget, sf::RenderStates states) const override
 	{

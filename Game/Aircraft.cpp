@@ -1,6 +1,5 @@
 #include "Aircraft.h"
 #include "../Engine/Audio.h"
-#include "../Engine/Projectile.h"
 #include "../Engine/World.h"
 #include "../Engine/Engine.h"
 
@@ -17,14 +16,20 @@ std::vector<AircraftData> Aircraft::m_aircraftData = LoadAircraftData("../Game/D
 
 Aircraft::Aircraft(const bool hasCollision, sf::Vector2f scale, sf::Vector2f position)
 	: GameSprite(hasCollision),
-	  m_isExiting(false),
-	  m_timeSinceDamage(0),
-	  m_routineDistanceTravelled(0),
-	  m_spawnDistanceTravelled(0),
-	  m_routineIndex(0),
-	  m_isDamageAnimationActive(false),
-	  m_fireCooldownRemaining(0),
-	  m_spawnPos(position)
+		m_isExiting(false),
+		m_timeSinceDamage(0),
+		m_routineDistanceTravelled(0),
+		m_spawnDistanceTravelled(0),
+		m_routineIndex(0),
+		m_isDamageAnimationActive(false),
+		m_fireCooldownRemaining(0),
+		m_spawnPos(position),
+		m_isFiring(false),
+		m_fireCommand(),
+		m_missileCommand(),
+		m_fireRateLevel(0),
+		m_isLaunchingMissile(false),
+		m_spreadLevel(0)
 {
 	setScale(scale);
 	setPosition(m_spawnPos);
@@ -51,20 +56,77 @@ void Aircraft::takeDamage(int health)
 	m_isDamageAnimationActive = true;
 }
 
+void Aircraft::fire()
+{
+ 	m_isFiring = true;
+}
+
+void Aircraft::launchMissile()
+{
+	m_isLaunchingMissile = true;
+}
+
 void Aircraft::handleAnimation(float deltaTime)
 {
 	handleDamageAnimation(deltaTime);
 }
 
-void Aircraft::fireBullet(sf::Vector2f velocity)
+bool Aircraft::isAllied() const
 {
-	if (m_fireCooldownRemaining > 0)
-		return;
+	return getNodeType() & static_cast<unsigned int>(NodeType::Player);
+}
 
-	auto offset = sf::Vector2f(0, getGlobalBounds().height / 2);
-	auto projectile = std::make_unique<Projectile>((NodeType)getNodeType(), offset, velocity);
-	m_fireCooldownRemaining = FIRE_COOLDOWN_TIME;
-	projectile->loadStateResources();
+void Aircraft::checkProjectileLaunch(float dt, CommandQueue& commands)
+{
+	if (!isAllied())
+	{
+		fire();
+	}
+
+	if (m_isFiring && m_fireCooldownRemaining <= 0)
+	{
+		commands.push(m_fireCommand);
+		m_fireCooldownRemaining += 1.f / (m_fireRateLevel+1);
+		m_isFiring = false;
+	}
+	else if (m_fireCooldownRemaining > 0)
+	{
+		m_fireCooldownRemaining -= dt;
+	}
+	if (m_isLaunchingMissile)
+	{
+		commands.push(m_missileCommand);
+		m_isLaunchingMissile = false;
+	}
+}
+
+void Aircraft::createBullets()
+{
+	switch (m_spreadLevel)
+	{
+	case 0:
+		createProjectile(Projectile::Bullet, 0.0f, 0.5f);
+		break;
+	case 1:
+		createProjectile(Projectile::Bullet, -0.33f, 0.33f);
+		createProjectile(Projectile::Bullet, +0.33f, 0.33f);
+		break;
+	case 2:
+		createProjectile(Projectile::Bullet, -0.5f, 0.33f);
+		createProjectile(Projectile::Bullet, 0.0f, 0.5f);
+		createProjectile(Projectile::Bullet, +0.5f, 0.33f);
+		break;
+	}
+}
+
+void Aircraft::createProjectile(Projectile::Type projectileType, float xOffset, float yOffset)
+{
+	auto nodeType = isAllied() ? NodeType::Player : NodeType::Enemy;
+	std::unique_ptr<Projectile> projectile(new Projectile(nodeType, projectileType));
+	sf::Vector2f offset(getGlobalBounds().width/2 + xOffset,yOffset * getGlobalBounds().height/2);
+	projectile->setPosition(offset);
+	projectile->setVelocity(900, 0);
+	projectile->loadResources();
 	attachNode(std::move(projectile));
 }
 
@@ -91,10 +153,12 @@ void Aircraft::handleDamageAnimation(float deltaTime)
 	}
 }
 
-void Aircraft::update(float deltaTime)
+void Aircraft::update(float deltaTime, CommandQueue& commands)
 {
-	Entity::update(deltaTime);
+	Entity::update(deltaTime, commands);
 	updateHealthDisplay();
+
+	checkProjectileLaunch(deltaTime, commands);
 
 	if (m_fireCooldownRemaining > 0)
 		m_fireCooldownRemaining -= deltaTime;
@@ -226,10 +290,30 @@ void Aircraft::loadResources()
 			vx = 0;
 			vy = 500;
 			break;
+		case Direction::Count:
+		default:
+			vx = 0;
+			vy = 0;
+			break;
 		}
 		m_spawnPos = m_spawnPos + sf::Vector2f(vx, vy);
 		setPosition(m_spawnPos);
 	}
+
+	m_fireCommand.nodeType = isAllied() ?  (unsigned int)NodeType::Player : (unsigned int)NodeType::Enemy;
+	m_fireCommand.target = this;
+	m_fireCommand.action =
+		[this] (WorldNode& node, float dt)
+		{
+		  createBullets();
+		};
+	m_missileCommand.nodeType = isAllied() ?  (unsigned int)NodeType::Player : (unsigned int)NodeType::Enemy;
+	m_missileCommand.target = this;
+	m_missileCommand.action =
+		[this] (WorldNode& node, float delta)
+		{
+		  createProjectile(Projectile::Missile, 0.f, 0.5f);
+		};
 
 	m_healthDisplay->setScale(getScale().x < 0 ? -1 : 1, 1);
 }

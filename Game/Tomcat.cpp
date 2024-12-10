@@ -3,7 +3,6 @@
 //
 
 #include "Tomcat.h"
-#include "../Engine/Projectile.h"
 
 #define DAMAGE_FLASH_TIME 4.0f
 #define DAMAGE_INVINCIBILITY_TIME .3f
@@ -14,30 +13,13 @@ Tomcat::Tomcat(bool hasCollision, sf::Vector2f position, NodeType nodeType, sf::
 {
 }
 
-void Tomcat::update(float deltaTime)
+void Tomcat::update(float deltaTime, CommandQueue& commands)
 {
-	Aircraft::update(deltaTime);
+	Aircraft::update(deltaTime, commands);
 	handleAnimation(deltaTime);
 }
 
 void Tomcat::collision(const Entity* other)
 {
 	GameSprite::collision(other);
-
-	if((other->getNodeType() & (unsigned int)NodeType::Enemy) > 0)
-	{
-		takeDamage(10);
-	}
-	else if((other->getNodeType() & (unsigned int)NodeType::Projectile) > 0)
-	{
-		const auto* projectile = static_cast<const Projectile*>(other);
-		if(projectile == nullptr)
-		{
-			Debug::logError("Entity set as Projectile type, but is not.");
-			return;
-		}
-
-		if(projectile->getOwnerType() == NodeType::Enemy)
-			takeDamage(20);
-	}
 }

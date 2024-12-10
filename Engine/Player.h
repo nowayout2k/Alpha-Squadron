@@ -30,6 +30,8 @@ class Player
 		AcceleratePosX,
 		AccelerateNegY,
 		AcceleratePosY,
+		Fire,
+		LaunchMissile,
 		ActionCount
 	};
 	Player();

@@ -8,6 +8,7 @@
 #include "../Engine/GameSprite.h"
 #include "DataTables.h"
 #include "../Engine/GameText.h"
+#include "../Engine/Projectile.h"
 #include <vector>
 
 class Aircraft : public GameSprite
@@ -19,7 +20,6 @@ class Aircraft : public GameSprite
 	int getHealth() const { return m_health; }
 	void setHealth(int health) { m_health = health; }
 
-	virtual void fireBullet(sf::Vector2f velocity);
 	void accelerate(sf::Vector2f velocity) { setVelocity(getVelocity() + velocity); }
 	void accelerate(float x, float y) { setVelocity(getVelocity() + sf::Vector2f(x, y)); }
 
@@ -27,23 +27,26 @@ class Aircraft : public GameSprite
 	virtual AircraftType getAircraftType() = 0;
 
 	virtual void loadResources() override;
-
+	void fire();
+	void launchMissile();
  protected:
 	virtual void handleAnimation(float deltaTime);
 	void handleDamageAnimation(float deltaTime);
 	virtual void takeDamage(int health);
-	virtual void update(float deltaTime) override;
-
+	virtual void update(float deltaTime, CommandQueue& commands) override;
 	virtual unsigned int getNodeType() const override { return GameSprite::getNodeType() | (unsigned int)NodeType::Aircraft; }
 
  private:
+	void createProjectile(Projectile::Type projectileType, float xOffset, float yOffset);
 	void updateHealthDisplay();
 	void updatePosition(float deltaTime);
 	void moveTowardsStart(float deltaTime);
 	void exitPhase();
 	void followAiRoutines(float deltaTime);
 	sf::Vector2f calculateDirectionalVelocity(Direction direction) const;
-
+	bool isAllied() const;
+	void checkProjectileLaunch(float dt, CommandQueue& commands);
+	void createBullets();
 	static std::vector<AircraftData> m_aircraftData;
 
 	int m_health;
@@ -52,6 +55,12 @@ class Aircraft : public GameSprite
 	float m_fireCooldownRemaining;
 	float m_routineDistanceTravelled;
 	float m_spawnDistanceTravelled;
+	bool m_isFiring;
+	Command m_fireCommand;
+	Command m_missileCommand;
+	int m_fireRateLevel;
+	bool m_isLaunchingMissile;
+	int m_spreadLevel;
 
 	bool m_isDamageAnimationActive;
 	bool m_isExiting;

@@ -8,6 +8,7 @@
 #include <SFML/Graphics.hpp>
 #include "NodeType.h"
 
+class CommandQueue;
 class Command;
 
 class WorldNode : public sf::Transformable, public sf::Drawable
@@ -21,17 +22,17 @@ class WorldNode : public sf::Transformable, public sf::Drawable
 	SmartNode detachNode(const WorldNode& node);
 	void setActive(bool isActive) { m_isActive = isActive; }
 	bool isActive() const { return m_isActive; };
-	virtual void updateState(float deltaTime);
 	virtual void renderState(sf::RenderTarget& renderTarget, sf::RenderStates states) const;
 	sf::Vector2f getWorldPosition() const;
-	virtual void loadStateResources();
-	virtual unsigned int getNodeType() const { return (unsigned int)NodeType::World; }
+	virtual void updateHierarchy(float deltaTime, CommandQueue& commands);
+	virtual void loadHierarchyResources();
+	virtual unsigned int getNodeType() const { return (unsigned int)NodeType::WorldNode; }
 	void onCommand(const Command& command, float deltaTime);
  protected:
 	sf::Transform getWorldTransform() const;
-	virtual void update(float deltaTime) = 0;
 	virtual void render(sf::RenderTarget& renderTarget, sf::RenderStates states) const = 0;
 	virtual void loadResources() = 0;
+	virtual void update(float deltaTime, CommandQueue& commands) = 0;
  private:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const final;
 	bool m_isActive;

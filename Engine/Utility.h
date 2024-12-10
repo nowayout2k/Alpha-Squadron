@@ -8,6 +8,7 @@
 #include <SFML/Graphics.hpp>
 #include "../Game/AircraftType.h"
 #include "../Game/TextureId.h"
+#include "Entity.h"
 #include "Debug.h"
 #include "Direction.h"
 
@@ -34,9 +35,27 @@ public:
 		return std::sqrt(x * x + y * y);
 	}
 
+	static float magnitude(sf::Vector2f v)
+	{
+		return std::sqrt(v.x * v.x + v.y * v.y);
+	}
+
+	static sf::Vector2f unitVector(sf::Vector2f v)
+	{
+		float mag = magnitude(v);
+		if (mag == 0)
+			return sf::Vector2f(0, 0);
+		return v/mag;
+	}
+
 	static float getDistance(const sf::Vector2f& a, const sf::Vector2f& b)
 	{
 		return std::sqrt(std::pow(b.x - a.x, 2) + std::pow(b.y - a.y, 2));
+	}
+
+	static float getDistance(const Entity& a, const Entity& b)
+	{
+		return std::sqrt(std::pow(b.getPosition().x - a.getPosition().x, 2) + std::pow(b.getPosition().y - a.getPosition().y, 2));
 	}
 
 	static Direction stringToDirection(std::string s)
@@ -83,8 +102,14 @@ public:
 		return a + (b - a) * t;
 	}
 
-	static constexpr float toRadian(float degree) {
+	static constexpr float toRadian(float degree)
+	{
 		return degree * (M_PI / 180.f);
+	}
+
+	static constexpr float toDegree(float angle)
+	{
+		return angle * (180.f / M_PI);
 	}
 
 	template <typename T>

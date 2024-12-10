@@ -7,6 +7,7 @@
 #include "Audio.h"
 #include "GameText.h"
 #include "../Game/Chopper.h"
+#include "Projectile.h"
 
 float World::m_scrollSpeed = 500.0f;
 
@@ -70,14 +71,50 @@ void World::setup()
 
 void World::addEnemies()
 {
-	m_enemySpawnPoints.push_back(SpawnPoint(AircraftType::Tomcat, 2500.f));
-	m_enemySpawnPoints.push_back(SpawnPoint(AircraftType::Chopper, 2000.f));
+	m_enemySpawnPoints.push_back(SpawnPoint(AircraftType::Tomcat, 5500.f));
+	m_enemySpawnPoints.push_back(SpawnPoint(AircraftType::Chopper, 9000.f));
 
 	std::sort(m_enemySpawnPoints.begin(), m_enemySpawnPoints.end(),
 		[] (SpawnPoint lhs, SpawnPoint rhs)
 		{
 		  return lhs.spawnDistance > rhs.spawnDistance;
 		});
+}
+
+void World::guideMissiles()
+{
+	Command enemyCollector;
+	enemyCollector.nodeType &= (int)NodeType::Enemy;
+	enemyCollector.action = derivedAction<Aircraft>([this] (Aircraft& enemy, float dt)
+		{
+		  if (!enemy.isDestroyPending())
+			  m_activeEnemies.push_back(&enemy);
+		});
+	Command missileGuider;
+	missileGuider.nodeType &= (int)NodeType::Projectile;
+	missileGuider.action = derivedAction<Projectile>(
+		[this] (Projectile& missile, float dt)
+		{
+		  if (!missile.isGuided())
+			  return;
+		  float minDistance = std::numeric_limits<float>::max();
+		  Aircraft* closestEnemy = nullptr;
+		  for (Aircraft* enemy : m_activeEnemies)
+		  {
+			  float enemyDistance = Utility::getDistance(missile, *enemy);
+			  if (enemyDistance < minDistance)
+			  {
+				  closestEnemy = enemy;
+				  minDistance = enemyDistance;
+			  }
+		  }
+		  if (closestEnemy)
+			  missile.guideTowards(
+				  closestEnemy->getWorldPosition());
+		});
+	m_commandQueue.push(enemyCollector);
+	m_commandQueue.push(missileGuider);
+	m_activeEnemies.clear();
 }
 
 void World::spawnEnemies()
@@ -88,7 +125,7 @@ void World::spawnEnemies()
 	{
 		SpawnPoint spawn = m_enemySpawnPoints.back();
 		auto enemy = createAircraft(spawn.type, sf::Vector2f(spawn.spawnDistance,0), NodeType::Enemy, sf::Vector2f(-4.0, 4.0));
-		enemy->loadStateResources();
+		enemy->loadHierarchyResources();
 		m_worldLayers[static_cast<int>(Layer::Collision)]->attachNode(std::move(enemy));
 		m_enemySpawnPoints.pop_back();
 	}
@@ -121,7 +158,7 @@ sf::FloatRect World::getBattlefieldBounds() const
 
 void World::loadResources()
 {
-	m_worldGraph.loadStateResources();
+	m_worldGraph.loadHierarchyResources();
 }
 
 void World::update(float deltaTime)
@@ -149,14 +186,14 @@ void World::update(float deltaTime)
 			scrollSpeedFactor = .2f;
 	}*/
 
-	if(currentViewPosRight.x < m_worldBounds.width)
-	{
+	//if(currentViewPosRight.x < m_worldBounds.width)
+	//{
 		m_worldView.move(m_scrollSpeed * scrollSpeedFactor * deltaTime, 0.f);
 		m_playerAircraft->accelerate(m_scrollSpeed * scrollSpeedFactor, 0.f);
 		spawnEnemies();
-	}
+	//}
 
-	m_worldGraph.updateState(deltaTime);
+	m_worldGraph.updateHierarchy(deltaTime, m_commandQueue);
 
 	sf::FloatRect viewBounds(m_worldView.getCenter() - m_worldView.getSize() / 2.f,m_worldView.getSize());
 	const auto spriteBounds = m_playerAircraft->getGlobalBounds();

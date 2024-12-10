@@ -10,7 +10,7 @@
 class EmptyWorldNode : public WorldNode
 {
  public:
-	void update(float deltaTime) override {}
+	void update(float deltaTime, CommandQueue& commands) override {}
 	void render(sf::RenderTarget& renderTarget, sf::RenderStates states) const override {}
 	void loadResources() override {};
 };

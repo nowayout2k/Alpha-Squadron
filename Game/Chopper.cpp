@@ -3,8 +3,6 @@
 //
 
 #include "Chopper.h"
-#include "../Engine/Projectile.h"
-#include "../Engine/World.h"
 
 Chopper::Chopper(bool hasCollision, sf::Vector2f position, NodeType nodeType, sf::Vector2f scale) :
 	Aircraft(hasCollision, scale, position),
@@ -12,36 +10,18 @@ Chopper::Chopper(bool hasCollision, sf::Vector2f position, NodeType nodeType, sf
 {
 }
 
-void Chopper::update(float deltaTime)
+void Chopper::update(float deltaTime, CommandQueue& commands)
 {
-	Aircraft::update(deltaTime);
+	Aircraft::update(deltaTime, commands);
 
 	if(getHealth() <= 0)
 	{
 		destroy();
 		return;
 	}
-	fireBullet(sf::Vector2f(1000, 0));
 }
 
 void Chopper::collision(const Entity* other)
 {
 	GameSprite::collision(other);
-
-	if((other->getNodeType() & (unsigned int)NodeType::Player) > 0)
-	{
-		takeDamage(getHealth());
-	}
-	else if((other->getNodeType() & (unsigned int)NodeType::Projectile) > 0)
-	{
-		const auto* projectile = static_cast<const Projectile*>(other);
-		if(projectile == nullptr)
-		{
-			Debug::logError("Entity set as Projectile type, but is not.");
-			return;
-		}
-
-		if(projectile->getOwnerType() == NodeType::Player)
-			takeDamage(50);
-	}
 }

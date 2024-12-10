@@ -8,7 +8,7 @@
 enum class NodeType
 {
 	None = 0,
-	World = 1 << 0,
+	WorldNode = 1 << 0,
 	Entity = 1 << 1,
 	Sprite = 1 << 2,
 	Text = 1 << 3,

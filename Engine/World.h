@@ -19,12 +19,12 @@ class World
 public:
 	explicit World(sf::RenderWindow& window);
 	void restart();
-	void update(float deltaTime);
 	void render(sf::RenderWindow &window, sf::RenderStates states);
 	CommandQueue& getCommandQueue() { return m_commandQueue; }
 	static float getScrollSpeed() { return m_scrollSpeed; }
 	sf::FloatRect getViewBounds() const;
 	sf::FloatRect getBattlefieldBounds() const;
+	void update(float deltaTime);
 private:
 	struct SpawnPoint
 	{
@@ -42,6 +42,7 @@ private:
 	void spawnEnemies();
 	sf::Vector2f getSpawnLocationOffset(int spawnLocation);
 	void addEnemies();
+	void guideMissiles();
 	static float m_scrollSpeed;
 
 	sf::RenderWindow& m_window;
@@ -50,6 +51,7 @@ private:
 	std::array<WorldNode*, static_cast<int>(Layer::LayerCount)> m_worldLayers;
 	sf::FloatRect m_worldBounds;
 	std::vector<SpawnPoint> m_enemySpawnPoints;
+	std::vector<Aircraft*> m_activeEnemies;
 	sf::Vector2f m_spawnPosition;
 	sf::Vector2f m_viewPositionOffset;
 	Aircraft* m_playerAircraft;

@@ -12,16 +12,21 @@ Player::Player()
 	m_realTimeActionTypes.push_back(AcceleratePosX);
 	m_realTimeActionTypes.push_back(AccelerateNegY);
 	m_realTimeActionTypes.push_back(AcceleratePosY);
+	m_realTimeActionTypes.push_back(Fire);
 
 	assignKey(AccelerateNegX, sf::Keyboard::Left);
 	assignKey(AcceleratePosX, sf::Keyboard::Right);
 	assignKey(AccelerateNegY, sf::Keyboard::Up);
 	assignKey(AcceleratePosY, sf::Keyboard::Down);
+	assignKey(Fire, sf::Keyboard::Space);
+	assignKey(LaunchMissile, sf::Keyboard::M);
 
 	m_actionBinding[AccelerateNegX].action = derivedAction<Aircraft>(AircraftMover(-1,  0));
 	m_actionBinding[AcceleratePosX].action = derivedAction<Aircraft>(AircraftMover(1,  0));
 	m_actionBinding[AccelerateNegY].action = derivedAction<Aircraft>(AircraftMover( 0, -1));
 	m_actionBinding[AcceleratePosY].action = derivedAction<Aircraft>(AircraftMover( 0, 1));
+ 	m_actionBinding[Fire].action = derivedAction<Aircraft>([] (Aircraft& a, float){ a.fire(); });
+	m_actionBinding[LaunchMissile].action = derivedAction<Aircraft>([] (Aircraft& a, float){ a.launchMissile(); });
 
 	for(auto& pair : m_actionBinding)
 		pair.second.nodeType = (unsigned int)NodeType::Player;
@@ -99,7 +104,6 @@ sf::Keyboard::Key Player::getAssignedKey(ActionType actionType) const
 
 bool Player::isRealtimeAction(ActionType actionType)
 {
-	bool isRealTime = std::any_of(m_realTimeActionTypes.begin(), m_realTimeActionTypes.end(), [actionType](ActionType at) { return actionType == at; });
-	return isRealTime;
+	return std::any_of(m_realTimeActionTypes.begin(), m_realTimeActionTypes.end(), [actionType](ActionType at) { return actionType == at; });
 }
 

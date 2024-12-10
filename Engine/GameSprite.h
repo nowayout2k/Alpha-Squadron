@@ -7,6 +7,7 @@
 
 #include "Entity.h"
 #include "ResourceManager.h"
+#include "Utility.h"
 
 class GameSprite : public Entity
 {
@@ -21,7 +22,8 @@ public:
 		const sf::IntRect textureLoadArea = sf::IntRect(), const sf::IntRect spriteTextureRegion = sf::IntRect(), bool repeatTexture = false)
 		: m_textureLoadArea(textureLoadArea), m_repeatTexture(repeatTexture), m_spriteTextureRegion(spriteTextureRegion),
 		  Entity(hasCollision)
-	{}
+	{
+	}
 
 	virtual ~GameSprite() override = default;
 
@@ -48,8 +50,7 @@ public:
 
 	sf::Rect<float> getGlobalBounds() const override
 	{
-		sf::FloatRect bounds = m_sprite.getGlobalBounds();
-		return getTransform().transformRect(bounds);
+		return m_sprite.getGlobalBounds();
 	}
 
 	sf::Rect<float> getLocalBounds() const
