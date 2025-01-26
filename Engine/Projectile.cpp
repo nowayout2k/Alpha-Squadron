@@ -21,13 +21,12 @@ void Projectile::update(float deltaTime, CommandQueue& commands)
 {
 	if (isGuided())
 	{
-		const float approachRate = 2000;
+		const float approachRate = 2000.f;
 		sf::Vector2f newVelocity = Utility::unitVector(approachRate * deltaTime * m_targetDirection + getVelocity());
-		newVelocity *= getMaxSpeed();
+		newVelocity *= approachRate;
 		float angle = std::atan2(newVelocity.y, newVelocity.x);
 		setRotation(Utility::toDegree(angle));
 		setVelocity(newVelocity);
-		Debug::log("target Direction", m_targetDirection.x, m_targetDirection.y, "Velocity", getVelocity().x, getVelocity().y,"newVelocity", newVelocity.x, newVelocity.y, "angle", angle);
 	}
 	GameSprite::update(deltaTime, commands);
 }

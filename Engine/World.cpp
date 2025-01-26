@@ -34,7 +34,7 @@ void World::setup()
 {
 	for (int i = 0; i < static_cast<int>(Layer::LayerCount); ++i)
 	{
-		WorldNode::SmartNode layer(new EmptyWorldNode());
+		WorldNode::SmartNode layer(static_cast<Layer>(i) == Layer::Collision ?  new EmptyWorldNode(NodeType::CollisionLayer) : new EmptyWorldNode());
 		m_worldLayers[i] = layer.get();
 		m_worldGraph.attachNode(std::move(layer));
 	}

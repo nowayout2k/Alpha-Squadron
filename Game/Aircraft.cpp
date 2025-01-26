@@ -100,37 +100,6 @@ void Aircraft::checkProjectileLaunch(float dt, CommandQueue& commands)
 	}
 }
 
-void Aircraft::createBullets()
-{
-	switch (m_spreadLevel)
-	{
-	case 0:
-		createProjectile(Projectile::Bullet, 0.0f, 0.5f);
-		break;
-	case 1:
-		createProjectile(Projectile::Bullet, -0.33f, 0.33f);
-		createProjectile(Projectile::Bullet, +0.33f, 0.33f);
-		break;
-	case 2:
-		createProjectile(Projectile::Bullet, -0.5f, 0.33f);
-		createProjectile(Projectile::Bullet, 0.0f, 0.5f);
-		createProjectile(Projectile::Bullet, +0.5f, 0.33f);
-		break;
-	}
-}
-
-void Aircraft::createProjectile(Projectile::Type projectileType, float xOffset, float yOffset)
-{
-
-	auto nodeType = isAllied() ? NodeType::Player : NodeType::Enemy;
-	std::unique_ptr<Projectile> projectile(new Projectile(nodeType, projectileType));
-	sf::Vector2f offset(getGlobalBounds().width/2 + xOffset,yOffset * getGlobalBounds().height/2);
-	projectile->setPosition(offset);
-	projectile->setVelocity(900, 0);
-	projectile->loadResources();
-	attachNode(std::move(projectile));
-}
-
 void Aircraft::handleDamageAnimation(float deltaTime)
 {
 	if (m_isDamageAnimationActive)
@@ -281,7 +250,7 @@ void Aircraft::loadResources()
 			break;
 		case Direction::South:
 			vx = -1000;
-			vy = -1000;
+			vy = 1000;
 			break;
 		case Direction::East:
 			vx = -2100;
@@ -301,20 +270,50 @@ void Aircraft::loadResources()
 		setPosition(m_spawnPos);
 	}
 
-	m_fireCommand.nodeType = isAllied() ?  (unsigned int)NodeType::Player : (unsigned int)NodeType::Enemy;
-	m_fireCommand.target = this;
+	m_fireCommand.nodeType = (unsigned int)NodeType::CollisionLayer;
 	m_fireCommand.action =
 		[this] (WorldNode& node, float dt)
 		{
-		  createBullets();
+		  createBullets(node);
 		};
-	m_missileCommand.nodeType = isAllied() ?  (unsigned int)NodeType::Player : (unsigned int)NodeType::Enemy;
-	m_missileCommand.target = this;
+	m_missileCommand.nodeType = (unsigned int)NodeType::CollisionLayer;
 	m_missileCommand.action =
 		[this] (WorldNode& node, float delta)
 		{
-		  createProjectile(Projectile::Missile, 0.f, 0.5f);
+		  createProjectile(node, Projectile::Missile, 0.f, 0.5f);
 		};
 
 	m_healthDisplay->setScale(getScale().x < 0 ? -1 : 1, 1);
+}
+
+void Aircraft::createBullets(WorldNode& node)
+{
+	switch (m_spreadLevel)
+	{
+	case 0:
+		createProjectile(node, Projectile::Bullet, 0.0f, 0.5f);
+		break;
+	case 1:
+		createProjectile(node, Projectile::Bullet, -0.33f, 0.33f);
+		createProjectile(node, Projectile::Bullet, +0.33f, 0.33f);
+		break;
+	case 2:
+		createProjectile(node, Projectile::Bullet, -0.5f, 0.33f);
+		createProjectile(node, Projectile::Bullet, 0.0f, 0.5f);
+		createProjectile(node, Projectile::Bullet, +0.5f, 0.33f);
+		break;
+	}
+}
+
+void Aircraft::createProjectile(WorldNode& node, Projectile::Type projectileType, float xOffset, float yOffset)
+{
+	auto nodeType = isAllied() ? NodeType::Player : NodeType::Enemy;
+	std::unique_ptr<Projectile> projectile(new Projectile(nodeType, projectileType));
+	float sign = isAllied() ? 1.f : - 1.f;
+	projectile->setVelocity(projectile->getMaxSpeed() * sign, 0);
+	projectile->setScale(4, 4);
+	sf::Vector2f offset(sign * getGlobalBounds().width * projectile->getScale().x  + xOffset, projectile->getScale().y * yOffset * (getGlobalBounds().height/2));
+	projectile->setPosition(getWorldPosition() + offset * sign);
+	projectile->loadResources();
+	node.attachNode(std::move(projectile));
 }

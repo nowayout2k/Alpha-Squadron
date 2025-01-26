@@ -14,7 +14,7 @@
 class Aircraft : public GameSprite
 {
  public:
-	explicit Aircraft(const bool hasCollision, sf::Vector2f scale, sf::Vector2f position);
+	explicit Aircraft(bool hasCollision, sf::Vector2f scale, sf::Vector2f position);
 	virtual ~Aircraft() override = default;
 
 	int getHealth() const { return m_health; }
@@ -37,7 +37,7 @@ class Aircraft : public GameSprite
 	virtual unsigned int getNodeType() const override { return GameSprite::getNodeType() | (unsigned int)NodeType::Aircraft; }
 
  private:
-	void createProjectile(Projectile::Type projectileType, float xOffset, float yOffset);
+	void createProjectile(WorldNode& node, Projectile::Type projectileType, float xOffset, float yOffset);
 	void updateHealthDisplay();
 	void updatePosition(float deltaTime);
 	void moveTowardsStart(float deltaTime);
@@ -46,11 +46,11 @@ class Aircraft : public GameSprite
 	sf::Vector2f calculateDirectionalVelocity(Direction direction) const;
 	bool isAllied() const;
 	void checkProjectileLaunch(float dt, CommandQueue& commands);
-	void createBullets();
+	void createBullets(WorldNode& node);
 	static std::vector<AircraftData> m_aircraftData;
 
-	int m_health;
-	int m_speed;
+	int m_health{};
+	int m_speed{};
 	float m_timeSinceDamage;
 	float m_fireCooldownRemaining;
 	float m_routineDistanceTravelled;
@@ -66,7 +66,7 @@ class Aircraft : public GameSprite
 	bool m_isExiting;
 
 	int m_routineIndex;
-	float m_despawnDistance;
+	float m_despawnDistance{};
 
 	GameText* m_healthDisplay;
 	std::vector<AiRoutine> m_aiRoutines;

@@ -13,7 +13,6 @@ struct Command
 	Command() = default;
 	std::function<void(WorldNode&, float)> action;
 	unsigned int nodeType = 0;
-	WorldNode* target = nullptr;
 };
 
 template <typename GameObject, typename Function>

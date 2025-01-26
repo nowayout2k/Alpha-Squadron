@@ -80,7 +80,7 @@ void WorldNode::loadHierarchyResources()
 
 void WorldNode::onCommand(const Command& command, float deltaTime)
 {
-	if ((command.nodeType & getNodeType()) && (command.target == this || command.target == nullptr))
+	if (command.nodeType & getNodeType())
 	{
 		command.action(*this, deltaTime);
 	}

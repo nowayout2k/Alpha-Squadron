@@ -19,6 +19,7 @@ enum class NodeType
 	Ally = 1 << 6,
 	Enemy = 1 << 7,
 	Projectile = 1 << 8,
+	CollisionLayer = 1 << 9,
 };
 
 inline std::string NodeTypeToString(NodeType type)
