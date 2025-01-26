@@ -38,17 +38,19 @@ private:
 	void setup();
 	void loadResources();
 	static void handleCollisions();
-	std::unique_ptr<Aircraft> createAircraft(AircraftType type, sf::Vector2f position, NodeType nodeType, sf::Vector2f scale);
+	static std::unique_ptr<Aircraft> createAircraft(AircraftType type, sf::Vector2f position, NodeType nodeType, sf::Vector2f scale);
 	void spawnEnemies();
 	sf::Vector2f getSpawnLocationOffset(int spawnLocation);
 	void addEnemies();
 	void guideMissiles();
+	void adaptPlayerVelocity();
+	void adaptPlayerPosition();
 	static float m_scrollSpeed;
 
 	sf::RenderWindow& m_window;
 	sf::View m_worldView;
 	EmptyWorldNode m_worldGraph;
-	std::array<WorldNode*, static_cast<int>(Layer::LayerCount)> m_worldLayers;
+	std::array<WorldNode*, static_cast<int>(Layer::LayerCount)> m_worldLayers{};
 	sf::FloatRect m_worldBounds;
 	std::vector<SpawnPoint> m_enemySpawnPoints;
 	std::vector<Aircraft*> m_activeEnemies;

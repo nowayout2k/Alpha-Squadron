@@ -22,7 +22,7 @@ class CommandQueue
 		return c;
 	}
 	bool isEmpty() const { return m_queue.empty(); }
-
+	std::queue<Command>::size_type size() const { return m_queue.size(); }
  private:
 	std::queue<Command> m_queue;
 };

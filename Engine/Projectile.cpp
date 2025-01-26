@@ -8,8 +8,8 @@
 
 Projectile::Projectile(NodeType ownerType, Projectile::Type projectileType) :
 	GameSprite(true,
-	TextureId::AircraftSpriteSheet,
-	sf::IntRect(376, 108, 10, 12))
+		projectileType == Missile ? TextureId::EnemiesSpriteSheet : TextureId::AircraftSpriteSheet,
+		projectileType == Missile ? sf::IntRect(211, 213, 7, 9) : sf::IntRect(376, 108, 10, 12))
 {
 	setScale(1.0f, 1.0f);
 	Audio::playSound(SoundFxId::Shoot1, 10);
@@ -19,17 +19,17 @@ Projectile::Projectile(NodeType ownerType, Projectile::Type projectileType) :
 
 void Projectile::update(float deltaTime, CommandQueue& commands)
 {
-	GameSprite::update(deltaTime, commands);
-
 	if (isGuided())
 	{
-		const float approachRate = 200.f;
+		const float approachRate = 2000;
 		sf::Vector2f newVelocity = Utility::unitVector(approachRate * deltaTime * m_targetDirection + getVelocity());
 		newVelocity *= getMaxSpeed();
 		float angle = std::atan2(newVelocity.y, newVelocity.x);
-		setRotation(Utility::toDegree(angle) + 180.f);
+		setRotation(Utility::toDegree(angle));
 		setVelocity(newVelocity);
+		Debug::log("target Direction", m_targetDirection.x, m_targetDirection.y, "Velocity", getVelocity().x, getVelocity().y,"newVelocity", newVelocity.x, newVelocity.y, "angle", angle);
 	}
+	GameSprite::update(deltaTime, commands);
 }
 
 void Projectile::render(sf::RenderTarget& renderTarget, sf::RenderStates states) const
@@ -45,7 +45,10 @@ bool Projectile::isGuided() const
 void Projectile::guideTowards(sf::Vector2f position)
 {
 	if(isGuided())
+	{
 		m_targetDirection = Utility::unitVector(position - getWorldPosition());
+	}
+
 }
 
 void Projectile::collision(const Entity* other)

@@ -84,19 +84,25 @@ void World::addEnemies()
 void World::guideMissiles()
 {
 	Command enemyCollector;
-	enemyCollector.nodeType &= (int)NodeType::Enemy;
-	enemyCollector.action = derivedAction<Aircraft>([this] (Aircraft& enemy, float dt)
+	enemyCollector.nodeType |= (int)NodeType::Enemy;
+	enemyCollector.action =
+		derivedAction<Aircraft>([this] (Aircraft& enemy, float dt)
 		{
 		  if (!enemy.isDestroyPending())
 			  m_activeEnemies.push_back(&enemy);
 		});
+	m_commandQueue.push(enemyCollector);
+
+
 	Command missileGuider;
-	missileGuider.nodeType &= (int)NodeType::Projectile;
-	missileGuider.action = derivedAction<Projectile>(
+	missileGuider.nodeType |= (int)NodeType::Projectile;
+	missileGuider.action =
+		derivedAction<Projectile>(
 		[this] (Projectile& missile, float dt)
 		{
 		  if (!missile.isGuided())
 			  return;
+
 		  float minDistance = std::numeric_limits<float>::max();
 		  Aircraft* closestEnemy = nullptr;
 		  for (Aircraft* enemy : m_activeEnemies)
@@ -109,11 +115,13 @@ void World::guideMissiles()
 			  }
 		  }
 		  if (closestEnemy)
-			  missile.guideTowards(
-				  closestEnemy->getWorldPosition());
+		  {
+			  missile.guideTowards(closestEnemy->getWorldPosition());
+		  }
+
 		});
-	m_commandQueue.push(enemyCollector);
 	m_commandQueue.push(missileGuider);
+
 	m_activeEnemies.clear();
 }
 
@@ -164,37 +172,37 @@ void World::loadResources()
 void World::update(float deltaTime)
 {
 	float scrollSpeedFactor = 1;
+	m_worldView.move(m_scrollSpeed * scrollSpeedFactor * deltaTime, 0.f);
 	m_playerAircraft->setVelocity(0,0);
 
+	guideMissiles();
 	while (!m_commandQueue.isEmpty())
-		m_worldGraph.onCommand(m_commandQueue.pop(), deltaTime);
+	{
+		auto nextCommand = m_commandQueue.pop();
+		m_worldGraph.onCommand(nextCommand, deltaTime);
+	}
 
+	adaptPlayerVelocity();
+
+	handleCollisions();
+	//m_worldGraph.removeWrecks();
+	spawnEnemies();
+
+	m_worldGraph.updateHierarchy(deltaTime, m_commandQueue);
+	adaptPlayerPosition();
+}
+
+void World::adaptPlayerVelocity()
+{
 	sf::Vector2f velocity = m_playerAircraft->getVelocity();
 	if (velocity.x != 0.f && velocity.y != 0.f)
 		m_playerAircraft->setVelocity(velocity / std::sqrt(2.f));
 
-	sf::Vector2f viewCenter = m_worldView.getCenter();
-	sf::Vector2f viewSize = m_worldView.getSize();
-	sf::Vector2f currentViewPosRight = sf::Vector2f(viewCenter.x + viewSize.x / 2, viewCenter.y + viewSize.y / 2);
+	m_playerAircraft->accelerate(m_scrollSpeed, 0.f);
+}
 
-/*	if(currentViewPosRight.x > m_worldBounds.width * .75f)
-	{
-		float distanceToEnd = m_worldBounds.width - currentViewPosRight.x;
-		float totalSlowDownDistance = m_worldBounds.width - (m_worldBounds.width * .75f);
-		scrollSpeedFactor = distanceToEnd / totalSlowDownDistance;
-		if(scrollSpeedFactor < .2f)
-			scrollSpeedFactor = .2f;
-	}*/
-
-	//if(currentViewPosRight.x < m_worldBounds.width)
-	//{
-		m_worldView.move(m_scrollSpeed * scrollSpeedFactor * deltaTime, 0.f);
-		m_playerAircraft->accelerate(m_scrollSpeed * scrollSpeedFactor, 0.f);
-		spawnEnemies();
-	//}
-
-	m_worldGraph.updateHierarchy(deltaTime, m_commandQueue);
-
+void World::adaptPlayerPosition()
+{
 	sf::FloatRect viewBounds(m_worldView.getCenter() - m_worldView.getSize() / 2.f,m_worldView.getSize());
 	const auto spriteBounds = m_playerAircraft->getGlobalBounds();
 	sf::Vector2f position = m_playerAircraft->getPosition();
@@ -203,8 +211,6 @@ void World::update(float deltaTime)
 	position.y = std::max(position.y, viewBounds.top + 0);
 	position.y = std::min(position.y, viewBounds.top + viewBounds.height - spriteBounds.height);
 	m_playerAircraft->setPosition(position);
-
-	handleCollisions();
 }
 
 void World::render(sf::RenderWindow &window, sf::RenderStates states)

@@ -121,6 +121,7 @@ void Aircraft::createBullets()
 
 void Aircraft::createProjectile(Projectile::Type projectileType, float xOffset, float yOffset)
 {
+
 	auto nodeType = isAllied() ? NodeType::Player : NodeType::Enemy;
 	std::unique_ptr<Projectile> projectile(new Projectile(nodeType, projectileType));
 	sf::Vector2f offset(getGlobalBounds().width/2 + xOffset,yOffset * getGlobalBounds().height/2);
