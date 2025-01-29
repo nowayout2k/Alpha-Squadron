@@ -6,7 +6,7 @@
 #include "Audio.h"
 #include "Engine.h"
 
-Projectile::Projectile(NodeType ownerType, Projectile::Type projectileType) :
+Projectile::Projectile(NodeType ownerType, Projectile::Type projectileType) : timeAlive(0),
 	GameSprite(true,
 		projectileType == Missile ? TextureId::EnemiesSpriteSheet : TextureId::AircraftSpriteSheet,
 		projectileType == Missile ? sf::IntRect(211, 213, 7, 9) : sf::IntRect(376, 108, 10, 12))
@@ -19,16 +19,47 @@ Projectile::Projectile(NodeType ownerType, Projectile::Type projectileType) :
 
 void Projectile::update(float deltaTime, CommandQueue& commands)
 {
+	if(timeAlive < .5)
+		timeAlive += deltaTime;
+
 	if (isGuided())
 	{
-		const float approachRate = 2000.f;
-		sf::Vector2f newVelocity = Utility::unitVector(approachRate * deltaTime * m_targetDirection + getVelocity());
-		newVelocity *= approachRate;
-		float angle = std::atan2(newVelocity.y, newVelocity.x);
-		setRotation(Utility::toDegree(angle));
-		setVelocity(newVelocity);
+		if(m_targetDirection == sf::Vector2f())
+		{
+			setVelocity(sf::Vector2f(1, 0) * getMaxSpeed());
+		}
+		else
+		{
+			if (isGuided())
+			{
+				const float approachRate = getMaxSpeed();  // Max missile speed
+				const float turnRate = 5.0f; // Controls how fast it turns
+
+				// Compute the desired velocity (toward target)
+				sf::Vector2f desiredVelocity = Utility::unitVector(m_targetDirection) * approachRate;
+
+				// Interpolate velocity towards the desired direction
+				sf::Vector2f newVelocity = getVelocity() + (desiredVelocity - getVelocity()) * (turnRate * deltaTime);
+
+				// Ensure the missile moves at max speed
+				newVelocity = Utility::unitVector(newVelocity) * approachRate;
+
+				// Update missile rotation
+				float angle = std::atan2(newVelocity.y, newVelocity.x);
+				setRotation(Utility::toDegree(angle));
+
+				// Apply new velocity
+				setVelocity(newVelocity);
+			}
+
+		}
 	}
 	GameSprite::update(deltaTime, commands);
+}
+
+float Projectile::getMaxSpeed() const
+{
+	return 900.0f;
 }
 
 void Projectile::render(sf::RenderTarget& renderTarget, sf::RenderStates states) const
@@ -45,9 +76,11 @@ void Projectile::guideTowards(sf::Vector2f position)
 {
 	if(isGuided())
 	{
-		m_targetDirection = Utility::unitVector(position - getWorldPosition());
+		if(position == sf::Vector2f())
+			m_targetDirection = position;
+		else
+			m_targetDirection = Utility::unitVector(position - getWorldPosition());
 	}
-
 }
 
 void Projectile::collision(const Entity* other)
@@ -58,9 +91,4 @@ void Projectile::collision(const Entity* other)
 sf::FloatRect Projectile::getBoundingRect() const
 {
 	return getWorldTransform().transformRect(getGlobalBounds());
-}
-
-float Projectile::getMaxSpeed() const
-{
-	return 900.0f;
 }

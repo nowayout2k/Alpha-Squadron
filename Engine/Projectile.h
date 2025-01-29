@@ -31,6 +31,7 @@ class Projectile : public GameSprite
 	sf::Vector2f m_targetDirection;
 	NodeType m_ownerType;
 	Projectile::Type m_projectileType;
+	float timeAlive;
 };
 
 #endif //PROJECTILE_H_

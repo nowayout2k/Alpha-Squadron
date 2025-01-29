@@ -93,6 +93,7 @@ void Aircraft::checkProjectileLaunch(float dt, CommandQueue& commands)
 	{
 		m_fireCooldownRemaining -= dt;
 	}
+
 	if (m_isLaunchingMissile)
 	{
 		commands.push(m_missileCommand);
@@ -312,8 +313,10 @@ void Aircraft::createProjectile(WorldNode& node, Projectile::Type projectileType
 	float sign = isAllied() ? 1.f : - 1.f;
 	projectile->setVelocity(projectile->getMaxSpeed() * sign, 0);
 	projectile->setScale(4, 4);
-	sf::Vector2f offset(sign * getGlobalBounds().width * projectile->getScale().x  + xOffset, projectile->getScale().y * yOffset * (getGlobalBounds().height/2));
-	projectile->setPosition(getWorldPosition() + offset * sign);
+	sf::Vector2f offset(sign * getGlobalBounds().width * projectile->getScale().x  + sign * xOffset, projectile->getScale().y *   yOffset * (getGlobalBounds().height/2));
+	projectile->setPosition(getWorldPosition() + offset);
+	if(!isAllied())
+		projectile->setRotation(180);
 	projectile->loadResources();
 	node.attachNode(std::move(projectile));
 }

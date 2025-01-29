@@ -12,7 +12,7 @@ Player::Player()
 	m_realTimeActionTypes.push_back(AcceleratePosX);
 	m_realTimeActionTypes.push_back(AccelerateNegY);
 	m_realTimeActionTypes.push_back(AcceleratePosY);
-	m_realTimeActionTypes.push_back(Fire);
+	//m_realTimeActionTypes.push_back(Fire);
 
 	assignKey(AccelerateNegX, sf::Keyboard::Left);
 	assignKey(AcceleratePosX, sf::Keyboard::Right);

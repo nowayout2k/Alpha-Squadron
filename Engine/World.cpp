@@ -114,14 +114,9 @@ void World::guideMissiles()
 				  minDistance = enemyDistance;
 			  }
 		  }
-		  if (closestEnemy)
-		  {
-			  missile.guideTowards(closestEnemy->getWorldPosition());
-		  }
-
+		  missile.guideTowards(closestEnemy ? sf::Vector2f(closestEnemy->getWorldPosition().x + (closestEnemy->getScale().x * closestEnemy->getGlobalBounds().width)/2, closestEnemy->getWorldPosition().y) : sf::Vector2f());
 		});
 	m_commandQueue.push(missileGuider);
-
 	m_activeEnemies.clear();
 }
 
