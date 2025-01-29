@@ -94,6 +94,8 @@ add_executable(Alpha-Squadron main.cpp
         Game/AircraftType.h
         Game/AiRoutine.h
         Engine/Direction.h
+        Engine/Pickup.cpp
+        Engine/Pickup.h
 )
 
 # Link the SFML libraries and nlohmann_json

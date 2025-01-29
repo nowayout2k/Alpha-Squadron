@@ -17,7 +17,7 @@ class Projectile : public GameSprite
 		Missile,
 		TypeCount
 	};
-	explicit Projectile(NodeType ownerType, Projectile::Type projectileType);
+	explicit Projectile(Projectile::Type projectileType);
 	void update(float deltaTime, CommandQueue& commands) override;
 	void render(sf::RenderTarget& renderTarget, sf::RenderStates states) const override;
 	void collision(const Entity* other) override;
@@ -29,9 +29,7 @@ class Projectile : public GameSprite
 	int getDamage() const;
  private:
 	sf::Vector2f m_targetDirection;
-	NodeType m_ownerType;
 	Projectile::Type m_projectileType;
-	float timeAlive;
 };
 
 #endif //PROJECTILE_H_

@@ -6,22 +6,18 @@
 #include "Audio.h"
 #include "Engine.h"
 
-Projectile::Projectile(NodeType ownerType, Projectile::Type projectileType) : timeAlive(0),
+Projectile::Projectile(Projectile::Type projectileType) :
 	GameSprite(true,
 		projectileType == Missile ? TextureId::EnemiesSpriteSheet : TextureId::AircraftSpriteSheet,
 		projectileType == Missile ? sf::IntRect(211, 213, 7, 9) : sf::IntRect(376, 108, 10, 12))
 {
 	setScale(1.0f, 1.0f);
 	Audio::playSound(SoundFxId::Shoot1, 10);
-	m_ownerType = ownerType;
 	m_projectileType = projectileType;
 }
 
 void Projectile::update(float deltaTime, CommandQueue& commands)
 {
-	if(timeAlive < .5)
-		timeAlive += deltaTime;
-
 	if (isGuided())
 	{
 		if(m_targetDirection == sf::Vector2f())
