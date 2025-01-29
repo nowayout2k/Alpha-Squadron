@@ -22,33 +22,6 @@ enum class NodeType
 	CollisionLayer = 1 << 9,
 };
 
-inline std::string NodeTypeToString(NodeType type)
-{
-	switch(type)
-	{
-	case NodeType::None:
-		return "None";
-	case NodeType::WorldNode:
-		return "WorldNode";
-	case NodeType::Entity:
-		return "Entity";
-	case NodeType::Sprite:
-		return "Sprite";
-	case NodeType::Text:
-		return "Text";
-	case NodeType::Aircraft:
-		return "Aircraft";
-	case NodeType::Player:
-		return "Player";
-	case NodeType::Ally:
-		return "Ally";
-	case NodeType::Enemy:
-		return "Enemy";
-	case NodeType::Projectile:
-		return "Projectile";
-	default:
-		return "None";
-	}
-}
+
 
 #endif //NODETYPE_H_

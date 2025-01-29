@@ -11,22 +11,9 @@ enum class AircraftType
 {
 	Chopper,
 	Tomcat,
-	Count
+	AircraftTypeCount
 };
 
-inline std::string AircraftTypeToString(AircraftType type)
-{
-	switch(type)
-	{
-	case AircraftType::Chopper:
-		return "Chopper";
-	case AircraftType::Tomcat:
-		return "Tomcat";
-	case AircraftType::Count:
-		return "Count";
-	default:
-		return "NONE";
-	}
-}
+
 
 #endif //AIRCRAFTTYPE_H_

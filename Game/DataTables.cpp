@@ -11,10 +11,8 @@
 #include "../Engine/Utility.h"
 #include "AiRoutine.h"
 
-std::vector<AircraftData> LoadAircraftData(const std::string& filename)
+GameData LoadData(const std::string& filename)
 {
-	std::vector<AircraftData> data(static_cast<int>(AircraftType::Count));
-
 	std::ifstream file(filename);
 	if (!file.is_open()) {
 		throw std::runtime_error("Could not open JSON file: " + filename);
@@ -23,25 +21,26 @@ std::vector<AircraftData> LoadAircraftData(const std::string& filename)
 	nlohmann::json j;
 	file >> j;
 
+	GameData gameData;
 	for (const auto& item : j["aircraft"])
 	{
-		AircraftData aircraft;
-		aircraft.type = Utility::stringToAircraftType(item["type"]);
-		if(aircraft.type == AircraftType::Count)
+		AircraftData aircraftData;
+		aircraftData.Type = Utility::stringToAircraftType(item["type"]);
+		if(aircraftData.Type == AircraftType::AircraftTypeCount)
 		{
 			Debug::logError("Index is greater than length of array! Could not parse " + filename);
-			return data;
+			return gameData;
 		}
 
-		aircraft.health = item["health"];
-		aircraft.speed = item["maxSpeed"];
-		aircraft.textureId = Utility::stringToTextureID(item["textureId"]);
-		aircraft.despawnDistance = item["aiDespawnDistance"];
-		aircraft.enterDirection = Utility::stringToDirection(item["aiEnterDirection"]);
-		aircraft.exitDirection = Utility::stringToDirection(item["aiExitDirection"]);
+		aircraftData.Health = item["health"];
+		aircraftData.Speed = item["maxSpeed"];
+		aircraftData.TextureId = Utility::stringToTextureId(item["textureId"]);
+		aircraftData.DespawnDistance = item["aiDespawnDistance"];
+		aircraftData.EnterDirection = Utility::stringToDirection(item["aiEnterDirection"]);
+		aircraftData.ExitDirection = Utility::stringToDirection(item["aiExitDirection"]);
 		for (auto aiRoutine : item["aiRoutine"])
 		{
-			aircraft.aiRoutines.push_back(AiRoutine( aiRoutine["angle"], aiRoutine["distance"]));
+			aircraftData.AiRoutines.emplace_back( aiRoutine["angle"], aiRoutine["distance"]);
 		}
 
 		auto left = item["textureLoadArea"]["left"];
@@ -49,13 +48,26 @@ std::vector<AircraftData> LoadAircraftData(const std::string& filename)
 		auto width = item["textureLoadArea"]["width"];
 		auto height = item["textureLoadArea"]["height"];
 
-		aircraft.textureLoadArea = sf::IntRect(left, top, width, height);
+		aircraftData.TextureLoadArea = sf::IntRect(left, top, width, height);
 
-		auto i = static_cast<int>(aircraft.type);
-		Debug::log("Added Data Aircraft Type: " + Utility::aircraftTypeToString(aircraft.type) + " at index: " + std::to_string(i));
-
-		data[i] = aircraft;
+		gameData.AircraftData[Utility::aircraftTypeToString(aircraftData.Type)] = aircraftData;
 	}
 
-	return data;
+	for (const auto& item : j["pickup"])
+	{
+		PickupData pickupData{};
+		pickupData.Type = Utility::stringToPickupType(item["type"]);
+		pickupData.Value = item["value"];
+		gameData.PickupData[Utility::pickupTypeToString(pickupData.Type)] = pickupData;
+	}
+
+	for (const auto& item : j["projectile"])
+	{
+		ProjectileData projectileData{};
+		projectileData.Type = Utility::stringToProjectileType(item["type"]);
+		projectileData.Value = item["value"];
+		gameData.ProjectileData[Utility::projectileTypeToString(projectileData.Type)] = projectileData;
+	}
+
+	return gameData;
 }

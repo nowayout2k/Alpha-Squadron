@@ -12,8 +12,6 @@ constexpr float MAX_SPAWN_DISTANCE = 1000.0f;
 	#define M_PI 3.14159265359
 #endif
 
-std::vector<AircraftData> Aircraft::m_aircraftData = LoadAircraftData("../Game/DataFiles/aircraftData.json");
-
 Aircraft::Aircraft(const bool hasCollision, sf::Vector2f scale, sf::Vector2f position)
 	: GameSprite(hasCollision),
 		m_isExiting(false),
@@ -208,32 +206,32 @@ sf::Vector2f Aircraft::calculateDirectionalVelocity(Direction direction) const
 	switch (direction)
 	{
 	case Direction::North:
-		return sf::Vector2f(0, -getMaxSpeed());
+		return {0, -getMaxSpeed()};
 	case Direction::South:
-		return sf::Vector2f(0, getMaxSpeed());
+		return {0, getMaxSpeed()};
 	case Direction::East:
-		return sf::Vector2f( getMaxSpeed() + World::getScrollSpeed(), 0);
+		return { getMaxSpeed() + World::getScrollSpeed(), 0};
 	case Direction::West:
-		return sf::Vector2f(-(getMaxSpeed() - World::getScrollSpeed()), 0);
+		return {-(getMaxSpeed() - World::getScrollSpeed()), 0};
 	default:
-		return sf::Vector2f(0, 0);
+		return {0, 0};
 	}
 }
 
 void Aircraft::loadResources()
 {
-	for (const auto& data : m_aircraftData)
+	for (const auto& data : World::GameData.AircraftData)
 	{
-		if (data.type == getAircraftType())
+		if (data.second.Type == getAircraftType())
 		{
-			m_health = data.health;
-			m_speed = data.speed;
-			m_aiRoutines = data.aiRoutines;
-			m_despawnDistance = data.despawnDistance;
-			m_enterDirection = data.enterDirection;
-			m_exitDirection = data.exitDirection;
-			setTextureId(data.textureId);
-			setTextureLoadArea(data.textureLoadArea);
+			m_health = data.second.Health;
+			m_speed = data.second.Speed;
+			m_aiRoutines = data.second.AiRoutines;
+			m_despawnDistance = data.second.DespawnDistance;
+			m_enterDirection = data.second.EnterDirection;
+			m_exitDirection = data.second.ExitDirection;
+			setTextureId(data.second.TextureId);
+			setTextureLoadArea(data.second.TextureLoadArea);
 		}
 	}
 
@@ -261,7 +259,7 @@ void Aircraft::loadResources()
 			vx = 0;
 			vy = 500;
 			break;
-		case Direction::Count:
+		case Direction::DirectionCount:
 		default:
 			vx = 0;
 			vy = 0;
@@ -281,7 +279,7 @@ void Aircraft::loadResources()
 	m_missileCommand.action =
 		[this] (WorldNode& node, float delta)
 		{
-		  createProjectile(node, Projectile::Missile, 0.f, 0.5f);
+		  createProjectile(node, ProjectileType::Missile, 0.f, 0.5f);
 		};
 
 	m_healthDisplay->setScale(getScale().x < 0 ? -1 : 1, 1);
@@ -292,26 +290,24 @@ void Aircraft::createBullets(WorldNode& node)
 	switch (m_spreadLevel)
 	{
 	case 0:
-		createProjectile(node, Projectile::Bullet, 0.0f, 0.5f);
+		createProjectile(node, ProjectileType::Bullet, 0.0f, 0.5f);
 		break;
 	case 1:
-		createProjectile(node, Projectile::Bullet, -0.33f, 0.33f);
-		createProjectile(node, Projectile::Bullet, +0.33f, 0.33f);
+		createProjectile(node, ProjectileType::Bullet, -0.33f, 0.33f);
+		createProjectile(node, ProjectileType::Bullet, +0.33f, 0.33f);
 		break;
 	case 2:
-		createProjectile(node, Projectile::Bullet, -0.5f, 0.33f);
-		createProjectile(node, Projectile::Bullet, 0.0f, 0.5f);
-		createProjectile(node, Projectile::Bullet, +0.5f, 0.33f);
+		createProjectile(node, ProjectileType::Bullet, -0.5f, 0.33f);
+		createProjectile(node, ProjectileType::Bullet, 0.0f, 0.5f);
+		createProjectile(node, ProjectileType::Bullet, +0.5f, 0.33f);
 		break;
 	}
 }
 
-void Aircraft::createProjectile(WorldNode& node, Projectile::Type projectileType, float xOffset, float yOffset)
+void Aircraft::createProjectile(WorldNode& node, ProjectileType projectileType, float xOffset, float yOffset)
 {
-	auto nodeType = isAllied() ? NodeType::Player : NodeType::Enemy;
-	std::unique_ptr<Projectile> projectile(new Projectile(nodeType, projectileType));
 	float sign = isAllied() ? 1.f : - 1.f;
-	projectile->setVelocity(projectile->getMaxSpeed() * sign, 0);
+	std::unique_ptr<Projectile> projectile(new Projectile(projectileType, sf::Vector2f(sign, 0)));
 	projectile->setScale(4, 4);
 	sf::Vector2f offset(sign * getGlobalBounds().width * projectile->getScale().x  + sign * xOffset, projectile->getScale().y *   yOffset * (getGlobalBounds().height/2));
 	projectile->setPosition(getWorldPosition() + offset);

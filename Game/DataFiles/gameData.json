@@ -1,10 +1,38 @@
 {
+  "pickup": [
+    {
+      "type": "fire_spread",
+      "value": 1
+    },
+    {
+      "type": "fire_rate",
+      "value": 1
+    },
+    {
+      "type": "health_refill",
+      "value": 100
+    },
+    {
+      "type": "missile_refill",
+      "value": 1
+    }
+  ],
+  "projectile": [
+    {
+      "type": "bullet",
+      "value": 2000
+    },
+    {
+      "type": "missile",
+      "value": 1000
+    }
+  ],
   "aircraft": [
     {
-      "type": "Tomcat",
+      "type": "tomcat",
       "health": 100,
       "maxSpeed": 600.0,
-      "textureId": "AircraftSpriteSheet",
+      "textureId": "aircraft_sprite_sheet",
       "textureLoadArea": {
         "left": 240,
         "top": 298,
@@ -43,10 +71,10 @@
       ]
     },
     {
-      "type": "Chopper",
+      "type": "chopper",
       "health": 20,
       "maxSpeed": 400.0,
-      "textureId": "EnemiesSpriteSheet",
+      "textureId": "enemies_sprite_sheet",
       "textureLoadArea": {
         "left": 70,
         "top": 200,

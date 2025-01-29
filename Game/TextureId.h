@@ -18,6 +18,6 @@ enum class TextureId
 	BlueButtonClicked,
 	MagentaButtonIdle,
 	MagentaButtonClicked,
-	Count
+	TextureIdCount
 };
 #endif //TEXTUREID_H_

@@ -10,6 +10,7 @@
 #include "Projectile.h"
 
 float World::m_scrollSpeed = 500.0f;
+GameData World::GameData = LoadData("../Game/DataFiles/gameData.json");
 
 World::World(sf::RenderWindow& window) : m_window(window), m_worldView(window.getDefaultView()),
 			m_worldBounds(0.0f,0.0f,100000.0f,m_worldView.getSize().y),
@@ -114,7 +115,8 @@ void World::guideMissiles()
 				  minDistance = enemyDistance;
 			  }
 		  }
-		  missile.guideTowards(closestEnemy ? sf::Vector2f(closestEnemy->getWorldPosition().x + (closestEnemy->getScale().x * closestEnemy->getGlobalBounds().width)/2, closestEnemy->getWorldPosition().y) : sf::Vector2f());
+		  if(closestEnemy)
+		  	missile.guideTowards(sf::Vector2f(closestEnemy->getWorldPosition().x + (closestEnemy->getScale().x * closestEnemy->getGlobalBounds().width)/2, closestEnemy->getWorldPosition().y));
 		});
 	m_commandQueue.push(missileGuider);
 	m_activeEnemies.clear();

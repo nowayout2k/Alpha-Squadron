@@ -11,7 +11,7 @@ enum Direction
 	South,
 	East,
 	West,
-	Count
+	DirectionCount
 };
 
 #endif //DIRECTION_H_

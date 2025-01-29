@@ -5,26 +5,48 @@
 #ifndef DATATABLES_H_
 #define DATATABLES_H_
 #include <SFML/Graphics/Rect.hpp>
+#include <unordered_map>
 #include <vector>
 #include "TextureId.h"
 #include "AircraftType.h"
 #include "AiRoutine.h"
 #include "../Engine/Direction.h"
+#include "PickupType.h"
+#include "ProjectileType.h"
 #include <string>
 
 struct AircraftData
 {
-	AircraftType type;
-	int health;
-	float speed;
-	float despawnDistance;
-	Direction enterDirection;
-	Direction exitDirection;
-	TextureId textureId;
-	sf::IntRect textureLoadArea;
-	std::vector<AiRoutine> aiRoutines;
+	AircraftType Type;
+	int Health;
+	float Speed;
+	float DespawnDistance;
+	Direction EnterDirection;
+	Direction ExitDirection;
+	TextureId TextureId;
+	sf::IntRect TextureLoadArea;
+	std::vector<AiRoutine> AiRoutines;
 };
 
-std::vector<AircraftData> LoadAircraftData(const std::string& filename);
+struct PickupData
+{
+	PickupType Type;
+	float Value;
+};
+
+struct ProjectileData
+{
+	ProjectileType Type;
+	float Value;
+};
+
+struct GameData
+{
+	std::unordered_map<std::string, AircraftData> AircraftData;
+	std::unordered_map<std::string, PickupData> PickupData;
+	std::unordered_map<std::string, ProjectileData> ProjectileData;
+};
+
+GameData LoadData(const std::string& filename);
 
 #endif //DATATABLES_H_

@@ -7,28 +7,20 @@
 
 #include "Entity.h"
 #include "../Game/Aircraft.h"
+#include "../Game/PickupType.h"
 
 class Pickup : public GameSprite
 {
+
  public:
-	enum Type
-	{
-		HealthRefill,
-		MissileRefill,
-		FireSpread,
-		FireRate,
-		Count
-	};
- public:
-	explicit Pickup(Type type);
+	explicit Pickup(PickupType type);
 	virtual unsigned int getCategory() const;
-	virtual sf::FloatRect getBoundingRect() const;
+
 	void apply(Aircraft& player) const;
  protected:
-	virtual void drawCurrent(sf::RenderTarget& target,
-		sf::RenderStates states) const;
+	void render(sf::RenderTarget& renderTarget, sf::RenderStates states) const override;
  private:
-	Type m_type;
+	PickupType m_type;
 	sf::Sprite m_sprite;
 };
 

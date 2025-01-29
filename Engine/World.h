@@ -25,6 +25,7 @@ public:
 	sf::FloatRect getViewBounds() const;
 	sf::FloatRect getBattlefieldBounds() const;
 	void update(float deltaTime);
+	static GameData GameData;
 private:
 	struct SpawnPoint
 	{

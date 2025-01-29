@@ -11,6 +11,8 @@
 #include "Entity.h"
 #include "Debug.h"
 #include "Direction.h"
+#include "../Game/PickupType.h"
+#include "../Game/ProjectileType.h"
 
 #ifndef M_PI
 #define M_PI 3.14159265359
@@ -19,6 +21,7 @@
 class Utility
 {
 public:
+#pragma region Time Functions
 	static void beginStopwatch(std::string message)
 	{
 		m_clock.restart();
@@ -28,6 +31,16 @@ public:
 	static void endStopwatch(std::string message)
 	{
 		sf::Time elapsed = m_clock.getElapsedTime();
+	}
+#pragma endregion // Time Functions
+
+#pragma region Math Functions
+	template <typename T>
+	static void centerOrigin(T& object)
+	{
+		static_assert(std::is_base_of<sf::Drawable, T>::value, "Object must be drawable");
+		sf::FloatRect bounds = object.getLocalBounds();
+		object.setOrigin(std::floor(bounds.left + bounds.width / 2.f), std::floor(bounds.top + bounds.height / 2.f));
 	}
 
 	static float magnitude(float x, float y)
@@ -58,7 +71,38 @@ public:
 		return std::sqrt(std::pow(b.getPosition().x - a.getPosition().x, 2) + std::pow(b.getPosition().y - a.getPosition().y, 2));
 	}
 
-	static Direction stringToDirection(std::string s)
+	static float dotProduct(const sf::Vector2f& vec1, const sf::Vector2f& vec2)
+	{
+		return vec1.x * vec2.x + vec1.y * vec2.y;
+	}
+
+	static float lerp(float a, float b, float t)
+	{
+		t = std::clamp(t, 0.0f, 1.0f);
+		return a + (b - a) * t;
+	}
+
+	static constexpr float toRadian(float degree)
+	{
+		return degree * (M_PI / 180.f);
+	}
+
+	static constexpr float toDegree(float angle)
+	{
+		return angle * (180.f / M_PI);
+	}
+#pragma endregion // Math Functions
+
+#pragma region StringTo Functions
+
+	static std::string toLower(const std::string& str) {
+		std::string result = str;
+		std::transform(result.begin(), result.end(), result.begin(),
+			[](unsigned char c) { return std::tolower(c); });
+		return result;
+	}
+
+	static Direction stringToDirection(const std::string& s)
 	{
 		auto lowerStr = Utility::toLower(s);
 		if(lowerStr == "north")
@@ -80,107 +124,205 @@ public:
 		else
 		{
 			Debug::logWarning("Could not convert string " + s + " to a direction.");
-			return Direction::Count;
+			return Direction::DirectionCount;
 		}
 	}
 
-	static std::string toLower(const std::string& str) {
-		std::string result = str;
-		std::transform(result.begin(), result.end(), result.begin(),
-			[](unsigned char c) { return std::tolower(c); });
-		return result;
-	}
-
-	static float dotProduct(const sf::Vector2f& vec1, const sf::Vector2f& vec2)
+	static TextureId stringToTextureId(const std::string& s)
 	{
-		return vec1.x * vec2.x + vec1.y * vec2.y;
-	}
+		auto type = Utility::toLower(s);
 
-	static float lerp(float a, float b, float t)
-	{
-		t = std::clamp(t, 0.0f, 1.0f);
-		return a + (b - a) * t;
-	}
-
-	static constexpr float toRadian(float degree)
-	{
-		return degree * (M_PI / 180.f);
-	}
-
-	static constexpr float toDegree(float angle)
-	{
-		return angle * (180.f / M_PI);
-	}
-
-	template <typename T>
-	static void centerOrigin(T& object)
-	{
-		static_assert(std::is_base_of<sf::Drawable, T>::value, "Object must be drawable");
-		sf::FloatRect bounds = object.getLocalBounds();
-		object.setOrigin(std::floor(bounds.left + bounds.width / 2.f), std::floor(bounds.top + bounds.height / 2.f));
-	}
-
-	static TextureId stringToTextureID(const std::string& str)
-	{
-		static std::unordered_map<std::string, TextureId> stringToEnumMap = {
-			{ "SmoggySky", TextureId::SmoggySky },
-			{ "Black", TextureId::Black },
-			{ "DecayedBuildings1", TextureId::DecayedBuildings1 },
-			{ "DecayedBuildings2", TextureId::DecayedBuildings2 },
-			{ "DecayedBuildings3", TextureId::DecayedBuildings3 },
-			{ "AircraftSpriteSheet", TextureId::AircraftSpriteSheet },
-			{ "EnemiesSpriteSheet", TextureId::EnemiesSpriteSheet },
-			{ "Coin", TextureId::Coin },
-			{ "BlueButtonIdle", TextureId::BlueButtonIdle },
-			{ "BlueButtonClicked", TextureId::BlueButtonClicked },
-			{ "MagentaButtonIdle", TextureId::MagentaButtonIdle },
-			{ "MagentaButtonClicked", TextureId::MagentaButtonClicked },
-		};
-
-		auto it = stringToEnumMap.find(str);
-		if (it != stringToEnumMap.end())
+		if(type == "smoggy_sky")
 		{
-			return it->second;
+			return TextureId::SmoggySky;
+		}
+		else if(type == "black")
+		{
+			return TextureId::Black;
+		}
+		else if(type == "decayed_buildings_1")
+		{
+			return TextureId::DecayedBuildings1;
+		}
+		else if(type == "decayed_buildings_2")
+		{
+			return TextureId::DecayedBuildings2;
+		}
+		else if(type == "decayed_buildings_3")
+		{
+			return TextureId::DecayedBuildings3;
+		}
+		else if(type == "aircraft_sprite_sheet")
+		{
+			return TextureId::AircraftSpriteSheet;
+		}
+		else if(type == "enemies_sprite_sheet")
+		{
+			return TextureId::EnemiesSpriteSheet;
+		}
+		else if(type == "coin")
+		{
+			return TextureId::Coin;
+		}
+		else if(type == "blue_button_idle")
+		{
+			return TextureId::BlueButtonIdle;
+		}
+		else if(type == "blue_button_clicked")
+		{
+			return TextureId::BlueButtonClicked;
+		}
+		else if(type == "magenta_button_idle")
+		{
+			return TextureId::MagentaButtonIdle;
+		}
+		else if(type == "magenta_button_clicked")
+		{
+			return TextureId::MagentaButtonClicked;
 		}
 		else
 		{
-			Debug::logError("Invalid aircraft type: " + str);
-			return TextureId::Count;
+			return TextureId::TextureIdCount;
+		}
+
+
+	}
+
+	static AircraftType stringToAircraftType(const std::string& s)
+	{
+		auto type = Utility::toLower(s);
+
+		if(type == "tomcat")
+		{
+			return AircraftType::Tomcat;
+		}
+		else if(type == "chopper")
+		{
+			return AircraftType::Chopper;
+		}
+		else
+		{
+			return AircraftType::AircraftTypeCount;
 		}
 	}
 
-	static std::string aircraftTypeToString(AircraftType aircraftType)
+	static PickupType stringToPickupType(const std::string& s)
 	{
-		switch (aircraftType)
+		auto type = Utility::toLower(s);
+		if(type == "missile_refill")
 		{
-		case AircraftType::Tomcat:
-			return "Tomcat";
-		case AircraftType::Chopper:
-			return "Chopper";
+			return PickupType::MissileRefill;
+		}
+		else if(type == "health_refill")
+		{
+			return PickupType::HealthRefill;
+		}
+		else if(type == "fire_spread")
+		{
+			return PickupType::FireSpread;
+		}
+		else
+		{
+			return PickupType::PickupCount;
+		}
+	}
+
+	static ProjectileType stringToProjectileType(const std::string& s)
+	{
+		auto type = Utility::toLower(s);
+		if(type == "bullet")
+		{
+			return ProjectileType::Bullet;
+		}
+		else if(type == "missile")
+		{
+			return ProjectileType::Missile;
+		}
+		else
+		{
+			return ProjectileType::TypeCount;
+		}
+	}
+
+#pragma endregion // StringTo Functions
+
+#pragma region TypeTo Functions
+	static std::string pickupTypeToString(PickupType type)
+	{
+		switch(type)
+		{
+		case PickupType::FireRate:
+			return "fire_rate";
+		case PickupType::FireSpread:
+			return "fire_spread";
+		case PickupType::HealthRefill:
+			return "health_refill";
+		case PickupType::MissileRefill:
+			return "missile_refill";
 		default:
-			return "Unknown";
+			return "none";
 		}
 	}
 
-	static AircraftType stringToAircraftType(const std::string& str)
+	static std::string projectileTypeToString(ProjectileType type)
 	{
-		static std::unordered_map<std::string, AircraftType> stringToEnumMap = {
-			{ "Tomcat", AircraftType::Tomcat },
-			{ "Chopper", AircraftType::Chopper }
-		};
-
-		auto it = stringToEnumMap.find(str);
-		if (it != stringToEnumMap.end())
+		switch(type)
 		{
-			return it->second;
-		}
-		else
-		{
-			Debug::logError("Invalid aircraft type: " + str);
-			return AircraftType::Count;
+		case ProjectileType::Bullet:
+			return "bullet";
+		case ProjectileType::Missile:
+			return "missile";
+		default:
+			return "none";
 		}
 	}
 
+	static std::string aircraftTypeToString(AircraftType type)
+	{
+		switch(type)
+		{
+		case AircraftType::Chopper:
+			return "chopper";
+		case AircraftType::Tomcat:
+			return "tomcat";
+		case AircraftType::AircraftTypeCount:
+			return "count";
+		default:
+			return "none";
+		}
+	}
+
+	static std::string nodeTypeToString(NodeType type)
+	{
+		switch(type)
+		{
+		case NodeType::None:
+			return "none";
+		case NodeType::WorldNode:
+			return "worldNode";
+		case NodeType::Entity:
+			return "entity";
+		case NodeType::Sprite:
+			return "sprite";
+		case NodeType::Text:
+			return "text";
+		case NodeType::Aircraft:
+			return "aircraft";
+		case NodeType::Player:
+			return "player";
+		case NodeType::Ally:
+			return "ally";
+		case NodeType::Enemy:
+			return "enemy";
+		case NodeType::Projectile:
+			return "projectile";
+		default:
+			return "none";
+		}
+	}
+#pragma endregion // TypeTo Functions
+
+#pragma region Input Functions
 	static std::string keyToString(sf::Keyboard::Key key)
 	{
 		switch (key)
@@ -286,6 +428,7 @@ public:
 			default: return "Unknown";
 		}
 	}
+#pragma endregion // Input Functions
 
  private:
     static sf::Clock m_clock;
