@@ -11,14 +11,18 @@
 #include "../Engine/Projectile.h"
 #include <vector>
 
+#define MAX_FIRE_RATE 3
+#define MAX_MISSILE_COUNT 3
+#define MAX_SPREAD_LEVEL 3
+
 class Aircraft : public GameSprite
 {
  public:
 	explicit Aircraft(bool hasCollision, sf::Vector2f scale, sf::Vector2f position);
-	virtual ~Aircraft() override = default;
+	~Aircraft() override = default;
 
-	int getHealth() const { return m_health; }
-	void setHealth(int health) { m_health = health; }
+	float getHealth() const { return m_health; }
+	void setHealth(float health) { m_health = health; }
 
 	void accelerate(sf::Vector2f velocity) { setVelocity(getVelocity() + velocity); }
 	void accelerate(float x, float y) { setVelocity(getVelocity() + sf::Vector2f(x, y)); }
@@ -26,15 +30,18 @@ class Aircraft : public GameSprite
 	float getMaxSpeed() const { return m_speed; }
 	virtual AircraftType getAircraftType() = 0;
 
-	virtual void loadResources() override;
+	void loadResources() override;
 	void fire();
 	void launchMissile();
+	virtual void changeFireRate(int increment) { m_fireRateLevel = std::min(m_fireRateLevel += increment, MAX_FIRE_RATE); }
+	virtual void changeMissileCount(int increment) { m_missileCount = std::min(m_missileCount += increment, MAX_MISSILE_COUNT); }
+	virtual void changeFireSpread(int increment) { m_spreadLevel = std::min(m_spreadLevel += increment, MAX_SPREAD_LEVEL); }
+	virtual void changeHealth(float increment);
  protected:
 	virtual void handleAnimation(float deltaTime);
 	void handleDamageAnimation(float deltaTime);
-	virtual void takeDamage(int health);
-	virtual void update(float deltaTime, CommandQueue& commands) override;
-	virtual unsigned int getNodeType() const override { return GameSprite::getNodeType() | (unsigned int)NodeType::Aircraft; }
+	void update(float deltaTime, CommandQueue& commands) override;
+	unsigned int getNodeType() const override { return GameSprite::getNodeType() | (unsigned int)NodeType::Aircraft; }
 
  private:
 	void createProjectile(WorldNode& node, ProjectileType projectileType, float xOffset, float yOffset);
@@ -48,7 +55,7 @@ class Aircraft : public GameSprite
 	void checkProjectileLaunch(float dt, CommandQueue& commands);
 	void createBullets(WorldNode& node);
 
-	int m_health{};
+	float m_health{};
 	float m_speed{};
 	float m_timeSinceDamage;
 	float m_fireCooldownRemaining;
@@ -57,9 +64,10 @@ class Aircraft : public GameSprite
 	bool m_isFiring;
 	Command m_fireCommand;
 	Command m_missileCommand;
-	int m_fireRateLevel;
+	int m_fireRateLevel{};
 	bool m_isLaunchingMissile;
-	int m_spreadLevel;
+	int m_spreadLevel{};
+	int m_missileCount{};
 
 	bool m_isDamageAnimationActive;
 	bool m_isExiting;
@@ -71,8 +79,8 @@ class Aircraft : public GameSprite
 	std::vector<AiRoutine> m_aiRoutines;
 
 	sf::Vector2f m_spawnPos;
-	Direction m_enterDirection;
-	Direction m_exitDirection;
+	Direction m_enterDirection{};
+	Direction m_exitDirection{};
 };
 
 #endif //AIRCRAFT_H_

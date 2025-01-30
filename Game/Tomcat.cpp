@@ -17,6 +17,10 @@ void Tomcat::update(float deltaTime, CommandQueue& commands)
 {
 	Aircraft::update(deltaTime, commands);
 	handleAnimation(deltaTime);
+	if(m_nodeType & (unsigned int)NodeType::Player)
+	{
+		Debug::log("Player pos", getWorldPosition().x, getWorldPosition().y);
+	}
 }
 
 void Tomcat::collision(const Entity* other)

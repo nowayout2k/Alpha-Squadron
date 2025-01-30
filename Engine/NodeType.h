@@ -20,6 +20,7 @@ enum class NodeType
 	Enemy = 1 << 7,
 	Projectile = 1 << 8,
 	CollisionLayer = 1 << 9,
+	Pickup = 1 << 10,
 };
 
 

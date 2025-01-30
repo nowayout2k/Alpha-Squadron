@@ -18,7 +18,6 @@ class Projectile : public GameSprite
 	void collision(const Entity* other) override;
 	void guideTowards(sf::Vector2f position);
 	bool isGuided() const;
-	virtual sf::FloatRect getBoundingRect() const;
 	unsigned int getNodeType() const override { return GameSprite::getNodeType() | (int)NodeType::Projectile; }
 	float getMaxSpeed() const;
 	int getDamage() const;

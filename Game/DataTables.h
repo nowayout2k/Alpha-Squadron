@@ -14,6 +14,8 @@
 #include "PickupType.h"
 #include "ProjectileType.h"
 #include <string>
+#include <functional>
+class Aircraft;
 
 struct AircraftData
 {
@@ -32,19 +34,24 @@ struct PickupData
 {
 	PickupType Type;
 	float Value;
+	TextureId TextureId;
+	sf::IntRect TextureLoadArea;
+	std::function<void(Aircraft&)> Action;
 };
 
 struct ProjectileData
 {
-	ProjectileType Type;
-	float Value;
+	ProjectileType Type{};
+	TextureId TextureId{};
+	sf::IntRect TextureLoadArea{};
+	float Value{};
 };
 
 struct GameData
 {
-	std::unordered_map<std::string, AircraftData> AircraftData;
-	std::unordered_map<std::string, PickupData> PickupData;
-	std::unordered_map<std::string, ProjectileData> ProjectileData;
+	std::unordered_map<AircraftType, AircraftData> AircraftData;
+	std::unordered_map<PickupType, PickupData> PickupData;
+	std::unordered_map<ProjectileType, ProjectileData> ProjectileData;
 };
 
 GameData LoadData(const std::string& filename);

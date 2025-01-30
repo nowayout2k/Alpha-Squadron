@@ -12,22 +12,22 @@
 class GameSprite : public Entity
 {
 public:
-	explicit GameSprite(const bool hasCollision, const TextureId textureId,
+	explicit GameSprite(const bool hasCollision, const TextureId textureId, const bool centerOrigin = false,
 		const sf::IntRect textureLoadArea = sf::IntRect(), const sf::IntRect spriteTextureRegion = sf::IntRect(), bool repeatTexture = false)
-		: m_textureId(textureId), m_textureLoadArea(textureLoadArea), m_repeatTexture(repeatTexture), m_spriteTextureRegion(spriteTextureRegion),
+		: m_textureId(textureId), m_centerOrigin(centerOrigin), m_textureLoadArea(textureLoadArea), m_repeatTexture(repeatTexture), m_spriteTextureRegion(spriteTextureRegion),
 		  Entity(hasCollision)
 		{}
 
-	explicit GameSprite(const bool hasCollision,
+	explicit GameSprite(const bool hasCollision, const bool centerOrigin = false,
 		const sf::IntRect textureLoadArea = sf::IntRect(), const sf::IntRect spriteTextureRegion = sf::IntRect(), bool repeatTexture = false)
-		: m_textureLoadArea(textureLoadArea), m_repeatTexture(repeatTexture), m_spriteTextureRegion(spriteTextureRegion),
+		: m_textureLoadArea(textureLoadArea), m_textureId(), m_centerOrigin(centerOrigin), m_repeatTexture(repeatTexture), m_spriteTextureRegion(spriteTextureRegion),
 		  Entity(hasCollision)
 	{
 	}
 
-	virtual ~GameSprite() override = default;
+	~GameSprite() override = default;
 
-	virtual unsigned int getNodeType() const override { return Entity::getNodeType() | (unsigned int)NodeType::Sprite; }
+	unsigned int getNodeType() const override { return Entity::getNodeType() | (unsigned int)NodeType::Sprite; }
 
 	void render(sf::RenderTarget& renderTarget, sf::RenderStates states) const override
 	{
@@ -58,13 +58,20 @@ public:
 		return m_sprite.getLocalBounds();
 	}
 
-	virtual void loadResources() override
+	sf::FloatRect getBoundingRect() const
+	{
+		return getWorldTransform().transformRect(m_sprite.getGlobalBounds());
+	}
+
+	void loadResources() override
 	{
 		auto& tex = ResourceManager::loadResource(m_textureId, m_textureLoadArea);
 		tex.setRepeated(m_repeatTexture);
 		m_sprite.setTexture(tex);
 		if(m_spriteTextureRegion != sf::IntRect())
 			m_sprite.setTextureRect(m_spriteTextureRegion);
+		if(m_centerOrigin)
+			Utility::centerOrigin(m_sprite);
 	}
 
 	void setColor(sf::Color color)
@@ -82,6 +89,7 @@ public:
 	sf::IntRect m_textureLoadArea;
 	sf::IntRect m_spriteTextureRegion;
 	bool m_repeatTexture;
+	bool m_centerOrigin;
  };
 
-#endif //ALPHA_SQUADRON_HEADER_SPRITE ENTITY_H_
+#endif //GAMESPRITE_H_

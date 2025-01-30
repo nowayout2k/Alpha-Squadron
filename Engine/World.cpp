@@ -8,6 +8,7 @@
 #include "GameText.h"
 #include "../Game/Chopper.h"
 #include "Projectile.h"
+#include "Pickup.h"
 
 float World::m_scrollSpeed = 500.0f;
 GameData World::GameData = LoadData("../Game/DataFiles/gameData.json");
@@ -44,6 +45,7 @@ void World::setup()
 		new GameSprite(
 			false,
 			TextureId::SmoggySky,
+			false,
 			sf::IntRect(),
 			sf::IntRect(0,0,m_worldBounds.width, m_worldView.getSize().y),
 			true));
@@ -54,6 +56,7 @@ void World::setup()
 		new GameSprite(
 			false,
 			TextureId::DecayedBuildings1,
+			false,
 			sf::IntRect(),
 			sf::IntRect(0,0,m_worldBounds.width,m_worldView.getSize().y),
 			true));
@@ -66,19 +69,32 @@ void World::setup()
 	m_worldLayers[static_cast<int>(Layer::Collision)]->attachNode(std::move(player));
 
 	addEnemies();
+	addPickUps();
 
 	Audio::playMusic(MusicId::UNSquadronLevel1, 10);
 }
 
 void World::addEnemies()
 {
-	m_enemySpawnPoints.push_back(SpawnPoint(AircraftType::Tomcat, 5500.f));
-	m_enemySpawnPoints.push_back(SpawnPoint(AircraftType::Chopper, 9000.f));
+	m_enemySpawnPoints.emplace_back(AircraftType::Tomcat, 5500.f);
+	m_enemySpawnPoints.emplace_back(AircraftType::Chopper, 9000.f);
 
 	std::sort(m_enemySpawnPoints.begin(), m_enemySpawnPoints.end(),
-		[] (SpawnPoint lhs, SpawnPoint rhs)
+		[] (EnemySpawnPoint lhs, EnemySpawnPoint rhs)
 		{
-		  return lhs.spawnDistance > rhs.spawnDistance;
+		  return lhs.SpawnDistance > rhs.SpawnDistance;
+		});
+}
+
+void World::addPickUps()
+{
+	m_pickupSpawnPoints.emplace_back(PickupType::HealthRefill, 3500.f, sf::Vector2f(0, 100));
+	m_pickupSpawnPoints.emplace_back(PickupType::FireRate, 4000.f, sf::Vector2f(0, 800));
+
+	std::sort(m_pickupSpawnPoints.begin(), m_pickupSpawnPoints.end(),
+		[] (PickupSpawnPoint lhs, PickupSpawnPoint rhs)
+		{
+		  return lhs.SpawnDistance > rhs.SpawnDistance;
 		});
 }
 
@@ -126,15 +142,32 @@ void World::spawnEnemies()
 {
 	auto bounds = getBattlefieldBounds();
 
-	while (!m_enemySpawnPoints.empty() && m_enemySpawnPoints.back().spawnDistance < bounds.left + bounds.width)
+	while (!m_enemySpawnPoints.empty() && m_enemySpawnPoints.back().SpawnDistance < bounds.left + bounds.width)
 	{
-		SpawnPoint spawn = m_enemySpawnPoints.back();
-		auto enemy = createAircraft(spawn.type, sf::Vector2f(spawn.spawnDistance,0), NodeType::Enemy, sf::Vector2f(-4.0, 4.0));
+		EnemySpawnPoint spawn = m_enemySpawnPoints.back();
+		auto enemy = createAircraft(spawn.Type, sf::Vector2f(spawn.SpawnDistance,0), NodeType::Enemy, sf::Vector2f(-4.0, 4.0));
 		enemy->loadHierarchyResources();
 		m_worldLayers[static_cast<int>(Layer::Collision)]->attachNode(std::move(enemy));
 		m_enemySpawnPoints.pop_back();
 	}
 }
+
+void World::spawnPickups()
+{
+	auto bounds = getBattlefieldBounds();
+
+	while (!m_pickupSpawnPoints.empty() && m_pickupSpawnPoints.back().SpawnDistance < bounds.left + bounds.width)
+	{
+		PickupSpawnPoint spawn = m_pickupSpawnPoints.back();
+		auto pickup = std::make_unique<Pickup>(spawn.Type);
+		pickup->setPosition(sf::Vector2f(spawn.SpawnDistance + spawn.offset.x, spawn.offset.y));
+		pickup->loadHierarchyResources();
+		Debug::log("Spawning Pickup", pickup->getWorldPosition().x, pickup->getWorldPosition().y);
+		m_worldLayers[static_cast<int>(Layer::Collision)]->attachNode(std::move(pickup));
+		m_pickupSpawnPoints.pop_back();
+	}
+}
+
 
 std::unique_ptr<Aircraft> World::createAircraft(AircraftType type, sf::Vector2f position, NodeType nodeType, sf::Vector2f scale)
 {
@@ -184,6 +217,7 @@ void World::update(float deltaTime)
 	handleCollisions();
 	//m_worldGraph.removeWrecks();
 	spawnEnemies();
+	spawnPickups();
 
 	m_worldGraph.updateHierarchy(deltaTime, m_commandQueue);
 	adaptPlayerPosition();

@@ -4,12 +4,30 @@
 #include "DataTables.h"
 #include "AircraftType.h"
 #include <fstream>
-#include <vector>
 #include <string>
 #include <nlohmann/json.hpp>
-#include "../Engine/Debug.h"
-#include "../Engine/Utility.h"
-#include "AiRoutine.h"
+#include "Aircraft.h"
+
+void SetPickupAction(PickupData& data)
+{
+	switch(data.Type)
+	{
+	case PickupType::FireSpread:
+		data.Action = [data] (Aircraft& a) { a.changeFireSpread((int)data.Value); };
+		break;
+	case PickupType::HealthRefill:
+		data.Action = [data] (Aircraft& a) { a.changeHealth(data.Value); };
+		break;
+	case PickupType::MissileRefill:
+		data.Action = [data] (Aircraft& a) { a.changeMissileCount((int)data.Value); };
+		break;
+	case PickupType::FireRate:
+		data.Action = [data] (Aircraft& a) { a.changeFireRate((int)data.Value); };
+		break;
+	default:
+		break;
+	}
+}
 
 GameData LoadData(const std::string& filename)
 {
@@ -50,7 +68,7 @@ GameData LoadData(const std::string& filename)
 
 		aircraftData.TextureLoadArea = sf::IntRect(left, top, width, height);
 
-		gameData.AircraftData[Utility::aircraftTypeToString(aircraftData.Type)] = aircraftData;
+		gameData.AircraftData[aircraftData.Type] = aircraftData;
 	}
 
 	for (const auto& item : j["pickup"])
@@ -58,7 +76,8 @@ GameData LoadData(const std::string& filename)
 		PickupData pickupData{};
 		pickupData.Type = Utility::stringToPickupType(item["type"]);
 		pickupData.Value = item["value"];
-		gameData.PickupData[Utility::pickupTypeToString(pickupData.Type)] = pickupData;
+		SetPickupAction(pickupData);
+		gameData.PickupData[pickupData.Type] = pickupData;
 	}
 
 	for (const auto& item : j["projectile"])
@@ -66,7 +85,7 @@ GameData LoadData(const std::string& filename)
 		ProjectileData projectileData{};
 		projectileData.Type = Utility::stringToProjectileType(item["type"]);
 		projectileData.Value = item["value"];
-		gameData.ProjectileData[Utility::projectileTypeToString(projectileData.Type)] = projectileData;
+		gameData.ProjectileData[projectileData.Type] = projectileData;
 	}
 
 	return gameData;

@@ -27,11 +27,19 @@ public:
 	void update(float deltaTime);
 	static GameData GameData;
 private:
-	struct SpawnPoint
+	struct EnemySpawnPoint
 	{
-		SpawnPoint(AircraftType type, float spawnDistance) : type(type), spawnDistance(spawnDistance){}
-		AircraftType type;
-		float spawnDistance;
+		EnemySpawnPoint(AircraftType type, float spawnDistance) : Type(type), SpawnDistance(spawnDistance){}
+		AircraftType Type;
+		float SpawnDistance;
+	};
+
+	struct PickupSpawnPoint
+	{
+		PickupSpawnPoint(PickupType type, float spawnDistance, sf::Vector2f offset) : Type(type), SpawnDistance(spawnDistance), offset(offset){}
+		PickupType Type;
+		float SpawnDistance;
+		sf::Vector2f offset;
 	};
 
 	friend class Debug;
@@ -41,8 +49,9 @@ private:
 	static void handleCollisions();
 	static std::unique_ptr<Aircraft> createAircraft(AircraftType type, sf::Vector2f position, NodeType nodeType, sf::Vector2f scale);
 	void spawnEnemies();
-	sf::Vector2f getSpawnLocationOffset(int spawnLocation);
+	void spawnPickups();
 	void addEnemies();
+	void addPickUps();
 	void guideMissiles();
 	void adaptPlayerVelocity();
 	void adaptPlayerPosition();
@@ -53,7 +62,8 @@ private:
 	EmptyWorldNode m_worldGraph;
 	std::array<WorldNode*, static_cast<int>(Layer::LayerCount)> m_worldLayers{};
 	sf::FloatRect m_worldBounds;
-	std::vector<SpawnPoint> m_enemySpawnPoints;
+	std::vector<EnemySpawnPoint> m_enemySpawnPoints;
+	std::vector<PickupSpawnPoint> m_pickupSpawnPoints;
 	std::vector<Aircraft*> m_activeEnemies;
 	sf::Vector2f m_spawnPosition;
 	sf::Vector2f m_viewPositionOffset;

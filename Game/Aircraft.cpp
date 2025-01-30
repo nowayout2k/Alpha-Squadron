@@ -12,8 +12,10 @@ constexpr float MAX_SPAWN_DISTANCE = 1000.0f;
 	#define M_PI 3.14159265359
 #endif
 
-Aircraft::Aircraft(const bool hasCollision, sf::Vector2f scale, sf::Vector2f position)
-	: GameSprite(hasCollision),
+#define MAX_HEALTH 120.f
+
+Aircraft::Aircraft(const bool hasCollision, sf::Vector2f  scale, sf::Vector2f position)
+	: GameSprite(hasCollision, false),
 		m_isExiting(false),
 		m_timeSinceDamage(0),
 		m_routineDistanceTravelled(0),
@@ -38,20 +40,23 @@ Aircraft::Aircraft(const bool hasCollision, sf::Vector2f scale, sf::Vector2f pos
 	attachNode(std::move(healthDisplay));
 }
 
-void Aircraft::takeDamage(int health)
+void Aircraft::changeHealth(float increment)
 {
-	m_health -= health;
-	if (m_isDamageAnimationActive || m_health <= 0)
+	m_health = std::min(m_health + increment, MAX_HEALTH);
+	if(increment < 0)
 	{
-		Audio::playSound(SoundFxId::Explosion, 50);
-		destroy();
-		return;
-	}
+		if (m_isDamageAnimationActive || m_health <= 0)
+		{
+			Audio::playSound(SoundFxId::Explosion, 50);
+			destroy();
+			return;
+		}
 
-	setColor(sf::Color::Red);
-	Audio::playSound(SoundFxId::Damage, 50);
-	m_timeSinceDamage = 0;
-	m_isDamageAnimationActive = true;
+		setColor(sf::Color::Red);
+		Audio::playSound(SoundFxId::Damage, 50);
+		m_timeSinceDamage = 0;
+		m_isDamageAnimationActive = true;
+	}
 }
 
 void Aircraft::fire()
@@ -140,7 +145,7 @@ void Aircraft::update(float deltaTime, CommandQueue& commands)
 
 void Aircraft::updateHealthDisplay()
 {
-	m_healthDisplay->setString(std::to_string(m_health) + " HP");
+	m_healthDisplay->setString(std::to_string((int)m_health) + " HP");
 	auto bounds = GameSprite::getLocalBounds();
 	m_healthDisplay->setPosition(bounds.width / 2, -bounds.height / 2);
 	m_healthDisplay->setRotation(-getRotation());
@@ -290,7 +295,7 @@ void Aircraft::createBullets(WorldNode& node)
 	switch (m_spreadLevel)
 	{
 	case 0:
-		createProjectile(node, ProjectileType::Bullet, 0.0f, 0.5f);
+		createProjectile(node, ProjectileType::Bullet, 0.0f, 0.0f);
 		break;
 	case 1:
 		createProjectile(node, ProjectileType::Bullet, -0.33f, 0.33f);
@@ -298,7 +303,7 @@ void Aircraft::createBullets(WorldNode& node)
 		break;
 	case 2:
 		createProjectile(node, ProjectileType::Bullet, -0.5f, 0.33f);
-		createProjectile(node, ProjectileType::Bullet, 0.0f, 0.5f);
+		createProjectile(node, ProjectileType::Bullet, 0.0f, 0.0f);
 		createProjectile(node, ProjectileType::Bullet, +0.5f, 0.33f);
 		break;
 	}
@@ -309,7 +314,7 @@ void Aircraft::createProjectile(WorldNode& node, ProjectileType projectileType, 
 	float sign = isAllied() ? 1.f : - 1.f;
 	std::unique_ptr<Projectile> projectile(new Projectile(projectileType, sf::Vector2f(sign, 0)));
 	projectile->setScale(4, 4);
-	sf::Vector2f offset(sign * getGlobalBounds().width * projectile->getScale().x  + sign * xOffset, projectile->getScale().y *   yOffset * (getGlobalBounds().height/2));
+	sf::Vector2f offset(getGlobalBounds().width * getScale().x + sign * xOffset, getScale().y * (yOffset + getGlobalBounds().height));
 	projectile->setPosition(getWorldPosition() + offset);
 	if(!isAllied())
 		projectile->setRotation(180);

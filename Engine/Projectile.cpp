@@ -8,7 +8,7 @@
 
 Projectile::Projectile(ProjectileType projectileType, sf::Vector2f targetDirection) : m_targetDirection(targetDirection),
 	GameSprite(true,
-		projectileType == Missile ? TextureId::EnemiesSpriteSheet : TextureId::AircraftSpriteSheet,
+		projectileType == Missile ? TextureId::EnemiesSpriteSheet : TextureId::AircraftSpriteSheet, true,
 		projectileType == Missile ? sf::IntRect(211, 213, 7, 9) : sf::IntRect(376, 108, 10, 12))
 {
 	setScale(1.0f, 1.0f);
@@ -51,7 +51,7 @@ void Projectile::update(float deltaTime, CommandQueue& commands)
 float Projectile::getMaxSpeed() const
 {
 	auto data = World::GameData.ProjectileData;
-	auto it = data.find(Utility::projectileTypeToString(m_projectileType));
+	auto it = data.find(m_projectileType);
 	if(it == data.end())
 	{
 		return 100.0f;
@@ -82,11 +82,6 @@ void Projectile::guideTowards(sf::Vector2f position)
 void Projectile::collision(const Entity* other)
 {
 	GameSprite::collision(other);
-}
-
-sf::FloatRect Projectile::getBoundingRect() const
-{
-	return getWorldTransform().transformRect(getGlobalBounds());
 }
 
 int Projectile::getDamage() const
