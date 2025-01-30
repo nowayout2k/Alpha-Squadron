@@ -6,23 +6,38 @@
 #include "Audio.h"
 #include "Engine.h"
 
-Projectile::Projectile(ProjectileType projectileType, sf::Vector2f targetDirection) : m_targetDirection(targetDirection),
+#define LAUNCH_TIME 0.25f
+
+Projectile::Projectile(ProjectileType projectileType, sf::Vector2f targetDirection, sf::Vector2f launchDirection) :
+	m_targetDirection(targetDirection),
+	m_launchDirection(launchDirection),
+	m_timeSinceLaunch(0),
+	m_isLaunching(true),
+	m_projectileType(projectileType),
 	GameSprite(true,
 		projectileType == Missile ? TextureId::EnemiesSpriteSheet : TextureId::AircraftSpriteSheet, true,
 		projectileType == Missile ? sf::IntRect(211, 213, 7, 9) : sf::IntRect(376, 108, 10, 12))
 {
 	setScale(1.0f, 1.0f);
 	Audio::playSound(SoundFxId::Shoot1, 10);
-	m_projectileType = projectileType;
 }
 
 void Projectile::update(float deltaTime, CommandQueue& commands)
 {
-	if (isGuided())
+	if(m_isLaunching)
+	{
+		m_timeSinceLaunch += deltaTime;
+		if(m_timeSinceLaunch > LAUNCH_TIME)
+		{
+			m_isLaunching = false;
+		}
+	}
+
+	if (isGuided() && !m_isLaunching)
 	{
 
 		const float approachRate = getMaxSpeed() + World::getScrollSpeed();
-		const float turnRate = 5.0f; // Controls how fast it turns
+		const float turnRate = 10.0f; // Controls how fast it turns
 
 		// Compute the desired velocity (toward target)
 		sf::Vector2f desiredVelocity = Utility::unitVector(m_targetDirection) * approachRate;
@@ -42,7 +57,7 @@ void Projectile::update(float deltaTime, CommandQueue& commands)
 	}
 	else
 	{
-		setVelocity(m_targetDirection.x * (getMaxSpeed() + World::getScrollSpeed()), 0);
+		setVelocity(m_launchDirection.x * (getMaxSpeed() + World::getScrollSpeed()), 0);
 	}
 
 	GameSprite::update(deltaTime, commands);

@@ -312,7 +312,7 @@ void Aircraft::createBullets(WorldNode& node)
 void Aircraft::createProjectile(WorldNode& node, ProjectileType projectileType, float xOffset, float yOffset)
 {
 	float sign = isAllied() ? 1.f : - 1.f;
-	std::unique_ptr<Projectile> projectile(new Projectile(projectileType, sf::Vector2f(sign, 0)));
+	std::unique_ptr<Projectile> projectile(new Projectile(projectileType, sf::Vector2f(0, 0), sf::Vector2f(sign, 0)));
 	projectile->setScale(4, 4);
 	sf::Vector2f offset(getGlobalBounds().width * getScale().x + sign * xOffset, getScale().y * (yOffset + getGlobalBounds().height));
 	projectile->setPosition(getWorldPosition() + offset);
