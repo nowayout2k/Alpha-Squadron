@@ -5,10 +5,10 @@
 #ifndef AIRCRAFT_H_
 #define AIRCRAFT_H_
 
-#include "../Engine/GameSprite.h"
+#include "GameSprite.h"
 #include "DataTables.h"
-#include "../Engine/GameText.h"
-#include "../Engine/Projectile.h"
+#include "GameText.h"
+#include "Projectile.h"
 #include <vector>
 
 #define MAX_FIRE_RATE 3

@@ -6,7 +6,7 @@
 #define PLAYER_H_
 
 #include "CommandQueue.h"
-#include "../Game/Aircraft.h"
+#include "Aircraft.h"
 
 
 

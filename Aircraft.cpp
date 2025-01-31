@@ -1,7 +1,7 @@
 #include "Aircraft.h"
-#include "../Engine/Audio.h"
-#include "../Engine/World.h"
-#include "../Engine/Engine.h"
+#include "Audio.h"
+#include "World.h"
+#include "Engine.h"
 
 constexpr float DAMAGE_FLASH_TIME = 4.0f;
 constexpr float DAMAGE_INVINCIBILITY_TIME = 0.3f;

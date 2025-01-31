@@ -10,7 +10,7 @@
 #include "TextureId.h"
 #include "AircraftType.h"
 #include "AiRoutine.h"
-#include "../Engine/Direction.h"
+#include "Direction.h"
 #include "PickupType.h"
 #include "ProjectileType.h"
 #include <string>

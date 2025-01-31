@@ -6,13 +6,13 @@
 #define UTILITY_H_
 #include <SFML/System/Clock.hpp>
 #include <SFML/Graphics.hpp>
-#include "../Game/AircraftType.h"
-#include "../Game/TextureId.h"
+#include "AircraftType.h"
+#include "TextureId.h"
 #include "Entity.h"
 #include "Debug.h"
 #include "Direction.h"
-#include "../Game/PickupType.h"
-#include "../Game/ProjectileType.h"
+#include "PickupType.h"
+#include "ProjectileType.h"
 
 #ifndef M_PI
 #define M_PI 3.14159265359

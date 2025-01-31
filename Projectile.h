@@ -7,7 +7,7 @@
 
 #include "GameSprite.h"
 #include "CommandQueue.h"
-#include "../Game/ProjectileType.h"
+#include "ProjectileType.h"
 
 class Projectile : public GameSprite
 {

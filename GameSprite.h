@@ -51,14 +51,24 @@ public:
 	{
 		sf::FloatRect rect = getBoundingRect();
 
-		sf::RectangleShape shape;
-		shape.setPosition(sf::Vector2f(rect.left, rect.top));
-		shape.setSize(sf::Vector2f(rect.width, rect.height));
-		shape.setFillColor(sf::Color::Transparent);
-		shape.setOutlineColor(sf::Color::Green);
-		shape.setOutlineThickness(3.f);
+		//Bounding box
+		sf::RectangleShape rectangleShape;
+		rectangleShape.setPosition(sf::Vector2f(rect.left, rect.top));
+		rectangleShape.setSize(sf::Vector2f(rect.width, rect.height));
+		rectangleShape.setFillColor(sf::Color::Transparent);
+		rectangleShape.setOutlineColor(sf::Color::Green);
+		rectangleShape.setOutlineThickness(3.f);
 
-		target.draw(shape);
+		//Pivot Point
+		sf::CircleShape circleShape;
+		circleShape.setPosition(getPosition().x + (getOrigin().x * rect.width), getPosition().y + (getOrigin().y * rect.height));
+		circleShape.setRadius(1.f);
+		circleShape.setFillColor(sf::Color::Red);
+		circleShape.setOutlineColor(sf::Color::Red);
+		circleShape.setOutlineThickness(3.f);
+
+		target.draw(rectangleShape);
+		target.draw(circleShape);
 	}
 
 	sf::FloatRect getBoundingRect() const override

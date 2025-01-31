@@ -6,8 +6,8 @@
 #define PICKUP_H_
 
 #include "Entity.h"
-#include "../Game/Aircraft.h"
-#include "../Game/PickupType.h"
+#include "Aircraft.h"
+#include "PickupType.h"
 
 class Pickup : public GameSprite
 {

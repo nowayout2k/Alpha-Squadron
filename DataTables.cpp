@@ -5,7 +5,7 @@
 #include "AircraftType.h"
 #include <fstream>
 #include <string>
-#include <nlohmann/json.hpp>
+#include "nlohmann/json.hpp"
 #include "Aircraft.h"
 
 void SetPickupAction(PickupData& data)

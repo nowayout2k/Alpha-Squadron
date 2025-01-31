@@ -6,8 +6,8 @@
 #define TOMCAT_H_
 
 
-#include "../Engine/GameSprite.h"
-#include "../Engine/Entity.h"
+#include "GameSprite.h"
+#include "Entity.h"
 #include "Aircraft.h"
 
 

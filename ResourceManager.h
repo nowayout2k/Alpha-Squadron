@@ -8,8 +8,8 @@
 #include <SFML/Audio/SoundBuffer.hpp>
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/Texture.hpp>
-#include "../Game/SoundFxId.h"
-#include "../Game/TextureId.h"
+#include "SoundFxId.h"
+#include "TextureId.h"
 #include "Cache.h"
 #include "FontId.h"
 

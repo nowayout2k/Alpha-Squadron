@@ -9,7 +9,7 @@
 #include <queue>
 #include "GameSprite.h"
 #include "Entity.h"
-#include "../Game/Aircraft.h"
+#include "Aircraft.h"
 #include "Layer.h"
 #include "EmptyWorldNode.h"
 #include "CommandQueue.h"

@@ -3,16 +3,16 @@
 //
 
 #include "World.h"
-#include "../Game/Tomcat.h"
+#include "Tomcat.h"
 #include "Audio.h"
 #include "GameText.h"
-#include "../Game/Chopper.h"
+#include "Chopper.h"
 #include "Projectile.h"
 #include "Pickup.h"
 #include "Engine.h"
 
 float World::m_scrollSpeed = 500.0f;
-GameData World::GameData = LoadData("../Game/DataFiles/gameData.json");
+GameData World::GameData = LoadData("../DataFiles/gameData.json");
 
 World::World(sf::RenderWindow& window) : m_window(window), m_worldView(window.getDefaultView()),
 			m_worldBounds(0.0f,0.0f,100000.0f,m_worldView.getSize().y),
