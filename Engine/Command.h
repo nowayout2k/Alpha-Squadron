@@ -11,12 +11,12 @@ struct Command
 {
  public:
 	Command() = default;
-	std::function<void(WorldNode&, float)> action;
-	unsigned int nodeType = 0;
+	std::function<void(WorldNode&, float)> Action;
+	unsigned int NodeType = 0;
 };
 
 template <typename GameObject, typename Function>
-std::function<void(WorldNode&, float)> derivedAction(Function fn)
+std::function<void(WorldNode&, float)> DerivedAction(Function fn)
 {
 	return [=] (WorldNode& node, float dt)
 	{

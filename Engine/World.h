@@ -24,6 +24,7 @@ public:
 	static float getScrollSpeed() { return m_scrollSpeed; }
 	sf::FloatRect getViewBounds() const;
 	sf::FloatRect getBattlefieldBounds() const;
+	void destroyEntitiesOutsideView();
 	void update(float deltaTime);
 	static GameData GameData;
 private:

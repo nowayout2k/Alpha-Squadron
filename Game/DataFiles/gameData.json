@@ -46,27 +46,27 @@
       [
         {
           "angle": 90,
-          "distance": 512
+          "distance": 490
         },
         {
           "angle": -90,
-          "distance": 512
+          "distance": 490
         },
         {
           "angle": 180,
-          "distance": 100
+          "distance": 200
         },
         {
           "angle": 0,
-          "distance": 100
+          "distance": 200
         },
         {
           "angle": -90,
-          "distance": 512
+          "distance": 490
         },
         {
           "angle": 90,
-          "distance": 512
+          "distance": 490
         }
       ]
     },
@@ -88,19 +88,19 @@
       [
         {
           "angle": 90,
-          "distance": 512
+          "distance": 490
         },
         {
           "angle": -90,
-          "distance": 512
+          "distance": 490
         },
         {
           "angle": -90,
-          "distance": 512
+          "distance": 490
         },
         {
           "angle": 90,
-          "distance": 512
+          "distance": 490
         }
       ]
     }

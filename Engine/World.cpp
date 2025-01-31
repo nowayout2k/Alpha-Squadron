@@ -33,6 +33,27 @@ void World::restart()
 	Debug::log("Restarting game.....");
 }
 
+void World:: destroyEntitiesOutsideView()
+{
+	Command command;
+	command.NodeType = static_cast<unsigned int>(NodeType::EnemyProjectile) |
+		static_cast<unsigned int>(NodeType::AlliedProjectile) |
+		static_cast<unsigned int>(NodeType::Pickup) |
+		static_cast<unsigned int>(NodeType::Enemy);
+
+	command.Action = DerivedAction<Entity>(
+		[this](Entity& e, float)
+		{
+		  if (!getBattlefieldBounds().intersects(e.getBoundingRect()))
+		  {
+			  e.destroy();
+			  e.markForRemoval();
+		  }
+		});
+
+	m_commandQueue.push(command);
+}
+
 void World::setup()
 {
 	for (int i = 0; i < static_cast<int>(Layer::LayerCount); ++i)
@@ -113,9 +134,9 @@ void World::addPickUps()
 void World::guideMissiles()
 {
 	Command enemyCollector;
-	enemyCollector.nodeType |= (int)NodeType::Enemy;
-	enemyCollector.action =
-		derivedAction<Aircraft>([this] (Aircraft& enemy, float dt)
+	enemyCollector.NodeType |= (int)NodeType::Enemy;
+	enemyCollector.Action =
+		DerivedAction<Aircraft>([this](Aircraft& enemy, float dt)
 		{
 		  if (!enemy.isDestroyed())
 			  m_activeEnemies.push_back(&enemy);
@@ -124,28 +145,30 @@ void World::guideMissiles()
 
 
 	Command missileGuider;
-	missileGuider.nodeType |= (int)NodeType::AlliedProjectile;
-	missileGuider.action =
-		derivedAction<Projectile>(
-		[this] (Projectile& missile, float dt)
-		{
-		  if (!missile.isGuided())
-			  return;
+	missileGuider.NodeType |= (int)NodeType::AlliedProjectile;
+	missileGuider.Action =
+		DerivedAction<Projectile>(
+			[this](Projectile& missile, float dt)
+			{
+			  if (!missile.isGuided())
+				  return;
 
-		  float minDistance = std::numeric_limits<float>::max();
-		  Aircraft* closestEnemy = nullptr;
-		  for (Aircraft* enemy : m_activeEnemies)
-		  {
-			  float enemyDistance = Utility::getDistance(missile, *enemy);
-			  if (enemyDistance < minDistance)
+			  float minDistance = std::numeric_limits<float>::max();
+			  Aircraft* closestEnemy = nullptr;
+			  for (Aircraft* enemy : m_activeEnemies)
 			  {
-				  closestEnemy = enemy;
-				  minDistance = enemyDistance;
+				  float enemyDistance = Utility::getDistance(missile, *enemy);
+				  if (enemyDistance < minDistance)
+				  {
+					  closestEnemy = enemy;
+					  minDistance = enemyDistance;
+				  }
 			  }
-		  }
-		  if(closestEnemy)
-		  	missile.guideTowards(sf::Vector2f(closestEnemy->getWorldPosition().x + (closestEnemy->getScale().x * closestEnemy->getGlobalBounds().width)/2, closestEnemy->getWorldPosition().y));
-		});
+			  if (closestEnemy)
+				  missile.guideTowards(sf::Vector2f(closestEnemy->getWorldPosition().x
+						  + (closestEnemy->getScale().x * closestEnemy->getGlobalBounds().width) / 2,
+					  closestEnemy->getWorldPosition().y));
+			});
 	m_commandQueue.push(missileGuider);
 	m_activeEnemies.clear();
 }
@@ -271,9 +294,11 @@ void World::update(float deltaTime)
 {
 	float scrollSpeedFactor = 1;
 	m_worldView.move(m_scrollSpeed * scrollSpeedFactor * deltaTime, 0.f);
+
 	if(m_playerAircraft)
 		m_playerAircraft->setVelocity(0,0);
 
+	destroyEntitiesOutsideView();
 	guideMissiles();
 	while (!m_commandQueue.isEmpty())
 	{

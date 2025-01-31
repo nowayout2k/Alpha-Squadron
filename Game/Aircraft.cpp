@@ -289,14 +289,14 @@ void Aircraft::loadResources()
 		setPosition(m_spawnPos);
 	}
 
-	m_fireCommand.nodeType = (unsigned int)NodeType::CollisionLayer;
-	m_fireCommand.action =
+	m_fireCommand.NodeType = (unsigned int)NodeType::CollisionLayer;
+	m_fireCommand.Action =
 		[this] (WorldNode& node, float dt)
 		{
 		  createBullets(node);
 		};
-	m_missileCommand.nodeType = (unsigned int)NodeType::CollisionLayer;
-	m_missileCommand.action =
+	m_missileCommand.NodeType = (unsigned int)NodeType::CollisionLayer;
+	m_missileCommand.Action =
 		[this] (WorldNode& node, float delta)
 		{
 		  createProjectile(node, ProjectileType::Missile, 0.f, 0.5f);

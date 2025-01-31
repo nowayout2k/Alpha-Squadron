@@ -21,15 +21,17 @@ Player::Player()
 	assignKey(Fire, sf::Keyboard::Space);
 	assignKey(LaunchMissile, sf::Keyboard::M);
 
-	m_actionBinding[AccelerateNegX].action = derivedAction<Aircraft>(AircraftMover(-1,  0));
-	m_actionBinding[AcceleratePosX].action = derivedAction<Aircraft>(AircraftMover(1,  0));
-	m_actionBinding[AccelerateNegY].action = derivedAction<Aircraft>(AircraftMover( 0, -1));
-	m_actionBinding[AcceleratePosY].action = derivedAction<Aircraft>(AircraftMover( 0, 1));
- 	m_actionBinding[Fire].action = derivedAction<Aircraft>([] (Aircraft& a, float){ a.fire(); });
-	m_actionBinding[LaunchMissile].action = derivedAction<Aircraft>([] (Aircraft& a, float){ a.launchMissile(); });
+	m_actionBinding[AccelerateNegX].Action = DerivedAction<Aircraft>(AircraftMover(-1, 0));
+	m_actionBinding[AcceleratePosX].Action = DerivedAction<Aircraft>(AircraftMover(1, 0));
+	m_actionBinding[AccelerateNegY].Action = DerivedAction<Aircraft>(AircraftMover(0, -1));
+	m_actionBinding[AcceleratePosY].Action = DerivedAction<Aircraft>(AircraftMover(0, 1));
+ 	m_actionBinding[Fire].Action = DerivedAction<Aircraft>([](Aircraft& a, float)
+	{ a.fire(); });
+	m_actionBinding[LaunchMissile].Action = DerivedAction<Aircraft>([](Aircraft& a, float)
+	{ a.launchMissile(); });
 
 	for(auto& pair : m_actionBinding)
-		pair.second.nodeType = (unsigned int)NodeType::Player;
+		pair.second.NodeType = (unsigned int)NodeType::Player;
 }
 
 void Player::handleEvent(const sf::Event& event, CommandQueue& commands)
@@ -43,8 +45,8 @@ void Player::handleEvent(const sf::Event& event, CommandQueue& commands)
 	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::P)
 	{
 		Command output;
-		output.nodeType |= (int)NodeType::Player;
-		output.action = [] (WorldNode& worldNode, float dt)
+		output.NodeType |= (int)NodeType::Player;
+		output.Action = [] (WorldNode& worldNode, float dt)
 		{
 		  std::cout << worldNode.getPosition().x << ","
 					<< worldNode.getPosition().y << "\n";

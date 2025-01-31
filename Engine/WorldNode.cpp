@@ -91,11 +91,15 @@ bool WorldNode::isColliding(const WorldNode& lhs, const WorldNode& rhs)
 
 void WorldNode::removeDestroyed()
 {
-	auto destroyedBegin = std::remove_if(m_children.begin(), m_children.end(),
-		std::mem_fn(&WorldNode::isMarkedForRemoval));
+	auto destroyedBegin = std::remove_if(m_children.begin(), m_children.end(),std::mem_fn(&WorldNode::isMarkedForRemoval));
+	int count = m_children.end() - destroyedBegin;
+	if(count > 0)
+		Debug::log("Destroy count", count);
+
 	m_children.erase(destroyedBegin, m_children.end());
-	std::for_each(m_children.begin(), m_children.end(),
-		std::mem_fn(&WorldNode::removeDestroyed));
+
+	std::for_each(m_children.begin(), m_children.end(),std::mem_fn(&WorldNode::removeDestroyed));
+
 }
 
 sf::FloatRect WorldNode::getBoundingRect() const
@@ -114,9 +118,9 @@ void WorldNode::loadHierarchyResources()
 
 void WorldNode::onCommand(const Command& command, float deltaTime)
 {
-	if (command.nodeType & getNodeType())
+	if (command.NodeType & getNodeType())
 	{
-		command.action(*this, deltaTime);
+		command.Action(*this, deltaTime);
 	}
 
 	for(auto& child : m_children)
