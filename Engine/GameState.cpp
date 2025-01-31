@@ -8,6 +8,8 @@ bool GameState::update(float deltaTime)
 	m_world.update(deltaTime);
 	CommandQueue& commands = m_world.getCommandQueue();
 	getContext().input->handleRealtimeInput(commands);
+	if(Player::getMissionStatus() != Player::MissionStatus::None)
+		requestStackPush(StateId::GameOver);
 	return true;
 }
 

@@ -10,6 +10,7 @@
 #include "GameState.h"
 #include "PauseState.h"
 #include "SettingsState.h"
+#include "GameOverState.h"
 
 #define FRAME_RATE_LIMIT 60.0f
 #define TIME_STEP_MAX 1.0f/FRAME_RATE_LIMIT
@@ -95,4 +96,5 @@ void Engine::registerStates()
 	m_stateStack.registerState<GameState>(StateId::Game);
 	m_stateStack.registerState<PauseState>(StateId::Pause);
 	m_stateStack.registerState<SettingsState>(StateId::Settings);
+	m_stateStack.registerState<GameOverState>(StateId::GameOver);
 }

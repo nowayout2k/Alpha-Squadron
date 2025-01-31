@@ -96,6 +96,8 @@ add_executable(Alpha-Squadron main.cpp
         Engine/Direction.h
         Engine/Pickup.cpp
         Engine/Pickup.h
+        Engine/GameOverState.cpp
+        Engine/GameOverState.h
 )
 
 # Link the SFML libraries and nlohmann_json

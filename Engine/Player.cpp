@@ -5,6 +5,7 @@
 #include "Player.h"
 
 std::vector<Player::ActionType> Player::m_realTimeActionTypes;
+Player::MissionStatus Player::m_missionStatus = Player::MissionStatus::None;
 
 Player::Player()
 {

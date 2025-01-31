@@ -72,6 +72,7 @@ void World::setup()
 			sf::IntRect(0,0,m_worldBounds.width, m_worldView.getSize().y),
 			true));
 	backgroundSkySprite->setPosition(m_worldBounds.left,m_worldBounds.top);
+	backgroundSkySprite->setColor(sf::Color(90,89,255,255));
 	m_worldLayers[static_cast<int>(Layer::Background)]->attachNode(std::move(backgroundSkySprite));
 
 	std::unique_ptr<GameSprite> backgroundBuildingsSprite(
@@ -83,6 +84,7 @@ void World::setup()
 			sf::IntRect(0,0,m_worldBounds.width,m_worldView.getSize().y),
 			true));
 	backgroundBuildingsSprite->setPosition(m_worldBounds.left,m_worldBounds.top);
+	backgroundBuildingsSprite->setColor(sf::Color(155,155,155,55));
 	m_worldLayers[static_cast<int>(Layer::Background)]->attachNode(std::move(backgroundBuildingsSprite));
 
 	std::unique_ptr<Aircraft> player = createAircraft(AircraftType::Tomcat, m_spawnPosition, NodeType::Player, sf::Vector2f(4.0, 4.0));
@@ -292,6 +294,9 @@ void World::loadResources()
 
 void World::update(float deltaTime)
 {
+	if(!m_playerAircraft)
+		Player::setMissionStatus(Player::MissionStatus::Failure);
+
 	float scrollSpeedFactor = 1;
 	m_worldView.move(m_scrollSpeed * scrollSpeedFactor * deltaTime, 0.f);
 

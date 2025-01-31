@@ -12,7 +12,8 @@ enum class StateId
 	Menu,
 	Game,
 	Settings,
-	Pause
+	Pause,
+	GameOver
 };
 
 #endif //STATEIDENTIFIERS_H_

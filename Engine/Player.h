@@ -34,6 +34,14 @@ class Player
 		LaunchMissile,
 		ActionCount
 	};
+
+	enum MissionStatus
+	{
+		None,
+		Success,
+		Failure
+	};
+
 	Player();
 	void assignKey(ActionType actionType, sf::Keyboard::Key key);
 
@@ -41,6 +49,8 @@ class Player
 
 	void handleEvent(const sf::Event& event, CommandQueue& commands);
 	void handleRealtimeInput(CommandQueue& commands);
+	static MissionStatus getMissionStatus() { return m_missionStatus; }
+	static void setMissionStatus(MissionStatus missionStatus) { m_missionStatus = missionStatus; }
  private:
 	static bool isRealtimeAction(ActionType actionType);
  private:
@@ -48,6 +58,7 @@ class Player
 	std::map<ActionType, Command> m_actionBinding;
 
 	static std::vector<ActionType> m_realTimeActionTypes;
+	static MissionStatus m_missionStatus;
 };
 
 #endif //PLAYER_H_
