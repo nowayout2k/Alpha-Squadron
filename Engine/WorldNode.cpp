@@ -69,6 +69,40 @@ WorldNode::SmartNode WorldNode::detachNode(const WorldNode& node)
 	return result;
 }
 
+void WorldNode::checkNodeCollision(WorldNode& node, std::set<Pair>& collisionPairs)
+{
+	if (this != &node && isColliding(*this, node) && !isDestroyed() && !node.isDestroyed())
+		collisionPairs.insert(std::minmax(this, &node));
+	for(SmartNode& child : m_children)
+		child->checkNodeCollision(node, collisionPairs);
+}
+
+void WorldNode::checkWorldCollision(WorldNode& sceneGraph, std::set<Pair>& collisionPairs)
+{
+	checkNodeCollision(sceneGraph, collisionPairs);
+	for(SmartNode& child : sceneGraph.m_children)
+		checkWorldCollision(*child, collisionPairs);
+}
+
+bool WorldNode::isColliding(const WorldNode& lhs, const WorldNode& rhs)
+{
+	return lhs.getBoundingRect().intersects(rhs.getBoundingRect());
+}
+
+void WorldNode::removeDestroyed()
+{
+	auto destroyedBegin = std::remove_if(m_children.begin(), m_children.end(),
+		std::mem_fn(&WorldNode::isMarkedForRemoval));
+	m_children.erase(destroyedBegin, m_children.end());
+	std::for_each(m_children.begin(), m_children.end(),
+		std::mem_fn(&WorldNode::removeDestroyed));
+}
+
+sf::FloatRect WorldNode::getBoundingRect() const
+{
+	return sf::FloatRect();
+}
+
 void WorldNode::loadHierarchyResources()
 {
 	loadResources();

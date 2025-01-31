@@ -8,15 +8,16 @@
 
 #define LAUNCH_TIME 0.25f
 
-Projectile::Projectile(ProjectileType projectileType, sf::Vector2f targetDirection, sf::Vector2f launchDirection) :
+Projectile::Projectile(NodeType type, ProjectileType projectileType, sf::Vector2f targetDirection, sf::Vector2f launchDirection) :
+	m_type(type),
 	m_targetDirection(targetDirection),
 	m_launchDirection(launchDirection),
 	m_timeSinceLaunch(0),
 	m_isLaunching(true),
 	m_projectileType(projectileType),
 	GameSprite(true,
-		projectileType == Missile ? TextureId::EnemiesSpriteSheet : TextureId::AircraftSpriteSheet, true,
-		projectileType == Missile ? sf::IntRect(211, 213, 7, 9) : sf::IntRect(376, 108, 10, 12))
+		projectileType == Missile ? TextureId::EnemiesSpriteSheet : TextureId::AircraftSpriteSheet, false,
+		projectileType == Missile ? sf::IntRect(211, 213, 7, 7) : sf::IntRect(376, 108, 5, 4))
 {
 	setScale(1.0f, 1.0f);
 	Audio::playSound(SoundFxId::Shoot1, 10);
@@ -94,12 +95,7 @@ void Projectile::guideTowards(sf::Vector2f position)
 	}
 }
 
-void Projectile::collision(const Entity* other)
-{
-	GameSprite::collision(other);
-}
-
 int Projectile::getDamage() const
 {
-	return 0;
+	return 25;
 }

@@ -10,13 +10,14 @@
 class EmptyWorldNode : public WorldNode
 {
  public:
-	EmptyWorldNode() : type(NodeType::None) {};
-	explicit EmptyWorldNode(NodeType type): type(type){};
-	unsigned int getNodeType() const override { return WorldNode::getNodeType() | (unsigned int)type; }
+	EmptyWorldNode() : m_type(NodeType::None) {};
+	explicit EmptyWorldNode(NodeType type): m_type(type){};
+	unsigned int getNodeType() const override { return WorldNode::getNodeType() | (unsigned int)m_type; }
 	void update(float deltaTime, CommandQueue& commands) override {  }
 	void render(sf::RenderTarget& renderTarget, sf::RenderStates states) const override {  }
 	void loadResources() override {  };
+	sf::Rect<float> getGlobalBounds() const override { return sf::Rect<float>(); }
  private:
-	NodeType type;
+	NodeType m_type;
 };
 #endif //EMPTYWORLDNODE_H_

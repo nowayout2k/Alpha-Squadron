@@ -58,6 +58,9 @@ void Player::handleEvent(const sf::Event& event, CommandQueue& commands)
 
 	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Key::F)
 		Debug::toggleFps();
+
+	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Key::C)
+		Debug::toggleDrawColliders();
 }
 
 void Player::handleRealtimeInput(CommandQueue& commands)

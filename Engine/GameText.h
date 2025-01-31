@@ -52,14 +52,6 @@ class GameText : public Entity
 		m_text.setFont(ResourceManager::loadResource(m_fontType));
 	};
 
-	void collision(const Entity* other) override { if(!hasCollision()) return; }
-	bool isColliding(const sf::Rect<float>& bounds) const override
-	{
-		if(!hasCollision())
-			return false;
-
-		return m_text.getGlobalBounds().intersects(bounds);
-	}
  private:
 	sf::Text m_text;
 	FontId m_fontType;

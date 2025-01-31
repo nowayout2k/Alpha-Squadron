@@ -221,6 +221,10 @@ public:
 		{
 			return PickupType::FireSpread;
 		}
+		else if(type == "fire_rate")
+		{
+			return PickupType::FireRate;
+		}
 		else
 		{
 			return PickupType::PickupCount;
@@ -314,8 +318,10 @@ public:
 			return "ally";
 		case NodeType::Enemy:
 			return "enemy";
-		case NodeType::Projectile:
-			return "projectile";
+		case NodeType::AlliedProjectile:
+			return "allied_projectile";
+		case NodeType::EnemyProjectile:
+			return "enemy_projectile";
 		default:
 			return "none";
 		}

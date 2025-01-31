@@ -33,9 +33,9 @@ class Aircraft : public GameSprite
 	void loadResources() override;
 	void fire();
 	void launchMissile();
-	virtual void changeFireRate(int increment) { m_fireRateLevel = std::min(m_fireRateLevel += increment, MAX_FIRE_RATE); }
-	virtual void changeMissileCount(int increment) { m_missileCount = std::min(m_missileCount += increment, MAX_MISSILE_COUNT); }
-	virtual void changeFireSpread(int increment) { m_spreadLevel = std::min(m_spreadLevel += increment, MAX_SPREAD_LEVEL); }
+	virtual void changeFireRate(int increment) { m_fireRateLevel = std::min(m_fireRateLevel + increment, MAX_FIRE_RATE); }
+	virtual void changeMissileCount(int increment) { m_missileCount = std::min(m_missileCount + increment, MAX_MISSILE_COUNT); }
+	virtual void changeFireSpread(int increment) { m_spreadLevel = std::min(m_spreadLevel + increment, MAX_SPREAD_LEVEL); }
 	virtual void changeHealth(float increment);
  protected:
 	virtual void handleAnimation(float deltaTime);

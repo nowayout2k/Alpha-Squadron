@@ -18,8 +18,3 @@ void Tomcat::update(float deltaTime, CommandQueue& commands)
 	Aircraft::update(deltaTime, commands);
 	handleAnimation(deltaTime);
 }
-
-void Tomcat::collision(const Entity* other)
-{
-	GameSprite::collision(other);
-}

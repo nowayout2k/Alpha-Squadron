@@ -36,17 +36,17 @@ private:
 
 	struct PickupSpawnPoint
 	{
-		PickupSpawnPoint(PickupType type, float spawnDistance, sf::Vector2f offset) : Type(type), SpawnDistance(spawnDistance), offset(offset){}
+		PickupSpawnPoint(PickupType type, float spawnDistance, sf::Vector2f offset) : Type(type), SpawnDistance(spawnDistance), Offset(offset){}
 		PickupType Type;
 		float SpawnDistance;
-		sf::Vector2f offset;
+		sf::Vector2f Offset;
 	};
 
 	friend class Debug;
 
 	void setup();
 	void loadResources();
-	static void handleCollisions();
+	void handleCollisions();
 	static std::unique_ptr<Aircraft> createAircraft(AircraftType type, sf::Vector2f position, NodeType nodeType, sf::Vector2f scale);
 	void spawnEnemies();
 	void spawnPickups();
@@ -55,6 +55,8 @@ private:
 	void guideMissiles();
 	void adaptPlayerVelocity();
 	void adaptPlayerPosition();
+	bool matchesCategories(WorldNode::Pair& colliders, NodeType t1, NodeType t2);
+
 	static float m_scrollSpeed;
 
 	sf::RenderWindow& m_window;
@@ -69,6 +71,12 @@ private:
 	sf::Vector2f m_viewPositionOffset;
 	Aircraft* m_playerAircraft;
 	CommandQueue m_commandQueue;
+
+	//Debug////////////////////////
+	sf::Text m_fpsText;
+	float m_timeSinceLastFpsUpdate;
+	int m_framesSinceLastFpsUpdate;
+	///////////////////////////////
 };
 
 

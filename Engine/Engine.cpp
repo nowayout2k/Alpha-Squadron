@@ -25,7 +25,6 @@ Engine::Engine() : m_isPaused(false), m_stateStack(State::Context(m_window, m_in
 
 void Engine::run()
 {
-	Debug::init();
 	sf::Clock clock;
 	float timeStep = 0;
 
@@ -45,7 +44,6 @@ void Engine::run()
 
 void Engine::update(float deltaTime)
 {
-	Debug::update(deltaTime);
 	m_stateStack.update(deltaTime);
 }
 void Engine::render()
@@ -53,7 +51,6 @@ void Engine::render()
 	sf::RenderStates states;
 	m_window.clear();
 	m_stateStack.render(states);
-	Debug::render(m_window, states);
 	m_window.display();
 }
 

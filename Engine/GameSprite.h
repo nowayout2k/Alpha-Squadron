@@ -16,7 +16,8 @@ public:
 		const sf::IntRect textureLoadArea = sf::IntRect(), const sf::IntRect spriteTextureRegion = sf::IntRect(), bool repeatTexture = false)
 		: m_textureId(textureId), m_centerOrigin(centerOrigin), m_textureLoadArea(textureLoadArea), m_repeatTexture(repeatTexture), m_spriteTextureRegion(spriteTextureRegion),
 		  Entity(hasCollision)
-		{}
+		{
+		}
 
 	explicit GameSprite(const bool hasCollision, const bool centerOrigin = false,
 		const sf::IntRect textureLoadArea = sf::IntRect(), const sf::IntRect spriteTextureRegion = sf::IntRect(), bool repeatTexture = false)
@@ -32,20 +33,8 @@ public:
 	void render(sf::RenderTarget& renderTarget, sf::RenderStates states) const override
 	{
 		renderTarget.draw(m_sprite, states);
-	}
-
-	void collision(const Entity* other) override
-	{
-		if(!hasCollision())
-			return;
-	}
-
-	bool isColliding(const sf::Rect<float>& bounds) const override
-	{
-		if(!hasCollision())
-			return false;
-
-		return getGlobalBounds().intersects(bounds);
+		if(Debug::isCollidersVisible())
+			drawBoundingRect(renderTarget, states);
 	}
 
 	sf::Rect<float> getGlobalBounds() const override
@@ -58,7 +47,21 @@ public:
 		return m_sprite.getLocalBounds();
 	}
 
-	sf::FloatRect getBoundingRect() const
+	void drawBoundingRect(sf::RenderTarget& target, sf::RenderStates) const
+	{
+		sf::FloatRect rect = getBoundingRect();
+
+		sf::RectangleShape shape;
+		shape.setPosition(sf::Vector2f(rect.left, rect.top));
+		shape.setSize(sf::Vector2f(rect.width, rect.height));
+		shape.setFillColor(sf::Color::Transparent);
+		shape.setOutlineColor(sf::Color::Green);
+		shape.setOutlineThickness(3.f);
+
+		target.draw(shape);
+	}
+
+	sf::FloatRect getBoundingRect() const override
 	{
 		return getWorldTransform().transformRect(m_sprite.getGlobalBounds());
 	}

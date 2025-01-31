@@ -29,7 +29,8 @@ Aircraft::Aircraft(const bool hasCollision, sf::Vector2f  scale, sf::Vector2f po
 		m_missileCommand(),
 		m_fireRateLevel(0),
 		m_isLaunchingMissile(false),
-		m_spreadLevel(0)
+		m_spreadLevel(0),
+	  	m_missileCount(3)
 {
 	setScale(scale);
 	setPosition(m_spawnPos);
@@ -49,6 +50,8 @@ void Aircraft::changeHealth(float increment)
 		{
 			Audio::playSound(SoundFxId::Explosion, 50);
 			destroy();
+			if(!(getNodeType() & static_cast<unsigned int>(NodeType::Player)))
+				markForRemoval();
 			return;
 		}
 
@@ -66,7 +69,12 @@ void Aircraft::fire()
 
 void Aircraft::launchMissile()
 {
-	m_isLaunchingMissile = true;
+	if(m_missileCount > 0)
+	{
+		m_missileCount--;
+		m_isLaunchingMissile = true;
+	}
+
 }
 
 void Aircraft::handleAnimation(float deltaTime)
@@ -123,7 +131,7 @@ void Aircraft::handleDamageAnimation(float deltaTime)
 			setColor(sf::Color(255, c, c, 255));
 		}
 
-		setCollision(m_timeSinceDamage > DAMAGE_INVINCIBILITY_TIME);
+		//setCollision(m_timeSinceDamage > DAMAGE_INVINCIBILITY_TIME);
 	}
 }
 
@@ -229,7 +237,14 @@ void Aircraft::loadResources()
 	{
 		if (data.second.Type == getAircraftType())
 		{
-			m_health = data.second.Health;
+			if(getNodeType() & static_cast<unsigned int>(NodeType::Player))
+			{
+				m_health = 100;
+			}
+			else
+			{
+				m_health = data.second.Health;
+			}
 			m_speed = data.second.Speed;
 			m_aiRoutines = data.second.AiRoutines;
 			m_despawnDistance = data.second.DespawnDistance;
@@ -312,9 +327,9 @@ void Aircraft::createBullets(WorldNode& node)
 void Aircraft::createProjectile(WorldNode& node, ProjectileType projectileType, float xOffset, float yOffset)
 {
 	float sign = isAllied() ? 1.f : - 1.f;
-	std::unique_ptr<Projectile> projectile(new Projectile(projectileType, sf::Vector2f(0, 0), sf::Vector2f(sign, 0)));
+	std::unique_ptr<Projectile> projectile(new Projectile(isAllied() ? NodeType::AlliedProjectile :  NodeType::EnemyProjectile ,projectileType, sf::Vector2f(0, 0), sf::Vector2f(sign, 0)));
 	projectile->setScale(4, 4);
-	sf::Vector2f offset(getGlobalBounds().width * getScale().x + sign * xOffset, getScale().y * (yOffset + getGlobalBounds().height));
+	sf::Vector2f offset(sign * getBoundingRect().width + sign * xOffset, getScale().y * (yOffset + getGlobalBounds().height/2));
 	projectile->setPosition(getWorldPosition() + offset);
 	if(!isAllied())
 		projectile->setRotation(180);

@@ -15,7 +15,7 @@ class Pickup : public GameSprite
  public:
 	explicit Pickup(PickupType type);
 	unsigned int getNodeType() const override { return GameSprite::getNodeType() | (unsigned int)NodeType::Pickup; }
-
+	void setPickupColor();
 	void apply(Aircraft& player) const;
 	void update(float deltaTime, CommandQueue& commands) override;
  protected:

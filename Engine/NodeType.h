@@ -18,9 +18,10 @@ enum class NodeType
 	Player = 1 << 5,
 	Ally = 1 << 6,
 	Enemy = 1 << 7,
-	Projectile = 1 << 8,
-	CollisionLayer = 1 << 9,
-	Pickup = 1 << 10,
+	EnemyProjectile = 1 << 8,
+	AlliedProjectile = 1 << 9,
+	CollisionLayer = 1 << 10,
+	Pickup = 1 << 11,
 };
 
 

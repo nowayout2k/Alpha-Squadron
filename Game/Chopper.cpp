@@ -20,8 +20,3 @@ void Chopper::update(float deltaTime, CommandQueue& commands)
 		return;
 	}
 }
-
-void Chopper::collision(const Entity* other)
-{
-	GameSprite::collision(other);
-}
