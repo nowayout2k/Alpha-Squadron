@@ -2,9 +2,9 @@
 // Created by Johnnie Otis on 6/8/24.
 //
 
-#include "Projectile.h"
-#include "Audio.h"
-#include "Engine.h"
+#include "../Headers/Projectile.h"
+#include "../Headers/Audio.h"
+#include "../Headers/Engine.h"
 
 #define LAUNCH_TIME 0.25f
 

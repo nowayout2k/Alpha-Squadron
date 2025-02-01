@@ -2,8 +2,8 @@
 // Created by Johnnie Otis on 10/13/24.
 //
 
-#include "SettingsState.h"
-#include "Utility.h"
+#include "../Headers/SettingsState.h"
+#include "../Headers/Utility.h"
 #include <SFML/Graphics/RenderWindow.hpp>
 
 

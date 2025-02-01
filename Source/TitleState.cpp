@@ -2,8 +2,8 @@
 // Created by Johnnie Otis on 10/12/24.
 //
 
-#include "TitleState.h"
-#include "Utility.h"
+#include "../Headers/TitleState.h"
+#include "../Headers/Utility.h"
 
 TitleState::TitleState(StateStack& stack, State::Context context) : State(stack, context),
 						m_backgroundSprite(ResourceManager::loadResource(TextureId::Black))

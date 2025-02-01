@@ -2,7 +2,7 @@
 // Created by Johnnie Otis on 6/2/24.
 //
 
-#include "Tomcat.h"
+#include "../Headers/Tomcat.h"
 
 #define DAMAGE_FLASH_TIME 4.0f
 #define DAMAGE_INVINCIBILITY_TIME .3f

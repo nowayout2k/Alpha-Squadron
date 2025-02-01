@@ -2,14 +2,12 @@
 // Created by Johnnie Otis on 5/30/24.
 //
 
-#include "World.h"
-#include "Tomcat.h"
-#include "Audio.h"
-#include "GameText.h"
-#include "Chopper.h"
-#include "Projectile.h"
-#include "Pickup.h"
-#include "Engine.h"
+#include "../Headers/World.h"
+#include "../Headers/Tomcat.h"
+#include "../Headers/Audio.h"
+#include "../Headers/Chopper.h"
+#include "../Headers/Pickup.h"
+#include "../Headers/Engine.h"
 
 float World::m_scrollSpeed = 500.0f;
 GameData World::GameData = LoadData("../DataFiles/gameData.json");

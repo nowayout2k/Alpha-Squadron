@@ -2,10 +2,10 @@
 // Created by Johnnie Otis on 5/26/24.
 //
 
-#include "Audio.h"
-#include "Debug.h"
+#include "../Headers/Audio.h"
+#include "../Headers/Debug.h"
 #include <SFML/Audio.hpp>
-#include "ResourceManager.h"
+#include "../Headers/ResourceManager.h"
 
 std::list<PooledSound> Audio::m_sounds;
 sf::Music Audio::m_music;

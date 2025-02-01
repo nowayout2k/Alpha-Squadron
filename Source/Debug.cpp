@@ -1,4 +1,4 @@
-#include "Debug.h"
+#include "../Headers/Debug.h"
 
 bool Debug::m_fpsVisible = false;
 bool Debug::m_collidersVisible = false;

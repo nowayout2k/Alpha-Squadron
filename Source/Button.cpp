@@ -2,10 +2,10 @@
 // Created by Johnnie Otis on 10/13/24.
 //
 
-#include "Button.h"
-#include "Component.h"
-#include "Utility.h"
-#include "ResourceManager.h"
+#include "../Headers/Button.h"
+#include "../Headers/Component.h"
+#include "../Headers/Utility.h"
+#include "../Headers/ResourceManager.h"
 #include <SFML/Graphics/RenderStates.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 

@@ -2,7 +2,7 @@
 // Created by Johnnie Otis on 10/13/24.
 //
 
-#include "Component.h"
+#include "../Headers/Component.h"
 GUI::Component::Component() : m_isActive(false), m_isSelected(false)
 {
 

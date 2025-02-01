@@ -2,7 +2,7 @@
 // Created by Johnnie Otis on 8/12/24.
 //
 
-#include "Player.h"
+#include "../Headers/Player.h"
 
 std::vector<Player::ActionType> Player::m_realTimeActionTypes;
 Player::MissionStatus Player::m_missionStatus = Player::MissionStatus::None;

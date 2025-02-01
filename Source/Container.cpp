@@ -2,8 +2,8 @@
 // Created by Johnnie Otis on 10/13/24.
 //
 
-#include "Container.h"
-#include "Debug.h"
+#include "../Headers/Container.h"
+#include "../Headers/Debug.h"
 #include <SFML/Graphics/RenderStates.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 

@@ -2,7 +2,7 @@
 // Created by Johnnie Otis on 6/1/24.
 //
 
-#include "Chopper.h"
+#include "../Headers/Chopper.h"
 
 Chopper::Chopper(bool hasCollision, sf::Vector2f position, NodeType nodeType, sf::Vector2f scale) :
 	Aircraft(hasCollision, scale, position),

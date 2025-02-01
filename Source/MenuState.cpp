@@ -2,8 +2,8 @@
 // Created by Johnnie Otis on 10/12/24.
 //
 
-#include "MenuState.h"
-#include "Button.h"
+#include "../Headers/MenuState.h"
+#include "../Headers/Button.h"
 
 MenuState::MenuState(StateStack& stack, State::Context context) : State(stack, context), m_backgroundSprite(ResourceManager::loadResource(TextureId::Black))
 {

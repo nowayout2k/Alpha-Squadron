@@ -2,9 +2,9 @@
 // Created by Johnnie Otis on 1/29/25.
 //
 
-#include "Pickup.h"
-#include "Audio.h"
-#include "World.h"
+#include "../Headers/Pickup.h"
+#include "../Headers/Audio.h"
+#include "../Headers/World.h"
 
 Pickup::Pickup(PickupType type) : m_type(type),
 									GameSprite(true,

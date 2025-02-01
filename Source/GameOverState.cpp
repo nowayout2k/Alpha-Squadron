@@ -2,7 +2,7 @@
 // Created by Johnnie Otis on 1/30/25.
 //
 
-#include "GameOverState.h"
+#include "../Headers/GameOverState.h"
 
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>

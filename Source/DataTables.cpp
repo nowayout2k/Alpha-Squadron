@@ -1,12 +1,12 @@
 //
 // Created by Johnnie Otis on 10/15/24.
 //
-#include "DataTables.h"
-#include "AircraftType.h"
+#include "../Headers/DataTables.h"
+#include "../Headers/AircraftType.h"
 #include <fstream>
 #include <string>
 #include "nlohmann/json.hpp"
-#include "Aircraft.h"
+#include "../Headers/Aircraft.h"
 
 void SetPickupAction(PickupData& data)
 {

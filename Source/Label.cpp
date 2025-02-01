@@ -2,9 +2,9 @@
 // Created by Johnnie Otis on 10/13/24.
 //
 
-#include "Label.h"
-#include "ResourceManager.h"
-#include "Utility.h"
+#include "../Headers/Label.h"
+#include "../Headers/ResourceManager.h"
+#include "../Headers/Utility.h"
 
 GUI::Label::Label(const std::string& text) : m_text(text, ResourceManager::loadResource(FontId::Gamer), 16)
 {

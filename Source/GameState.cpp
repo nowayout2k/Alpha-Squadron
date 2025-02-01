@@ -1,7 +1,7 @@
 //
 // Created by Johnnie Otis on 10/12/24.
 //
-#include "GameState.h"
+#include "../Headers/GameState.h"
 
 bool GameState::update(float deltaTime)
 {

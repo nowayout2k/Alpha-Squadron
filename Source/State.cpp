@@ -1,8 +1,8 @@
 //
 // Created by Johnnie Otis on 10/12/24.
 //
-#include "State.h"
-#include "StateStack.h"
+#include "../Headers/State.h"
+#include "../Headers/StateStack.h"
 
 void State::requestStackPush(StateId stateId)
 {

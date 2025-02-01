@@ -3,7 +3,7 @@
 //
 
 #include <SFML/System/Lock.hpp>
-#include "ParallelTask.h"
+#include "../Headers/ParallelTask.h"
 
 ParallelTask::ParallelTask() : m_thread(&ParallelTask::runTask, this), m_finished(false) {}
 

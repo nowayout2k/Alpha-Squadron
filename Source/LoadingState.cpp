@@ -2,9 +2,9 @@
 // Created by Johnnie Otis on 10/12/24.
 //
 
-#include "LoadingState.h"
-#include "ResourceManager.h"
-#include "Utility.h"
+#include "../Headers/LoadingState.h"
+#include "../Headers/ResourceManager.h"
+#include "../Headers/Utility.h"
 
 LoadingState::LoadingState(StateStack& stateStack, Context& context, std::function<void()> loadingTask) : State(stateStack, context)
 {

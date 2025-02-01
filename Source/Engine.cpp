@@ -3,14 +3,14 @@
 //
 
 #include <SFML/Window/Event.hpp>
-#include "Engine.h"
-#include "State.h"
-#include "TitleState.h"
-#include "MenuState.h"
-#include "GameState.h"
-#include "PauseState.h"
-#include "SettingsState.h"
-#include "GameOverState.h"
+#include "../Headers/Engine.h"
+#include "../Headers/State.h"
+#include "../Headers/TitleState.h"
+#include "../Headers/MenuState.h"
+#include "../Headers/GameState.h"
+#include "../Headers/PauseState.h"
+#include "../Headers/SettingsState.h"
+#include "../Headers/GameOverState.h"
 
 #define FRAME_RATE_LIMIT 60.0f
 #define TIME_STEP_MAX 1.0f/FRAME_RATE_LIMIT

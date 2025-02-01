@@ -2,7 +2,7 @@
 // Created by Johnnie Otis on 10/12/24.
 //
 
-#include "PauseState.h"
+#include "../Headers/PauseState.h"
 void PauseState::render(sf::RenderStates& states)
 {
 	sf::RenderWindow& window = *getContext().window;
