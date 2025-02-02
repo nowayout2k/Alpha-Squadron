@@ -73,14 +73,6 @@ The project supports data-driven design through:
 The game supports parallel tasking for handling background processes:
 - **ParallelTask**: Handles background tasks running in separate threads.
 
-## Installation
-To install and set up this project, clone the repository and follow these steps:
-1. Ensure you have the required development tools (C++ compiler, libraries, etc.).
-2. Set up your build system to compile the source files.
-
-## Usage
-Once installed, you can build and run the project through your preferred IDE or command line. The game engine will load the main menu, where you can start playing or adjust settings.
-
 ## License
 This project is licensed under a proprietary license. You are not permitted to use, modify, or distribute the code without explicit permission from the author.
 
