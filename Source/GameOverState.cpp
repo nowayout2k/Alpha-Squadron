@@ -1,6 +1,4 @@
-//
-// Created by Johnnie Otis on 1/30/25.
-//
+// Copyright (c) 2025 No Way Out LLC All rights reserved.
 
 #include "../Headers/GameOverState.h"
 

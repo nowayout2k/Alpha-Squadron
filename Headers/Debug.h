@@ -1,6 +1,4 @@
-//
-// Created by Johnnie Otis on 6/11/24.
-//
+// Copyright (c) 2025 No Way Out LLC All rights reserved.
 
 #ifndef DEBUG_H_
 #define DEBUG_H_

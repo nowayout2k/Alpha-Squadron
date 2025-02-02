@@ -1,6 +1,4 @@
-//
-// Created by Johnnie Otis on 10/13/24.
-//
+// Copyright (c) 2025 No Way Out LLC All rights reserved.
 
 #ifndef LABEL_H_
 #define LABEL_H_

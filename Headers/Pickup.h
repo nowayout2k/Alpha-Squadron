@@ -1,6 +1,4 @@
-//
-// Created by Johnnie Otis on 1/29/25.
-//
+// Copyright (c) 2025 No Way Out LLC All rights reserved.
 
 #ifndef PICKUP_H_
 #define PICKUP_H_

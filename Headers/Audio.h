@@ -1,6 +1,4 @@
-//
-// Created by Johnnie Otis on 5/26/24.
-//
+// Copyright (c) 2025 No Way Out LLC All rights reserved.
 
 #ifndef AUDIO_H_
 #define AUDIO_H_

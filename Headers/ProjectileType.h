@@ -1,6 +1,4 @@
-//
-// Created by Johnnie Otis on 10/15/24.
-//
+// Copyright (c) 2025 No Way Out LLC All rights reserved.
 
 #ifndef PROJECTILETYPE_H_
 #define PROJECTILETYPE_H_

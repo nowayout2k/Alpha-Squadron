@@ -1,6 +1,4 @@
-//
-// Created by Johnnie Otis on 9/2/24.
-//
+// Copyright (c) 2025 No Way Out LLC All rights reserved.
 #include "../Headers/StateStack.h"
 
 StateStack::StateStack(State::Context context) : m_context(context)

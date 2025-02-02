@@ -1,6 +1,4 @@
-//
-// Created by Johnnie Otis on 6/9/24.
-//
+// Copyright (c) 2025 No Way Out LLC All rights reserved.
 
 #ifndef AIRCRAFT_H_
 #define AIRCRAFT_H_

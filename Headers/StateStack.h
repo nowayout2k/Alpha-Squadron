@@ -1,6 +1,4 @@
-//
-// Created by Johnnie Otis on 9/2/24.
-//
+// Copyright (c) 2025 No Way Out LLC All rights reserved.
 
 #ifndef STATESTACK_H_
 #define STATESTACK_H_

@@ -1,6 +1,4 @@
-//
-// Created by Johnnie Otis on 6/16/24.
-//
+// Copyright (c) 2025 No Way Out LLC All rights reserved.
 
 #include "../Headers/ResourceManager.h"
 

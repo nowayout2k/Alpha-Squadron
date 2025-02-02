@@ -1,3 +1,4 @@
+// Copyright (c) 2025 No Way Out LLC All rights reserved.
 #include "../Headers/Engine.h"
 
 int main()
@@ -9,7 +10,8 @@ int main()
 	}
 	catch (std::exception& e)
 	{
-		std::cout << "\nEXCEPTION: " << e.what() << std::endl;
+		std::cout << "
+EXCEPTION: " << e.what() << std::endl;
 	}
 
     return 0;

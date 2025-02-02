@@ -1,6 +1,4 @@
-//
-// Created by Johnnie Otis on 6/30/24.
-//
+// Copyright (c) 2025 No Way Out LLC All rights reserved.
 #include "../Headers/WorldNode.h"
 #include "../Headers/Debug.h"
 #include "../Headers/Command.h"

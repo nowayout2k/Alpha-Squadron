@@ -1,6 +1,4 @@
-//
-// Created by Johnnie Otis on 6/2/24.
-//
+// Copyright (c) 2025 No Way Out LLC All rights reserved.
 
 #ifndef TOMCAT_H_
 #define TOMCAT_H_

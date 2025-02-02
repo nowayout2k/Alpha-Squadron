@@ -1,6 +1,4 @@
-//
-// Created by Johnnie Otis on 6/1/24.
-//
+// Copyright (c) 2025 No Way Out LLC All rights reserved.
 
 #ifndef CHOPPER_H_
 #define CHOPPER_H_

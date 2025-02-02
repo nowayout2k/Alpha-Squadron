@@ -1,6 +1,4 @@
-//
-// Created by Johnnie Otis on 7/9/24.
-//
+// Copyright (c) 2025 No Way Out LLC All rights reserved.
 
 #ifndef EMPTYWORLDNODE_H_
 #define EMPTYWORLDNODE_H_

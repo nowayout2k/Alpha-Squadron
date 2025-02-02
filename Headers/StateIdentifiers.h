@@ -1,6 +1,4 @@
-//
-// Created by Johnnie Otis on 9/2/24.
-//
+// Copyright (c) 2025 No Way Out LLC All rights reserved.
 
 #ifndef STATEIDENTIFIERS_H_
 #define STATEIDENTIFIERS_H_

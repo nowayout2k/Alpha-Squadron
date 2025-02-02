@@ -1,6 +1,4 @@
-//
-// Created by Johnnie Otis on 10/13/24.
-//
+// Copyright (c) 2025 No Way Out LLC All rights reserved.
 
 #include "../Headers/Component.h"
 GUI::Component::Component() : m_isActive(false), m_isSelected(false)

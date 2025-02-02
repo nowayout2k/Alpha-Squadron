@@ -1,6 +1,4 @@
-//
-// Created by Johnnie Otis on 6/29/24.
-//
+// Copyright (c) 2025 No Way Out LLC All rights reserved.
 
 #ifndef NODETYPE_H_
 #define NODETYPE_H_

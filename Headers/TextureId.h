@@ -1,6 +1,4 @@
-//
-// Created by Johnnie Otis on 6/15/24.
-//
+// Copyright (c) 2025 No Way Out LLC All rights reserved.
 
 #ifndef TEXTUREID_H_
 #define TEXTUREID_H_

@@ -1,3 +1,4 @@
+// Copyright (c) 2025 No Way Out LLC All rights reserved.
 #include "../Headers/Aircraft.h"
 #include "../Headers/Audio.h"
 #include "../Headers/World.h"

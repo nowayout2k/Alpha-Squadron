@@ -1,6 +1,4 @@
-//
-// Created by Johnnie Otis on 5/30/24.
-//
+// Copyright (c) 2025 No Way Out LLC All rights reserved.
 
 #ifndef WORLD_H_
 #define WORLD_H_

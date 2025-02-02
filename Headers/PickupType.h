@@ -1,6 +1,4 @@
-//
-// Created by Johnnie Otis on 12/6/24.
-//
+// Copyright (c) 2025 No Way Out LLC All rights reserved.
 
 #ifndef PICKUP_TYPE_H_
 #define PICKUP_TYPE_H_

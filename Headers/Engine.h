@@ -1,6 +1,4 @@
-//
-// Created by Johnnie Otis on 6/13/24.
-//
+// Copyright (c) 2025 No Way Out LLC All rights reserved.
 
 #ifndef ENGINE_H_
 #define ENGINE_H_

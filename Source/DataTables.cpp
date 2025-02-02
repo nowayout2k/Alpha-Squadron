@@ -1,6 +1,4 @@
-//
-// Created by Johnnie Otis on 10/15/24.
-//
+// Copyright (c) 2025 No Way Out LLC All rights reserved.
 #include "../Headers/DataTables.h"
 #include "../Headers/AircraftType.h"
 #include <fstream>

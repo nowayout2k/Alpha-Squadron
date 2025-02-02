@@ -1,6 +1,4 @@
-//
-// Created by Johnnie Otis on 5/30/24.
-//
+// Copyright (c) 2025 No Way Out LLC All rights reserved.
 
 #include "../Headers/World.h"
 #include "../Headers/Tomcat.h"
@@ -215,7 +213,6 @@ std::unique_ptr<Aircraft> World::createAircraft(AircraftType type, sf::Vector2f 
 	}
 }
 
-//TODO: Add grid based collision detection
 void World::handleCollisions()
 {
 	std::set<WorldNode::Pair> collisionPairs;
@@ -387,6 +384,3 @@ void World::render(sf::RenderWindow &window, sf::RenderStates states)
 		window.draw(m_fpsText, states);
 	}
 }
-
-
-

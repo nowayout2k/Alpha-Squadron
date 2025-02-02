@@ -1,6 +1,4 @@
-//
-// Created by Johnnie Otis on 5/30/24.
-//
+// Copyright (c) 2025 No Way Out LLC All rights reserved.
 
 #ifndef GAMESPRITE_H_
 #define GAMESPRITE_H_

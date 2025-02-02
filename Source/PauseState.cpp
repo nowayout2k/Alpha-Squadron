@@ -1,6 +1,4 @@
-//
-// Created by Johnnie Otis on 10/12/24.
-//
+// Copyright (c) 2025 No Way Out LLC All rights reserved.
 
 #include "../Headers/PauseState.h"
 void PauseState::render(sf::RenderStates& states)

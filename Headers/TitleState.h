@@ -1,6 +1,4 @@
-//
-// Created by Johnnie Otis on 10/12/24.
-//
+// Copyright (c) 2025 No Way Out LLC All rights reserved.
 
 #ifndef TITLESTATE_H_
 #define TITLESTATE_H_

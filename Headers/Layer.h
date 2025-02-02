@@ -1,6 +1,4 @@
-//
-// Created by Johnnie Otis on 7/1/24.
-//
+// Copyright (c) 2025 No Way Out LLC All rights reserved.
 
 #ifndef LAYER_H_
 #define LAYER_H_

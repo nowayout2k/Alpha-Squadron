@@ -1,6 +1,4 @@
-//
-// Created by Johnnie Otis on 10/13/24.
-//
+// Copyright (c) 2025 No Way Out LLC All rights reserved.
 
 #ifndef CONTAINER_H_
 #define CONTAINER_H_

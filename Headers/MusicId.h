@@ -1,6 +1,4 @@
-//
-// Created by Johnnie Otis on 6/2/24.
-//
+// Copyright (c) 2025 No Way Out LLC All rights reserved.
 
 #ifndef MUSICID_H_
 #define MUSICID_H_

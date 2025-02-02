@@ -1,6 +1,5 @@
-//
-// Created by Johnnie on 5/29/2024.
-//
+// Copyright (c) 2025 No Way Out LLC All rights reserved.
+
 
 #ifndef ENTITY_H_
 #define ENTITY_H_
@@ -15,7 +14,6 @@
 #include "WorldNode.h"
 #include "Debug.h"
 
-//TODO: Explore using a component based system
 class Entity : public WorldNode
 {
  public:

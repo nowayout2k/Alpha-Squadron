@@ -1,6 +1,4 @@
-//
-// Created by Johnnie Otis on 6/8/24.
-//
+// Copyright (c) 2025 No Way Out LLC All rights reserved.
 
 #include "../Headers/Projectile.h"
 #include "../Headers/Audio.h"

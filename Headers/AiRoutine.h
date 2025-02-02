@@ -1,6 +1,4 @@
-//
-// Created by Johnnie Otis on 11/30/24.
-//
+// Copyright (c) 2025 No Way Out LLC All rights reserved.
 
 #ifndef AIROUTINE_H_
 #define AIROUTINE_H_

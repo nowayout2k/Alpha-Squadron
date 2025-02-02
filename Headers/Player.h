@@ -1,6 +1,4 @@
-//
-// Created by Johnnie Otis on 8/12/24.
-//
+// Copyright (c) 2025 No Way Out LLC All rights reserved.
 
 #ifndef PLAYER_H_
 #define PLAYER_H_

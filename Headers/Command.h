@@ -1,6 +1,4 @@
-//
-// Created by Johnnie Otis on 7/31/24.
-//
+// Copyright (c) 2025 No Way Out LLC All rights reserved.
 
 #ifndef COMMAND_H_
 #define COMMAND_H_

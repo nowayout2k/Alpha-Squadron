@@ -1,6 +1,4 @@
-//
-// Created by Johnnie on 5/27/2024.
-//
+// Copyright (c) 2025 No Way Out LLC All rights reserved.
 
 #ifndef UTILITY_H_
 #define UTILITY_H_

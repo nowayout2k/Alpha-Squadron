@@ -1,6 +1,4 @@
-//
-// Created by Johnnie Otis on 8/12/24.
-//
+// Copyright (c) 2025 No Way Out LLC All rights reserved.
 
 #include "../Headers/Player.h"
 
@@ -50,7 +48,8 @@ void Player::handleEvent(const sf::Event& event, CommandQueue& commands)
 		output.Action = [] (WorldNode& worldNode, float dt)
 		{
 		  std::cout << worldNode.getPosition().x << ","
-					<< worldNode.getPosition().y << "\n";
+					<< worldNode.getPosition().y << "
+";
 		};
 		commands.push(output);
 	}
@@ -112,4 +111,3 @@ bool Player::isRealtimeAction(ActionType actionType)
 {
 	return std::any_of(m_realTimeActionTypes.begin(), m_realTimeActionTypes.end(), [actionType](ActionType at) { return actionType == at; });
 }
-
