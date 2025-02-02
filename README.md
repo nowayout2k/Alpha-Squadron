@@ -1,4 +1,4 @@
-# Game Project
+# 2D Side Scroller Framework and Game
 
 ## Overview
 This project is a game engine and framework designed to support the development of a game with various components like game states, entities, sound, and graphical elements. It includes support for managing game assets, entities, user input, and game states, as well as integrating audio and graphical features.
