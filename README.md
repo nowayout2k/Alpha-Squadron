@@ -13,8 +13,6 @@ This project is a game engine and framework designed to support the development 
 - [Resource Management](#resource-management)
 - [Data Tables](#data-tables)
 - [Parallel Tasking](#parallel-tasking)
-- [Installation](#installation)
-- [Usage](#usage)
 - [License](#license)
 
 ## Components
