@@ -5,8 +5,8 @@
 
 enum class MusicId
 {
-	UNSquadronLevel1,
-	UNSquadronMenu
+	GameMusic,
+	MenuMusic,
 };
 
 #endif //MUSICID_H_

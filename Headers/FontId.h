@@ -5,7 +5,7 @@
 
 enum class FontId
 {
-	Gamer
+	Arnold
 };
 
 #endif //FONTID_H_

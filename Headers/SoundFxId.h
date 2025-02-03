@@ -5,11 +5,12 @@
 
 enum class SoundFxId
 {
-	Collect,
-	Shoot1,
-	Damage,
+	ButtonClick,
 	Explosion,
-	UNSquadronPositiveSelection
+	MenuClick,
+	MissileLaunch,
+	CollectPickup,
+
 };
 
 #endif //SOUNDFXID_H_

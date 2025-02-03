@@ -4,18 +4,13 @@
 #define TEXTUREID_H_
 enum class TextureId
 {
-	SmoggySky,
-	Black,
-	DecayedBuildings1,
-	DecayedBuildings2,
-	DecayedBuildings3,
-	AircraftSpriteSheet,
-	EnemiesSpriteSheet,
-	Coin,
-	BlueButtonIdle,
-	BlueButtonClicked,
-	MagentaButtonIdle,
-	MagentaButtonClicked,
-	TextureIdCount
+	ForestBg,
+	SkyBg,
+	JungleBg,
+	TallCityBg,
+	NightCityBg,
+	DecayedCityBg,
+	missile,
+	
 };
 #endif //TEXTUREID_H_
