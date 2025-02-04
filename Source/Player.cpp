@@ -3,10 +3,10 @@
 #include "../Headers/Player.h"
 
 std::vector<Player::ActionType> Player::m_realTimeActionTypes;
-Player::MissionStatus Player::m_missionStatus = Player::MissionStatus::None;
 
 Player::Player()
 {
+	m_missionStatus = Player::MissionStatus::None;
 	m_realTimeActionTypes.push_back(AccelerateNegX);
 	m_realTimeActionTypes.push_back(AcceleratePosX);
 	m_realTimeActionTypes.push_back(AccelerateNegY);

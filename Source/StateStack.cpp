@@ -73,7 +73,7 @@ void StateStack::update(float deltaTime)
 	for(auto itr = m_stack.rbegin(); itr != m_stack.rend(); ++itr)
 	{
 		if(!(*itr)->update(deltaTime))
-			return;
+			break;
 	}
 	applyPendingChanges();
 }

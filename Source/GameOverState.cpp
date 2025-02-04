@@ -14,7 +14,7 @@ GameOverState::GameOverState(StateStack& stack, Context context) :
 	sf::Vector2f windowSize(context.window->getSize());
 
 	m_gameOverText.setFont(font);
-	if (Player::getMissionStatus() == Player::MissionStatus::Failure)
+	if (context.player->getMissionStatus() == Player::MissionStatus::Failure)
 		m_gameOverText.setString("Mission failed!");
 	else
 		m_gameOverText.setString("Mission successful!");
@@ -44,7 +44,6 @@ bool GameOverState::update(float dt)
 	{
 		requestStateClear();
 		requestStackPush(StateId::Menu);
-		return true;
 	}
 	return false;
 }

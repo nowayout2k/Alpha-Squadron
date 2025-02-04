@@ -12,7 +12,7 @@ GameData World::GameData = LoadData("../DataFiles/gameData.json");
 
 World::World(sf::RenderWindow& window) : m_window(window), m_worldView(window.getDefaultView()),
 			m_worldBounds(0.0f,0.0f,100000.0f,m_worldView.getSize().y),
-			m_spawnPosition(0, m_worldView.getSize().y/2),
+			m_spawnPosition(0, m_worldView.getSize().y/2), m_isPlayerAlive(true),
 			m_playerAircraft(nullptr), m_viewPositionOffset(0,0), m_commandQueue()
 {
 	setup();
@@ -51,7 +51,6 @@ void World:: destroyEntitiesOutsideView()
 
 void World::setup()
 {
-	Player::setMissionStatus(Player::MissionStatus::None);
 	m_worldGraph.setIsCollidable(false);
 	for (int i = 0; i < static_cast<int>(Layer::LayerCount); ++i)
 	{
@@ -290,16 +289,21 @@ void World::loadResources()
 
 void World::update(float deltaTime)
 {
-	if(!m_playerAircraft && Player::getMissionStatus() == Player::MissionStatus::None)
-		Player::setMissionStatus(Player::MissionStatus::Failure);
-	else if(m_worldView.getCenter().x > 15000.0f && Player::getMissionStatus() == Player::MissionStatus::None)
-		Player::setMissionStatus(Player::MissionStatus::Success);
+	if(!isPlayerAlive())
+	{
+		return;
+	}
+	if(m_worldView.getCenter().x > 15000.0f)
+	{
+		m_hasPlayerReachedEnd = true;
+		return;
+	}
+
 
 	float scrollSpeedFactor = 1;
 	m_worldView.move(m_scrollSpeed * scrollSpeedFactor * deltaTime, 0.f);
 
-	if(m_playerAircraft)
-		m_playerAircraft->setVelocity(0,0);
+	m_playerAircraft->setVelocity(0,0);
 
 	destroyEntitiesOutsideView();
 	guideMissiles();
@@ -309,15 +313,15 @@ void World::update(float deltaTime)
 		m_worldGraph.onCommand(nextCommand, deltaTime);
 	}
 
-	if(m_playerAircraft)
-		adaptPlayerVelocity();
+	adaptPlayerVelocity();
 
 	handleCollisions();
-	if(m_playerAircraft && m_playerAircraft->isDestroyed())
+	if(m_playerAircraft->isDestroyed())
 	{
 		m_playerAircraft->markForRemoval();
 		m_playerAircraft->removeDestroyed();
-		m_playerAircraft = nullptr;
+		m_isPlayerAlive = false;
+		return;
 	}
 	m_worldGraph.removeDestroyed();
 
@@ -325,8 +329,7 @@ void World::update(float deltaTime)
 	spawnPickups();
 
 	m_worldGraph.updateHierarchy(deltaTime, m_commandQueue);
-	if(m_playerAircraft)
-		adaptPlayerPosition();
+	adaptPlayerPosition();
 
 	if(Debug::isDebuggingEnabled())
 	{
@@ -362,6 +365,12 @@ void World::adaptPlayerPosition()
 {
 	if(m_playerAircraft)
 	{
+		if (!m_playerAircraft->getTexture())  // Add a method to check if the texture is loaded
+		{
+			Debug::log("Player Aircraft has no texture!");
+			return;
+		}
+
 		sf::FloatRect viewBounds(m_worldView.getCenter() - m_worldView.getSize() / 2.f,m_worldView.getSize());
 		const auto spriteBounds = m_playerAircraft->getGlobalBounds();
 		sf::Vector2f position = m_playerAircraft->getPosition();

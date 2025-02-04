@@ -14,9 +14,9 @@ class State
 	typedef std::unique_ptr<State> Ptr;
 	struct Context
 	{
-		Context(sf::RenderWindow& window, Player& input) : window(&window), input(&input){};
+		Context(sf::RenderWindow& window, Player& input) : window(&window), player(&input){};
 		sf::RenderWindow* window;
-		Player* input;
+		Player* player;
 	};
  public:
 	State(StateStack& stack, Context context) : m_stack(&stack), m_context(context) {}

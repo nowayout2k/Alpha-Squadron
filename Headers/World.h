@@ -25,6 +25,8 @@ public:
 	void destroyEntitiesOutsideView();
 	void update(float deltaTime);
 	static GameData GameData;
+	bool isPlayerAlive() const { return m_isPlayerAlive; }
+	bool hasPlayerReachedEnd() const { return m_hasPlayerReachedEnd; }
 private:
 	struct EnemySpawnPoint
 	{
@@ -70,6 +72,8 @@ private:
 	sf::Vector2f m_viewPositionOffset;
 	Aircraft* m_playerAircraft;
 	CommandQueue m_commandQueue;
+	bool m_isPlayerAlive;
+	bool m_hasPlayerReachedEnd;
 
 	//Debug////////////////////////
 	sf::Text m_fpsText;

@@ -55,7 +55,7 @@ bool SettingsState::handleEvent(const sf::Event& event)
 			isKeyBinding = true;
 			if (event.type == sf::Event::KeyReleased)
 			{
-				getContext().input->assignKey(static_cast<Player::ActionType>(actionType), event.key.code);
+				getContext().player->assignKey(static_cast<Player::ActionType>(actionType), event.key.code);
 				m_bindingButtons[actionType]->deactivate();
 			}
 			break;
@@ -72,7 +72,7 @@ bool SettingsState::handleEvent(const sf::Event& event)
 
 void SettingsState::updateLabels()
 {
-	Player& input = *getContext().input;
+	Player& input = *getContext().player;
 
 	for (std::size_t i = 0; i < Player::ActionCount; ++i)
 	{

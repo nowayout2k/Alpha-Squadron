@@ -11,6 +11,9 @@
 struct AircraftMover
 {
 	AircraftMover(float vx, float vy) : m_velocity(vx, vy){}
+	explicit AircraftMover(const sf::Vector2f& mVelocity) : m_velocity(mVelocity)
+	{
+	}
 	void operator() (Aircraft& aircraft, float dt) const
 	{
 		aircraft.accelerate(sf::Vector2f(m_velocity.x < 0 ? -World::getScrollSpeed() + (m_velocity.x * aircraft.getMaxSpeed()) : m_velocity.x * aircraft.getMaxSpeed(), m_velocity.y * aircraft.getMaxSpeed()));
@@ -47,8 +50,8 @@ class Player
 
 	void handleEvent(const sf::Event& event, CommandQueue& commands);
 	void handleRealtimeInput(CommandQueue& commands);
-	static MissionStatus getMissionStatus() { return m_missionStatus; }
-	static void setMissionStatus(MissionStatus missionStatus) { m_missionStatus = missionStatus; }
+	MissionStatus getMissionStatus() { return m_missionStatus; }
+	void setMissionStatus(MissionStatus missionStatus) { m_missionStatus = missionStatus; }
  private:
 	static bool isRealtimeAction(ActionType actionType);
  private:
@@ -56,7 +59,7 @@ class Player
 	std::map<ActionType, Command> m_actionBinding;
 
 	static std::vector<ActionType> m_realTimeActionTypes;
-	static MissionStatus m_missionStatus;
+	MissionStatus m_missionStatus;
 };
 
 #endif //PLAYER_H_

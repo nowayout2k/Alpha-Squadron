@@ -41,7 +41,7 @@ class WorldNode : public sf::Transformable, public sf::Drawable
 	bool isMarkedForRemoval() const { return m_isMarkedForRemoval; }
 	void markForRemoval() { m_isMarkedForRemoval = true; }
 	bool isCollidable() { return m_isCollidable; }
-	bool setIsCollidable(bool isCollidable) { m_isCollidable = isCollidable; }
+	void setIsCollidable(bool isCollidable) { m_isCollidable = isCollidable; }
  protected:
 	sf::Transform getWorldTransform() const;
 	virtual void render(sf::RenderTarget& renderTarget, sf::RenderStates states) const = 0;

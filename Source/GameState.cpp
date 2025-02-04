@@ -4,10 +4,20 @@
 bool GameState::update(float deltaTime)
 {
 	m_world.update(deltaTime);
-	CommandQueue& commands = m_world.getCommandQueue();
-	getContext().input->handleRealtimeInput(commands);
-	if(Player::getMissionStatus() != Player::MissionStatus::None)
+	if(!m_world.isPlayerAlive())
+	{
+		getContext().player->setMissionStatus(Player::MissionStatus::Failure);
 		requestStackPush(StateId::GameOver);
+	}
+	else if(m_world.hasPlayerReachedEnd())
+	{
+		getContext().player->setMissionStatus(Player::MissionStatus::Success);
+		requestStackPush(StateId::GameOver);
+	}
+
+	CommandQueue& commands = m_world.getCommandQueue();
+	getContext().player->handleRealtimeInput(commands);
+
 	return true;
 }
 
@@ -18,6 +28,6 @@ void GameState::render(sf::RenderStates& states)
 bool GameState::handleEvent(const sf::Event& event)
 {
 	CommandQueue& commands = m_world.getCommandQueue();
-	getContext().input->handleEvent(event, commands);
+	getContext().player->handleEvent(event, commands);
 	return true;
 }
