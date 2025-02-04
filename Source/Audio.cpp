@@ -8,7 +8,7 @@
 std::list<PooledSound> Audio::m_sounds;
 sf::Music Audio::m_music;
 
-#define POOL_RESIZE_LIMIT 10
+#define POOL_RESIZE_LIMIT 40
 
 void Audio::playSound(SoundFxId soundFxId, float volume)
 {
@@ -54,6 +54,7 @@ void Audio::playSound(SoundFxId soundFxId, float volume)
 
 void Audio::playMusic(MusicId musicId, float volume)
 {
+	m_music.stop();
 	std::string pathToFile = getMusicPath(musicId);
 	if (!m_music.openFromFile(pathToFile))
 		return;
@@ -72,10 +73,10 @@ std::string Audio::getMusicPath(MusicId musicId)
 {
 	switch (musicId)
 	{
-	case MusicId::UNSquadronLevel1:
-		return "../Assets/Music/UN Squadron Level 1.mp3";
-	case MusicId::UNSquadronMenu:
-		return "../Assets/Music/UN Squadron Menu.mp3";
+	case MusicId::GameMusic:
+		return "../Assets/Music/game_music.wav";
+	case MusicId::MenuMusic:
+		return "../Assets/Music/menu_music.wav";
 	default:
 		Debug::logError("Music Id is unknown!");
 		return nullptr;

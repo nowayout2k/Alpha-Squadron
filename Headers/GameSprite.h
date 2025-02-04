@@ -26,6 +26,11 @@ public:
 
 	~GameSprite() override = default;
 
+	const sf::Texture* getTexture()
+	{
+		return m_sprite.getTexture();
+	}
+
 	unsigned int getNodeType() const override { return Entity::getNodeType() | (unsigned int)NodeType::Sprite; }
 
 	void render(sf::RenderTarget& renderTarget, sf::RenderStates states) const override
@@ -89,11 +94,11 @@ public:
 	{
 		m_sprite.setColor(color);
 	}
-
+	void setSpriteTextureRegion(sf::IntRect rect) { m_spriteTextureRegion = rect; }
  protected:
 	void setTextureId(TextureId textureId) { m_textureId = textureId; }
 	void setTextureLoadArea(sf::IntRect rect) { m_textureLoadArea = rect; }
-	void setSpriteTextureRegion(sf::IntRect rect) { m_spriteTextureRegion = rect; }
+
  private:
 	sf::Sprite m_sprite;
 	TextureId m_textureId;

@@ -9,10 +9,15 @@
 
 namespace GUI
 {
-	Button::Button() : m_normalTexture(ResourceManager::loadResource(TextureId::BlueButtonIdle)), m_pressedTexture(ResourceManager::loadResource(TextureId::BlueButtonClicked)), m_selectedTexture(ResourceManager::loadResource(TextureId::MagentaButtonIdle))
+	Button::Button(sf::IntRect normalTextureRect, sf::IntRect pressedTextureRect, sf::IntRect selectedTextureRect) :
+						m_normalTextureRect(normalTextureRect),
+						m_pressedTextureRect(pressedTextureRect),
+						m_selectedTextureRect(selectedTextureRect),
+						m_isToggle(false)
 	{
-		m_sprite.setTexture(m_normalTexture);
-		m_text.setFont(ResourceManager::loadResource(FontId::Gamer));
+		m_sprite.setTexture(ResourceManager::loadResource(TextureId::UiSpriteSheet));
+		m_sprite.setTextureRect(m_normalTextureRect);
+		m_text.setFont(ResourceManager::loadResource(FontId::Arnold));
 		m_text.setFillColor(sf::Color::White);
 		Utility::centerOrigin(m_sprite);
 	}
@@ -20,20 +25,20 @@ namespace GUI
 	void Button::select()
 	{
 		Component::select();
-		m_sprite.setTexture(m_selectedTexture);
+		m_sprite.setTextureRect(m_selectedTextureRect);
 	}
 
 	void Button::deselect()
 	{
 		Component::deselect();
-		m_sprite.setTexture(m_normalTexture);
+		m_sprite.setTextureRect(m_normalTextureRect);
 	}
 
 	void Button::activate()
 	{
 		Component::activate();
 		if (m_isToggle)
-			m_sprite.setTexture(m_pressedTexture);
+			m_sprite.setTextureRect(m_pressedTextureRect);
 		if (m_callback)
 			m_callback();
 		if (!m_isToggle)
@@ -46,9 +51,9 @@ namespace GUI
 		if (m_isToggle)
 		{
 			if (Component::isSelected())
-				m_sprite.setTexture(m_selectedTexture);
+				m_sprite.setTextureRect(m_selectedTextureRect);
 			else
-				m_sprite.setTexture(m_normalTexture);
+				m_sprite.setTextureRect(m_normalTextureRect);
 		}
 	}
 

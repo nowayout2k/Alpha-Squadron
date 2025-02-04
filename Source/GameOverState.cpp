@@ -10,7 +10,7 @@
 GameOverState::GameOverState(StateStack& stack, Context context) :
 	State(stack, context) , m_gameOverText(), m_elapsedTime(0)
 {
-	sf::Font& font = ResourceManager::loadResource(FontId::Gamer);
+	sf::Font& font = ResourceManager::loadResource(FontId::Arnold);
 	sf::Vector2f windowSize(context.window->getSize());
 
 	m_gameOverText.setFont(font);

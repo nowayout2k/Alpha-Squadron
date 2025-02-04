@@ -4,7 +4,7 @@
 #include "../Headers/ResourceManager.h"
 #include "../Headers/Utility.h"
 
-GUI::Label::Label(const std::string& text) : m_text(text, ResourceManager::loadResource(FontId::Gamer), 16)
+GUI::Label::Label(const std::string& text) : m_text(text, ResourceManager::loadResource(FontId::Arnold), 16)
 {
 }
 

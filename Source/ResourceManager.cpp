@@ -32,11 +32,27 @@ std::string ResourceManager::getTexturePath(TextureId textureId)
 {
 	switch (textureId)
 	{
-	case TextureId::AircraftSpriteSheet :
-		return "../Assets/Textures/AircraftSpriteSheet.png";
+	case TextureId::DecayedCityBg :
+		return "../Assets/Textures/Backgrounds/decayed_city_bg_2048x1536.png";
+	case TextureId::ForestBg :
+		return "../Assets/Textures/Backgrounds/forest_bg_2048x1536.png";
+	case TextureId::GameSpriteSheet :
+		return "../Assets/Textures/Characters/game_sprite_sheet.png";
+	case TextureId::MetalBg :
+		return "../Assets/Textures/UI/metal_bg.png";
+	case TextureId::JungleBg :
+		return "../Assets/Textures/Backgrounds/jungle_bg_2048x1536.png";
+	case TextureId::NightCityBg :
+		return "../Assets/Textures/Backgrounds/night_city_bg_1920x1080.png";
+	case TextureId::SkyBg:
+		return "../Assets/Textures/Backgrounds/sky_bg_2048x1536.png";
+	case TextureId::TallCityBg :
+		return "../Assets/Textures/Backgrounds/tall_city_bg.png";
+	case TextureId::UiSpriteSheet :
+		return "../Assets/Textures/UI/ui_sprite_sheet.png";
 	default:
 		Debug::logError("Texture Id is unknown!");
-		return nullptr;
+		return "../Assets/Textures/UI/ui_sprite_sheet.png";
 	}
 }
 
@@ -54,9 +70,17 @@ std::string ResourceManager::getSoundPath(SoundFxId soundFxId)
 		return "../Assets/SFX/menu_click.wav";
 	case SoundFxId::MissileLaunch :
 		return "../Assets/SFX/missile_launch.wav";
+	case SoundFxId::DamageWarning1 :
+		return "../Assets/SFX/damage_warning_1.wav";
+	case SoundFxId::DamageWarning2 :
+		return "../Assets/SFX/damage_warning_2.wav";
+	case SoundFxId::TakeDamage :
+		return "../Assets/SFX/take_damage.wav";
+	case SoundFxId::BulletLaunch :
+		return "../Assets/SFX/bullet_launch.wav";
 	default:
-		Debug::logError("Sound FX Id is unknown!");
-		return nullptr;
+		Debug::logError("Sound FX Id is unknown!" + std::to_string(static_cast<int>(soundFxId)));
+		return "../Assets/SFX/button_click.wav";
 	}
 }
 
@@ -68,6 +92,6 @@ std::string ResourceManager::getFontPath(FontId fontId)
 		return "../Assets/Fonts/Arnold.ttf";
 	default:
 		Debug::logError("Font Id is unknown!");
-		return nullptr;
+		return "../Assets/Fonts/Arnold.ttf";
 	}
 }

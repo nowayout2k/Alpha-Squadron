@@ -1,30 +1,72 @@
 {
   "pickup": [
     {
+      "textureId": "game_sprite_sheet",
+      "textureLoadArea": {
+        "left": 85,
+        "top": 345,
+        "width": 64,
+        "height": 64
+      },
       "type": "fire_spread",
       "value": 1
     },
     {
+      "textureId": "game_sprite_sheet",
+      "textureLoadArea": {
+        "left": 316,
+        "top": 345,
+        "width": 64,
+        "height": 64
+      },
       "type": "fire_rate",
       "value": 1
     },
     {
+      "textureId": "game_sprite_sheet",
+      "textureLoadArea": {
+        "left": 10,
+        "top": 345,
+        "width": 64,
+        "height": 64
+      },
       "type": "health_refill",
       "value": 100
     },
     {
+      "textureId": "game_sprite_sheet",
+      "textureLoadArea": {
+        "left": 162,
+        "top": 345,
+        "width": 64,
+        "height": 64
+      },
       "type": "missile_refill",
       "value": 1
     }
   ],
   "projectile": [
     {
+      "textureId": "game_sprite_sheet",
+      "textureLoadArea": {
+        "left": 250,
+        "top": 285,
+        "width": 37,
+        "height": 17
+      },
       "type": "bullet",
-      "value": 2000
+      "maxSpeed": 2000
     },
     {
+      "textureId": "game_sprite_sheet",
+      "textureLoadArea": {
+        "left": 73,
+        "top": 312,
+        "width": 90,
+        "height": 25
+      },
       "type": "missile",
-      "value": 1000
+      "maxSpeed": 1000
     }
   ],
   "aircraft": [
@@ -32,12 +74,12 @@
       "type": "tomcat",
       "health": 35,
       "maxSpeed": 600.0,
-      "textureId": "aircraft_sprite_sheet",
+      "textureId": "game_sprite_sheet",
       "textureLoadArea": {
-        "left": 242,
-        "top": 299,
-        "width": 47,
-        "height": 9
+        "left": 18,
+        "top": 148,
+        "width": 217,
+        "height": 58
       },
       "aiDespawnDistance": 5400.0,
       "aiEnterDirection": "west",
@@ -74,12 +116,12 @@
       "type": "chopper",
       "health": 20,
       "maxSpeed": 400.0,
-      "textureId": "enemies_sprite_sheet",
+      "textureId": "game_sprite_sheet",
       "textureLoadArea": {
-        "left": 70,
-        "top": 200,
-        "width": 25,
-        "height": 12
+        "left": 19,
+        "top": 86,
+        "width": 199,
+        "height": 51
       },
       "aiDespawnDistance": 5400.0,
       "aiEnterDirection": "west",

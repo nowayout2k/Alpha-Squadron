@@ -37,7 +37,7 @@ Aircraft::Aircraft(const bool hasCollision, sf::Vector2f  scale, sf::Vector2f po
 	setPosition(m_spawnPos);
 
 	auto healthDisplay = std::make_unique<GameText>(
-		FontId::Gamer, "", 12, sf::Color::Black, sf::Text::Style::Regular, sf::Vector2f());
+		FontId::Arnold, "", 12, sf::Color::Black, sf::Text::Style::Regular, sf::Vector2f());
 	m_healthDisplay = healthDisplay.get();
 	attachNode(std::move(healthDisplay));
 }
@@ -50,14 +50,16 @@ void Aircraft::changeHealth(float increment)
 		if (m_isDamageAnimationActive || m_health <= 0)
 		{
 			Audio::playSound(SoundFxId::Explosion, 50);
-			destroy();
+        			destroy();
 			if(!(getNodeType() & static_cast<unsigned int>(NodeType::Player)))
 				markForRemoval();
 			return;
 		}
 
 		setColor(sf::Color::Red);
-		Audio::playSound(SoundFxId::Damage, 50);
+		Audio::playSound(SoundFxId::TakeDamage, 50);
+		if((getNodeType() & static_cast<unsigned int>(NodeType::Player)))
+			Audio::playSound(SoundFxId::DamageWarning1, 20);
 		m_timeSinceDamage = 0;
 		m_isDamageAnimationActive = true;
 	}
@@ -234,26 +236,26 @@ sf::Vector2f Aircraft::calculateDirectionalVelocity(Direction direction) const
 
 void Aircraft::loadResources()
 {
-	for (const auto& data : World::GameData.AircraftData)
+	auto dataPair = World::GameData.AircraftData.find(getAircraftType());
+
+	if (dataPair != World::GameData.AircraftData.end())
 	{
-		if (data.second.Type == getAircraftType())
+		auto data = dataPair->second;
+		if(getNodeType() & static_cast<unsigned int>(NodeType::Player))
 		{
-			if(getNodeType() & static_cast<unsigned int>(NodeType::Player))
-			{
-				m_health = 100;
-			}
-			else
-			{
-				m_health = data.second.Health;
-			}
-			m_speed = data.second.Speed;
-			m_aiRoutines = data.second.AiRoutines;
-			m_despawnDistance = data.second.DespawnDistance;
-			m_enterDirection = data.second.EnterDirection;
-			m_exitDirection = data.second.ExitDirection;
-			setTextureId(data.second.TextureId);
-			setTextureLoadArea(data.second.TextureLoadArea);
+			m_health = 100;
 		}
+		else
+		{
+			m_health = data.Health;
+		}
+		m_speed = data.Speed;
+		m_aiRoutines = data.AiRoutines;
+		m_despawnDistance = data.DespawnDistance;
+		m_enterDirection = data.EnterDirection;
+		m_exitDirection = data.ExitDirection;
+		setTextureId(data.TextureId);
+		setTextureLoadArea(data.TextureLoadArea);
 	}
 
 	GameSprite::loadResources();
@@ -329,7 +331,7 @@ void Aircraft::createProjectile(WorldNode& node, ProjectileType projectileType, 
 {
 	float sign = isAllied() ? 1.f : - 1.f;
 	std::unique_ptr<Projectile> projectile(new Projectile(isAllied() ? NodeType::AlliedProjectile :  NodeType::EnemyProjectile ,projectileType, sf::Vector2f(0, 0), sf::Vector2f(sign, 0)));
-	projectile->setScale(4, 4);
+	projectile->setScale(1, 1);
 	sf::Vector2f offset(sign * getBoundingRect().width + sign * xOffset, getScale().y * (yOffset + getGlobalBounds().height/2));
 	projectile->setPosition(getWorldPosition() + offset);
 	if(!isAllied())

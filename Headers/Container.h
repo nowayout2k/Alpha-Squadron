@@ -13,13 +13,13 @@ namespace GUI
 		typedef std::shared_ptr<Container> Ptr;
 		Container();
 		void pack(Component::Ptr component);
-		void handleEvent(const sf::Event& event);
+		void handleEvent(const sf::Event& event) override;
 		bool hasSelection() const;
-		bool isSelectable() const;
+		bool isSelectable() const override;
 		void select(int index);
 		void selectNext();
 		void selectPrevious();
-		void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+		void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 	 private:
 		int m_selectedChild;
 		std::vector<Component::Ptr> m_children;

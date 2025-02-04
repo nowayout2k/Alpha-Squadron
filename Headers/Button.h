@@ -15,30 +15,30 @@ namespace GUI
 	{
 	 public:
 		typedef std::shared_ptr<Button> Ptr;
-		explicit Button();
-		virtual bool isSelectable() const override
+		explicit Button(sf::IntRect normalTextureRect, sf::IntRect pressedTextureRect, sf::IntRect selectedTextureRect);
+		bool isSelectable() const override
 		{
 			return true;
 		}
 
-		virtual void handleEvent(const sf::Event& event) override
+		void handleEvent(const sf::Event& event) override
 		{
 
 		}
 
-		virtual void select() override;
-		virtual void deselect() override;
-		virtual void activate() override;
-		virtual void deactivate() override;
+		void select() override;
+		void deselect() override;
+		void activate() override;
+		void deactivate() override;
 		void setCallback(std::function<void()> callback);
-		void setText(const unsigned int size, const std::string& text);
+		void setText(unsigned int size, const std::string& text);
 		void setToggle(bool flag);
 	 private:
-		virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+		void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 		sf::Sprite m_sprite;
-		sf::Texture m_normalTexture;
-		sf::Texture m_selectedTexture;
-		sf::Texture m_pressedTexture;
+		sf::IntRect m_normalTextureRect;
+		sf::IntRect m_selectedTextureRect;
+		sf::IntRect m_pressedTextureRect;
 		sf::Text m_text;
 		bool m_isToggle;
 		std::function<void()> m_callback;

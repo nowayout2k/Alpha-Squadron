@@ -16,7 +16,6 @@ World::World(sf::RenderWindow& window) : m_window(window), m_worldView(window.ge
 			m_playerAircraft(nullptr), m_viewPositionOffset(0,0), m_commandQueue()
 {
 	setup();
-	loadResources();
 }
 
 void World::restart()
@@ -62,28 +61,20 @@ void World::setup()
 	std::unique_ptr<GameSprite> backgroundSkySprite(
 		new GameSprite(
 			false,
-			TextureId::SmoggySky,
+			TextureId::DecayedCityBg,
 			false,
 			sf::IntRect(),
-			sf::IntRect(0,0,m_worldBounds.width, m_worldView.getSize().y),
+			sf::IntRect(),
 			true));
+	backgroundSkySprite->loadResources();
 	backgroundSkySprite->setPosition(m_worldBounds.left,m_worldBounds.top);
-	backgroundSkySprite->setColor(sf::Color(90,89,255,255));
+	auto windowSize = m_window.getView().getSize();
+	auto bgTextureSize = backgroundSkySprite->getTexture()->getSize();
+	backgroundSkySprite->setSpriteTextureRegion(sf::IntRect(0, 0, m_worldBounds.width, bgTextureSize.y));
+	backgroundSkySprite->setScale(windowSize.x/bgTextureSize.x, windowSize.y/bgTextureSize.y);
 	m_worldLayers[static_cast<int>(Layer::Background)]->attachNode(std::move(backgroundSkySprite));
 
-	std::unique_ptr<GameSprite> backgroundBuildingsSprite(
-		new GameSprite(
-			false,
-			TextureId::DecayedBuildings1,
-			false,
-			sf::IntRect(),
-			sf::IntRect(0,0,m_worldBounds.width,m_worldView.getSize().y),
-			true));
-	backgroundBuildingsSprite->setPosition(m_worldBounds.left,m_worldBounds.top);
-	backgroundBuildingsSprite->setColor(sf::Color(155,155,155,55));
-	m_worldLayers[static_cast<int>(Layer::Background)]->attachNode(std::move(backgroundBuildingsSprite));
-
-	std::unique_ptr<Aircraft> player = createAircraft(AircraftType::Tomcat, m_spawnPosition, NodeType::Player, sf::Vector2f(4.0, 4.0));
+	std::unique_ptr<Aircraft> player = createAircraft(AircraftType::Tomcat, m_spawnPosition, NodeType::Player, sf::Vector2f(1.0, 1.0));
 	m_playerAircraft = player.get();
 	m_playerAircraft->setVelocity(m_scrollSpeed, 0);
 	m_worldLayers[static_cast<int>(Layer::Collision)]->attachNode(std::move(player));
@@ -91,16 +82,18 @@ void World::setup()
 	addEnemies();
 	addPickUps();
 
-	Audio::playMusic(MusicId::UNSquadronLevel1, 10);
+	Audio::playMusic(MusicId::GameMusic, 10);
 
 	//Debug////////////////////////////////////////////////////////////////
-	m_fpsText.setFont(ResourceManager::loadResource(FontId::Gamer));
+	m_fpsText.setFont(ResourceManager::loadResource(FontId::Arnold));
 	m_fpsText.setPosition(sf::Vector2f());
 	m_fpsText.setStyle(sf::Text::Bold | sf::Text::Underlined);
 	m_fpsText.setCharacterSize(100);
 	m_fpsText.setFillColor(sf::Color::White);
 	m_fpsText.setString("0000");
 	//////////////////////////////////////////////////////////////////////
+
+	loadResources();
 }
 
 void World::addEnemies()
@@ -178,7 +171,7 @@ void World::spawnEnemies()
 	while (!m_enemySpawnPoints.empty() && m_enemySpawnPoints.back().SpawnDistance < bounds.left + bounds.width)
 	{
 		EnemySpawnPoint spawn = m_enemySpawnPoints.back();
-		auto enemy = createAircraft(spawn.Type, sf::Vector2f(spawn.SpawnDistance,0), NodeType::Enemy, sf::Vector2f(-4.0, 4.0));
+		auto enemy = createAircraft(spawn.Type, sf::Vector2f(spawn.SpawnDistance,0), NodeType::Enemy, sf::Vector2f(-1.0, 1.0));
 		enemy->loadHierarchyResources();
 		m_worldLayers[static_cast<int>(Layer::Collision)]->attachNode(std::move(enemy));
 		m_enemySpawnPoints.pop_back();
@@ -221,16 +214,16 @@ void World::handleCollisions()
 	{
 		if (matchesCategories(pair, NodeType::Player, NodeType::Enemy))
 		{
-			auto& player = static_cast<Aircraft&>(*pair.first);
-			auto& enemy = static_cast<Aircraft&>(*pair.second);
-			player.changeHealth(-enemy.getHealth());
+			auto& player = dynamic_cast<Aircraft&>(*pair.first);
+			auto& enemy = dynamic_cast<Aircraft&>(*pair.second);
+ 			player.changeHealth(-enemy.getHealth());
 			enemy.destroy();
 			enemy.markForRemoval();
 		}
 		else if (matchesCategories(pair, NodeType::Player, NodeType::Pickup))
 		{
-			auto& player = static_cast<Aircraft&>(*pair.first);
-			auto& pickup = static_cast<Pickup&>(*pair.second);
+			auto& player = dynamic_cast<Aircraft&>(*pair.first);
+			auto& pickup = dynamic_cast<Pickup&>(*pair.second);
 			pickup.apply(player);
 			pickup.destroy();
 			pickup.markForRemoval();
@@ -238,8 +231,8 @@ void World::handleCollisions()
 		else if (matchesCategories(pair, NodeType::Enemy, NodeType::AlliedProjectile) ||
 					matchesCategories(pair, NodeType::Player, NodeType::EnemyProjectile))
 		{
-			auto& aircraft = static_cast<Aircraft&>(*pair.first);
-			auto& projectile = static_cast<Projectile&>(*pair.second);
+			auto& aircraft = dynamic_cast<Aircraft&>(*pair.first);
+			auto& projectile = dynamic_cast<Projectile&>(*pair.second);
 			aircraft.changeHealth(-projectile.getDamage());
 			projectile.destroy();
 			projectile.markForRemoval();
@@ -249,8 +242,8 @@ void World::handleCollisions()
 
 bool World::matchesCategories(WorldNode::Pair& colliders, NodeType t1, NodeType t2)
 {
-	unsigned int type1 = static_cast<unsigned int>(t1);
-	unsigned int type2 = static_cast<unsigned int>(t2);
+	auto type1 = static_cast<unsigned int>(t1);
+	auto type2 = static_cast<unsigned int>(t2);
 
 	unsigned int colliderNodeType1 = colliders.first->getNodeType();
 	unsigned int colliderNodeType2 = colliders.second->getNodeType();
@@ -272,7 +265,7 @@ bool World::matchesCategories(WorldNode::Pair& colliders, NodeType t1, NodeType 
 
 sf::FloatRect World::getViewBounds() const
 {
-	return sf::FloatRect(m_worldView.getCenter() - m_worldView.getSize() / 2.f, m_worldView.getSize());
+	return {m_worldView.getCenter() - m_worldView.getSize() / 2.f, m_worldView.getSize()};
 }
 
 sf::FloatRect World::getBattlefieldBounds() const
@@ -310,13 +303,14 @@ void World::update(float deltaTime)
 		adaptPlayerVelocity();
 
 	handleCollisions();
-	m_worldGraph.removeDestroyed();
 	if(m_playerAircraft && m_playerAircraft->isDestroyed())
 	{
 		m_playerAircraft->markForRemoval();
 		m_playerAircraft->removeDestroyed();
 		m_playerAircraft = nullptr;
 	}
+	m_worldGraph.removeDestroyed();
+
 	spawnEnemies();
 	spawnPickups();
 

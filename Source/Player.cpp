@@ -11,7 +11,7 @@ Player::Player()
 	m_realTimeActionTypes.push_back(AcceleratePosX);
 	m_realTimeActionTypes.push_back(AccelerateNegY);
 	m_realTimeActionTypes.push_back(AcceleratePosY);
-	//m_realTimeActionTypes.push_back(Fire);
+	m_realTimeActionTypes.push_back(Fire);
 
 	assignKey(AccelerateNegX, sf::Keyboard::Left);
 	assignKey(AcceleratePosX, sf::Keyboard::Right);
@@ -24,10 +24,8 @@ Player::Player()
 	m_actionBinding[AcceleratePosX].Action = DerivedAction<Aircraft>(AircraftMover(1, 0));
 	m_actionBinding[AccelerateNegY].Action = DerivedAction<Aircraft>(AircraftMover(0, -1));
 	m_actionBinding[AcceleratePosY].Action = DerivedAction<Aircraft>(AircraftMover(0, 1));
- 	m_actionBinding[Fire].Action = DerivedAction<Aircraft>([](Aircraft& a, float)
-	{ a.fire(); });
-	m_actionBinding[LaunchMissile].Action = DerivedAction<Aircraft>([](Aircraft& a, float)
-	{ a.launchMissile(); });
+ 	m_actionBinding[Fire].Action = DerivedAction<Aircraft>([](Aircraft& a, float){ a.fire(); });
+	m_actionBinding[LaunchMissile].Action = DerivedAction<Aircraft>([](Aircraft& a, float){ a.launchMissile(); });
 
 	for(auto& pair : m_actionBinding)
 		pair.second.NodeType = (unsigned int)NodeType::Player;
@@ -48,8 +46,7 @@ void Player::handleEvent(const sf::Event& event, CommandQueue& commands)
 		output.Action = [] (WorldNode& worldNode, float dt)
 		{
 		  std::cout << worldNode.getPosition().x << ","
-					<< worldNode.getPosition().y << "
-";
+					<< worldNode.getPosition().y;
 		};
 		commands.push(output);
 	}

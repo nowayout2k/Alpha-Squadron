@@ -18,7 +18,7 @@ class WorldNode : public sf::Transformable, public sf::Drawable
 
 	WorldNode(const WorldNode&) = delete;
 	WorldNode& operator=(const WorldNode& other) = delete;
-	explicit WorldNode() : m_isActive(true), m_parent(nullptr) {}
+	explicit WorldNode() : m_isActive(true), m_parent(nullptr), m_isDestroyed(false), m_isMarkedForRemoval(false) {}
 	void attachNode(SmartNode node);
 	virtual sf::FloatRect getBoundingRect() const;
 	void onCommand(const Command& command, float deltaTime);
@@ -37,7 +37,7 @@ class WorldNode : public sf::Transformable, public sf::Drawable
 	void checkNodeCollision(WorldNode& node, std::set<Pair>& collisionPairs);
 	void removeDestroyed();
 	virtual void destroy() { m_isDestroyed = true; }
-	bool isDestroyed() { return m_isDestroyed; }
+	bool isDestroyed() const { return m_isDestroyed; }
 	bool isMarkedForRemoval() const { return m_isMarkedForRemoval; }
 	void markForRemoval() { m_isMarkedForRemoval = true; }
  protected:

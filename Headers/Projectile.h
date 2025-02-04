@@ -17,7 +17,8 @@ class Projectile : public GameSprite
 	bool isGuided() const;
 	unsigned int getNodeType() const override { return GameSprite::getNodeType() | static_cast<unsigned int>(m_type); }
 	float getMaxSpeed() const;
-	int getDamage() const;
+	static int getDamage() ;
+	void loadResources() override;
  private:
 	sf::Vector2f m_targetDirection;
 	sf::Vector2f m_launchDirection;
@@ -25,6 +26,7 @@ class Projectile : public GameSprite
 	NodeType m_type;
 	bool m_isLaunching;
 	float m_timeSinceLaunch;
+	float m_maxSpeed;
 };
 
 #endif //PROJECTILE_H_

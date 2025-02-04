@@ -130,57 +130,45 @@ public:
 	{
 		auto type = Utility::toLower(s);
 
-		if(type == "smoggy_sky")
+		if(type == "forest_bg")
 		{
-			return TextureId::SmoggySky;
+			return TextureId::ForestBg;
 		}
-		else if(type == "black")
+		else if(type == "sky_bg")
 		{
-			return TextureId::Black;
+			return TextureId::SkyBg;
 		}
-		else if(type == "decayed_buildings_1")
+		else if(type == "jungle_bg")
 		{
-			return TextureId::DecayedBuildings1;
+			return TextureId::JungleBg;
 		}
-		else if(type == "decayed_buildings_2")
+		else if(type == "metal_bg")
 		{
-			return TextureId::DecayedBuildings2;
+			return TextureId::MetalBg;
 		}
-		else if(type == "decayed_buildings_3")
+		else if(type == "tall_city_bg")
 		{
-			return TextureId::DecayedBuildings3;
+			return TextureId::TallCityBg;
 		}
-		else if(type == "aircraft_sprite_sheet")
+		else if(type == "night_city_bg")
 		{
-			return TextureId::AircraftSpriteSheet;
+			return TextureId::NightCityBg;
 		}
-		else if(type == "enemies_sprite_sheet")
+		else if(type == "decayed_city_bg")
 		{
-			return TextureId::EnemiesSpriteSheet;
+			return TextureId::DecayedCityBg;
 		}
-		else if(type == "coin")
+		else if(type == "game_sprite_sheet")
 		{
-			return TextureId::Coin;
+			return TextureId::GameSpriteSheet;
 		}
-		else if(type == "blue_button_idle")
+		else if(type == "ui_sprite_sheet")
 		{
-			return TextureId::BlueButtonIdle;
-		}
-		else if(type == "blue_button_clicked")
-		{
-			return TextureId::BlueButtonClicked;
-		}
-		else if(type == "magenta_button_idle")
-		{
-			return TextureId::MagentaButtonIdle;
-		}
-		else if(type == "magenta_button_clicked")
-		{
-			return TextureId::MagentaButtonClicked;
+			return TextureId::UiSpriteSheet;
 		}
 		else
 		{
-			return TextureId::TextureIdCount;
+			return TextureId::TextureCount;
 		}
 
 

@@ -11,14 +11,13 @@ Projectile::Projectile(NodeType type, ProjectileType projectileType, sf::Vector2
 	m_targetDirection(targetDirection),
 	m_launchDirection(launchDirection),
 	m_timeSinceLaunch(0),
+	m_maxSpeed(100),
 	m_isLaunching(true),
 	m_projectileType(projectileType),
-	GameSprite(true,
-		projectileType == Missile ? TextureId::EnemiesSpriteSheet : TextureId::AircraftSpriteSheet, false,
-		projectileType == Missile ? sf::IntRect(211, 213, 7, 7) : sf::IntRect(376, 108, 5, 4))
+	GameSprite(true,false,sf::IntRect())
 {
 	setScale(1.0f, 1.0f);
-	Audio::playSound(SoundFxId::Shoot1, 10);
+	Audio::playSound(SoundFxId::BulletLaunch, 10);
 }
 
 void Projectile::update(float deltaTime, CommandQueue& commands)
@@ -64,14 +63,7 @@ void Projectile::update(float deltaTime, CommandQueue& commands)
 
 float Projectile::getMaxSpeed() const
 {
-	auto data = World::GameData.ProjectileData;
-	auto it = data.find(m_projectileType);
-	if(it == data.end())
-	{
-		return 100.0f;
-	}
-
-	return it->second.Value;
+	return m_maxSpeed;
 }
 
 void Projectile::render(sf::RenderTarget& renderTarget, sf::RenderStates states) const
@@ -93,7 +85,22 @@ void Projectile::guideTowards(sf::Vector2f position)
 	}
 }
 
-int Projectile::getDamage() const
+int Projectile::getDamage()
 {
 	return 25;
+}
+
+void Projectile::loadResources()
+{
+	auto dataPair = World::GameData.ProjectileData.find(m_projectileType);
+
+	if (dataPair != World::GameData.ProjectileData.end())
+	{
+		auto data = dataPair->second;
+		m_maxSpeed = data.MaxSpeed;
+		setTextureId(data.TextureId);
+		setTextureLoadArea(data.TextureLoadArea);
+	}
+
+	GameSprite::loadResources();
 }

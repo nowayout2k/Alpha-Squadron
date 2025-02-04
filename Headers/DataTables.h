@@ -18,7 +18,7 @@ class Aircraft;
 struct AircraftData
 {
 	AircraftType Type;
-	int Health;
+	float Health;
 	float Speed;
 	float DespawnDistance;
 	Direction EnterDirection;
@@ -42,7 +42,7 @@ struct ProjectileData
 	ProjectileType Type{};
 	TextureId TextureId{};
 	sf::IntRect TextureLoadArea{};
-	float Value{};
+	float MaxSpeed{};
 };
 
 struct GameData

@@ -10,7 +10,10 @@ enum class TextureId
 	TallCityBg,
 	NightCityBg,
 	DecayedCityBg,
-	missile,
+	GameSpriteSheet,
+	UiSpriteSheet,
+	MetalBg,
+	TextureCount
 	
 };
 #endif //TEXTUREID_H_

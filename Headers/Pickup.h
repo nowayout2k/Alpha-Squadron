@@ -16,12 +16,14 @@ class Pickup : public GameSprite
 	void setPickupColor();
 	void apply(Aircraft& player) const;
 	void update(float deltaTime, CommandQueue& commands) override;
+	void loadResources() override;
  protected:
 	void render(sf::RenderTarget& renderTarget, sf::RenderStates states) const override;
 
  private:
-	PickupType m_type;
+	PickupType m_pickupType;
 	sf::Sprite m_sprite;
+	std::function<void(Aircraft&)> m_action;
 };
 
 #endif //PICKUP_H_

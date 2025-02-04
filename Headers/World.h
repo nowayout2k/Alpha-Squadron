@@ -54,7 +54,7 @@ private:
 	void guideMissiles();
 	void adaptPlayerVelocity();
 	void adaptPlayerPosition();
-	bool matchesCategories(WorldNode::Pair& colliders, NodeType t1, NodeType t2);
+	static bool matchesCategories(WorldNode::Pair& colliders, NodeType t1, NodeType t2);
 
 	static float m_scrollSpeed;
 
@@ -73,8 +73,8 @@ private:
 
 	//Debug////////////////////////
 	sf::Text m_fpsText;
-	float m_timeSinceLastFpsUpdate;
-	int m_framesSinceLastFpsUpdate;
+	float m_timeSinceLastFpsUpdate{};
+	int m_framesSinceLastFpsUpdate{};
 	///////////////////////////////
 };
 

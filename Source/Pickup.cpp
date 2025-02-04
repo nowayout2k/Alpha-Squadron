@@ -4,19 +4,19 @@
 #include "../Headers/Audio.h"
 #include "../Headers/World.h"
 
-Pickup::Pickup(PickupType type) : m_type(type),
-									GameSprite(true,
-										TextureId::EnemiesSpriteSheet, true,
-										sf::IntRect(192, 213, 7, 7),
+Pickup::Pickup(PickupType type) : m_pickupType(type), m_action(),
+								  GameSprite(true,
+										true,
+										sf::IntRect(),
 										sf::IntRect(), false)
 {
-	setScale(4.0f, 4.0f);
-	setPickupColor();
+	setScale(1.0f, 1.0f);
+	//setPickupColor();
 }
 
 void Pickup::setPickupColor()
 {
-	switch (m_type)
+	switch (m_pickupType)
 	{
 	case PickupType::FireRate:
 		setColor(sf::Color::Black);
@@ -40,8 +40,8 @@ void Pickup::setPickupColor()
 
 void Pickup::apply(Aircraft& player) const
 {
-	Audio::playSound(SoundFxId::Collect, 10);
-	World::GameData.PickupData[m_type].Action(player);
+	Audio::playSound(SoundFxId::CollectPickup, 10);
+	m_action(player);
 }
 
 void Pickup::render(sf::RenderTarget& renderTarget, sf::RenderStates states) const
@@ -52,4 +52,17 @@ void Pickup::render(sf::RenderTarget& renderTarget, sf::RenderStates states) con
 void Pickup::update(float deltaTime, CommandQueue& commands)
 {
 	GameSprite::update(deltaTime, commands);
+}
+void Pickup::loadResources()
+{
+	auto dataPair = World::GameData.PickupData.find(m_pickupType);
+
+	if (dataPair != World::GameData.PickupData.end())
+	{
+		auto data = dataPair->second;
+		m_action = data.Action;
+		setTextureId(data.TextureId);
+		setTextureLoadArea(data.TextureLoadArea);
+	}
+	GameSprite::loadResources();
 }

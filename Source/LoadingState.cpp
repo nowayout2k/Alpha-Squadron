@@ -6,7 +6,7 @@
 
 LoadingState::LoadingState(StateStack& stateStack, Context& context, std::function<void()> loadingTask) : State(stateStack, context)
 {
-	m_loadingText.setFont(ResourceManager::loadResource(FontId::Gamer));
+	m_loadingText.setFont(ResourceManager::loadResource(FontId::Arnold));
 	m_loadingText.setString("Loading Resources");
 	Utility::centerOrigin(m_loadingText);
 	m_loadingText.setPosition(getContext().window->getSize().x / 2u, getContext().window->getSize().y / 2u + 50);

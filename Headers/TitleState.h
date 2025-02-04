@@ -9,12 +9,15 @@ class TitleState : public State
 {
  public:
 	TitleState(StateStack& stack, Context context);
-	virtual void render(sf::RenderStates& states) override;
-	virtual bool update(float deltaTime) override;
-	virtual bool handleEvent(const sf::Event& event) override;
+	void render(sf::RenderStates& states) override;
+	bool update(float deltaTime) override;
+	bool handleEvent(const sf::Event& event) override;
  private:
+
 	sf::Sprite m_backgroundSprite;
-	sf::Text m_text;
+
+	sf::Text m_continueText;
+	sf::Text m_companyNameText;
 	bool m_showText;
 	float m_textEffectTime;
 };
