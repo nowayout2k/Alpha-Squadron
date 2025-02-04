@@ -44,6 +44,7 @@ bool GameOverState::update(float dt)
 	{
 		requestStateClear();
 		requestStackPush(StateId::Menu);
+		return true;
 	}
 	return false;
 }

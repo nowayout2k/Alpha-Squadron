@@ -16,7 +16,6 @@ Projectile::Projectile(NodeType type, ProjectileType projectileType, sf::Vector2
 	m_projectileType(projectileType),
 	GameSprite(true,false,sf::IntRect())
 {
-	setScale(1.0f, 1.0f);
 	Audio::playSound(SoundFxId::BulletLaunch, 10);
 }
 
@@ -33,22 +32,36 @@ void Projectile::update(float deltaTime, CommandQueue& commands)
 
 	if (isGuided() && !m_isLaunching)
 	{
-
 		const float approachRate = getMaxSpeed() + World::getScrollSpeed();
-		const float turnRate = 10.0f; // Controls how fast it turns
+		//const float turnRate = 30.0f; // Controls how fast it turns
+		const float turnRadius = 300.0f; // Maximum turn angle in degrees per second
 
 		// Compute the desired velocity (toward target)
 		sf::Vector2f desiredVelocity = Utility::unitVector(m_targetDirection) * approachRate;
 
-		// Interpolate velocity towards the desired direction
-		sf::Vector2f newVelocity = getVelocity() + (desiredVelocity - getVelocity()) * (turnRate * deltaTime);
+		// Calculate the current angle and the desired angle
+		float currentAngle = std::atan2(getVelocity().y, getVelocity().x);
+		float targetAngle = std::atan2(desiredVelocity.y, desiredVelocity.x);
 
-		// Ensure the missile moves at max speed
-		newVelocity = Utility::unitVector(newVelocity) * approachRate;
+		// Calculate the shortest angular difference
+		float angleDifference = targetAngle - currentAngle;
+		if (angleDifference > M_PI) angleDifference -= 2 * M_PI;  // Wrap around
+		if (angleDifference < -M_PI) angleDifference += 2 * M_PI;
+
+		// Limit the change in angle to the turn radius (convert from degrees to radians)
+		float maxAngleChange = turnRadius * deltaTime * (M_PI / 180.0f);
+		float angleToApply = std::clamp(angleDifference, -maxAngleChange, maxAngleChange);
+
+		// Update the current angle
+		float newAngle = currentAngle + angleToApply;
+
+		// Calculate the new velocity vector from the new angle
+		sf::Vector2f newVelocity;
+		newVelocity.x = std::cos(newAngle) * approachRate;
+		newVelocity.y = std::sin(newAngle) * approachRate;
 
 		// Update missile rotation
-		float angle = std::atan2(newVelocity.y, newVelocity.x);
-		setRotation(Utility::toDegree(angle));
+		setRotation(Utility::toDegree(newAngle));
 
 		// Apply new velocity
 		setVelocity(newVelocity);
@@ -60,6 +73,8 @@ void Projectile::update(float deltaTime, CommandQueue& commands)
 
 	GameSprite::update(deltaTime, commands);
 }
+
+
 
 float Projectile::getMaxSpeed() const
 {

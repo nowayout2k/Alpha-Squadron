@@ -31,7 +31,7 @@
         "height": 64
       },
       "type": "health_refill",
-      "value": 100
+      "value": 50
     },
     {
       "textureId": "game_sprite_sheet",

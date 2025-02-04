@@ -18,7 +18,7 @@ class WorldNode : public sf::Transformable, public sf::Drawable
 
 	WorldNode(const WorldNode&) = delete;
 	WorldNode& operator=(const WorldNode& other) = delete;
-	explicit WorldNode() : m_isActive(true), m_parent(nullptr), m_isDestroyed(false), m_isMarkedForRemoval(false) {}
+	explicit WorldNode() : m_isActive(true), m_parent(nullptr), m_isDestroyed(false), m_isMarkedForRemoval(false), m_isCollidable(true) {}
 	void attachNode(SmartNode node);
 	virtual sf::FloatRect getBoundingRect() const;
 	void onCommand(const Command& command, float deltaTime);
@@ -40,6 +40,8 @@ class WorldNode : public sf::Transformable, public sf::Drawable
 	bool isDestroyed() const { return m_isDestroyed; }
 	bool isMarkedForRemoval() const { return m_isMarkedForRemoval; }
 	void markForRemoval() { m_isMarkedForRemoval = true; }
+	bool isCollidable() { return m_isCollidable; }
+	bool setIsCollidable(bool isCollidable) { m_isCollidable = isCollidable; }
  protected:
 	sf::Transform getWorldTransform() const;
 	virtual void render(sf::RenderTarget& renderTarget, sf::RenderStates states) const = 0;
@@ -49,6 +51,7 @@ class WorldNode : public sf::Transformable, public sf::Drawable
  private:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const final;
 	bool m_isActive;
+	bool m_isCollidable;
 	std::vector<SmartNode> m_children;
 	WorldNode* m_parent;
 	bool m_isDestroyed;

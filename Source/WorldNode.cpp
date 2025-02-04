@@ -84,7 +84,7 @@ void WorldNode::checkWorldCollision(WorldNode& sceneGraph, std::set<Pair>& colli
 
 bool WorldNode::isColliding(const WorldNode& lhs, const WorldNode& rhs)
 {
-	return lhs.getBoundingRect().intersects(rhs.getBoundingRect());
+	return lhs.m_isCollidable && rhs.m_isCollidable && lhs.getBoundingRect().intersects(rhs.getBoundingRect());
 }
 
 void WorldNode::removeDestroyed()

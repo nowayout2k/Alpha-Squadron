@@ -4,9 +4,8 @@
 #include "../Headers/World.h"
 #include "../Headers/Engine.h"
 
-constexpr float DAMAGE_FLASH_TIME = 4.0f;
-constexpr float DAMAGE_INVINCIBILITY_TIME = 0.3f;
-constexpr float FIRE_COOLDOWN_TIME = 0.2f;
+constexpr float DAMAGE_FLASH_TIME = 2.0f;
+constexpr float DAMAGE_INVINCIBILITY_TIME = 0.5f;
 constexpr float MAX_SPAWN_DISTANCE = 1000.0f;
 
 #ifndef M_PI
@@ -47,7 +46,7 @@ void Aircraft::changeHealth(float increment)
 	m_health = std::min(m_health + increment, MAX_HEALTH);
 	if(increment < 0)
 	{
-		if (m_isDamageAnimationActive || m_health <= 0)
+		if (((getNodeType() & static_cast<unsigned int>(NodeType::Player)) && m_isDamageAnimationActive) || m_health <= 0)
 		{
 			Audio::playSound(SoundFxId::Explosion, 50);
         			destroy();
@@ -56,12 +55,12 @@ void Aircraft::changeHealth(float increment)
 			return;
 		}
 
-		setColor(sf::Color::Red);
 		Audio::playSound(SoundFxId::TakeDamage, 50);
 		if((getNodeType() & static_cast<unsigned int>(NodeType::Player)))
 			Audio::playSound(SoundFxId::DamageWarning1, 20);
 		m_timeSinceDamage = 0;
 		m_isDamageAnimationActive = true;
+		setIsCollidable(false);
 	}
 }
 
@@ -77,7 +76,6 @@ void Aircraft::launchMissile()
 		m_missileCount--;
 		m_isLaunchingMissile = true;
 	}
-
 }
 
 void Aircraft::handleAnimation(float deltaTime)
@@ -133,14 +131,22 @@ void Aircraft::handleDamageAnimation(float deltaTime)
 			float c = Utility::lerp(0, 255, t);
 			setColor(sf::Color(255, c, c, 255));
 		}
-
-		//setCollision(m_timeSinceDamage > DAMAGE_INVINCIBILITY_TIME);
 	}
 }
 
 void Aircraft::update(float deltaTime, CommandQueue& commands)
 {
 	Entity::update(deltaTime, commands);
+
+	if(m_timeSinceDamage > DAMAGE_INVINCIBILITY_TIME)
+	{
+		setIsCollidable(true);
+	}
+	else
+	{
+		m_timeSinceDamage += deltaTime;
+	}
+
 	updateHealthDisplay();
 
 	checkProjectileLaunch(deltaTime, commands);
@@ -331,7 +337,10 @@ void Aircraft::createProjectile(WorldNode& node, ProjectileType projectileType, 
 {
 	float sign = isAllied() ? 1.f : - 1.f;
 	std::unique_ptr<Projectile> projectile(new Projectile(isAllied() ? NodeType::AlliedProjectile :  NodeType::EnemyProjectile ,projectileType, sf::Vector2f(0, 0), sf::Vector2f(sign, 0)));
-	projectile->setScale(1, 1);
+	if(projectileType == ProjectileType::Missile)
+		projectile->setScale(.75, .75);
+	else
+		projectile->setScale(1, 1);
 	sf::Vector2f offset(sign * getBoundingRect().width + sign * xOffset, getScale().y * (yOffset + getGlobalBounds().height/2));
 	projectile->setPosition(getWorldPosition() + offset);
 	if(!isAllied())

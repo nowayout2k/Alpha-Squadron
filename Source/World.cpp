@@ -51,9 +51,12 @@ void World:: destroyEntitiesOutsideView()
 
 void World::setup()
 {
+	Player::setMissionStatus(Player::MissionStatus::None);
+	m_worldGraph.setIsCollidable(false);
 	for (int i = 0; i < static_cast<int>(Layer::LayerCount); ++i)
 	{
 		WorldNode::SmartNode layer(static_cast<Layer>(i) == Layer::Collision ?  new EmptyWorldNode(NodeType::CollisionLayer) : new EmptyWorldNode());
+		layer->setIsCollidable(false);
 		m_worldLayers[i] = layer.get();
 		m_worldGraph.attachNode(std::move(layer));
 	}
@@ -67,6 +70,7 @@ void World::setup()
 			sf::IntRect(),
 			true));
 	backgroundSkySprite->loadResources();
+	backgroundSkySprite->setIsCollidable(false);
 	backgroundSkySprite->setPosition(m_worldBounds.left,m_worldBounds.top);
 	auto windowSize = m_window.getView().getSize();
 	auto bgTextureSize = backgroundSkySprite->getTexture()->getSize();
@@ -98,8 +102,12 @@ void World::setup()
 
 void World::addEnemies()
 {
-	m_enemySpawnPoints.emplace_back(AircraftType::Tomcat, 5500.f);
+	m_enemySpawnPoints.emplace_back(AircraftType::Tomcat, 3500.f);
+	m_enemySpawnPoints.emplace_back(AircraftType::Chopper, 5500.f);
+	m_enemySpawnPoints.emplace_back(AircraftType::Chopper, 7000.f);
 	m_enemySpawnPoints.emplace_back(AircraftType::Chopper, 9000.f);
+	m_enemySpawnPoints.emplace_back(AircraftType::Tomcat, 12000.f);
+	m_enemySpawnPoints.emplace_back(AircraftType::Chopper, 15000.f);
 
 	std::sort(m_enemySpawnPoints.begin(), m_enemySpawnPoints.end(),
 		[] (EnemySpawnPoint lhs, EnemySpawnPoint rhs)
@@ -282,8 +290,10 @@ void World::loadResources()
 
 void World::update(float deltaTime)
 {
-	if(!m_playerAircraft)
+	if(!m_playerAircraft && Player::getMissionStatus() == Player::MissionStatus::None)
 		Player::setMissionStatus(Player::MissionStatus::Failure);
+	else if(m_worldView.getCenter().x > 15000.0f && Player::getMissionStatus() == Player::MissionStatus::None)
+		Player::setMissionStatus(Player::MissionStatus::Success);
 
 	float scrollSpeedFactor = 1;
 	m_worldView.move(m_scrollSpeed * scrollSpeedFactor * deltaTime, 0.f);
