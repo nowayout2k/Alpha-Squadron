@@ -13,7 +13,7 @@ GameData World::GameData = LoadData("../DataFiles/gameData.json");
 World::World(sf::RenderWindow& window) : m_window(window), m_worldView(window.getDefaultView()),
 			m_worldBounds(0.0f,0.0f,100000.0f,m_worldView.getSize().y),
 			m_spawnPosition(0, m_worldView.getSize().y/2), m_isPlayerAlive(true),
-			m_playerAircraft(nullptr), m_viewPositionOffset(0,0), m_commandQueue()
+			m_playerAircraft(nullptr), m_viewPositionOffset(0,0), m_commandQueue(), m_hasPlayerReachedEnd(false)
 {
 	setup();
 }
@@ -316,13 +316,7 @@ void World::update(float deltaTime)
 	adaptPlayerVelocity();
 
 	handleCollisions();
-	if(m_playerAircraft->isDestroyed())
-	{
-		m_playerAircraft->markForRemoval();
-		m_playerAircraft->removeDestroyed();
-		m_isPlayerAlive = false;
-		return;
-	}
+
 	m_worldGraph.removeDestroyed();
 
 	spawnEnemies();
@@ -330,6 +324,14 @@ void World::update(float deltaTime)
 
 	m_worldGraph.updateHierarchy(deltaTime, m_commandQueue);
 	adaptPlayerPosition();
+
+	if(m_playerAircraft->isDestroyed())
+	{
+		m_playerAircraft->markForRemoval();
+		m_isPlayerAlive = false;
+		m_worldGraph.removeDestroyed();
+		return;
+	}
 
 	if(Debug::isDebuggingEnabled())
 	{
