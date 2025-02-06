@@ -15,7 +15,9 @@ constexpr float MAX_SPAWN_DISTANCE = 1000.0f;
 #define MAX_HEALTH 120.f
 
 Aircraft::Aircraft(const bool hasCollision, sf::Vector2f  scale, sf::Vector2f position)
-	: GameSprite(hasCollision, false),
+	: m_explosion(ResourceManager::loadResource(TextureId::ExplosionSpriteSheet), sf::Vector2i(256, 256), 16, sf::seconds(1)),
+	  m_showExplosion(false),
+	GameSprite(hasCollision, true),
 		m_isExiting(false),
 		m_timeSinceDamage(0),
 		m_routineDistanceTravelled(0),
@@ -39,6 +41,8 @@ Aircraft::Aircraft(const bool hasCollision, sf::Vector2f  scale, sf::Vector2f po
 		FontId::Arnold, "", 12, sf::Color::Black, sf::Text::Style::Regular, sf::Vector2f());
 	m_healthDisplay = healthDisplay.get();
 	attachNode(std::move(healthDisplay));
+	m_explosion.setOrigin(m_explosion.getFrameSize().x / 2.f, m_explosion.getFrameSize().y / 2.f);
+
 }
 
 void Aircraft::changeHealth(float increment)
@@ -49,9 +53,10 @@ void Aircraft::changeHealth(float increment)
 		if (((getNodeType() & static_cast<unsigned int>(NodeType::Player)) && m_isDamageAnimationActive) || m_health <= 0)
 		{
 			Audio::playSound(SoundFxId::Explosion, 50);
-        			destroy();
-			if(!(getNodeType() & static_cast<unsigned int>(NodeType::Player)))
-				markForRemoval();
+        	destroy();
+			//detachNode(*m_healthDisplay);
+			//m_healthDisplay = nullptr;
+			m_showExplosion = true;
 			return;
 		}
 
@@ -76,6 +81,16 @@ void Aircraft::launchMissile()
 		m_missileCount--;
 		m_isLaunchingMissile = true;
 	}
+}
+
+void Aircraft::updateRollAnimation()
+{
+	sf::IntRect textureRect = World::GameData.AircraftData[getAircraftType()].SpriteTextureRegion;
+	if (getVelocity().y > 0.f)
+		textureRect.left += textureRect.width;
+	else if (getVelocity().y < 0.f)
+		textureRect.left += 2 * textureRect.width;
+	setSpriteTextureRegion(textureRect);
 }
 
 void Aircraft::handleAnimation(sf::Time deltaTime)
@@ -136,6 +151,15 @@ void Aircraft::handleDamageAnimation(sf::Time deltaTime)
 
 void Aircraft::update(sf::Time deltaTime, CommandQueue& commands)
 {
+	if (isDestroyed())
+	{
+		if(m_explosion.isComplete())
+			markForRemoval();
+		else
+			m_explosion.update(deltaTime);
+		return;
+	}
+
 	Entity::update(deltaTime, commands);
 
 	if(m_timeSinceDamage > DAMAGE_INVINCIBILITY_TIME)
@@ -156,19 +180,21 @@ void Aircraft::update(sf::Time deltaTime, CommandQueue& commands)
 
 	if (!(getNodeType() & static_cast<unsigned int>(NodeType::Player)))
 	{
-		updatePosition(deltaTime);
+		updateAiPosition(deltaTime);
 	}
+
+	updateRollAnimation();
 }
 
 void Aircraft::updateHealthDisplay()
 {
 	m_healthDisplay->setString(std::to_string((int)m_health) + " HP");
 	auto bounds = GameSprite::getLocalBounds();
-	m_healthDisplay->setPosition(bounds.width / 2, -bounds.height / 2);
+	m_healthDisplay->setPosition(0, -bounds.height / 2);
 	m_healthDisplay->setRotation(-getRotation());
 }
 
-void Aircraft::updatePosition(sf::Time deltaTime)
+void Aircraft::updateAiPosition(sf::Time deltaTime)
 {
 	auto& view = Engine::getWindow().getView();
 	sf::Vector2f viewSize = view.getSize();
@@ -262,6 +288,7 @@ void Aircraft::loadResources()
 		m_exitDirection = data.ExitDirection;
 		setTextureId(data.TextureId);
 		setTextureLoadArea(data.TextureLoadArea);
+		setSpriteTextureRegion(data.SpriteTextureRegion);
 	}
 
 	GameSprite::loadResources();
@@ -341,10 +368,18 @@ void Aircraft::createProjectile(WorldNode& node, ProjectileType projectileType, 
 		projectile->setScale(.75, .75);
 	else
 		projectile->setScale(1, 1);
-	sf::Vector2f offset(sign * getBoundingRect().width + sign * xOffset, getScale().y * (yOffset + getBoundingRect().height/2));
+	sf::Vector2f offset(sign * (getBoundingRect().width/2) + (sign * xOffset), 0);
 	projectile->setPosition(getWorldPosition() + offset);
 	if(!isAllied())
 		projectile->setRotation(180);
 	projectile->loadResources();
 	node.attachNode(std::move(projectile));
+}
+
+void Aircraft::render(sf::RenderTarget& target, sf::RenderStates states) const
+{
+	if (isDestroyed() && m_showExplosion)
+		target.draw(m_explosion, states);
+	else
+		GameSprite::render(target, states);
 }

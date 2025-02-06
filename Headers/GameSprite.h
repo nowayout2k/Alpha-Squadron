@@ -15,6 +15,7 @@ public:
 		: m_textureId(textureId), m_centerOrigin(centerOrigin), m_textureLoadArea(textureLoadArea), m_repeatTexture(repeatTexture), m_spriteTextureRegion(spriteTextureRegion),
 		  Entity(hasCollision)
 		{
+
 		}
 
 	explicit GameSprite(const bool hasCollision, const bool centerOrigin = false,
@@ -22,6 +23,7 @@ public:
 		: m_textureLoadArea(textureLoadArea), m_textureId(), m_centerOrigin(centerOrigin), m_repeatTexture(repeatTexture), m_spriteTextureRegion(spriteTextureRegion),
 		  Entity(hasCollision)
 	{
+
 	}
 
 	~GameSprite() override = default;
@@ -74,6 +76,11 @@ public:
 		return getWorldTransform().transformRect(m_sprite.getGlobalBounds());
 	}
 
+	void setSpriteOrigin(float x, float y)
+	{
+		m_sprite.setOrigin(x,y);
+	}
+
 	void loadResources() override
 	{
 		auto& tex = ResourceManager::loadResource(m_textureId, m_textureLoadArea);
@@ -89,7 +96,7 @@ public:
 	{
 		m_sprite.setColor(color);
 	}
-	void setSpriteTextureRegion(sf::IntRect rect) { m_spriteTextureRegion = rect; }
+	void setSpriteTextureRegion(sf::IntRect rect) { m_spriteTextureRegion = rect; m_sprite.setTextureRect(m_spriteTextureRegion); }
  protected:
 	void setTextureId(TextureId textureId) { m_textureId = textureId; }
 	void setTextureLoadArea(sf::IntRect rect) { m_textureLoadArea = rect; }

@@ -12,6 +12,7 @@ enum class TextureId
 	DecayedCityBg,
 	GameSpriteSheet,
 	UiSpriteSheet,
+	ExplosionSpriteSheet,
 	MetalBg,
 	Particle,
 	CompanyLogo,

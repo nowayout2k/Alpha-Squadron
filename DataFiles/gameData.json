@@ -88,9 +88,15 @@
       "maxSpeed": 600.0,
       "textureId": "game_sprite_sheet",
       "textureLoadArea": {
-        "left": 18,
-        "top": 148,
-        "width": 217,
+        "left": 0,
+        "top": 144,
+        "width": 715,
+        "height": 58
+      },
+      "spriteTextureRegion": {
+        "left": 0,
+        "top": 0,
+        "width": 218,
         "height": 58
       },
       "aiDespawnDistance": 5400.0,
@@ -130,10 +136,16 @@
       "maxSpeed": 400.0,
       "textureId": "game_sprite_sheet",
       "textureLoadArea": {
-        "left": 19,
-        "top": 86,
-        "width": 199,
-        "height": 51
+        "left": 0,
+        "top": 80,
+        "width": 715,
+        "height": 56
+      },
+      "spriteTextureRegion": {
+        "left": 0,
+        "top": 0,
+        "width": 201,
+        "height": 56
       },
       "aiDespawnDistance": 5400.0,
       "aiEnterDirection": "west",

@@ -103,6 +103,8 @@ add_executable(Alpha-Squadron main.cpp
         Headers/ParticleSystemNode.h
         Source/EmitterNode.cpp
         Headers/EmitterNode.h
+        Source/Animation.cpp
+        Headers/Animation.h
 )
 
 # Link the SFML libraries and nlohmann_json

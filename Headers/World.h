@@ -20,6 +20,7 @@ public:
 	void render(sf::RenderWindow &window, sf::RenderStates states);
 	CommandQueue& getCommandQueue() { return m_commandQueue; }
 	static float getScrollSpeed() { return m_scrollSpeed; }
+	bool isPlayerAircraftExploding() const { return m_playerAircraft->isExploding(); }
 	sf::FloatRect getViewBounds() const;
 	sf::FloatRect getBattlefieldBounds() const;
 	void destroyEntitiesOutsideView();

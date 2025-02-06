@@ -54,6 +54,8 @@ std::string ResourceManager::getTexturePath(TextureId textureId)
 		return "../Assets/Textures/Backgrounds/tall_city_bg.png";
 	case TextureId::UiSpriteSheet :
 		return "../Assets/Textures/UI/ui_sprite_sheet.png";
+	case TextureId::ExplosionSpriteSheet :
+		return "../Assets/Textures/FX/explosion_sprite_sheet.png";
 	default:
 		Debug::logError("Texture Id is unknown!");
 		return "../Assets/Textures/UI/ui_sprite_sheet.png";

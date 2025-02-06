@@ -17,7 +17,6 @@ Projectile::Projectile(NodeType type, ProjectileType projectileType, sf::Vector2
 	m_projectileType(projectileType),
 	GameSprite(true,false,sf::IntRect())
 {
-
 }
 
 void Projectile::update(sf::Time deltaTime, CommandQueue& commands)
@@ -30,8 +29,6 @@ void Projectile::update(sf::Time deltaTime, CommandQueue& commands)
 			m_isLaunching = false;
 		}
 	}
-
-
 
 	if (isGuided() && !m_isLaunching)
 	{
@@ -121,6 +118,8 @@ void Projectile::loadResources()
 	}
 
 	GameSprite::loadResources();
+
+	setOrigin(0, .5f);
 
 	if(isGuided())
 	{

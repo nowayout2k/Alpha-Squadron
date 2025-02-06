@@ -7,6 +7,7 @@
 #include "DataTables.h"
 #include "GameText.h"
 #include "Projectile.h"
+#include "Animation.h"
 #include <vector>
 
 #define MAX_FIRE_RATE 3
@@ -26,6 +27,7 @@ class Aircraft : public GameSprite
 	void accelerate(float x, float y) { setVelocity(getVelocity() + sf::Vector2f(x, y)); }
 
 	float getMaxSpeed() const { return m_speed; }
+	bool isExploding() const { return m_showExplosion && !m_explosion.isComplete(); }
 	virtual AircraftType getAircraftType() = 0;
 
 	void loadResources() override;
@@ -35,6 +37,7 @@ class Aircraft : public GameSprite
 	virtual void changeMissileCount(int increment) { m_missileCount = std::min(m_missileCount + increment, MAX_MISSILE_COUNT); }
 	virtual void changeFireSpread(int increment) { m_spreadLevel = std::min(m_spreadLevel + increment, MAX_SPREAD_LEVEL); }
 	virtual void changeHealth(float increment);
+	void render(sf::RenderTarget&, sf::RenderStates) const override;
  protected:
 	virtual void handleAnimation(sf::Time deltaTime);
 	void handleDamageAnimation(sf::Time deltaTime);
@@ -44,7 +47,7 @@ class Aircraft : public GameSprite
  private:
 	void createProjectile(WorldNode& node, ProjectileType projectileType, float xOffset, float yOffset);
 	void updateHealthDisplay();
-	void updatePosition(sf::Time deltaTime);
+	void updateAiPosition(sf::Time deltaTime);
 	void moveTowardsStart(sf::Time deltaTime);
 	void exitPhase();
 	void followAiRoutines(sf::Time deltaTime);
@@ -52,6 +55,7 @@ class Aircraft : public GameSprite
 	bool isAllied() const;
 	void checkProjectileLaunch(sf::Time dt, CommandQueue& commands);
 	void createBullets(WorldNode& node);
+	void updateRollAnimation();
 
 	float m_health{};
 	float m_speed{};
@@ -69,9 +73,11 @@ class Aircraft : public GameSprite
 
 	bool m_isDamageAnimationActive;
 	bool m_isExiting;
+	bool m_showExplosion;
 
 	int m_routineIndex;
 	float m_despawnDistance{};
+	Animation m_explosion;
 
 	GameText* m_healthDisplay;
 	std::vector<AiRoutine> m_aiRoutines;

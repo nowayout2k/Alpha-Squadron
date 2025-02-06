@@ -61,7 +61,7 @@ void World::setup()
 		m_worldGraph.attachNode(std::move(layer));
 	}
 
-	std::unique_ptr<GameSprite> backgroundSkySprite(
+	std::unique_ptr<GameSprite> backgroundSprite(
 		new GameSprite(
 			false,
 			TextureId::DecayedCityBg,
@@ -69,14 +69,14 @@ void World::setup()
 			sf::IntRect(),
 			sf::IntRect(),
 			true));
-	backgroundSkySprite->loadResources();
-	backgroundSkySprite->setIsCollidable(false);
-	backgroundSkySprite->setPosition(m_worldBounds.left,m_worldBounds.top);
+	backgroundSprite->loadResources();
+	backgroundSprite->setIsCollidable(false);
+	backgroundSprite->setPosition( m_worldBounds.left - m_worldView.getSize().x, m_worldBounds.top);
 	auto windowSize = m_window.getView().getSize();
-	auto bgTextureSize = backgroundSkySprite->getTexture()->getSize();
-	backgroundSkySprite->setSpriteTextureRegion(sf::IntRect(0, 0, m_worldBounds.width, bgTextureSize.y));
-	backgroundSkySprite->setScale(windowSize.x/bgTextureSize.x, windowSize.y/bgTextureSize.y);
-	m_worldLayers[static_cast<int>(Layer::Background)]->attachNode(std::move(backgroundSkySprite));
+	auto bgTextureSize = backgroundSprite->getTexture()->getSize();
+	backgroundSprite->setSpriteTextureRegion(sf::IntRect(0, 0, m_worldBounds.width, bgTextureSize.y));
+	backgroundSprite->setScale(windowSize.x/bgTextureSize.x, windowSize.y/bgTextureSize.y);
+	m_worldLayers[static_cast<int>(Layer::Background)]->attachNode(std::move(backgroundSprite));
 
 	std::unique_ptr<Aircraft> player = createAircraft(AircraftType::Tomcat, m_spawnPosition, NodeType::Player, sf::Vector2f(1.0, 1.0));
 	m_playerAircraft = player.get();
@@ -91,6 +91,8 @@ void World::setup()
 
 	std::unique_ptr<ParticleSystemNode> propellantNode(new ParticleSystemNode(Particle::Propellant));
 	m_worldLayers[static_cast<int>(Layer::Foreground)]->attachNode(std::move(propellantNode));
+
+	m_worldView.setCenter(m_spawnPosition);
 
 	Audio::playMusic(MusicId::GameMusic, 10);
 
@@ -296,16 +298,16 @@ void World::loadResources()
 
 void World::update(sf::Time deltaTime)
 {
-	if(!isPlayerAlive())
+	if(m_playerAircraft->isDestroyed())
 	{
-		return;
+		m_isPlayerAlive = false;
 	}
+
 	if(m_worldView.getCenter().x > 15000.0f)
 	{
 		m_hasPlayerReachedEnd = true;
 		return;
 	}
-
 
 	float scrollSpeedFactor = 1;
 	m_worldView.move(m_scrollSpeed * scrollSpeedFactor * deltaTime.asSeconds(), 0.f);
@@ -330,15 +332,8 @@ void World::update(sf::Time deltaTime)
 	spawnPickups();
 
 	m_worldGraph.updateHierarchy(deltaTime, m_commandQueue);
-	adaptPlayerPosition();
-
-	if(m_playerAircraft->isDestroyed())
-	{
-		m_playerAircraft->markForRemoval();
-		m_isPlayerAlive = false;
-		m_worldGraph.removeDestroyed();
-		return;
-	}
+	if(m_isPlayerAlive)
+		adaptPlayerPosition();
 
 	if(Debug::isDebuggingEnabled())
 	{
@@ -383,10 +378,10 @@ void World::adaptPlayerPosition()
 		sf::FloatRect viewBounds(m_worldView.getCenter() - m_worldView.getSize() / 2.f,m_worldView.getSize());
 		const auto spriteBounds = m_playerAircraft->getBoundingRect();
 		sf::Vector2f position = m_playerAircraft->getPosition();
-		position.x = std::max(position.x, viewBounds.left + 0);
-		position.x = std::min(position.x, viewBounds.left + viewBounds.width - spriteBounds.width);
-		position.y = std::max(position.y, viewBounds.top + 0);
-		position.y = std::min(position.y, viewBounds.top + viewBounds.height - spriteBounds.height);
+		position.x = std::max(position.x, viewBounds.left + spriteBounds.width/2);
+		position.x = std::min(position.x, viewBounds.left + viewBounds.width - spriteBounds.width/2);
+		position.y = std::max(position.y, viewBounds.top + spriteBounds.height/2);
+		position.y = std::min(position.y, viewBounds.top + viewBounds.height - spriteBounds.height/2);
 		m_playerAircraft->setPosition(position);
 	}
 }

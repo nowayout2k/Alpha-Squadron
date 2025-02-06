@@ -4,7 +4,7 @@
 bool GameState::update(sf::Time deltaTime)
 {
 	m_world.update(deltaTime);
-	if(!m_world.isPlayerAlive())
+	if(!m_world.isPlayerAlive() && !m_world.isPlayerAircraftExploding())
 	{
 		getContext().player->setMissionStatus(Player::MissionStatus::Failure);
 		requestStackPush(StateId::GameOver);

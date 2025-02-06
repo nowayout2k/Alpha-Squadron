@@ -61,12 +61,19 @@ GameData LoadData(const std::string& filename)
 				aircraftData.AiRoutines.emplace_back( aiRoutine["angle"], aiRoutine["distance"]);
 			}
 
-			auto left = item["textureLoadArea"]["left"];
-			auto top = item["textureLoadArea"]["top"];
-			auto width = item["textureLoadArea"]["width"];
-			auto height = item["textureLoadArea"]["height"];
+			auto sLeft = item["spriteTextureRegion"]["left"];
+			auto sTop = item["spriteTextureRegion"]["top"];
+			auto sWidth = item["spriteTextureRegion"]["width"];
+			auto sHeight = item["spriteTextureRegion"]["height"];
 
-			aircraftData.TextureLoadArea = sf::IntRect(left, top, width, height);
+			aircraftData.SpriteTextureRegion = sf::IntRect(sLeft, sTop, sWidth, sHeight);
+
+			auto lLeft = item["textureLoadArea"]["left"];
+			auto lTop = item["textureLoadArea"]["top"];
+			auto lWidth = item["textureLoadArea"]["width"];
+			auto lHeight = item["textureLoadArea"]["height"];
+
+			aircraftData.TextureLoadArea = sf::IntRect(lLeft, lTop, lWidth, lHeight);
 
 			gameData.AircraftData[aircraftData.Type] = aircraftData;
 		}

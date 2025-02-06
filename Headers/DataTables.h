@@ -28,6 +28,7 @@ struct AircraftData
 	Direction ExitDirection;
 	TextureId TextureId;
 	sf::IntRect TextureLoadArea;
+	sf::IntRect SpriteTextureRegion;
 	std::vector<AiRoutine> AiRoutines;
 };
 
