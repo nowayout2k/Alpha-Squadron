@@ -14,7 +14,7 @@ class EmptyWorldNode : public WorldNode
 	void update(sf::Time deltaTime, CommandQueue& commands) override {  }
 	void render(sf::RenderTarget& renderTarget, sf::RenderStates states) const override {  }
 	void loadResources() override {  };
-	sf::Rect<float> getGlobalBounds() const override { return sf::Rect<float>(); }
+	sf::Rect<float> getBoundingRect() const override { return {}; }
  private:
 	NodeType m_type;
 };

@@ -24,7 +24,7 @@ class GameText : public Entity
 
 	virtual unsigned int getNodeType() const override { return Entity::getNodeType() | (unsigned int)NodeType::Text; }
 
-	virtual sf::Rect<float> getGlobalBounds() const override
+	sf::Rect<float> getBoundingRect() const override
 	{
 		sf::FloatRect bounds = m_text.getGlobalBounds();
 		return getTransform().transformRect(bounds);
@@ -36,9 +36,9 @@ class GameText : public Entity
 		Utility::centerOrigin(m_text);
 	}
 
-	virtual void update(sf::Time deltaTime, CommandQueue& commands) override { if(!isActive()) return; }
+	void update(sf::Time deltaTime, CommandQueue& commands) override { if(!isActive()) return; }
 
-	virtual void render(sf::RenderTarget& renderTarget, sf::RenderStates states) const override
+	void render(sf::RenderTarget& renderTarget, sf::RenderStates states) const override
 	{
 		if(!isActive())
 			return;

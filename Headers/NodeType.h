@@ -20,7 +20,7 @@ enum class NodeType
 	AlliedProjectile = 1 << 9,
 	CollisionLayer = 1 << 10,
 	Pickup = 1 << 11,
-	Particle = 1 << 12,
+	ParticleSystem = 1 << 12,
 };
 
 

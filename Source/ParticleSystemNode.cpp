@@ -1,17 +1,15 @@
-//
-// Created by Johnnie on 2/5/2025.
-//
+// Copyright (c) 2025 No Way Out LLC All rights reserved.
 
-#include "../Headers/ParticleNode.h"
+#include "../Headers/ParticleSystemNode.h"
 
-ParticleNode::ParticleNode(Particle::Type type) : m_particles(),
-	m_texture(ResourceManager::loadResource(TextureId::Particle)),
-	m_type(Particle::Type::None), m_vertexArray(), m_needsVertexUpdate(false)
+ParticleSystemNode::ParticleSystemNode(Particle::Type type) : m_particles(),
+															  m_texture(ResourceManager::loadResource(TextureId::Particle)),
+															  m_type(type), m_vertexArray(), m_needsVertexUpdate(false)
 {
 
 }
 
-void ParticleNode::addParticle(sf::Vector2f position)
+void ParticleSystemNode::addParticle(sf::Vector2f position)
 {
 	Particle particle;
 	particle.Position = position;
@@ -20,9 +18,12 @@ void ParticleNode::addParticle(sf::Vector2f position)
 	m_particles.push_back(particle);
 }
 
-void ParticleNode::update(sf::Time deltaTime, CommandQueue& commands)
+void ParticleSystemNode::update(sf::Time deltaTime, CommandQueue& commands)
 {
-	while (!m_particles.empty() && m_particles.front().Lifetime <= sf::Time::Zero)
+	if(m_particles.empty())
+		return;
+
+	while (m_particles.front().Lifetime <= sf::Time::Zero)
 		m_particles.pop_front();
 
 	for(Particle& particle : m_particles)
@@ -30,18 +31,21 @@ void ParticleNode::update(sf::Time deltaTime, CommandQueue& commands)
 
 	m_needsVertexUpdate = true;
 }
-void ParticleNode::render(sf::RenderTarget& target, sf::RenderStates states) const
+void ParticleSystemNode::render(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	if (m_needsVertexUpdate)
 	{
 		computeVertices();
 		m_needsVertexUpdate = false;
 	}
-	states.texture = &m_texture;
-	target.draw(m_vertexArray, states);
+	if(m_vertexArray.getVertexCount() > 0)
+	{
+		states.texture = &m_texture;
+		target.draw(m_vertexArray, states);
+	}
 
 }
-void ParticleNode::computeVertices() const
+void ParticleSystemNode::computeVertices() const
 {
 	sf::Vector2f size(m_texture.getSize());
 	sf::Vector2f half = size / 2.f;
@@ -60,12 +64,22 @@ void ParticleNode::computeVertices() const
 	}
 }
 
-void ParticleNode::addVertex(float worldX, float worldY, float texCoordX, float texCoordY, const sf::Color& color) const
+void ParticleSystemNode::addVertex(float worldX, float worldY, float texCoordX, float texCoordY, const sf::Color& color) const
 {
 	sf::Vertex vertex;
 	vertex.position = sf::Vector2f(worldX, worldY);
 	vertex.texCoords = sf::Vector2f(texCoordX, texCoordY);
 	vertex.color = color;
 	m_vertexArray.append(vertex);
+}
+
+sf::Rect<float> ParticleSystemNode::getBoundingRect() const
+{
+	return {};
+}
+
+void ParticleSystemNode::loadResources()
+{
+
 }
 

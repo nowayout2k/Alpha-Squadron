@@ -48,12 +48,12 @@
   "particle": [
     {
       "type": "smoke",
-      "lifetime" : 10.0,
+      "lifetime" : 1000.0,
       "color" : "#FF00AAFF"
     },
     {
       "type": "Propellant",
-      "lifetime" : 1.0,
+      "lifetime" : 1000.0,
       "color" : "#AA55AAFF"
     }
   ],

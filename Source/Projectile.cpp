@@ -3,6 +3,7 @@
 #include "../Headers/Projectile.h"
 #include "../Headers/Audio.h"
 #include "../Headers/Engine.h"
+#include "../Headers/EmitterNode.h"
 
 #define LAUNCH_TIME 0.25f
 
@@ -16,7 +17,7 @@ Projectile::Projectile(NodeType type, ProjectileType projectileType, sf::Vector2
 	m_projectileType(projectileType),
 	GameSprite(true,false,sf::IntRect())
 {
-	Audio::playSound(SoundFxId::BulletLaunch, 10);
+
 }
 
 void Projectile::update(sf::Time deltaTime, CommandQueue& commands)
@@ -29,6 +30,8 @@ void Projectile::update(sf::Time deltaTime, CommandQueue& commands)
 			m_isLaunching = false;
 		}
 	}
+
+
 
 	if (isGuided() && !m_isLaunching)
 	{
@@ -118,4 +121,22 @@ void Projectile::loadResources()
 	}
 
 	GameSprite::loadResources();
+
+	if(isGuided())
+	{
+		auto rect = getBoundingRect();
+		std::unique_ptr<EmitterNode> smoke(new EmitterNode(Particle::Smoke));
+		smoke->setPosition(0.f, rect.height / 2.f);
+		attachNode(std::move(smoke));
+
+		std::unique_ptr<EmitterNode> propellant(new EmitterNode(Particle::Propellant));
+		propellant->setPosition(0.f, rect.height / 2.f);
+		attachNode(std::move(propellant));
+
+		Audio::playSound(SoundFxId::MissileLaunch, 10);
+	}
+	else
+	{
+		Audio::playSound(SoundFxId::BulletLaunch, 10);
+	}
 }

@@ -6,6 +6,7 @@
 #include "../Headers/Chopper.h"
 #include "../Headers/Pickup.h"
 #include "../Headers/Engine.h"
+#include "../Headers/ParticleSystemNode.h"
 
 float World::m_scrollSpeed = 500.0f;
 GameData World::GameData = LoadData("../DataFiles/gameData.json");
@@ -55,7 +56,7 @@ void World::setup()
 	for (int i = 0; i < static_cast<int>(Layer::LayerCount); ++i)
 	{
 		WorldNode::SmartNode layer(static_cast<Layer>(i) == Layer::Collision ?  new EmptyWorldNode(NodeType::CollisionLayer) : new EmptyWorldNode());
-		layer->setIsCollidable(false);
+		layer->setIsCollidable(static_cast<Layer>(i) == Layer::Collision);
 		m_worldLayers[i] = layer.get();
 		m_worldGraph.attachNode(std::move(layer));
 	}
@@ -84,6 +85,12 @@ void World::setup()
 
 	addEnemies();
 	addPickUps();
+
+	std::unique_ptr<ParticleSystemNode> smokeNode(new ParticleSystemNode(Particle::Smoke));
+	m_worldLayers[static_cast<int>(Layer::Foreground)]->attachNode(std::move(smokeNode));
+
+	std::unique_ptr<ParticleSystemNode> propellantNode(new ParticleSystemNode(Particle::Propellant));
+	m_worldLayers[static_cast<int>(Layer::Foreground)]->attachNode(std::move(propellantNode));
 
 	Audio::playMusic(MusicId::GameMusic, 10);
 
@@ -164,7 +171,7 @@ void World::guideMissiles()
 			  }
 			  if (closestEnemy)
 				  missile.guideTowards(sf::Vector2f(closestEnemy->getWorldPosition().x
-						  + (closestEnemy->getScale().x * closestEnemy->getGlobalBounds().width) / 2,
+						  + (closestEnemy->getScale().x * closestEnemy->getBoundingRect().width) / 2,
 					  closestEnemy->getWorldPosition().y));
 			});
 	m_commandQueue.push(missileGuider);
@@ -374,7 +381,7 @@ void World::adaptPlayerPosition()
 		}
 
 		sf::FloatRect viewBounds(m_worldView.getCenter() - m_worldView.getSize() / 2.f,m_worldView.getSize());
-		const auto spriteBounds = m_playerAircraft->getGlobalBounds();
+		const auto spriteBounds = m_playerAircraft->getBoundingRect();
 		sf::Vector2f position = m_playerAircraft->getPosition();
 		position.x = std::max(position.x, viewBounds.left + 0);
 		position.x = std::min(position.x, viewBounds.left + viewBounds.width - spriteBounds.width);

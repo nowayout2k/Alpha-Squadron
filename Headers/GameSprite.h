@@ -40,11 +40,6 @@ public:
 			drawBoundingRect(renderTarget, states);
 	}
 
-	sf::Rect<float> getGlobalBounds() const override
-	{
-		return m_sprite.getGlobalBounds();
-	}
-
 	sf::Rect<float> getLocalBounds() const
 	{
 		return m_sprite.getLocalBounds();

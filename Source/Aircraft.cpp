@@ -341,7 +341,7 @@ void Aircraft::createProjectile(WorldNode& node, ProjectileType projectileType, 
 		projectile->setScale(.75, .75);
 	else
 		projectile->setScale(1, 1);
-	sf::Vector2f offset(sign * getBoundingRect().width + sign * xOffset, getScale().y * (yOffset + getGlobalBounds().height/2));
+	sf::Vector2f offset(sign * getBoundingRect().width + sign * xOffset, getScale().y * (yOffset + getBoundingRect().height/2));
 	projectile->setPosition(getWorldPosition() + offset);
 	if(!isAllied())
 		projectile->setRotation(180);

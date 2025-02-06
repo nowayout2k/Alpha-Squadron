@@ -90,9 +90,6 @@ bool WorldNode::isColliding(const WorldNode& lhs, const WorldNode& rhs)
 void WorldNode::removeDestroyed()
 {
 	auto destroyedBegin = std::remove_if(m_children.begin(), m_children.end(),std::mem_fn(&WorldNode::isMarkedForRemoval));
-	int count = m_children.end() - destroyedBegin;
-	if(count > 0)
-		Debug::log("Destroy count", count);
 
 	m_children.erase(destroyedBegin, m_children.end());
 

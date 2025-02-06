@@ -99,8 +99,8 @@ add_executable(Alpha-Squadron main.cpp
         Source/GameOverState.cpp
         Headers/GameOverState.h
         Headers/Particle.h
-        Source/ParticleNode.cpp
-        Headers/ParticleNode.h
+        Source/ParticleSystemNode.cpp
+        Headers/ParticleSystemNode.h
         Source/EmitterNode.cpp
         Headers/EmitterNode.h
 )

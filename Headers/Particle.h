@@ -1,5 +1,4 @@
-// Created by Johnnie on 2/5/2025.
-//
+// Copyright (c) 2025 No Way Out LLC All rights reserved.
 
 #ifndef ALPHA_SQUADRON_HEADERS_PARTICLE_H_
 #define ALPHA_SQUADRON_HEADERS_PARTICLE_H_

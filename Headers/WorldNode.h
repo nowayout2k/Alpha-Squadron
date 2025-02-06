@@ -20,14 +20,14 @@ class WorldNode : public sf::Transformable, public sf::Drawable
 	WorldNode& operator=(const WorldNode& other) = delete;
 	explicit WorldNode() : m_isActive(true), m_parent(nullptr), m_isDestroyed(false), m_isMarkedForRemoval(false), m_isCollidable(true) {}
 	void attachNode(SmartNode node);
-	virtual sf::FloatRect getBoundingRect() const;
+
 	void onCommand(const Command& command, sf::Time deltaTime);
 	SmartNode detachNode(const WorldNode& node);
 	void setActive(bool isActive) { m_isActive = isActive; }
 	bool isActive() const { return m_isActive; };
 	virtual void renderState(sf::RenderTarget& renderTarget, sf::RenderStates states) const;
 	sf::Vector2f getWorldPosition() const;
-	virtual sf::Rect<float> getGlobalBounds() const = 0;
+	virtual sf::FloatRect getBoundingRect() const;
 	virtual void updateHierarchy(sf::Time deltaTime, CommandQueue& commands);
 	virtual void loadHierarchyResources();
 	virtual unsigned int getNodeType() const { return (unsigned int)NodeType::WorldNode; }
