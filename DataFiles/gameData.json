@@ -48,13 +48,13 @@
   "particle": [
     {
       "type": "smoke",
-      "lifetime" : 1000.0,
-      "color" : "#FF00AAFF"
+      "lifetime" : 4.0,
+      "color" : "#323232FF"
     },
     {
       "type": "Propellant",
-      "lifetime" : 1000.0,
-      "color" : "#AA55AAFF"
+      "lifetime" : 0.6,
+      "color" : "#FFFF32FF"
     }
   ],
   "projectile": [
@@ -67,7 +67,7 @@
         "height": 17
       },
       "type": "bullet",
-      "maxSpeed": 2000
+      "maxSpeed": 700
     },
     {
       "textureId": "game_sprite_sheet",
@@ -78,7 +78,7 @@
         "height": 25
       },
       "type": "missile",
-      "maxSpeed": 1000
+      "maxSpeed": 350
     }
   ],
   "aircraft": [

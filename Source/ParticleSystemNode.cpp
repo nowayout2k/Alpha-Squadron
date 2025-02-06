@@ -4,7 +4,7 @@
 
 ParticleSystemNode::ParticleSystemNode(Particle::Type type) : m_particles(),
 															  m_texture(ResourceManager::loadResource(TextureId::Particle)),
-															  m_type(type), m_vertexArray(), m_needsVertexUpdate(false)
+															  m_type(type), m_vertexArray(sf::Quads), m_needsVertexUpdate(true)
 {
 
 }
@@ -20,10 +20,7 @@ void ParticleSystemNode::addParticle(sf::Vector2f position)
 
 void ParticleSystemNode::update(sf::Time deltaTime, CommandQueue& commands)
 {
-	if(m_particles.empty())
-		return;
-
-	while (m_particles.front().Lifetime <= sf::Time::Zero)
+	while (!m_particles.empty() && m_particles.front().Lifetime <= sf::Time::Zero)
 		m_particles.pop_front();
 
 	for(Particle& particle : m_particles)
@@ -38,11 +35,8 @@ void ParticleSystemNode::render(sf::RenderTarget& target, sf::RenderStates state
 		computeVertices();
 		m_needsVertexUpdate = false;
 	}
-	if(m_vertexArray.getVertexCount() > 0)
-	{
-		states.texture = &m_texture;
-		target.draw(m_vertexArray, states);
-	}
+	states.texture = &m_texture;
+	target.draw(m_vertexArray, states);
 
 }
 void ParticleSystemNode::computeVertices() const

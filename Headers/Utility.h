@@ -72,6 +72,22 @@ public:
 		object.setOrigin(std::floor(bounds.left + bounds.width / 2.f), std::floor(bounds.top + bounds.height / 2.f));
 	}
 
+	static sf::Vector2f calculateScaleFromViewPercentage(sf::Vector2f viewSize, sf::Vector2f textureSize, sf::Vector2f scalePercentageOfView, bool preserveAspectRatio)
+	{
+		auto desiredSize = sf::Vector2f(viewSize.x * scalePercentageOfView.x,viewSize.y * scalePercentageOfView.y);
+
+		float scaleX = desiredSize.x / textureSize.x;
+		float scaleY =desiredSize.y / textureSize.y;
+
+		if(preserveAspectRatio)
+		{
+			// Compute uniform scale factor (maintains aspect ratio)
+			scaleX = scaleY = std::max(scaleX, scaleY);
+		}
+
+ 		return {scaleX, scaleY};
+	}
+
 	static float magnitude(float x, float y)
 	{
 		return std::sqrt(x * x + y * y);

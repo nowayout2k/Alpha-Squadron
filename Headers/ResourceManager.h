@@ -21,6 +21,7 @@ class ResourceManager
 	static void clearFontCache() { m_fontCache.clear(); }
 	static void clearSoundBufferCache() { m_soundBufferCache.clear(); }
 	static void clearTextureCache() { m_textureCache.clear(); }
+	static void clearAllCache() { m_textureCache.clear(); m_soundBufferCache.clear(); m_fontCache.clear(); }
  private:
 	static std::string getTexturePath(TextureId textureId);
 	static std::string getSoundPath(SoundFxId soundFxId);

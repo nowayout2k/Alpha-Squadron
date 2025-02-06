@@ -113,6 +113,7 @@ void StateStack::applyPendingChanges()
 			break;
 		case Clear:
 			m_stack.clear();
+			ResourceManager::clearAllCache();
 			break;
 		}
 	}
