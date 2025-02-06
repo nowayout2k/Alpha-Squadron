@@ -13,11 +13,11 @@ class Tomcat : public Aircraft
 {
 public:
     explicit Tomcat(bool hasCollision, sf::Vector2f position, NodeType nodeType = NodeType::None, sf::Vector2f scale = sf::Vector2f());
-    void update(float deltaTime, CommandQueue& commands) override;
+    void update(sf::Time deltaTime, CommandQueue& commands) override;
 	virtual unsigned int getNodeType() const override { return m_nodeType; }
 	AircraftType getAircraftType() override { return AircraftType::Tomcat; }
  private:
-    sf::Vector2f handleInput(float deltaTime);
+    sf::Vector2f handleInput(sf::Time deltaTime);
 	unsigned int m_nodeType;
 };
 

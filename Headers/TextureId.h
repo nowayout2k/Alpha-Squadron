@@ -13,6 +13,8 @@ enum class TextureId
 	GameSpriteSheet,
 	UiSpriteSheet,
 	MetalBg,
+	Particle,
+	CompanyLogo,
 	TextureCount
 	
 };

@@ -78,7 +78,7 @@ void Aircraft::launchMissile()
 	}
 }
 
-void Aircraft::handleAnimation(float deltaTime)
+void Aircraft::handleAnimation(sf::Time deltaTime)
 {
 	handleDamageAnimation(deltaTime);
 }
@@ -88,7 +88,7 @@ bool Aircraft::isAllied() const
 	return getNodeType() & static_cast<unsigned int>(NodeType::Player);
 }
 
-void Aircraft::checkProjectileLaunch(float dt, CommandQueue& commands)
+void Aircraft::checkProjectileLaunch(sf::Time dt, CommandQueue& commands)
 {
 	if (!isAllied())
 	{
@@ -103,7 +103,7 @@ void Aircraft::checkProjectileLaunch(float dt, CommandQueue& commands)
 	}
 	else if (m_fireCooldownRemaining > 0)
 	{
-		m_fireCooldownRemaining -= dt;
+		m_fireCooldownRemaining -= dt.asSeconds();
 	}
 
 	if (m_isLaunchingMissile)
@@ -113,11 +113,11 @@ void Aircraft::checkProjectileLaunch(float dt, CommandQueue& commands)
 	}
 }
 
-void Aircraft::handleDamageAnimation(float deltaTime)
+void Aircraft::handleDamageAnimation(sf::Time deltaTime)
 {
 	if (m_isDamageAnimationActive)
 	{
-		m_timeSinceDamage += deltaTime;
+		m_timeSinceDamage += deltaTime.asSeconds();
 
 		if (m_timeSinceDamage > DAMAGE_FLASH_TIME)
 		{
@@ -134,7 +134,7 @@ void Aircraft::handleDamageAnimation(float deltaTime)
 	}
 }
 
-void Aircraft::update(float deltaTime, CommandQueue& commands)
+void Aircraft::update(sf::Time deltaTime, CommandQueue& commands)
 {
 	Entity::update(deltaTime, commands);
 
@@ -144,7 +144,7 @@ void Aircraft::update(float deltaTime, CommandQueue& commands)
 	}
 	else
 	{
-		m_timeSinceDamage += deltaTime;
+		m_timeSinceDamage += deltaTime.asSeconds();
 	}
 
 	updateHealthDisplay();
@@ -152,7 +152,7 @@ void Aircraft::update(float deltaTime, CommandQueue& commands)
 	checkProjectileLaunch(deltaTime, commands);
 
 	if (m_fireCooldownRemaining > 0)
-		m_fireCooldownRemaining -= deltaTime;
+		m_fireCooldownRemaining -= deltaTime.asSeconds();
 
 	if (!(getNodeType() & static_cast<unsigned int>(NodeType::Player)))
 	{
@@ -168,7 +168,7 @@ void Aircraft::updateHealthDisplay()
 	m_healthDisplay->setRotation(-getRotation());
 }
 
-void Aircraft::updatePosition(float deltaTime)
+void Aircraft::updatePosition(sf::Time deltaTime)
 {
 	auto& view = Engine::getWindow().getView();
 	sf::Vector2f viewSize = view.getSize();
@@ -192,11 +192,11 @@ void Aircraft::updatePosition(float deltaTime)
 	}
 }
 
-void Aircraft::moveTowardsStart(float deltaTime)
+void Aircraft::moveTowardsStart(sf::Time deltaTime)
 {
 	sf::Vector2f velocity = calculateDirectionalVelocity(m_enterDirection);
 	setVelocity(velocity);
-	m_spawnDistanceTravelled += getMaxSpeed() * deltaTime;
+	m_spawnDistanceTravelled += getMaxSpeed() * deltaTime.asSeconds();
 }
 
 void Aircraft::exitPhase()
@@ -205,7 +205,7 @@ void Aircraft::exitPhase()
 	setVelocity(velocity);
 }
 
-void Aircraft::followAiRoutines(float deltaTime)
+void Aircraft::followAiRoutines(sf::Time deltaTime)
 {
 	float distanceToTravel = m_aiRoutines[m_routineIndex].distance;
 	if (m_routineDistanceTravelled > distanceToTravel)
@@ -220,7 +220,7 @@ void Aircraft::followAiRoutines(float deltaTime)
 		getMaxSpeed() * std::sin(radians));
 
 	setVelocity(velocity);
-	m_routineDistanceTravelled += getMaxSpeed() * deltaTime;
+	m_routineDistanceTravelled += getMaxSpeed() * deltaTime.asSeconds();
 }
 
 sf::Vector2f Aircraft::calculateDirectionalVelocity(Direction direction) const
@@ -300,13 +300,13 @@ void Aircraft::loadResources()
 
 	m_fireCommand.NodeType = (unsigned int)NodeType::CollisionLayer;
 	m_fireCommand.Action =
-		[this] (WorldNode& node, float dt)
+		[this] (WorldNode& node, sf::Time dt)
 		{
 		  createBullets(node);
 		};
 	m_missileCommand.NodeType = (unsigned int)NodeType::CollisionLayer;
 	m_missileCommand.Action =
-		[this] (WorldNode& node, float delta)
+		[this] (WorldNode& node, sf::Time delta)
 		{
 		  createProjectile(node, ProjectileType::Missile, 0.f, 0.5f);
 		};

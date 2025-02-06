@@ -11,8 +11,11 @@
 #include "Direction.h"
 #include "PickupType.h"
 #include "ProjectileType.h"
+#include "Particle.h"
 #include <string>
 #include <functional>
+#include <SFML/Graphics/Color.hpp>
+#include <SFML/System/Time.hpp>
 class Aircraft;
 
 struct AircraftData
@@ -45,11 +48,19 @@ struct ProjectileData
 	float MaxSpeed{};
 };
 
+struct ParticleData
+{
+	Particle::Type Type{};
+	sf::Color Color;
+	sf::Time Lifetime;
+};
+
 struct GameData
 {
 	std::unordered_map<AircraftType, AircraftData> AircraftData;
 	std::unordered_map<PickupType, PickupData> PickupData;
 	std::unordered_map<ProjectileType, ProjectileData> ProjectileData;
+	std::unordered_map<Particle::Type, ParticleData> ParticleData;
 };
 
 GameData LoadData(const std::string& filename);

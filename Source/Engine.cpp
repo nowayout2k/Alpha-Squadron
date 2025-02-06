@@ -11,7 +11,7 @@
 #include "../Headers/GameOverState.h"
 
 #define FRAME_RATE_LIMIT 60.0f
-#define TIME_STEP_MAX 1.0f/FRAME_RATE_LIMIT
+#define TIME_STEP_MAX (1.0f/FRAME_RATE_LIMIT)
 
 sf::RenderWindow Engine::m_window = {};
 
@@ -35,13 +35,13 @@ void Engine::run()
 			timeStep -= TIME_STEP_MAX;
 			processEvents();
 			if(!m_isPaused)
-				update(TIME_STEP_MAX);
+				update(sf::seconds(TIME_STEP_MAX));
 		}
 		render();
 	}
 }
 
-void Engine::update(float deltaTime)
+void Engine::update(sf::Time deltaTime)
 {
 	m_stateStack.update(deltaTime);
 }

@@ -24,7 +24,7 @@ class StateStack
 		  return State::Ptr(new T(*this, m_context));
 		};
 	}
-	void update(float deltaTime);
+	void update(sf::Time deltaTime);
 	void render(sf::RenderStates& states);
 	void handleEvent(const sf::Event& event);
 	void pushState(StateId stateId);

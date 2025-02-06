@@ -37,9 +37,9 @@ void GameOverState::render(sf::RenderStates& states)
 	window.draw(m_gameOverText);
 }
 
-bool GameOverState::update(float dt)
+bool GameOverState::update(sf::Time dt)
 {
-	m_elapsedTime += dt;
+	m_elapsedTime += dt.asSeconds();
 	if (m_elapsedTime > 3)
 	{
 		requestStateClear();

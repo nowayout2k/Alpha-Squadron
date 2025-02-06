@@ -11,7 +11,7 @@ class Projectile : public GameSprite
 {
  public:
 	explicit Projectile(NodeType type, ProjectileType projectileType, sf::Vector2f targetDirection, sf::Vector2f launchDirection);
-	void update(float deltaTime, CommandQueue& commands) override;
+	void update(sf::Time deltaTime, CommandQueue& commands) override;
 	void render(sf::RenderTarget& renderTarget, sf::RenderStates states) const override;
 	void guideTowards(sf::Vector2f position);
 	bool isGuided() const;

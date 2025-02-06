@@ -18,7 +18,7 @@ class SettingsState : public State
  public:
 	explicit SettingsState(StateStack& stack, Context context);
 	virtual void render(sf::RenderStates& states) override;
-	virtual bool update(float deltaTime) override;
+	virtual bool update(sf::Time deltaTime) override;
 	virtual bool handleEvent(const sf::Event& event) override;
  private:
 	void updateLabels();

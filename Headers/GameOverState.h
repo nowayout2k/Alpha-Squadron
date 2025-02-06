@@ -14,7 +14,7 @@ class GameOverState : public State
  public:
 	GameOverState(StateStack& stack, Context context);
 	virtual void render(sf::RenderStates& states) override;
-	virtual bool update(float dt) override;
+	virtual bool update(sf::Time dt) override;
 	virtual bool handleEvent(const sf::Event& event) override;
  private:
 	sf::Text m_gameOverText;

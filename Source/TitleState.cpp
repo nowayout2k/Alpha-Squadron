@@ -12,13 +12,11 @@ TitleState::TitleState(StateStack& stack, State::Context context) : State(stack,
 	m_continueText.setFont(ResourceManager::loadResource(FontId::Arnold));
 	m_continueText.setString("Press Any Key To Continue!");
 	Utility::centerOrigin(m_continueText);
-	m_continueText.setPosition(context.window->getView().getSize() / 2.f);
+	m_continueText.setPosition(context.window->getView().getSize().x/2.f, context.window->getView().getSize().y/1.5f);
 
-	m_companyNameText.setFont(ResourceManager::loadResource(FontId::Arnold));
-	m_companyNameText.setString("No Way Out Games");
-	m_companyNameText.setCharacterSize(70.f);
-	Utility::centerOrigin(m_companyNameText);
-	m_companyNameText.setPosition(context.window->getView().getSize().x/2, context.window->getView().getSize().y / 3.f);
+	m_logoSprite.setTexture(ResourceManager::loadResource(TextureId::CompanyLogo));
+	Utility::centerOrigin(m_logoSprite);
+	m_logoSprite.setPosition(context.window->getView().getSize().x/2.f, context.window->getView().getSize().y / 3.f);
 }
 
 bool TitleState::handleEvent(const sf::Event& event)
@@ -31,9 +29,9 @@ bool TitleState::handleEvent(const sf::Event& event)
 	return true;
 }
 
-bool TitleState::update(float deltaTime)
+bool TitleState::update(sf::Time deltaTime)
 {
-	m_textEffectTime += deltaTime;
+	m_textEffectTime += deltaTime.asSeconds();
 	if (m_textEffectTime >= 0.5f)
 	{
 		m_showText = !m_showText;
@@ -45,7 +43,7 @@ void TitleState::render(sf::RenderStates& states)
 {
 	getContext().window->draw(m_backgroundSprite);
 
-	getContext().window->draw(m_companyNameText);
+	getContext().window->draw(m_logoSprite);
 	if(m_showText)
 		getContext().window->draw(m_continueText);
 }

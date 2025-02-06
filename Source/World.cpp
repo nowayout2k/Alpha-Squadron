@@ -37,7 +37,7 @@ void World:: destroyEntitiesOutsideView()
 		static_cast<unsigned int>(NodeType::Enemy);
 
 	command.Action = DerivedAction<Entity>(
-		[this](Entity& e, float)
+		[this](Entity& e, sf::Time)
 		{
 		  if (!getBattlefieldBounds().intersects(e.getBoundingRect()))
 		  {
@@ -134,7 +134,7 @@ void World::guideMissiles()
 	Command enemyCollector;
 	enemyCollector.NodeType |= (int)NodeType::Enemy;
 	enemyCollector.Action =
-		DerivedAction<Aircraft>([this](Aircraft& enemy, float dt)
+		DerivedAction<Aircraft>([this](Aircraft& enemy, sf::Time dt)
 		{
 		  if (!enemy.isDestroyed())
 			  m_activeEnemies.push_back(&enemy);
@@ -146,7 +146,7 @@ void World::guideMissiles()
 	missileGuider.NodeType |= (int)NodeType::AlliedProjectile;
 	missileGuider.Action =
 		DerivedAction<Projectile>(
-			[this](Projectile& missile, float dt)
+			[this](Projectile& missile, sf::Time dt)
 			{
 			  if (!missile.isGuided())
 				  return;
@@ -287,7 +287,7 @@ void World::loadResources()
 	m_worldGraph.loadHierarchyResources();
 }
 
-void World::update(float deltaTime)
+void World::update(sf::Time deltaTime)
 {
 	if(!isPlayerAlive())
 	{
@@ -301,7 +301,7 @@ void World::update(float deltaTime)
 
 
 	float scrollSpeedFactor = 1;
-	m_worldView.move(m_scrollSpeed * scrollSpeedFactor * deltaTime, 0.f);
+	m_worldView.move(m_scrollSpeed * scrollSpeedFactor * deltaTime.asSeconds(), 0.f);
 
 	m_playerAircraft->setVelocity(0,0);
 
@@ -336,7 +336,7 @@ void World::update(float deltaTime)
 	if(Debug::isDebuggingEnabled())
 	{
 		m_framesSinceLastFpsUpdate++;
-		m_timeSinceLastFpsUpdate += deltaTime;
+		m_timeSinceLastFpsUpdate += deltaTime.asSeconds();
 		if(Debug::isFpsVisible())
 		{
 			m_fpsText.setPosition(sf::Vector2f(0,0));

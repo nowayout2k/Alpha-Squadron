@@ -23,7 +23,7 @@ class Entity : public WorldNode
 	void setVelocity(sf::Vector2f velocity) { m_velocity = velocity; }
 	void setVelocity(float x, float y) { m_velocity.x = x; m_velocity.y = y; }
 	sf::Vector2f getVelocity() const { return m_velocity; }
-	void update(float deltaTime, CommandQueue& commands) override { if(isActive()) {move(m_velocity * deltaTime);} }
+	void update(sf::Time deltaTime, CommandQueue& commands) override { if(isActive()) {move(m_velocity * deltaTime.asSeconds());} }
 	unsigned int getNodeType() const override { return WorldNode::getNodeType() | (unsigned int)NodeType::Entity; }
 protected:
 	explicit Entity(bool hasCollision) : m_velocity(sf::Vector2f(0,0)), m_hasCollision(hasCollision) {}

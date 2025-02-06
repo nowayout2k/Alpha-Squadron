@@ -8,7 +8,7 @@ Tomcat::Tomcat(bool hasCollision, sf::Vector2f position, NodeType nodeType, sf::
 
 }
 
-void Tomcat::update(float deltaTime, CommandQueue& commands)
+void Tomcat::update(sf::Time deltaTime, CommandQueue& commands)
 {
 	Aircraft::update(deltaTime, commands);
 	handleAnimation(deltaTime);

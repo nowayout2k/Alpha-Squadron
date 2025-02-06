@@ -68,7 +68,7 @@ bool StateStack::handleRolloverKeyEvent(const sf::Event& event)
 	return false;
 }
 
-void StateStack::update(float deltaTime)
+void StateStack::update(sf::Time deltaTime)
 {
 	for(auto itr = m_stack.rbegin(); itr != m_stack.rend(); ++itr)
 	{

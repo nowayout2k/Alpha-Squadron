@@ -23,7 +23,7 @@ public:
 	sf::FloatRect getViewBounds() const;
 	sf::FloatRect getBattlefieldBounds() const;
 	void destroyEntitiesOutsideView();
-	void update(float deltaTime);
+	void update(sf::Time deltaTime);
 	static GameData GameData;
 	bool isPlayerAlive() const { return m_isPlayerAlive; }
 	bool hasPlayerReachedEnd() const { return m_hasPlayerReachedEnd; }

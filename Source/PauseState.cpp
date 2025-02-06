@@ -12,7 +12,7 @@ void PauseState::render(sf::RenderStates& states)
 	window.draw(m_pausedText, states);
 	window.draw(m_instructionText, states);
 }
-bool PauseState::update(float deltaTime)
+bool PauseState::update(sf::Time deltaTime)
 {
 	return false;
 }

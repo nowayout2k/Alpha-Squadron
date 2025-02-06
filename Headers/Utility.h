@@ -11,6 +11,7 @@
 #include "Direction.h"
 #include "PickupType.h"
 #include "ProjectileType.h"
+#include "Particle.h"
 
 #ifndef M_PI
 #define M_PI 3.14159265359
@@ -19,16 +20,46 @@
 class Utility
 {
 public:
-#pragma region Time Functions
-	static void beginStopwatch(std::string message)
+#pragma region Misc Functions
+	static void beginStopwatch(std::string& message)
 	{
 		m_clock.restart();
 		sf::Time elapsed = m_clock.getElapsedTime();
 	}
 
-	static void endStopwatch(std::string message)
+	static void endStopwatch(const std::string& message)
 	{
 		sf::Time elapsed = m_clock.getElapsedTime();
+	}
+
+	static sf::Color hexToColor(const std::string& hexString)
+	{
+		// Ensure the string starts with '#' and is of valid length (#RRGGBBAA -> 9 chars)
+		if (hexString[0] != '#' || (hexString.length() != 9 && hexString.length() != 7)) {
+			throw std::invalid_argument("Invalid hex color format. Use #RRGGBB or #RRGGBBAA.");
+		}
+
+		// Remove the '#' character
+		std::string hexValue = hexString.substr(1);
+
+		// Convert hex string to an unsigned integer
+		unsigned int hexNumber;
+		std::stringstream ss;
+		ss << std::hex << hexValue;
+		ss >> hexNumber;
+
+		// If it's 6 characters, assume full opacity (0xFF)
+		if (hexString.length() == 7) {
+			hexNumber = (hexNumber << 8) | 0xFF;  // Append full alpha to the end
+		}
+
+		// Extract RGBA components
+		sf::Uint8 red   = (hexNumber >> 24) & 0xFF;
+		sf::Uint8 green = (hexNumber >> 16) & 0xFF;
+		sf::Uint8 blue  = (hexNumber >> 8)  & 0xFF;
+		sf::Uint8 alpha = hexNumber & 0xFF;
+
+		return {red, green, blue, alpha};
 	}
 #pragma endregion // Time Functions
 
@@ -231,6 +262,23 @@ public:
 		else
 		{
 			return ProjectileType::TypeCount;
+		}
+	}
+
+	static Particle::Type stringToParticleType(const std::string& s)
+	{
+		auto type = Utility::toLower(s);
+		if(type == "smoke")
+		{
+			return Particle::Type::Smoke;
+		}
+		else if(type == "propellant")
+		{
+			return Particle::Type::Propellant;
+		}
+		else
+		{
+			return Particle::Type::ParticleTypeCount;
 		}
 	}
 

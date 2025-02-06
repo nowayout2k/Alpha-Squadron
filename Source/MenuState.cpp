@@ -69,7 +69,7 @@ void MenuState::render(sf::RenderStates& states)
 	window.draw(m_guiContainer, states);
 	window.draw(m_titleText, states);
 }
-bool MenuState::update(float deltaTime)
+bool MenuState::update(sf::Time deltaTime)
 {
 	return true;
 }

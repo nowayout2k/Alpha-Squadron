@@ -40,6 +40,10 @@ std::string ResourceManager::getTexturePath(TextureId textureId)
 		return "../Assets/Textures/Characters/game_sprite_sheet.png";
 	case TextureId::MetalBg :
 		return "../Assets/Textures/UI/metal_bg.png";
+	case TextureId::Particle :
+		return "../Assets/Textures/FX/particle.png";
+	case TextureId::CompanyLogo :
+		return "../Assets/Textures/UI/company_logo.png";
 	case TextureId::JungleBg :
 		return "../Assets/Textures/Backgrounds/jungle_bg_2048x1536.png";
 	case TextureId::NightCityBg :

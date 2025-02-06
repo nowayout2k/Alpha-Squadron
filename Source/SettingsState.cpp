@@ -39,7 +39,7 @@ void SettingsState::render(sf::RenderStates& states)
 	window.draw(m_guiContainer, states);
 }
 
-bool SettingsState::update(float deltaTime)
+bool SettingsState::update(sf::Time deltaTime)
 {
 	return true;
 }

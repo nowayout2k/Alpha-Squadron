@@ -11,7 +11,7 @@ class EmptyWorldNode : public WorldNode
 	EmptyWorldNode() : m_type(NodeType::None) {};
 	explicit EmptyWorldNode(NodeType type): m_type(type){};
 	unsigned int getNodeType() const override { return WorldNode::getNodeType() | (unsigned int)m_type; }
-	void update(float deltaTime, CommandQueue& commands) override {  }
+	void update(sf::Time deltaTime, CommandQueue& commands) override {  }
 	void render(sf::RenderTarget& renderTarget, sf::RenderStates states) const override {  }
 	void loadResources() override {  };
 	sf::Rect<float> getGlobalBounds() const override { return sf::Rect<float>(); }

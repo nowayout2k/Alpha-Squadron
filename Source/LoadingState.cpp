@@ -20,7 +20,7 @@ LoadingState::LoadingState(StateStack& stateStack, Context& context, std::functi
 	m_parallelTask.execute(loadingTask);
 }
 
-bool LoadingState::update(float deltaTime)
+bool LoadingState::update(sf::Time deltaTime)
 {
 	if (m_parallelTask.isFinished())
 	{

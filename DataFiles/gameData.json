@@ -45,6 +45,18 @@
       "value": 1
     }
   ],
+  "particle": [
+    {
+      "type": "smoke",
+      "lifetime" : 10.0,
+      "color" : "#FF00AAFF"
+    },
+    {
+      "type": "Propellant",
+      "lifetime" : 1.0,
+      "color" : "#AA55AAFF"
+    }
+  ],
   "projectile": [
     {
       "textureId": "game_sprite_sheet",

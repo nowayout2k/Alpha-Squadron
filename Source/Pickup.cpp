@@ -49,7 +49,7 @@ void Pickup::render(sf::RenderTarget& renderTarget, sf::RenderStates states) con
 	GameSprite::render(renderTarget, states);
 }
 
-void Pickup::update(float deltaTime, CommandQueue& commands)
+void Pickup::update(sf::Time deltaTime, CommandQueue& commands)
 {
 	GameSprite::update(deltaTime, commands);
 }

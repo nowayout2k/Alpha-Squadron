@@ -15,7 +15,7 @@ class Pickup : public GameSprite
 	unsigned int getNodeType() const override { return GameSprite::getNodeType() | (unsigned int)NodeType::Pickup; }
 	void setPickupColor();
 	void apply(Aircraft& player) const;
-	void update(float deltaTime, CommandQueue& commands) override;
+	void update(sf::Time deltaTime, CommandQueue& commands) override;
 	void loadResources() override;
  protected:
 	void render(sf::RenderTarget& renderTarget, sf::RenderStates states) const override;

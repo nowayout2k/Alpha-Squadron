@@ -10,14 +10,14 @@ class TitleState : public State
  public:
 	TitleState(StateStack& stack, Context context);
 	void render(sf::RenderStates& states) override;
-	bool update(float deltaTime) override;
+	bool update(sf::Time deltaTime) override;
 	bool handleEvent(const sf::Event& event) override;
  private:
 
 	sf::Sprite m_backgroundSprite;
-
+	sf::Sprite m_logoSprite;
 	sf::Text m_continueText;
-	sf::Text m_companyNameText;
+
 	bool m_showText;
 	float m_textEffectTime;
 };

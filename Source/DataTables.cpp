@@ -100,6 +100,15 @@ GameData LoadData(const std::string& filename)
 			gameData.ProjectileData[projectileData.Type] = projectileData;
 		}
 
+		for (const auto& item : j["particle"])
+		{
+			ParticleData particleData{};
+			particleData.Type = Utility::stringToParticleType(item["type"]);
+			particleData.Color = Utility::hexToColor(item["color"]);
+			particleData.Lifetime = sf::seconds(item["lifetime"]);
+			gameData.ParticleData[particleData.Type] = particleData;
+		}
+
 		return gameData;
 	}
 	catch(std::exception& e)

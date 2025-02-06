@@ -19,11 +19,11 @@ Projectile::Projectile(NodeType type, ProjectileType projectileType, sf::Vector2
 	Audio::playSound(SoundFxId::BulletLaunch, 10);
 }
 
-void Projectile::update(float deltaTime, CommandQueue& commands)
+void Projectile::update(sf::Time deltaTime, CommandQueue& commands)
 {
 	if(m_isLaunching)
 	{
-		m_timeSinceLaunch += deltaTime;
+		m_timeSinceLaunch += deltaTime.asSeconds();
 		if(m_timeSinceLaunch > LAUNCH_TIME)
 		{
 			m_isLaunching = false;
@@ -49,7 +49,7 @@ void Projectile::update(float deltaTime, CommandQueue& commands)
 		if (angleDifference < -M_PI) angleDifference += 2 * M_PI;
 
 		// Limit the change in angle to the turn radius (convert from degrees to radians)
-		float maxAngleChange = turnRadius * deltaTime * (M_PI / 180.0f);
+		float maxAngleChange = turnRadius * deltaTime.asSeconds() * (M_PI / 180.0f);
 		float angleToApply = std::clamp(angleDifference, -maxAngleChange, maxAngleChange);
 
 		// Update the current angle

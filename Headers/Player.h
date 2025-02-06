@@ -14,7 +14,7 @@ struct AircraftMover
 	explicit AircraftMover(const sf::Vector2f& mVelocity) : m_velocity(mVelocity)
 	{
 	}
-	void operator() (Aircraft& aircraft, float dt) const
+	void operator() (Aircraft& aircraft, sf::Time dt) const
 	{
 		aircraft.accelerate(sf::Vector2f(m_velocity.x < 0 ? -World::getScrollSpeed() + (m_velocity.x * aircraft.getMaxSpeed()) : m_velocity.x * aircraft.getMaxSpeed(), m_velocity.y * aircraft.getMaxSpeed()));
 	}

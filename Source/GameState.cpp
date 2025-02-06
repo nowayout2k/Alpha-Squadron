@@ -1,7 +1,7 @@
 // Copyright (c) 2025 No Way Out LLC All rights reserved.
 #include "../Headers/GameState.h"
 
-bool GameState::update(float deltaTime)
+bool GameState::update(sf::Time deltaTime)
 {
 	m_world.update(deltaTime);
 	if(!m_world.isPlayerAlive())

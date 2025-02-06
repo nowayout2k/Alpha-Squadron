@@ -8,7 +8,7 @@ Chopper::Chopper(bool hasCollision, sf::Vector2f position, NodeType nodeType, sf
 {
 }
 
-void Chopper::update(float deltaTime, CommandQueue& commands)
+void Chopper::update(sf::Time deltaTime, CommandQueue& commands)
 {
 	Aircraft::update(deltaTime, commands);
 

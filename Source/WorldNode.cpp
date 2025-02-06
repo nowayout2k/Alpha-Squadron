@@ -32,7 +32,7 @@ void WorldNode::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	draw(target, states);
 }
 
-void WorldNode::updateHierarchy(float deltaTime, CommandQueue& commands)
+void WorldNode::updateHierarchy(sf::Time deltaTime, CommandQueue& commands)
 {
 	if(!isActive())
 		return;
@@ -114,7 +114,7 @@ void WorldNode::loadHierarchyResources()
 	}
 }
 
-void WorldNode::onCommand(const Command& command, float deltaTime)
+void WorldNode::onCommand(const Command& command, sf::Time deltaTime)
 {
 	if (command.NodeType & getNodeType())
 	{

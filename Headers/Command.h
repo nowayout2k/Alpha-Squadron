@@ -9,14 +9,14 @@ struct Command
 {
  public:
 	Command() = default;
-	std::function<void(WorldNode&, float)> Action;
+	std::function<void(WorldNode&, sf::Time)> Action;
 	unsigned int NodeType = 0;
 };
 
 template <typename GameObject, typename Function>
-std::function<void(WorldNode&, float)> DerivedAction(Function fn)
+std::function<void(WorldNode&, sf::Time)> DerivedAction(Function fn)
 {
-	return [=] (WorldNode& node, float dt)
+	return [=] (WorldNode& node, sf::Time dt)
 	{
 	  fn(static_cast<GameObject&>(node), dt);
 	};

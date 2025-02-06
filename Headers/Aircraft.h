@@ -36,21 +36,21 @@ class Aircraft : public GameSprite
 	virtual void changeFireSpread(int increment) { m_spreadLevel = std::min(m_spreadLevel + increment, MAX_SPREAD_LEVEL); }
 	virtual void changeHealth(float increment);
  protected:
-	virtual void handleAnimation(float deltaTime);
-	void handleDamageAnimation(float deltaTime);
-	void update(float deltaTime, CommandQueue& commands) override;
+	virtual void handleAnimation(sf::Time deltaTime);
+	void handleDamageAnimation(sf::Time deltaTime);
+	void update(sf::Time dt, CommandQueue& commands) override;
 	unsigned int getNodeType() const override { return GameSprite::getNodeType() | (unsigned int)NodeType::Aircraft; }
 
  private:
 	void createProjectile(WorldNode& node, ProjectileType projectileType, float xOffset, float yOffset);
 	void updateHealthDisplay();
-	void updatePosition(float deltaTime);
-	void moveTowardsStart(float deltaTime);
+	void updatePosition(sf::Time deltaTime);
+	void moveTowardsStart(sf::Time deltaTime);
 	void exitPhase();
-	void followAiRoutines(float deltaTime);
+	void followAiRoutines(sf::Time deltaTime);
 	sf::Vector2f calculateDirectionalVelocity(Direction direction) const;
 	bool isAllied() const;
-	void checkProjectileLaunch(float dt, CommandQueue& commands);
+	void checkProjectileLaunch(sf::Time dt, CommandQueue& commands);
 	void createBullets(WorldNode& node);
 
 	float m_health{};

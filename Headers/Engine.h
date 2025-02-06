@@ -11,7 +11,7 @@ class Engine
 {
  public:
 	Engine();
-	void update(float deltaTime);
+	void update(sf::Time deltaTime);
 	void render();
 	void processEvents();
 	void run();

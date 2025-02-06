@@ -24,7 +24,7 @@ set(SFML_DIR "C:/Users/Johnnie/Documents/SFML-2.6.1-VS/lib/cmake/SFML")
 # Find the SFML package
 find_package(SFML COMPONENTS system window graphics network audio REQUIRED)
 
-add_executable(Alpha-Squadron Source/main.cpp
+add_executable(Alpha-Squadron main.cpp
         Source/Audio.cpp
         Headers/Audio.h
         Headers/Utility.h
@@ -98,6 +98,11 @@ add_executable(Alpha-Squadron Source/main.cpp
         Headers/Pickup.h
         Source/GameOverState.cpp
         Headers/GameOverState.h
+        Headers/Particle.h
+        Source/ParticleNode.cpp
+        Headers/ParticleNode.h
+        Source/EmitterNode.cpp
+        Headers/EmitterNode.h
 )
 
 # Link the SFML libraries and nlohmann_json
