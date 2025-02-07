@@ -3,8 +3,8 @@
 # Define the new copyright comment
 COPYRIGHT="// Copyright (c) 2025 No Way Out LLC All rights reserved.\n"
 
-# Loop through all .cpp and .h files in the project directory
-find . -type f \( -name "*.cpp" -o -name "*.h" \) | while read -r file; do
+# Loop through all .cpp and .h files in the Headers and Source directories
+find Headers Source -type f \( -name "*.cpp" -o -name "*.h" \) | while read -r file; do
     # Get the current content of the file
     file_content=$(cat "$file")
 

@@ -1,6 +1,4 @@
-//
-// Created by Johnnie on 2/6/2025.
-//
+// Copyright (c) 2025 No Way Out LLC All rights reserved.
 
 #include "../Headers/Animation.h"
 void Animation::update(sf::Time dt)

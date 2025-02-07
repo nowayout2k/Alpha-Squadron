@@ -11,7 +11,6 @@ Pickup::Pickup(PickupType type) : m_pickupType(type), m_action(),
 										sf::IntRect(), false)
 {
 	setScale(1.0f, 1.0f);
-	//setPickupColor();
 }
 
 void Pickup::setPickupColor()

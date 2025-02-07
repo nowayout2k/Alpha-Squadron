@@ -34,7 +34,7 @@ void EmitterNode::update(sf::Time deltaTime, CommandQueue& commands)
 
 void EmitterNode::emitParticles(sf::Time dt)
 {
-	const float emissionRate = 30.f;
+	const float emissionRate = 1000.f;
 	const sf::Time interval = sf::seconds(1.f) / emissionRate;
 	m_accumulatedTime += dt;
 	while (m_accumulatedTime > interval)
@@ -51,4 +51,3 @@ void EmitterNode::loadResources()
 {
 
 }
-

@@ -11,10 +11,10 @@ GameOverState::GameOverState(StateStack& stack, Context context) :
 	State(stack, context) , m_gameOverText(), m_elapsedTime(0)
 {
 	sf::Font& font = ResourceManager::loadResource(FontId::Arnold);
-	sf::Vector2f windowSize(context.window->getSize());
+	sf::Vector2f windowSize(context.Window->getSize());
 
 	m_gameOverText.setFont(font);
-	if (context.player->getMissionStatus() == Player::MissionStatus::Failure)
+	if (context.Player->getMissionStatus() == Player::MissionStatus::Failure)
 		m_gameOverText.setString("Mission failed!");
 	else
 		m_gameOverText.setString("Mission successful!");
@@ -24,9 +24,9 @@ GameOverState::GameOverState(StateStack& stack, Context context) :
 	m_gameOverText.setPosition(0.5f * windowSize.x, 0.4f * windowSize.y);
 }
 
-void GameOverState::render(sf::RenderStates& states)
+void GameOverState::render()
 {
-	sf::RenderWindow& window = *getContext().window;
+	sf::RenderWindow& window = *getContext().Window;
 	window.setView(window.getDefaultView());
 
 	sf::RectangleShape backgroundShape;

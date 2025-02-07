@@ -10,7 +10,7 @@ class MenuState : public State
 {
  public:
 	explicit MenuState(StateStack& stack, Context context);
-	void render(sf::RenderStates& states) override;
+	void render() override;
 	bool update(sf::Time deltaTime) override;
 	bool handleEvent(const sf::Event& event) override;
  private:

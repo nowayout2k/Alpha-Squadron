@@ -49,7 +49,7 @@ void Engine::render()
 {
 	sf::RenderStates states;
 	m_window.clear();
-	m_stateStack.render(states);
+	m_stateStack.render();
 	m_window.display();
 }
 

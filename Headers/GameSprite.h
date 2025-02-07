@@ -51,7 +51,6 @@ public:
 	{
 		sf::FloatRect rect = getBoundingRect();
 
-		//Bounding box
 		sf::RectangleShape rectangleShape;
 		rectangleShape.setPosition(sf::Vector2f(rect.left, rect.top));
 		rectangleShape.setSize(sf::Vector2f(rect.width, rect.height));
@@ -59,7 +58,6 @@ public:
 		rectangleShape.setOutlineColor(sf::Color::Green);
 		rectangleShape.setOutlineThickness(3.f);
 
-		//Pivot Point
 		sf::CircleShape circleShape;
 		circleShape.setPosition(getPosition().x + (getOrigin().x * rect.width), getPosition().y + (getOrigin().y * rect.height));
 		circleShape.setRadius(1.f);

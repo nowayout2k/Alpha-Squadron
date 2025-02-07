@@ -7,9 +7,9 @@
 
 SettingsState::SettingsState(StateStack& stack, Context context) : State(stack, context), m_guiContainer()
 {
-	sf::Vector2f center = context.window->getView().getSize() / 2.f;
+	sf::Vector2f center = context.Window->getView().getSize() / 2.f;
 	m_backgroundSprite.setTexture(ResourceManager::loadResource(TextureId::MetalBg));
-	auto winSize = sf::Vector2f(context.window->getSize().x, context.window->getSize().y);
+	auto winSize = sf::Vector2f(context.Window->getSize().x, context.Window->getSize().y);
 	auto bgSize = sf::Vector2f(m_backgroundSprite.getTexture()->getSize().x, m_backgroundSprite.getTexture()->getSize().y);
 	m_backgroundSprite.setScale(winSize.x/bgSize.x, winSize.y/bgSize.y);
 
@@ -32,11 +32,11 @@ SettingsState::SettingsState(StateStack& stack, Context context) : State(stack, 
 	m_guiContainer.pack(backButton);
 }
 
-void SettingsState::render(sf::RenderStates& states)
+void SettingsState::render()
 {
-	sf::RenderWindow& window = *getContext().window;
-	window.draw(m_backgroundSprite, states);
-	window.draw(m_guiContainer, states);
+	sf::RenderWindow& window = *getContext().Window;
+	window.draw(m_backgroundSprite);
+	window.draw(m_guiContainer);
 }
 
 bool SettingsState::update(sf::Time deltaTime)
@@ -55,7 +55,7 @@ bool SettingsState::handleEvent(const sf::Event& event)
 			isKeyBinding = true;
 			if (event.type == sf::Event::KeyReleased)
 			{
-				getContext().player->assignKey(static_cast<Player::ActionType>(actionType), event.key.code);
+				getContext().Player->assignKey(static_cast<Player::ActionType>(actionType), event.key.code);
 				m_bindingButtons[actionType]->deactivate();
 			}
 			break;
@@ -72,7 +72,7 @@ bool SettingsState::handleEvent(const sf::Event& event)
 
 void SettingsState::updateLabels()
 {
-	Player& input = *getContext().player;
+	Player& input = *getContext().Player;
 
 	for (std::size_t i = 0; i < Player::ActionCount; ++i)
 	{

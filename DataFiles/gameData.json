@@ -49,12 +49,12 @@
     {
       "type": "smoke",
       "lifetime" : 4.0,
-      "color" : "#323232FF"
+      "color" : "#323232"
     },
     {
       "type": "Propellant",
       "lifetime" : 0.6,
-      "color" : "#FFFF32FF"
+      "color" : "#FFFF32"
     }
   ],
   "projectile": [

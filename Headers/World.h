@@ -11,13 +11,14 @@
 #include "Layer.h"
 #include "EmptyWorldNode.h"
 #include "CommandQueue.h"
+#include "BloomEffect.h"
 
 class World
 {
 public:
-	explicit World(sf::RenderWindow& window);
+	explicit World(sf::RenderTarget& outputTarget);
 	void restart();
-	void render(sf::RenderWindow &window, sf::RenderStates states);
+	void render();
 	CommandQueue& getCommandQueue() { return m_commandQueue; }
 	static float getScrollSpeed() { return m_scrollSpeed; }
 	bool isPlayerAircraftExploding() const { return m_playerAircraft->isExploding(); }
@@ -61,7 +62,8 @@ private:
 
 	static float m_scrollSpeed;
 
-	sf::RenderWindow& m_window;
+	sf::RenderTarget& m_target;
+	sf::RenderTexture m_sceneTexture;
 	sf::View m_worldView;
 	EmptyWorldNode m_worldGraph;
 	std::array<WorldNode*, static_cast<int>(Layer::LayerCount)> m_worldLayers{};
@@ -75,12 +77,11 @@ private:
 	CommandQueue m_commandQueue;
 	bool m_isPlayerAlive;
 	bool m_hasPlayerReachedEnd;
+	BloomEffect m_bloomEffect;
 
-	//Debug////////////////////////
 	sf::Text m_fpsText;
 	float m_timeSinceLastFpsUpdate{};
 	int m_framesSinceLastFpsUpdate{};
-	///////////////////////////////
 };
 
 

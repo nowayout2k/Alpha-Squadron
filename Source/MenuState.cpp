@@ -6,9 +6,9 @@
 
 MenuState::MenuState(StateStack& stack, State::Context context) : State(stack, context), m_backgroundSprite(), m_titleText()
 {
-	sf::Vector2f center = context.window->getView().getSize() / 2.f;
+	sf::Vector2f center = context.Window->getView().getSize() / 2.f;
 	m_backgroundSprite.setTexture(ResourceManager::loadResource(TextureId::MetalBg));
-	auto winSize = sf::Vector2f(context.window->getSize().x, context.window->getSize().y);
+	auto winSize = sf::Vector2f(context.Window->getSize().x, context.Window->getSize().y);
 	auto bgSize = sf::Vector2f(m_backgroundSprite.getTexture()->getSize().x, m_backgroundSprite.getTexture()->getSize().y);
 	m_backgroundSprite.setScale(winSize.x/bgSize.x, winSize.y/bgSize.y);
 
@@ -16,7 +16,7 @@ MenuState::MenuState(StateStack& stack, State::Context context) : State(stack, c
 	m_titleText.setString("Alpha Squadron");
 	m_titleText.setCharacterSize(70);
 	Utility::centerOrigin(m_titleText);
-	m_titleText.setPosition(context.window->getView().getSize().x / 2.f, context.window->getView().getSize().y / 3.f);
+	m_titleText.setPosition(context.Window->getView().getSize().x / 2.f, context.Window->getView().getSize().y / 3.f);
 
 	auto playButton = std::make_shared<GUI::Button>(sf::IntRect(0,0,208,64),
 		sf::IntRect(223,0,208,64),
@@ -60,14 +60,14 @@ bool MenuState::handleEvent(const sf::Event& event)
 	m_guiContainer.handleEvent(event);
 	return true;
 }
-void MenuState::render(sf::RenderStates& states)
+void MenuState::render()
 {
-	sf::RenderWindow& window = *getContext().window;
+	sf::RenderWindow& window = *getContext().Window;
 	window.setView(window.getDefaultView());
 
-	window.draw(m_backgroundSprite, states);
-	window.draw(m_guiContainer, states);
-	window.draw(m_titleText, states);
+	window.draw(m_backgroundSprite);
+	window.draw(m_guiContainer);
+	window.draw(m_titleText);
 }
 bool MenuState::update(sf::Time deltaTime)
 {

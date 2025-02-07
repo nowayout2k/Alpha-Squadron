@@ -33,37 +33,28 @@ void Projectile::update(sf::Time deltaTime, CommandQueue& commands)
 	if (isGuided() && !m_isLaunching)
 	{
 		const float approachRate = getMaxSpeed() + World::getScrollSpeed();
-		//const float turnRate = 30.0f; // Controls how fast it turns
 		const float turnRadius = 300.0f; // Maximum turn angle in degrees per second
 
-		// Compute the desired velocity (toward target)
 		sf::Vector2f desiredVelocity = Utility::unitVector(m_targetDirection) * approachRate;
 
-		// Calculate the current angle and the desired angle
 		float currentAngle = std::atan2(getVelocity().y, getVelocity().x);
 		float targetAngle = std::atan2(desiredVelocity.y, desiredVelocity.x);
 
-		// Calculate the shortest angular difference
 		float angleDifference = targetAngle - currentAngle;
 		if (angleDifference > M_PI) angleDifference -= 2 * M_PI;  // Wrap around
 		if (angleDifference < -M_PI) angleDifference += 2 * M_PI;
 
-		// Limit the change in angle to the turn radius (convert from degrees to radians)
 		float maxAngleChange = turnRadius * deltaTime.asSeconds() * (M_PI / 180.0f);
 		float angleToApply = std::clamp(angleDifference, -maxAngleChange, maxAngleChange);
 
-		// Update the current angle
 		float newAngle = currentAngle + angleToApply;
 
-		// Calculate the new velocity vector from the new angle
 		sf::Vector2f newVelocity;
 		newVelocity.x = std::cos(newAngle) * approachRate;
 		newVelocity.y = std::sin(newAngle) * approachRate;
 
-		// Update missile rotation
 		setRotation(Utility::toDegree(newAngle));
 
-		// Apply new velocity
 		setVelocity(newVelocity);
 	}
 	else
@@ -118,18 +109,18 @@ void Projectile::loadResources()
 	}
 
 	GameSprite::loadResources();
-
-	setOrigin(0, .5f);
-
+	setOrigin(0, 0.5f);
 	if(isGuided())
 	{
 		auto rect = getBoundingRect();
 		std::unique_ptr<EmitterNode> smoke(new EmitterNode(Particle::Smoke));
-		smoke->setPosition(0.f, rect.height / 2.f);
+		smoke->setOrigin(0, 0.5f);
+		smoke->setPosition(0.f, rect.height/2);
 		attachNode(std::move(smoke));
 
 		std::unique_ptr<EmitterNode> propellant(new EmitterNode(Particle::Propellant));
-		propellant->setPosition(0.f, rect.height / 2.f);
+		propellant->setOrigin(0, 0.5f);
+		propellant->setPosition(0.f, rect.height/2);
 		attachNode(std::move(propellant));
 
 		Audio::playSound(SoundFxId::MissileLaunch, 10);

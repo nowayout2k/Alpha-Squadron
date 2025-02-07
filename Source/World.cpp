@@ -7,15 +7,17 @@
 #include "../Headers/Pickup.h"
 #include "../Headers/Engine.h"
 #include "../Headers/ParticleSystemNode.h"
+#include "../Headers/PostEffect.h"
 
 float World::m_scrollSpeed = 500.0f;
 GameData World::GameData = LoadData("../DataFiles/gameData.json");
 
-World::World(sf::RenderWindow& window) : m_window(window), m_worldView(window.getDefaultView()),
+World::World(sf::RenderTarget& outputTarget) : m_target(outputTarget), m_worldView(m_target.getDefaultView()),
 			m_worldBounds(0.0f,0.0f,100000.0f,m_worldView.getSize().y),
 			m_spawnPosition(0, m_worldView.getSize().y/2), m_isPlayerAlive(true),
 			m_playerAircraft(nullptr), m_viewPositionOffset(0,0), m_commandQueue(), m_hasPlayerReachedEnd(false)
 {
+	m_sceneTexture.create(m_target.getSize().x, m_target.getSize().y);
 	setup();
 }
 
@@ -72,7 +74,7 @@ void World::setup()
 	backgroundSprite->loadResources();
 	backgroundSprite->setIsCollidable(false);
 	backgroundSprite->setPosition( m_worldBounds.left - m_worldView.getSize().x, m_worldBounds.top);
-	auto windowSize = m_window.getView().getSize();
+	auto windowSize = m_target.getView().getSize();
 	auto bgTextureSize = backgroundSprite->getTexture()->getSize();
 	backgroundSprite->setSpriteTextureRegion(sf::IntRect(0, 0, m_worldBounds.width, bgTextureSize.y));
 	backgroundSprite->setScale(windowSize.x/bgTextureSize.x, windowSize.y/bgTextureSize.y);
@@ -96,14 +98,12 @@ void World::setup()
 
 	Audio::playMusic(MusicId::GameMusic, 10);
 
-	//Debug////////////////////////////////////////////////////////////////
 	m_fpsText.setFont(ResourceManager::loadResource(FontId::Arnold));
 	m_fpsText.setPosition(sf::Vector2f());
 	m_fpsText.setStyle(sf::Text::Bold | sf::Text::Underlined);
 	m_fpsText.setCharacterSize(100);
 	m_fpsText.setFillColor(sf::Color::White);
 	m_fpsText.setString("0000");
-	//////////////////////////////////////////////////////////////////////
 
 	loadResources();
 }
@@ -386,18 +386,30 @@ void World::adaptPlayerPosition()
 	}
 }
 
-void World::render(sf::RenderWindow &window, sf::RenderStates states)
+void World::render()
 {
-	m_window.setView(m_worldView);
-	m_worldGraph.renderState(window, states);
+	if(PostEffect::isSupported())
+	{
+		m_sceneTexture.clear();
+		m_sceneTexture.setView(m_worldView);
+		m_sceneTexture.draw(m_worldGraph);
+		m_sceneTexture.display();
+		m_bloomEffect.apply(m_sceneTexture, m_target);
+	}
+	else
+	{
+		m_target.setView(m_worldView);
+		m_target.draw(m_worldGraph);
+	}
+
 
 	if(Debug::isDebuggingEnabled() && Debug::isFpsVisible())
 	{
-		sf::View currentView = window.getView();
+		sf::View currentView = m_target.getView();
 		sf::Vector2f viewCenter = currentView.getCenter();
 		sf::Vector2f viewSize = currentView.getSize();
 		sf::Vector2f topLeftPosition = sf::Vector2f(viewCenter.x - viewSize.x / 2, viewCenter.y - viewSize.y / 2);
 		m_fpsText.setPosition(topLeftPosition);
-		window.draw(m_fpsText, states);
+		m_target.draw(m_fpsText);
 	}
 }

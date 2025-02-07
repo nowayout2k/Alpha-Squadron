@@ -29,11 +29,11 @@ bool StateStack::isEmpty() const
 	return m_stack.empty();
 }
 
-void StateStack::render(sf::RenderStates& states)
+void StateStack::render()
 {
 	for(auto itr = m_stack.begin(); itr != m_stack.end(); ++itr)
 	{
-		(*itr)->render(states);
+		(*itr)->render();
 	}
 }
 
@@ -91,7 +91,6 @@ State::Ptr StateStack::createState(StateId stateId)
 
 void StateStack::applyPendingChanges()
 {
-	//capture keys pressed while transitioning
 	if(!m_pendingList.empty())
 	{
 		for (auto key : m_allKeys)
@@ -103,10 +102,10 @@ void StateStack::applyPendingChanges()
 
 	for(auto& change : m_pendingList)
 	{
-		switch (change.stackActionType)
+		switch (change.StackActionType)
 		{
 		case Push:
-			m_stack.push_back(createState(change.stateId));
+			m_stack.push_back(createState(change.StateId));
 			break;
 		case Pop:
 			m_stack.pop_back();

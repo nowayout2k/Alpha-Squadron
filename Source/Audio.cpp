@@ -15,7 +15,6 @@ void Audio::playSound(SoundFxId soundFxId, float volume)
 	sf::SoundBuffer& buffer = ResourceManager::loadResource(soundFxId);
 	PooledSound* availableSound = nullptr;
 
-	//Set finished sounds to available
 	for (auto& pooledSound : m_sounds)
 	{
 		if(!pooledSound.isAvailable && pooledSound.sound.getStatus() == sf::Sound::Status::Stopped)
@@ -24,7 +23,6 @@ void Audio::playSound(SoundFxId soundFxId, float volume)
 		}
 	}
 
-	//find an available sound
 	for (auto& pooledSound : m_sounds )
 	{
 		if(pooledSound.isAvailable)
@@ -34,7 +32,6 @@ void Audio::playSound(SoundFxId soundFxId, float volume)
 		}
 	}
 
-	//if no sounds are available, add a new sound
 	if(!availableSound)
 	{
 		if(m_sounds.size() > POOL_RESIZE_LIMIT)

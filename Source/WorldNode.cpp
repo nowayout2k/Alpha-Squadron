@@ -29,7 +29,7 @@ sf::Vector2f WorldNode::getWorldPosition() const
 
 void WorldNode::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	draw(target, states);
+	renderState(target, states);
 }
 
 void WorldNode::updateHierarchy(sf::Time deltaTime, CommandQueue& commands)

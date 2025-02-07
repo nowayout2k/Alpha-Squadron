@@ -25,21 +25,21 @@ class StateStack
 		};
 	}
 	void update(sf::Time deltaTime);
-	void render(sf::RenderStates& states);
+	void render();
 	void handleEvent(const sf::Event& event);
 	void pushState(StateId stateId);
 	void popState();
 	void clearStates();
 	bool isEmpty() const;
 	explicit StateStack(State::Context context);
-	~StateStack() {}
+	~StateStack() = default;
  private:
 	struct PendingChange
 	{
-		PendingChange(StackActionType stackActionType, StateId stateId) : stackActionType(stackActionType), stateId(stateId){};
-		PendingChange(StackActionType stackActionType) : stackActionType(stackActionType), stateId(StateId::None){};
-		StackActionType stackActionType;
-		StateId stateId;
+		PendingChange(StackActionType stackActionType, StateId stateId) : StackActionType(stackActionType), StateId(stateId){};
+		explicit PendingChange(StackActionType stackActionType) : StackActionType(stackActionType), StateId(StateId::None){};
+		StackActionType StackActionType;
+		StateId StateId;
 	};
 	StateStack(const StateStack&);
 	StateStack& operator=(const StateStack&);

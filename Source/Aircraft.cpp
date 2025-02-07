@@ -54,8 +54,6 @@ void Aircraft::changeHealth(float increment)
 		{
 			Audio::playSound(SoundFxId::Explosion, 50);
         	destroy();
-			//detachNode(*m_healthDisplay);
-			//m_healthDisplay = nullptr;
 			m_showExplosion = true;
 			return;
 		}
@@ -364,15 +362,20 @@ void Aircraft::createProjectile(WorldNode& node, ProjectileType projectileType, 
 {
 	float sign = isAllied() ? 1.f : - 1.f;
 	std::unique_ptr<Projectile> projectile(new Projectile(isAllied() ? NodeType::AlliedProjectile :  NodeType::EnemyProjectile ,projectileType, sf::Vector2f(0, 0), sf::Vector2f(sign, 0)));
+
 	if(projectileType == ProjectileType::Missile)
 		projectile->setScale(.75, .75);
 	else
 		projectile->setScale(1, 1);
-	sf::Vector2f offset(sign * (getBoundingRect().width/2) + (sign * xOffset), 0);
-	projectile->setPosition(getWorldPosition() + offset);
+
 	if(!isAllied())
 		projectile->setRotation(180);
+
 	projectile->loadResources();
+
+	sf::Vector2f offset(sign * (getBoundingRect().width/2) + (sign * xOffset), projectileType == ProjectileType::Missile ? getBoundingRect().height/2 : 0);
+	projectile->setPosition(getWorldPosition() + offset);
+
 	node.attachNode(std::move(projectile));
 }
 

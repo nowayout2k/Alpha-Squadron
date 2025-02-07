@@ -105,6 +105,11 @@ add_executable(Alpha-Squadron main.cpp
         Headers/EmitterNode.h
         Source/Animation.cpp
         Headers/Animation.h
+        Source/PostEffect.cpp
+        Headers/PostEffect.h
+        Source/BloomEffect.cpp
+        Headers/BloomEffect.h
+        Headers/ShaderId.h
 )
 
 # Link the SFML libraries and nlohmann_json

@@ -34,26 +34,22 @@ public:
 
 	static sf::Color hexToColor(const std::string& hexString)
 	{
-		// Ensure the string starts with '#' and is of valid length (#RRGGBBAA -> 9 chars)
-		if (hexString[0] != '#' || (hexString.length() != 9 && hexString.length() != 7)) {
+		if (hexString[0] != '#' || (hexString.length() != 9 && hexString.length() != 7))
+		{
 			throw std::invalid_argument("Invalid hex color format. Use #RRGGBB or #RRGGBBAA.");
 		}
 
-		// Remove the '#' character
 		std::string hexValue = hexString.substr(1);
 
-		// Convert hex string to an unsigned integer
 		unsigned int hexNumber;
 		std::stringstream ss;
 		ss << std::hex << hexValue;
 		ss >> hexNumber;
 
-		// If it's 6 characters, assume full opacity (0xFF)
 		if (hexString.length() == 7) {
-			hexNumber = (hexNumber << 8) | 0xFF;  // Append full alpha to the end
+			hexNumber = (hexNumber << 8) | 0xFF;
 		}
 
-		// Extract RGBA components
 		sf::Uint8 red   = (hexNumber >> 24) & 0xFF;
 		sf::Uint8 green = (hexNumber >> 16) & 0xFF;
 		sf::Uint8 blue  = (hexNumber >> 8)  & 0xFF;
@@ -81,7 +77,6 @@ public:
 
 		if(preserveAspectRatio)
 		{
-			// Compute uniform scale factor (maintains aspect ratio)
 			scaleX = scaleY = std::max(scaleX, scaleY);
 		}
 

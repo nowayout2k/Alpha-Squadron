@@ -6,8 +6,8 @@
 TitleState::TitleState(StateStack& stack, State::Context context) : State(stack, context), m_showText(true), m_textEffectTime(0), m_backgroundSprite()
 {
 	m_backgroundSprite.setTexture(ResourceManager::loadResource(TextureId::MetalBg));
-	auto winSize = sf::Vector2f(context.window->getSize());
-	auto viewSize = sf::Vector2f(context.window->getView().getSize());
+	auto winSize = sf::Vector2f(context.Window->getSize());
+	auto viewSize = sf::Vector2f(context.Window->getView().getSize());
 	auto bgSize = sf::Vector2f(m_backgroundSprite.getTexture()->getSize().x, m_backgroundSprite.getTexture()->getSize().y);
 	m_backgroundSprite.setScale(winSize.x/bgSize.x, winSize.y/bgSize.y);
 	m_continueText.setFont(ResourceManager::loadResource(FontId::Arnold));
@@ -45,11 +45,11 @@ bool TitleState::update(sf::Time deltaTime)
 	}
 	return true;
 }
-void TitleState::render(sf::RenderStates& states)
+void TitleState::render()
 {
-	getContext().window->draw(m_backgroundSprite);
+	getContext().Window->draw(m_backgroundSprite);
 
-	getContext().window->draw(m_logoSprite);
+	getContext().Window->draw(m_logoSprite);
 	if(m_showText)
-		getContext().window->draw(m_continueText);
+		getContext().Window->draw(m_continueText);
 }

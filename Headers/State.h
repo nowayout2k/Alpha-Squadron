@@ -14,14 +14,14 @@ class State
 	typedef std::unique_ptr<State> Ptr;
 	struct Context
 	{
-		Context(sf::RenderWindow& window, Player& input) : window(&window), player(&input){};
-		sf::RenderWindow* window;
-		Player* player;
+		Context(sf::RenderWindow& window, Player& input) : Window(&window), Player(&input){};
+		sf::RenderWindow* Window;
+		Player* Player;
 	};
  public:
 	State(StateStack& stack, Context context) : m_stack(&stack), m_context(context) {}
-	virtual ~State() {};
-	virtual void render(sf::RenderStates& states) = 0;
+	virtual ~State() = default;
+	virtual void render() = 0;
 	virtual bool update(sf::Time deltaTime) = 0;
 	virtual bool handleEvent(const sf::Event& event) = 0;
  protected:

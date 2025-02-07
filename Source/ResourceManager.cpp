@@ -5,6 +5,7 @@
 Cache<sf::Texture> ResourceManager::m_textureCache;
 Cache<sf::SoundBuffer> ResourceManager::m_soundBufferCache;
 Cache<sf::Font> ResourceManager::m_fontCache;
+Cache<sf::Shader> ResourceManager::m_shaderCache;
 
 sf::Font& ResourceManager::loadResource(FontId fontId)
 {
@@ -26,6 +27,12 @@ sf::Texture& ResourceManager::loadResource(TextureId textureId, sf::Rect<int> ar
 sf::Texture& ResourceManager::loadResource(TextureId textureId)
 {
 	return loadResource(textureId, sf::Rect<int>());
+}
+
+sf::Shader& ResourceManager::loadResource(ShaderId shaderId)
+{
+	auto type = shaderId == ShaderId::FullPass ? sf::Shader::Type::Vertex : sf::Shader::Type::Fragment;
+	return m_shaderCache.load(std::to_string(static_cast<int>(shaderId)), getShaderPath(shaderId), type);
 }
 
 std::string ResourceManager::getTexturePath(TextureId textureId)
@@ -96,6 +103,26 @@ std::string ResourceManager::getFontPath(FontId fontId)
 	{
 	case FontId::Arnold:
 		return "../Assets/Fonts/Arnold.ttf";
+	default:
+		Debug::logError("Font Id is unknown!");
+		return "../Assets/Fonts/Arnold.ttf";
+	}
+}
+
+std::string ResourceManager::getShaderPath(ShaderId shaderId)
+{
+	switch(shaderId)
+	{
+	case ShaderId::AddPass:
+		return "../Assets/Shaders/Add.frag";
+	case ShaderId::BrightnessPass:
+		return "../Assets/Shaders/Brightness.frag";
+	case ShaderId::DownSamplePass:
+		return "../Assets/Shaders/DownSample.frag";
+	case ShaderId::GaussianBlurPass:
+		return "../Assets/Shaders/GuassianBlur.frag";
+	case ShaderId::FullPass:
+		return "../Assets/Shaders/FullPass.vert";
 	default:
 		Debug::logError("Font Id is unknown!");
 		return "../Assets/Fonts/Arnold.ttf";

@@ -64,7 +64,6 @@ void GUI::Container::selectNext()
 	do
 		next = (next + 1) % m_children.size();
 	while (!m_children[next]->isSelectable());
-	// Select that component
 	select(next);
 }
 
