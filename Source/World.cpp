@@ -7,7 +7,6 @@
 #include "../Headers/Pickup.h"
 #include "../Headers/Engine.h"
 #include "../Headers/ParticleSystemNode.h"
-#include "../Headers/PostEffect.h"
 
 float World::m_scrollSpeed = 500.0f;
 GameData World::GameData = LoadData("../DataFiles/gameData.json");
@@ -39,8 +38,8 @@ void World:: destroyEntitiesOutsideView()
 		static_cast<unsigned int>(NodeType::Pickup) |
 		static_cast<unsigned int>(NodeType::Enemy);
 
-	command.Action = DerivedAction<Entity>(
-		[this](Entity& e, sf::Time)
+	command.Action = DerivedAction<GameSprite>(
+		[this](GameSprite& e, sf::Time)
 		{
 		  if (!getBattlefieldBounds().intersects(e.getBoundingRect()))
 		  {
@@ -57,8 +56,8 @@ void World::setup()
 	m_worldGraph.setIsCollidable(false);
 	for (int i = 0; i < static_cast<int>(Layer::LayerCount); ++i)
 	{
-		WorldNode::SmartNode layer(static_cast<Layer>(i) == Layer::Collision ?  new EmptyWorldNode(NodeType::CollisionLayer) : new EmptyWorldNode());
-		layer->setIsCollidable(static_cast<Layer>(i) == Layer::Collision);
+		WorldNode::SmartNode layer(static_cast<Layer>(i) == Layer::SpriteFront ? new EmptyWorldNode(NodeType::SpriteFrontLayer) : new EmptyWorldNode());
+		layer->setIsCollidable(static_cast<Layer>(i) == Layer::SpriteFront);
 		m_worldLayers[i] = layer.get();
 		m_worldGraph.attachNode(std::move(layer));
 	}
@@ -83,16 +82,21 @@ void World::setup()
 	std::unique_ptr<Aircraft> player = createAircraft(AircraftType::Tomcat, m_spawnPosition, NodeType::Player, sf::Vector2f(1.0, 1.0));
 	m_playerAircraft = player.get();
 	m_playerAircraft->setVelocity(m_scrollSpeed, 0);
-	m_worldLayers[static_cast<int>(Layer::Collision)]->attachNode(std::move(player));
+	m_worldLayers[static_cast<int>(Layer::SpriteFront)]->attachNode(std::move(player));
+
+	std::unique_ptr<UiCanvas> ui = std::make_unique<UiCanvas>();
+	m_ui = ui.get();
+	Utility::centerOrigin(*m_ui);
+	m_worldLayers[static_cast<int>(Layer::UI)]->attachNode(std::move(ui));
 
 	addEnemies();
 	addPickUps();
 
 	std::unique_ptr<ParticleSystemNode> smokeNode(new ParticleSystemNode(Particle::Smoke));
-	m_worldLayers[static_cast<int>(Layer::Foreground)]->attachNode(std::move(smokeNode));
+	m_worldLayers[static_cast<int>(Layer::SpriteBack)]->attachNode(std::move(smokeNode));
 
 	std::unique_ptr<ParticleSystemNode> propellantNode(new ParticleSystemNode(Particle::Propellant));
-	m_worldLayers[static_cast<int>(Layer::Foreground)]->attachNode(std::move(propellantNode));
+	m_worldLayers[static_cast<int>(Layer::SpriteBack)]->attachNode(std::move(propellantNode));
 
 	m_worldView.setCenter(m_spawnPosition);
 
@@ -189,7 +193,7 @@ void World::spawnEnemies()
 		EnemySpawnPoint spawn = m_enemySpawnPoints.back();
 		auto enemy = createAircraft(spawn.Type, sf::Vector2f(spawn.SpawnDistance,0), NodeType::Enemy, sf::Vector2f(-1.0, 1.0));
 		enemy->loadHierarchyResources();
-		m_worldLayers[static_cast<int>(Layer::Collision)]->attachNode(std::move(enemy));
+		m_worldLayers[static_cast<int>(Layer::SpriteFront)]->attachNode(std::move(enemy));
 		m_enemySpawnPoints.pop_back();
 	}
 }
@@ -204,7 +208,7 @@ void World::spawnPickups()
 		auto pickup = std::make_unique<Pickup>(spawn.Type);
 		pickup->setPosition(sf::Vector2f(spawn.SpawnDistance + spawn.Offset.x, spawn.Offset.y));
 		pickup->loadHierarchyResources();
-		m_worldLayers[static_cast<int>(Layer::Collision)]->attachNode(std::move(pickup));
+		m_worldLayers[static_cast<int>(Layer::SpriteFront)]->attachNode(std::move(pickup));
 		m_pickupSpawnPoints.pop_back();
 	}
 }
@@ -308,9 +312,7 @@ void World::update(sf::Time deltaTime)
 		m_hasPlayerReachedEnd = true;
 		return;
 	}
-
-	float scrollSpeedFactor = 1;
-	m_worldView.move(m_scrollSpeed * scrollSpeedFactor * deltaTime.asSeconds(), 0.f);
+	m_worldView.move(m_scrollSpeed * deltaTime.asSeconds(), 0.f);
 
 	m_playerAircraft->setVelocity(0,0);
 
@@ -393,6 +395,7 @@ void World::render()
 		m_sceneTexture.clear();
 		m_sceneTexture.setView(m_worldView);
 		m_sceneTexture.draw(m_worldGraph);
+		m_sceneTexture.draw(*m_ui);
 		m_sceneTexture.display();
 		m_bloomEffect.apply(m_sceneTexture, m_target);
 	}
@@ -400,6 +403,7 @@ void World::render()
 	{
 		m_target.setView(m_worldView);
 		m_target.draw(m_worldGraph);
+		m_sceneTexture.draw(*m_ui);
 	}
 
 

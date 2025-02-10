@@ -6,12 +6,12 @@
 #include <SFML/Graphics.hpp>
 #include "AircraftType.h"
 #include "TextureId.h"
-#include "Entity.h"
 #include "Debug.h"
 #include "Direction.h"
 #include "PickupType.h"
 #include "ProjectileType.h"
 #include "Particle.h"
+#include "WorldNode.h"
 
 #ifndef M_PI
 #define M_PI 3.14159265359
@@ -63,9 +63,9 @@ public:
 	template <typename T>
 	static void centerOrigin(T& object)
 	{
-		static_assert(std::is_base_of<sf::Drawable, T>::value, "Object must be drawable");
+		static_assert(std::is_base_of<sf::Transformable, T>::value, "Object must be Transformable");
 		sf::FloatRect bounds = object.getLocalBounds();
-		object.setOrigin(std::floor(bounds.left + bounds.width / 2.f), std::floor(bounds.top + bounds.height / 2.f));
+		object.setOrigin(bounds.width / 2.f, bounds.top + bounds.height / 2.f);
 	}
 
 	static sf::Vector2f calculateScaleFromViewPercentage(sf::Vector2f viewSize, sf::Vector2f textureSize, sf::Vector2f scalePercentageOfView, bool preserveAspectRatio)
@@ -106,7 +106,7 @@ public:
 		return std::sqrt(std::pow(b.x - a.x, 2) + std::pow(b.y - a.y, 2));
 	}
 
-	static float getDistance(const Entity& a, const Entity& b)
+	static float getDistance(const WorldNode& a, const WorldNode& b)
 	{
 		return std::sqrt(std::pow(b.getPosition().x - a.getPosition().x, 2) + std::pow(b.getPosition().y - a.getPosition().y, 2));
 	}
@@ -348,19 +348,15 @@ public:
 		case NodeType::None:
 			return "none";
 		case NodeType::WorldNode:
-			return "worldNode";
-		case NodeType::Entity:
-			return "entity";
-		case NodeType::Sprite:
-			return "sprite";
+			return "world_node";
+		case NodeType::GameSprite:
+			return "game_sprite";
 		case NodeType::Text:
 			return "text";
 		case NodeType::Aircraft:
 			return "aircraft";
 		case NodeType::Player:
 			return "player";
-		case NodeType::Ally:
-			return "ally";
 		case NodeType::Enemy:
 			return "enemy";
 		case NodeType::AlliedProjectile:

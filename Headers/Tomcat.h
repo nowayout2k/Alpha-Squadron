@@ -5,7 +5,6 @@
 
 
 #include "GameSprite.h"
-#include "Entity.h"
 #include "Aircraft.h"
 
 

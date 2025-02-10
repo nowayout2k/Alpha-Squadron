@@ -3,7 +3,6 @@
 #ifndef PICKUP_H_
 #define PICKUP_H_
 
-#include "Entity.h"
 #include "Aircraft.h"
 #include "PickupType.h"
 

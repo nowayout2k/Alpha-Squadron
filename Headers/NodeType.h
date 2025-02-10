@@ -9,18 +9,17 @@ enum class NodeType
 {
 	None = 0,
 	WorldNode = 1 << 0,
-	Entity = 1 << 1,
-	Sprite = 1 << 2,
-	Text = 1 << 3,
-	Aircraft = 1 << 4,
-	Player = 1 << 5,
-	Ally = 1 << 6,
-	Enemy = 1 << 7,
-	EnemyProjectile = 1 << 8,
-	AlliedProjectile = 1 << 9,
-	CollisionLayer = 1 << 10,
-	Pickup = 1 << 11,
-	ParticleSystem = 1 << 12,
+	GameSprite = 1 << 1,
+	Text = 1 << 2,
+	Aircraft = 1 << 3,
+	Player = 1 << 4,
+	ParticleSystem = 1 << 5,
+	Enemy = 1 << 6,
+	EnemyProjectile = 1 << 7,
+	AlliedProjectile = 1 << 8,
+	SpriteFrontLayer = 1 << 9,
+	Pickup = 1 << 10,
+	UiCanvas = 1 << 11
 };
 
 

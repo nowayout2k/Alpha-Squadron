@@ -28,7 +28,6 @@ add_executable(Alpha-Squadron main.cpp
         Source/Audio.cpp
         Headers/Audio.h
         Headers/Utility.h
-        Headers/Entity.h
         Headers/GameSprite.h
         Source/World.cpp
         Headers/World.h
@@ -110,6 +109,9 @@ add_executable(Alpha-Squadron main.cpp
         Source/BloomEffect.cpp
         Headers/BloomEffect.h
         Headers/ShaderId.h
+        Source/UiCanvas.cpp
+        Headers/UiCanvas.h
+        Source/GameSprite.cpp
 )
 
 # Link the SFML libraries and nlohmann_json

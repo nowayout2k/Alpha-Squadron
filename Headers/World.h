@@ -6,12 +6,12 @@
 #include <array>
 #include <queue>
 #include "GameSprite.h"
-#include "Entity.h"
 #include "Aircraft.h"
 #include "Layer.h"
 #include "EmptyWorldNode.h"
 #include "CommandQueue.h"
 #include "BloomEffect.h"
+#include "UiCanvas.h"
 
 class World
 {
@@ -78,6 +78,7 @@ private:
 	bool m_isPlayerAlive;
 	bool m_hasPlayerReachedEnd;
 	BloomEffect m_bloomEffect;
+	UiCanvas* m_ui{};
 
 	sf::Text m_fpsText;
 	float m_timeSinceLastFpsUpdate{};

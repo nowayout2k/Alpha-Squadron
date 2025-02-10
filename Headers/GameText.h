@@ -4,15 +4,14 @@
 #define GAMETEXT_H_
 
 #include <SFML/Graphics/Text.hpp>
-#include "Entity.h"
 #include "ResourceManager.h"
 #include "Utility.h"
 
-class GameText : public Entity
+class GameText : public WorldNode
 {
  public:
 	GameText(FontId fontType, std::string text, unsigned int pixelSize, sf::Color color, sf::Text::Style style, sf::Vector2f position)
-		: m_fontType(fontType), Entity(false)
+		: m_fontType(fontType), WorldNode(false)
 	{
 		setString(text);
 		m_text.setCharacterSize(pixelSize);
@@ -22,7 +21,7 @@ class GameText : public Entity
 		m_text.getGlobalBounds();
 	}
 
-	virtual unsigned int getNodeType() const override { return Entity::getNodeType() | (unsigned int)NodeType::Text; }
+	virtual unsigned int getNodeType() const override { return WorldNode::getNodeType() | (unsigned int)NodeType::Text; }
 
 	sf::Rect<float> getBoundingRect() const override
 	{

@@ -158,7 +158,7 @@ void Aircraft::update(sf::Time deltaTime, CommandQueue& commands)
 		return;
 	}
 
-	Entity::update(deltaTime, commands);
+	GameSprite::update(deltaTime, commands);
 
 	if(m_timeSinceDamage > DAMAGE_INVINCIBILITY_TIME)
 	{
@@ -323,13 +323,13 @@ void Aircraft::loadResources()
 		setPosition(m_spawnPos);
 	}
 
-	m_fireCommand.NodeType = (unsigned int)NodeType::CollisionLayer;
+	m_fireCommand.NodeType = (unsigned int)NodeType::SpriteFrontLayer;
 	m_fireCommand.Action =
 		[this] (WorldNode& node, sf::Time dt)
 		{
 		  createBullets(node);
 		};
-	m_missileCommand.NodeType = (unsigned int)NodeType::CollisionLayer;
+	m_missileCommand.NodeType = (unsigned int)NodeType::SpriteFrontLayer;
 	m_missileCommand.Action =
 		[this] (WorldNode& node, sf::Time delta)
 		{

@@ -18,7 +18,8 @@ class WorldNode : public sf::Transformable, public sf::Drawable
 
 	WorldNode(const WorldNode&) = delete;
 	WorldNode& operator=(const WorldNode& other) = delete;
-	explicit WorldNode() : m_isActive(true), m_parent(nullptr), m_isDestroyed(false), m_isMarkedForRemoval(false), m_isCollidable(true) {}
+	explicit WorldNode() : WorldNode(false) {}
+	explicit WorldNode(bool isCollidable) : m_isActive(true), m_parent(nullptr), m_isDestroyed(false), m_isMarkedForRemoval(false), m_isCollidable(isCollidable) {}
 	void attachNode(SmartNode node);
 
 	void onCommand(const Command& command, sf::Time deltaTime);

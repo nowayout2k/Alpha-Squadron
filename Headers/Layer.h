@@ -6,9 +6,10 @@
 enum class Layer
 {
 	Background = 0,
-	Foreground = 1,
-	Collision = 2,
-	LayerCount = 3
+	UI = 1,
+	SpriteBack = 2,
+	SpriteFront = 3,
+	LayerCount = 4
 };
 
 #endif //LAYER_H_
