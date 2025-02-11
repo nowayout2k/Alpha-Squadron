@@ -1,5 +1,6 @@
 // Copyright (c) 2025 No Way Out LLC All rights reserved.
 #include "../Headers/GameState.h"
+#include "../Headers/Audio.h"
 
 bool GameState::update(sf::Time deltaTime)
 {

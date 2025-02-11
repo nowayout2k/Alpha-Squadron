@@ -46,7 +46,6 @@ class Aircraft : public GameSprite
 
  private:
 	void createProjectile(WorldNode& node, ProjectileType projectileType, float xOffset, float yOffset);
-	void updateHealthDisplay();
 	void updateAiPosition(sf::Time deltaTime);
 	void moveTowardsStart(sf::Time deltaTime);
 	void exitPhase();
@@ -78,8 +77,6 @@ class Aircraft : public GameSprite
 	int m_routineIndex;
 	float m_despawnDistance{};
 	Animation m_explosion;
-
-	GameText* m_healthDisplay;
 	std::vector<AiRoutine> m_aiRoutines;
 
 	sf::Vector2f m_spawnPos;

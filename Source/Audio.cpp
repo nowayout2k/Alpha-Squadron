@@ -17,15 +17,15 @@ void Audio::playSound(SoundFxId soundFxId, float volume)
 
 	for (auto& pooledSound : m_sounds)
 	{
-		if(!pooledSound.isAvailable && pooledSound.sound.getStatus() == sf::Sound::Status::Stopped)
+		if(!pooledSound.IsAvailable && pooledSound.Sound.getStatus() == sf::Sound::Status::Stopped)
 		{
-			pooledSound.isAvailable = true;
+			pooledSound.IsAvailable = true;
 		}
 	}
 
 	for (auto& pooledSound : m_sounds )
 	{
-		if(pooledSound.isAvailable)
+		if(pooledSound.IsAvailable)
 		{
 			availableSound = &pooledSound;
 			break;
@@ -43,10 +43,10 @@ void Audio::playSound(SoundFxId soundFxId, float volume)
 		availableSound = &m_sounds.back();
 	}
 
-	availableSound->isAvailable = false;
-	availableSound->sound.setBuffer(buffer);
-	availableSound->sound.setVolume(volume);
-	availableSound->sound.play();
+	availableSound->IsAvailable = false;
+	availableSound->Sound.setBuffer(buffer);
+	availableSound->Sound.setVolume(volume);
+	availableSound->Sound.play();
 }
 
 void Audio::playMusic(MusicId musicId, float volume)
@@ -78,4 +78,16 @@ std::string Audio::getMusicPath(MusicId musicId)
 		Debug::logError("Music Id is unknown!");
 		return nullptr;
 	}
+}
+void Audio::stopAllSounds()
+{
+	m_music.stop();
+	for (auto& pooledSound : m_sounds )
+	{
+		if(pooledSound.Sound.getStatus() == sf::Sound::Status::Playing)
+		{
+			pooledSound.Sound.stop();
+		}
+	}
+
 }

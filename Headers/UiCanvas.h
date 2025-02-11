@@ -14,12 +14,12 @@ class UiCanvas : public WorldNode
 	void render(sf::RenderTarget& target, sf::RenderStates states) const override;
  public:
 	explicit UiCanvas();
-	void updateHeath(float increment);
 	sf::FloatRect getBoundingRect() const override;
 	unsigned int getNodeType() const override;
 	sf::FloatRect getLocalBounds() const;
 	void drawBoundingRect(sf::RenderTarget& target, sf::RenderStates) const;
 	void update(sf::Time deltaTime, CommandQueue& commands) override;
+	void setHeath(float health) { m_health = std::max(health, 0.f); }
  protected:
 	void loadResources() override;
 

@@ -8,26 +8,18 @@
 #include "../Headers/Engine.h"
 #include "../Headers/ParticleSystemNode.h"
 
-float World::m_scrollSpeed = 500.0f;
 GameData World::GameData = LoadData("../DataFiles/gameData.json");
+sf::View World::m_worldView = {};
+float World::m_scrollSpeed = 500.0f;
 
-World::World(sf::RenderTarget& outputTarget) : m_target(outputTarget), m_worldView(m_target.getDefaultView()),
+World::World(sf::RenderTarget& outputTarget) : m_target(outputTarget),
 			m_worldBounds(0.0f,0.0f,100000.0f,m_worldView.getSize().y),
 			m_spawnPosition(0, m_worldView.getSize().y/2), m_isPlayerAlive(true),
 			m_playerAircraft(nullptr), m_viewPositionOffset(0,0), m_commandQueue(), m_hasPlayerReachedEnd(false)
 {
+	m_worldView = m_target.getDefaultView();
 	m_sceneTexture.create(m_target.getSize().x, m_target.getSize().y);
 	setup();
-}
-
-void World::restart()
-{
-	Audio::stopMusic();
-	ResourceManager::clearFontCache();
-	ResourceManager::clearSoundBufferCache();
-	ResourceManager::clearTextureCache();
-	setup();
-	Debug::log("Restarting game.....");
 }
 
 void World:: destroyEntitiesOutsideView()
@@ -86,7 +78,6 @@ void World::setup()
 
 	std::unique_ptr<UiCanvas> ui = std::make_unique<UiCanvas>();
 	m_ui = ui.get();
-	Utility::centerOrigin(*m_ui);
 	m_worldLayers[static_cast<int>(Layer::UI)]->attachNode(std::move(ui));
 
 	addEnemies();
@@ -237,8 +228,7 @@ void World::handleCollisions()
 			auto& player = dynamic_cast<Aircraft&>(*pair.first);
 			auto& enemy = dynamic_cast<Aircraft&>(*pair.second);
  			player.changeHealth(-enemy.getHealth());
-			enemy.destroy();
-			enemy.markForRemoval();
+			enemy.changeHealth(-player.getHealth());
 		}
 		else if (matchesCategories(pair, NodeType::Player, NodeType::Pickup))
 		{
@@ -312,12 +302,14 @@ void World::update(sf::Time deltaTime)
 		m_hasPlayerReachedEnd = true;
 		return;
 	}
+
 	m_worldView.move(m_scrollSpeed * deltaTime.asSeconds(), 0.f);
 
 	m_playerAircraft->setVelocity(0,0);
 
 	destroyEntitiesOutsideView();
 	guideMissiles();
+
 	while (!m_commandQueue.isEmpty())
 	{
 		auto nextCommand = m_commandQueue.pop();
@@ -325,8 +317,8 @@ void World::update(sf::Time deltaTime)
 	}
 
 	adaptPlayerVelocity();
-
 	handleCollisions();
+	m_ui->setHeath(m_playerAircraft->getHealth());
 
 	m_worldGraph.removeDestroyed();
 
@@ -348,7 +340,7 @@ void World::update(sf::Time deltaTime)
 		if(m_timeSinceLastFpsUpdate > 1)
 		{
 			auto value = std::to_string((int)(m_framesSinceLastFpsUpdate/m_timeSinceLastFpsUpdate));
-			auto& view = Engine::getWindow().getView();
+			auto& view = getWorldView();
 			sf::Vector2f center = view.getCenter();
 			sf::Vector2f size = view.getSize();
 			m_fpsText.setString("FPS: " + value + " POS: (x= " + std::to_string(center.x + size.x / 2.f) +  + " y= " + std::to_string(center.y) + ")");
@@ -364,14 +356,14 @@ void World::adaptPlayerVelocity()
 	if (velocity.x != 0.f && velocity.y != 0.f)
 		m_playerAircraft->setVelocity(velocity / std::sqrt(2.f));
 
-	m_playerAircraft->accelerate(m_scrollSpeed, 0.f);
+	m_playerAircraft->accelerate(velocity.x >= 0 ? m_scrollSpeed : 0, 0.f);
 }
 
 void World::adaptPlayerPosition()
 {
 	if(m_playerAircraft)
 	{
-		if (!m_playerAircraft->getTexture())  // Add a method to check if the texture is loaded
+		if (!m_playerAircraft->getTexture())
 		{
 			Debug::log("Player Aircraft has no texture!");
 			return;
@@ -390,12 +382,11 @@ void World::adaptPlayerPosition()
 
 void World::render()
 {
-	if(PostEffect::isSupported())
+	if(!PostEffect::isSupported())
 	{
 		m_sceneTexture.clear();
 		m_sceneTexture.setView(m_worldView);
 		m_sceneTexture.draw(m_worldGraph);
-		m_sceneTexture.draw(*m_ui);
 		m_sceneTexture.display();
 		m_bloomEffect.apply(m_sceneTexture, m_target);
 	}
@@ -403,7 +394,6 @@ void World::render()
 	{
 		m_target.setView(m_worldView);
 		m_target.draw(m_worldGraph);
-		m_sceneTexture.draw(*m_ui);
 	}
 
 

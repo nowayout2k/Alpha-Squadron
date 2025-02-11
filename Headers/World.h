@@ -21,6 +21,7 @@ public:
 	void render();
 	CommandQueue& getCommandQueue() { return m_commandQueue; }
 	static float getScrollSpeed() { return m_scrollSpeed; }
+	static sf::View& getWorldView() { return m_worldView; }
 	bool isPlayerAircraftExploding() const { return m_playerAircraft->isExploding(); }
 	sf::FloatRect getViewBounds() const;
 	sf::FloatRect getBattlefieldBounds() const;
@@ -61,10 +62,10 @@ private:
 	static bool matchesCategories(WorldNode::Pair& colliders, NodeType t1, NodeType t2);
 
 	static float m_scrollSpeed;
+	static sf::View m_worldView;
 
 	sf::RenderTarget& m_target;
 	sf::RenderTexture m_sceneTexture;
-	sf::View m_worldView;
 	EmptyWorldNode m_worldGraph;
 	std::array<WorldNode*, static_cast<int>(Layer::LayerCount)> m_worldLayers{};
 	sf::FloatRect m_worldBounds;

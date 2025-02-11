@@ -17,6 +17,7 @@ class Audio
 	static void playSound(SoundFxId soundType, float volume = 100);
 	static void playMusic(MusicId musicType, float volume = 100);
 	static void stopMusic();
+	static void stopAllSounds();
 	static std::string getMusicPath(MusicId musicId);
  private:
 	static std::list<PooledSound> m_sounds;

@@ -5,19 +5,12 @@
 
 UiCanvas::UiCanvas() : m_health(0), m_healthBar(), m_healthBg()
 {
-	Utility::centerOrigin(m_healthBar);
-	Utility::centerOrigin(m_healthBg);
-	sf::Vector2f viewSize = Engine::getWindow().getView().getSize();
-	m_healthBg.setPosition(viewSize.x / 2.f, viewSize.y / 2.f);
-	m_healthBar.setPosition(viewSize.x / 2.f, viewSize.y / 2.f);
 }
 
 sf::FloatRect UiCanvas::getBoundingRect() const
 {
-	auto view = Engine::getWindow().getView();
-	sf::Vector2f viewSize = view.getSize();
-	sf::Vector2f viewPosition = view.getCenter() - viewSize / 2.f;
-	return {viewPosition.x,viewPosition.y, viewSize.x, viewSize.y};
+	sf::Vector2f viewSize = World::getWorldView().getSize();
+	return {0.f, 0.f, viewSize.x, viewSize.y};
 }
 
 sf::FloatRect UiCanvas::getLocalBounds() const
@@ -27,42 +20,20 @@ sf::FloatRect UiCanvas::getLocalBounds() const
 
 void UiCanvas::update(sf::Time deltaTime, CommandQueue& commands)
 {
-	auto view = Engine::getWindow().getView();
+	auto view = World::getWorldView();
 	sf::Vector2f viewSize = view.getSize();
-	auto viewCenter = view.getCenter();
-	auto newPos = viewCenter - viewSize / 2.f;
-	setPosition(viewCenter.x,viewCenter.y);
+	sf::Vector2f viewCenter = view.getCenter();
+
+	setOrigin(0, 0);
+	setPosition(viewCenter - viewSize / 2.f);
+	auto bgSize = sf::Vector2f(m_healthBg.getTexture()->getSize().x, m_healthBg.getTexture()->getSize().y);
+	m_healthBar.setScale((viewSize.x / bgSize.x*.2)*(m_health/100.f), m_healthBar.getScale().y);
 }
 
 void UiCanvas::render(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	states.transform *= getTransform();
 	target.draw(m_healthBg, states);
 	target.draw(m_healthBar, states);
-	if(Debug::isCollidersVisible())
-		drawBoundingRect(target, states);
-}
-
-void UiCanvas::drawBoundingRect(sf::RenderTarget& target, sf::RenderStates) const
-{
-	sf::FloatRect rect = getBoundingRect();
-
-	sf::RectangleShape rectangleShape;
-	rectangleShape.setPosition(sf::Vector2f(rect.left, rect.top));
-	rectangleShape.setSize(sf::Vector2f(rect.width, rect.height));
-	rectangleShape.setFillColor(sf::Color::Transparent);
-	rectangleShape.setOutlineColor(sf::Color::Green);
-	rectangleShape.setOutlineThickness(3.f);
-
-	sf::CircleShape circleShape;
-	circleShape.setPosition(getPosition().x + (getOrigin().x * rect.width), getPosition().y + (getOrigin().y * rect.height));
-	circleShape.setRadius(1.f);
-	circleShape.setFillColor(sf::Color::Red);
-	circleShape.setOutlineColor(sf::Color::Red);
-	circleShape.setOutlineThickness(3.f);
-
-	target.draw(rectangleShape);
-	target.draw(circleShape);
 }
 
 unsigned int UiCanvas::getNodeType() const
@@ -70,13 +41,21 @@ unsigned int UiCanvas::getNodeType() const
 	return WorldNode::getNodeType() | static_cast<unsigned int>(NodeType::UiCanvas);
 }
 
-void UiCanvas::updateHeath(float increment)
-{
-	m_health += increment;
-}
-
 void UiCanvas::loadResources()
 {
 	m_healthBg.setTexture(ResourceManager::loadResource(TextureId::MetalBg));
 	m_healthBar.setTexture(ResourceManager::loadResource(TextureId::MetalBg));
+
+	sf::Vector2f viewSize = World::getWorldView().getSize();
+	auto bgSize = sf::Vector2f(m_healthBg.getTexture()->getSize().x, m_healthBg.getTexture()->getSize().y);
+
+	auto textureScaleAdjustment = sf::Vector2f(viewSize.x / bgSize.x, viewSize.x / bgSize.x);
+
+	m_healthBg.setScale(textureScaleAdjustment.x * .2f, textureScaleAdjustment.y * .012f);
+	m_healthBar.setScale(textureScaleAdjustment.x * .2f, textureScaleAdjustment.y * .01f);
+	m_healthBar.setColor(sf::Color::Green);
+
+	auto offset = sf::Vector2f(viewSize.x / 2 - m_healthBg.getGlobalBounds().width/2, viewSize.y * .015f - m_healthBg.getGlobalBounds().height/2);
+	m_healthBg.setPosition(0.f + offset.x, 0.f + offset.y);
+	m_healthBar.setPosition(viewSize.x * .001f + offset.x, viewSize.y * .001f + offset.y);
 }

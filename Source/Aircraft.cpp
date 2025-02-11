@@ -12,7 +12,7 @@ constexpr float MAX_SPAWN_DISTANCE = 1000.0f;
 	#define M_PI 3.14159265359
 #endif
 
-#define MAX_HEALTH 120.f
+#define MAX_HEALTH 100.f
 
 Aircraft::Aircraft(const bool hasCollision, sf::Vector2f  scale, sf::Vector2f position)
 	: m_explosion(ResourceManager::loadResource(TextureId::ExplosionSpriteSheet), sf::Vector2i(256, 256), 16, sf::seconds(1)),
@@ -36,11 +36,6 @@ Aircraft::Aircraft(const bool hasCollision, sf::Vector2f  scale, sf::Vector2f po
 {
 	setScale(scale);
 	setPosition(m_spawnPos);
-
-	auto healthDisplay = std::make_unique<GameText>(
-		FontId::Arnold, "", 12, sf::Color::Black, sf::Text::Style::Regular, sf::Vector2f());
-	m_healthDisplay = healthDisplay.get();
-	attachNode(std::move(healthDisplay));
 	m_explosion.setOrigin(m_explosion.getFrameSize().x / 2.f, m_explosion.getFrameSize().y / 2.f);
 
 }
@@ -52,6 +47,7 @@ void Aircraft::changeHealth(float increment)
 	{
 		if (((getNodeType() & static_cast<unsigned int>(NodeType::Player)) && m_isDamageAnimationActive) || m_health <= 0)
 		{
+			m_health=0;
 			Audio::playSound(SoundFxId::Explosion, 50);
         	destroy();
 			m_showExplosion = true;
@@ -169,8 +165,6 @@ void Aircraft::update(sf::Time deltaTime, CommandQueue& commands)
 		m_timeSinceDamage += deltaTime.asSeconds();
 	}
 
-	updateHealthDisplay();
-
 	checkProjectileLaunch(deltaTime, commands);
 
 	if (m_fireCooldownRemaining > 0)
@@ -184,17 +178,9 @@ void Aircraft::update(sf::Time deltaTime, CommandQueue& commands)
 	updateRollAnimation();
 }
 
-void Aircraft::updateHealthDisplay()
-{
-	m_healthDisplay->setString(std::to_string((int)m_health) + " HP");
-	auto bounds = GameSprite::getLocalBounds();
-	m_healthDisplay->setPosition(0, -bounds.height / 2);
-	m_healthDisplay->setRotation(-getRotation());
-}
-
 void Aircraft::updateAiPosition(sf::Time deltaTime)
 {
-	auto& view = Engine::getWindow().getView();
+	auto& view = World::getWorldView();
 	sf::Vector2f viewSize = view.getSize();
 	sf::Vector2f viewCenter = view.getCenter();
 	auto viewRect = sf::FloatRect(viewCenter - viewSize / 2.f, viewSize);
@@ -239,9 +225,7 @@ void Aircraft::followAiRoutines(sf::Time deltaTime)
 	}
 
 	float radians = Utility::toRadian(m_aiRoutines[m_routineIndex].angle);
-	sf::Vector2f velocity = sf::Vector2f(
-		World::getScrollSpeed() + getMaxSpeed() * std::cos(radians),
-		getMaxSpeed() * std::sin(radians));
+	sf::Vector2f velocity = sf::Vector2f(World::getScrollSpeed() + getMaxSpeed() * std::cos(radians), getMaxSpeed() * std::sin(radians));
 
 	setVelocity(velocity);
 	m_routineDistanceTravelled += getMaxSpeed() * deltaTime.asSeconds();
@@ -335,8 +319,6 @@ void Aircraft::loadResources()
 		{
 		  createProjectile(node, ProjectileType::Missile, 0.f, 0.5f);
 		};
-
-	m_healthDisplay->setScale(getScale().x < 0 ? -1 : 1, 1);
 }
 
 void Aircraft::createBullets(WorldNode& node)

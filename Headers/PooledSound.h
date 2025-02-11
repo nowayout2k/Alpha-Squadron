@@ -7,8 +7,8 @@
 
 struct PooledSound
 {
-	sf::Sound sound;
-	bool isAvailable = false;
+	sf::Sound Sound;
+	bool IsAvailable = false;
 };
 
 #endif //POOLEDSOUND_H_

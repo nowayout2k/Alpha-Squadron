@@ -65,7 +65,7 @@ public:
 	{
 		static_assert(std::is_base_of<sf::Transformable, T>::value, "Object must be Transformable");
 		sf::FloatRect bounds = object.getLocalBounds();
-		object.setOrigin(bounds.width / 2.f, bounds.top + bounds.height / 2.f);
+		object.setOrigin(bounds.width / 2.f,bounds.height / 2.f);
 	}
 
 	static sf::Vector2f calculateScaleFromViewPercentage(sf::Vector2f viewSize, sf::Vector2f textureSize, sf::Vector2f scalePercentageOfView, bool preserveAspectRatio)
