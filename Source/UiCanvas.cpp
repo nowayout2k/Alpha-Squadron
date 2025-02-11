@@ -3,8 +3,20 @@
 #include "../Headers/UiCanvas.h"
 #include "../Headers/Engine.h"
 
-UiCanvas::UiCanvas() : m_health(0), m_healthBar(), m_healthBg()
+UiCanvas::UiCanvas() : m_health(0),
+	m_healthBarElement(),
+	m_healthBgElement()
 {
+	auto healthBarElementPtr = std::make_unique<GameSprite>(false,TextureId::MetalBg);
+
+	auto healthBgElementPtr = std::make_unique<GameSprite>(false, TextureId::MetalBg);
+
+	m_healthBarElement = healthBarElementPtr.get();
+	m_healthBgElement = healthBgElementPtr.get();
+	m_healthBarElement->setColor(sf::Color::Green);
+
+	attachNode(std::move(healthBgElementPtr));
+	attachNode(std::move(healthBarElementPtr));
 }
 
 sf::FloatRect UiCanvas::getBoundingRect() const
@@ -26,14 +38,14 @@ void UiCanvas::update(sf::Time deltaTime, CommandQueue& commands)
 
 	setOrigin(0, 0);
 	setPosition(viewCenter - viewSize / 2.f);
-	auto bgSize = sf::Vector2f(m_healthBg.getTexture()->getSize().x, m_healthBg.getTexture()->getSize().y);
-	m_healthBar.setScale((viewSize.x / bgSize.x*.2)*(m_health/100.f), m_healthBar.getScale().y);
+	auto bgSize = sf::Vector2f(m_healthBgElement->getTexture()->getSize().x, m_healthBgElement->getTexture()->getSize().y);
+	m_healthBarElement->setScale((viewSize.x / bgSize.x*.2)*(m_health/100.f), m_healthBarElement->getScale().y);
 }
 
 void UiCanvas::render(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	target.draw(m_healthBg, states);
-	target.draw(m_healthBar, states);
+	target.draw(*m_healthBgElement, states);
+	target.draw(*m_healthBarElement, states);
 }
 
 unsigned int UiCanvas::getNodeType() const
@@ -43,19 +55,17 @@ unsigned int UiCanvas::getNodeType() const
 
 void UiCanvas::loadResources()
 {
-	m_healthBg.setTexture(ResourceManager::loadResource(TextureId::MetalBg));
-	m_healthBar.setTexture(ResourceManager::loadResource(TextureId::MetalBg));
+	m_healthBgElement->loadResources();
+	m_healthBarElement->loadResources();
 
+	auto bgSize = sf::Vector2f(m_healthBgElement->getTexture()->getSize().x, m_healthBgElement->getTexture()->getSize().y);
 	sf::Vector2f viewSize = World::getWorldView().getSize();
-	auto bgSize = sf::Vector2f(m_healthBg.getTexture()->getSize().x, m_healthBg.getTexture()->getSize().y);
-
+	
 	auto textureScaleAdjustment = sf::Vector2f(viewSize.x / bgSize.x, viewSize.x / bgSize.x);
+	m_healthBgElement->setScale(textureScaleAdjustment.x * .2f, textureScaleAdjustment.y * .012f);
+	m_healthBarElement->setScale(textureScaleAdjustment.x * .2f, textureScaleAdjustment.y * .01f);
 
-	m_healthBg.setScale(textureScaleAdjustment.x * .2f, textureScaleAdjustment.y * .012f);
-	m_healthBar.setScale(textureScaleAdjustment.x * .2f, textureScaleAdjustment.y * .01f);
-	m_healthBar.setColor(sf::Color::Green);
-
-	auto offset = sf::Vector2f(viewSize.x / 2 - m_healthBg.getGlobalBounds().width/2, viewSize.y * .015f - m_healthBg.getGlobalBounds().height/2);
-	m_healthBg.setPosition(0.f + offset.x, 0.f + offset.y);
-	m_healthBar.setPosition(viewSize.x * .001f + offset.x, viewSize.y * .001f + offset.y);
+	auto offset = sf::Vector2f(viewSize.x / 2 - m_healthBgElement->getBoundingRect().width/2, viewSize.y * .015f - m_healthBgElement->getBoundingRect().height/2);
+	m_healthBgElement->setPosition(0.f + offset.x, 0.f + offset.y);
+	m_healthBarElement->setPosition(viewSize.x * .001f + offset.x, viewSize.y * .001f + offset.y);
 }
