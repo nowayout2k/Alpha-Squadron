@@ -3,18 +3,18 @@
 #include "../Headers/UiCanvas.h"
 #include "../Headers/Engine.h"
 
-UiCanvas::UiCanvas() : m_health(0),
-	m_healthBarElement(),
-	m_healthBgElement()
+UiCanvas::UiCanvas() : m_health(0), m_healthBarElement(), m_healthBgElement(), m_healthTextElement()
 {
 	auto healthBarElementPtr = std::make_unique<GameSprite>(false,TextureId::MetalBg);
-
 	auto healthBgElementPtr = std::make_unique<GameSprite>(false, TextureId::MetalBg);
+	auto healthTextElementPtr = std::make_unique<GameText>(FontId::Arnold, "Health", 18, sf::Color::Black, sf::Text::Style::Regular, sf::Vector2f());
 
-	m_healthBarElement = healthBarElementPtr.get();
+	m_healthTextElement = healthTextElementPtr.get();
 	m_healthBgElement = healthBgElementPtr.get();
+	m_healthBarElement = healthBarElementPtr.get();
 	m_healthBarElement->setColor(sf::Color::Green);
 
+	attachNode(std::move(healthTextElementPtr));
 	attachNode(std::move(healthBgElementPtr));
 	attachNode(std::move(healthBarElementPtr));
 }
@@ -57,15 +57,19 @@ void UiCanvas::loadResources()
 {
 	m_healthBgElement->loadResources();
 	m_healthBarElement->loadResources();
+	m_healthTextElement->loadResources();
 
 	auto bgSize = sf::Vector2f(m_healthBgElement->getTexture()->getSize().x, m_healthBgElement->getTexture()->getSize().y);
 	sf::Vector2f viewSize = World::getWorldView().getSize();
 	
 	auto textureScaleAdjustment = sf::Vector2f(viewSize.x / bgSize.x, viewSize.x / bgSize.x);
-	m_healthBgElement->setScale(textureScaleAdjustment.x * .2f, textureScaleAdjustment.y * .012f);
+	m_healthBgElement->setScale(textureScaleAdjustment.x * .205f, textureScaleAdjustment.y * .015f);
 	m_healthBarElement->setScale(textureScaleAdjustment.x * .2f, textureScaleAdjustment.y * .01f);
 
-	auto offset = sf::Vector2f(viewSize.x / 2 - m_healthBgElement->getBoundingRect().width/2, viewSize.y * .015f - m_healthBgElement->getBoundingRect().height/2);
-	m_healthBgElement->setPosition(0.f + offset.x, 0.f + offset.y);
-	m_healthBarElement->setPosition(viewSize.x * .001f + offset.x, viewSize.y * .001f + offset.y);
+	auto offset = sf::Vector2f(viewSize.x / 2 - m_healthBgElement->getBoundingRect().width/2, viewSize.y - m_healthBgElement->getBoundingRect().height/2);
+	m_healthBgElement->setPosition(viewSize.x / 2 - m_healthBgElement->getBoundingRect().width/2, viewSize.y * .02f);
+	m_healthBarElement->setPosition(viewSize.x * .001f + (viewSize.x / 2 - m_healthBarElement->getBoundingRect().width/2), viewSize.y * .023f);
+
+	m_healthTextElement->setPosition(viewSize.x / 2, 0);
+	m_healthTextElement->setOrigin(m_healthTextElement->getBoundingRect().width/2,0);
 }

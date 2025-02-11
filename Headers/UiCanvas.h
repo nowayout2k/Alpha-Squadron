@@ -8,6 +8,7 @@
 #include <SFML/Graphics/Sprite.hpp>
 #include "WorldNode.h"
 #include "GameSprite.h"
+#include "GameText.h"
 
 class UiCanvas : public WorldNode
 {
@@ -26,6 +27,7 @@ class UiCanvas : public WorldNode
 	float m_health;
 	GameSprite* m_healthBgElement;
 	GameSprite* m_healthBarElement;
+	GameText* m_healthTextElement;
 };
 
 #endif //ALPHA_SQUADRON__UI_H_
