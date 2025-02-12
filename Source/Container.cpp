@@ -2,12 +2,9 @@
 
 #include "../Headers/Container.h"
 #include "../Headers/Debug.h"
+#include "../Headers/Audio.h"
 #include <SFML/Graphics/RenderStates.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
-
-GUI::Container::Container() : m_children(), m_selectedChild(-1)
-{
-}
 
 void GUI::Container::pack(Component::Ptr component)
 {
@@ -35,7 +32,10 @@ void GUI::Container::handleEvent(const sf::Event& event)
 		else if (event.key.code == sf::Keyboard::Return || event.key.code == sf::Keyboard::Space)
 		{
 			if (hasSelection())
+			{
+				m_audio.playSound(SoundFxId::ButtonClick);
 				m_children[m_selectedChild]->activate();
+			}
 		}
 	}
 }
@@ -47,6 +47,7 @@ bool GUI::Container::isSelectable() const
 
 void GUI::Container::select(int index)
 {
+	m_audio.playSound(SoundFxId::MenuClick);
 	if (m_children[index]->isSelectable())
 	{
 		if (hasSelection())

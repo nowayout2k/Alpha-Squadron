@@ -10,12 +10,12 @@
 #include "GameSprite.h"
 #include "GameText.h"
 
-class UiCanvas : public WorldNode
+class CanvasNode : public WorldNode
 {
  protected:
 	void render(sf::RenderTarget& target, sf::RenderStates states) const override;
  public:
-	explicit UiCanvas();
+	explicit CanvasNode();
 	sf::FloatRect getBoundingRect() const override;
 	unsigned int getNodeType() const override;
 	sf::FloatRect getLocalBounds() const;

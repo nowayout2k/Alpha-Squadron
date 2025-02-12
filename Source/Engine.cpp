@@ -13,7 +13,7 @@
 #define FRAME_RATE_LIMIT 60.0f
 #define TIME_STEP_MAX (1.0f/FRAME_RATE_LIMIT)
 
-Engine::Engine() : m_isPaused(false), m_stateStack(State::Context(m_window, m_input))
+Engine::Engine() : m_isPaused(false), m_stateStack(State::Context(m_window, m_input, m_audio))
 {
 	createWindow(sf::VideoMode(2000,1000), "Alpha Squadron", sf::Style::Resize);
 	registerStates();

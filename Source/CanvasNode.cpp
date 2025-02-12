@@ -1,9 +1,9 @@
 // Copyright (c) 2025 No Way Out LLC All rights reserved.
 
-#include "../Headers/UiCanvas.h"
+#include "../Headers/CanvasNode.h"
 #include "../Headers/Engine.h"
 
-UiCanvas::UiCanvas() : m_health(0), m_healthBarElement(), m_healthBgElement(), m_healthTextElement()
+CanvasNode::CanvasNode() : m_health(0), m_healthBarElement(), m_healthBgElement(), m_healthTextElement()
 {
 	auto healthBarElementPtr = std::make_unique<GameSprite>(false,TextureId::MetalBg);
 	auto healthBgElementPtr = std::make_unique<GameSprite>(false, TextureId::MetalBg);
@@ -19,18 +19,18 @@ UiCanvas::UiCanvas() : m_health(0), m_healthBarElement(), m_healthBgElement(), m
 	attachNode(std::move(healthBarElementPtr));
 }
 
-sf::FloatRect UiCanvas::getBoundingRect() const
+sf::FloatRect CanvasNode::getBoundingRect() const
 {
 	sf::Vector2f viewSize = World::getWorldView().getSize();
 	return {0.f, 0.f, viewSize.x, viewSize.y};
 }
 
-sf::FloatRect UiCanvas::getLocalBounds() const
+sf::FloatRect CanvasNode::getLocalBounds() const
 {
 	return getBoundingRect();
 }
 
-void UiCanvas::update(sf::Time deltaTime, CommandQueue& commands)
+void CanvasNode::update(sf::Time deltaTime, CommandQueue& commands)
 {
 	auto view = World::getWorldView();
 	sf::Vector2f viewSize = view.getSize();
@@ -42,18 +42,18 @@ void UiCanvas::update(sf::Time deltaTime, CommandQueue& commands)
 	m_healthBarElement->setScale((viewSize.x / bgSize.x*.2)*(m_health/100.f), m_healthBarElement->getScale().y);
 }
 
-void UiCanvas::render(sf::RenderTarget& target, sf::RenderStates states) const
+void CanvasNode::render(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	target.draw(*m_healthBgElement, states);
 	target.draw(*m_healthBarElement, states);
 }
 
-unsigned int UiCanvas::getNodeType() const
+unsigned int CanvasNode::getNodeType() const
 {
 	return WorldNode::getNodeType() | static_cast<unsigned int>(NodeType::UiCanvas);
 }
 
-void UiCanvas::loadResources()
+void CanvasNode::loadResources()
 {
 	m_healthBgElement->loadResources();
 	m_healthBarElement->loadResources();

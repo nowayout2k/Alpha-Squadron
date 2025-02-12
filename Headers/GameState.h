@@ -9,7 +9,7 @@
 class GameState : public State
 {
  public:
-	GameState(StateStack& stack, State::Context context) : State(stack, context), m_world(*context.Window){}
+	GameState(StateStack& stack, State::Context context) : State(stack, context), m_world(*context.Window, *context.Audio){}
 	virtual void render() override;
 	virtual bool update(sf::Time deltaTime) override;
 	virtual bool handleEvent(const sf::Event& event) override;

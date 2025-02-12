@@ -7,15 +7,16 @@
 #include "../Headers/Pickup.h"
 #include "../Headers/Engine.h"
 #include "../Headers/ParticleSystemNode.h"
+#include "../Headers/AudioNode.h"
 
 GameData World::GameData = LoadData("../DataFiles/gameData.json");
 sf::View World::m_worldView = {};
 float World::m_scrollSpeed = 500.0f;
 
-World::World(sf::RenderTarget& outputTarget) : m_target(outputTarget),
-			m_worldBounds(0.0f,0.0f,100000.0f,m_worldView.getSize().y),
-			m_spawnPosition(0, m_worldView.getSize().y/2), m_isPlayerAlive(true),
-			m_playerAircraft(nullptr), m_viewPositionOffset(0,0), m_commandQueue(), m_hasPlayerReachedEnd(false)
+World::World(sf::RenderTarget& outputTarget, Audio& audioPlayer) : m_target(outputTarget), m_audioPlayer(audioPlayer),
+																   m_worldBounds(0.0f,0.0f,100000.0f,m_worldView.getSize().y),
+																   m_spawnPosition(0, m_worldView.getSize().y/2), m_isPlayerAlive(true),
+																   m_playerAircraft(nullptr), m_viewPositionOffset(0,0), m_commandQueue(), m_hasPlayerReachedEnd(false)
 {
 	m_worldView = m_target.getDefaultView();
 	m_sceneTexture.create(m_target.getSize().x, m_target.getSize().y);
@@ -76,7 +77,7 @@ void World::setup()
 	m_playerAircraft->setVelocity(m_scrollSpeed, 0);
 	m_worldLayers[static_cast<int>(Layer::SpriteFront)]->attachNode(std::move(player));
 
-	std::unique_ptr<UiCanvas> ui = std::make_unique<UiCanvas>();
+	std::unique_ptr<CanvasNode> ui = std::make_unique<CanvasNode>();
 	m_ui = ui.get();
 	m_worldLayers[static_cast<int>(Layer::UI)]->attachNode(std::move(ui));
 
@@ -91,7 +92,9 @@ void World::setup()
 
 	m_worldView.setCenter(m_spawnPosition);
 
-	Audio::playMusic(MusicId::GameMusic, 10);
+	std::unique_ptr<AudioNode> audioNode(new AudioNode(m_audioPlayer));
+	audioNode->playMusic(MusicId::GameMusic, 10);
+	m_worldLayers[static_cast<int>(Layer::Audio)]->attachNode(std::move(audioNode));
 
 	m_fpsText.setFont(ResourceManager::loadResource(FontId::Arnold));
 	m_fpsText.setPosition(sf::Vector2f());
@@ -229,6 +232,13 @@ void World::handleCollisions()
 			auto& enemy = dynamic_cast<Aircraft&>(*pair.second);
  			player.changeHealth(-enemy.getHealth());
 			enemy.changeHealth(-player.getHealth());
+			if(player.getHealth() <= 0)
+				m_audioPlayer.playSound(SoundFxId::Explosion, 50);
+			else
+			{
+				m_audioPlayer.playSound(SoundFxId::TakeDamage, 50);
+				m_audioPlayer.playSound(SoundFxId::DamageWarning1, 20);
+			}
 		}
 		else if (matchesCategories(pair, NodeType::Player, NodeType::Pickup))
 		{
@@ -246,6 +256,18 @@ void World::handleCollisions()
 			aircraft.changeHealth(-projectile.getDamage());
 			projectile.destroy();
 			projectile.markForRemoval();
+
+			if(aircraft.getHealth() <= 0)
+				m_audioPlayer.playSound(SoundFxId::Explosion, 50);
+			else
+			{
+				m_audioPlayer.playSound(SoundFxId::TakeDamage, 50);
+				if(aircraft.getNodeType() & static_cast<unsigned int>(NodeType::Player))
+				{
+					m_audioPlayer.playSound(SoundFxId::DamageWarning1, 20);
+				}
+
+			}
 		}
 	}
 }

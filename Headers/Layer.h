@@ -9,7 +9,8 @@ enum class Layer
 	UI = 1,
 	SpriteBack = 2,
 	SpriteFront = 3,
-	LayerCount = 4
+	Audio = 4,
+	LayerCount = 5
 };
 
 #endif //LAYER_H_

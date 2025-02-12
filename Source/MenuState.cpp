@@ -4,7 +4,8 @@
 #include "../Headers/Button.h"
 #include "../Headers/Audio.h"
 
-MenuState::MenuState(StateStack& stack, State::Context context) : State(stack, context), m_backgroundSprite(), m_titleText()
+MenuState::MenuState(StateStack& stack, State::Context context) : State(stack, context),
+		m_backgroundSprite(), m_titleText(), m_guiContainer(context.Audio)
 {
 	sf::Vector2f center = context.Window->getView().getSize() / 2.f;
 	m_backgroundSprite.setTexture(ResourceManager::loadResource(TextureId::MetalBg));
@@ -52,7 +53,7 @@ MenuState::MenuState(StateStack& stack, State::Context context) : State(stack, c
 	m_guiContainer.pack(playButton);
 	m_guiContainer.pack(settingsButton);
 	m_guiContainer.pack(exitButton);
-	Audio::playMusic(MusicId::MenuMusic, 12);
+	context.Audio->playMusic(MusicId::MenuMusic, 12);
 }
 
 bool MenuState::handleEvent(const sf::Event& event)

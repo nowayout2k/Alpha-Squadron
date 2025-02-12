@@ -3,6 +3,7 @@
 #include "../Headers/Audio.h"
 #include "../Headers/World.h"
 #include "../Headers/Engine.h"
+#include "../Headers/AudioNode.h"
 
 constexpr float DAMAGE_FLASH_TIME = 2.0f;
 constexpr float DAMAGE_INVINCIBILITY_TIME = 0.5f;
@@ -40,6 +41,19 @@ Aircraft::Aircraft(const bool hasCollision, sf::Vector2f  scale, sf::Vector2f po
 
 }
 
+void Aircraft::playLocalSound(CommandQueue& commands, SoundFxId effect, float volume)
+{
+	Command command;
+	command.NodeType = static_cast<unsigned int>(NodeType::Sound);
+	command.Action = DerivedAction<AudioNode>(
+		[effect, this, volume](AudioNode& node, sf::Time dt) {
+		  node.playSound(effect, getWorldPosition(), volume);
+		}
+	);
+
+	commands.push(command);
+}
+
 void Aircraft::changeHealth(float increment)
 {
 	m_health = std::min(m_health + increment, MAX_HEALTH);
@@ -48,15 +62,11 @@ void Aircraft::changeHealth(float increment)
 		if (((getNodeType() & static_cast<unsigned int>(NodeType::Player)) && m_isDamageAnimationActive) || m_health <= 0)
 		{
 			m_health=0;
-			Audio::playSound(SoundFxId::Explosion, 50);
         	destroy();
 			m_showExplosion = true;
 			return;
 		}
 
-		Audio::playSound(SoundFxId::TakeDamage, 50);
-		if((getNodeType() & static_cast<unsigned int>(NodeType::Player)))
-			Audio::playSound(SoundFxId::DamageWarning1, 20);
 		m_timeSinceDamage = 0;
 		m_isDamageAnimationActive = true;
 		setIsCollidable(false);
@@ -106,6 +116,7 @@ void Aircraft::checkProjectileLaunch(sf::Time dt, CommandQueue& commands)
 
 	if (m_isFiring && m_fireCooldownRemaining <= 0)
 	{
+		playLocalSound(commands, SoundFxId::BulletLaunch, 100);
 		commands.push(m_fireCommand);
 		m_fireCooldownRemaining += 1.f / (m_fireRateLevel+1);
 		m_isFiring = false;
@@ -117,6 +128,7 @@ void Aircraft::checkProjectileLaunch(sf::Time dt, CommandQueue& commands)
 
 	if (m_isLaunchingMissile)
 	{
+		playLocalSound(commands, SoundFxId::MissileLaunch, 100);
 		commands.push(m_missileCommand);
 		m_isLaunchingMissile = false;
 	}

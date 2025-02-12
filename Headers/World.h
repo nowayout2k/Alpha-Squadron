@@ -11,13 +11,13 @@
 #include "EmptyWorldNode.h"
 #include "CommandQueue.h"
 #include "BloomEffect.h"
-#include "UiCanvas.h"
+#include "CanvasNode.h"
+#include "Audio.h"
 
 class World
 {
 public:
-	explicit World(sf::RenderTarget& outputTarget);
-	void restart();
+	explicit World(sf::RenderTarget& outputTarget, Audio& audioPlayer);
 	void render();
 	CommandQueue& getCommandQueue() { return m_commandQueue; }
 	static float getScrollSpeed() { return m_scrollSpeed; }
@@ -79,7 +79,8 @@ private:
 	bool m_isPlayerAlive;
 	bool m_hasPlayerReachedEnd;
 	BloomEffect m_bloomEffect;
-	UiCanvas* m_ui{};
+	CanvasNode* m_ui{};
+	Audio& m_audioPlayer;
 
 	sf::Text m_fpsText;
 	float m_timeSinceLastFpsUpdate{};

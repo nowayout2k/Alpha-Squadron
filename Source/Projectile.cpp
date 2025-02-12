@@ -91,7 +91,7 @@ void Projectile::guideTowards(sf::Vector2f position)
 	}
 }
 
-int Projectile::getDamage()
+float Projectile::getDamage()
 {
 	return 25;
 }
@@ -122,11 +122,5 @@ void Projectile::loadResources()
 		propellant->setOrigin(0, 0.5f);
 		propellant->setPosition(0.f, rect.height/2);
 		attachNode(std::move(propellant));
-
-		Audio::playSound(SoundFxId::MissileLaunch, 10);
-	}
-	else
-	{
-		Audio::playSound(SoundFxId::BulletLaunch, 10);
 	}
 }

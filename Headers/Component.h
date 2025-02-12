@@ -16,7 +16,7 @@ namespace GUI
 		typedef std::shared_ptr<Component> Ptr;
 	 public:
 		Component();
-		virtual ~Component();
+		~Component() override;
 		bool isSelected() const;
 		virtual void select();
 		virtual void deselect();
@@ -25,7 +25,7 @@ namespace GUI
 		virtual void deactivate();
 		virtual bool isSelectable() const = 0;
 		virtual void handleEvent(const sf::Event& event) = 0;
-		virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const = 0;
+		void draw(sf::RenderTarget& target, sf::RenderStates states) const override = 0;
 	 private:
 		bool m_isSelected;
 		bool m_isActive;

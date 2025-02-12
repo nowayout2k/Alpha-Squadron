@@ -10,18 +10,32 @@
 #include "MusicId.h"
 #include "PooledSound.h"
 #include <list>
+#include <SFML/System/Vector2.hpp>
+#include <SFML/Audio.hpp>
+
+namespace
+{
+	const float ListenerZ = 300.f;
+	const float Attenuation = 8.f;
+	const float MinDistance2D = 200.f;
+	const float MinDistance3D = std::sqrt(MinDistance2D*MinDistance2D + ListenerZ*ListenerZ);
+}
 
 class Audio
 {
  public:
-	static void playSound(SoundFxId soundType, float volume = 100);
-	static void playMusic(MusicId musicType, float volume = 100);
-	static void stopMusic();
-	static void stopAllSounds();
-	static std::string getMusicPath(MusicId musicId);
+	void playSound(SoundFxId soundFxId, sf::Vector2f position, float volume = 100);
+	void playSound(SoundFxId soundFxId, float volume = 100);
+	void playMusic(MusicId musicType, float volume = 100);
+	void stopMusic();
+	void stopAllSounds();
+	std::string getMusicPath(MusicId musicId);
+	static void setListenerPosition(sf::Vector2f position) {sf::Listener::setPosition(position.x, -position.y, ListenerZ);}
  private:
-	static std::list<PooledSound> m_sounds;
-	static sf::Music m_music;
+	static sf::Vector2f getListenerPosition() { return { sf::Listener::getPosition().x, sf::Listener::getPosition().y}; }
+	PooledSound* getSoundFromPool();
+	std::list<PooledSound> m_sounds;
+	sf::Music m_music;
 };
 
 

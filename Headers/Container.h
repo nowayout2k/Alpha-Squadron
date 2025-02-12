@@ -4,6 +4,7 @@
 #define CONTAINER_H_
 #include <vector>
 #include "Component.h"
+#include "Audio.h"
 
 namespace GUI
 {
@@ -11,7 +12,7 @@ namespace GUI
 	{
 	 public:
 		typedef std::shared_ptr<Container> Ptr;
-		Container();
+		explicit Container(Audio* audio) : m_children(), m_selectedChild(-1), m_audio(*audio) {}
 		void pack(Component::Ptr component);
 		void handleEvent(const sf::Event& event) override;
 		bool hasSelection() const;
@@ -23,6 +24,7 @@ namespace GUI
 	 private:
 		int m_selectedChild;
 		std::vector<Component::Ptr> m_children;
+		Audio& m_audio;
 	};
 }
 #endif //CONTAINER_H_

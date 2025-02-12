@@ -37,12 +37,14 @@ class Aircraft : public GameSprite
 	virtual void changeMissileCount(int increment) { m_missileCount = std::min(m_missileCount + increment, MAX_MISSILE_COUNT); }
 	virtual void changeFireSpread(int increment) { m_spreadLevel = std::min(m_spreadLevel + increment, MAX_SPREAD_LEVEL); }
 	virtual void changeHealth(float increment);
+	void playLocalSound(CommandQueue& commands, SoundFxId effect, float volume);
 	void render(sf::RenderTarget&, sf::RenderStates) const override;
+	unsigned int getNodeType() const override { return GameSprite::getNodeType() | (unsigned int)NodeType::Aircraft; }
  protected:
 	virtual void handleAnimation(sf::Time deltaTime);
 	void handleDamageAnimation(sf::Time deltaTime);
 	void update(sf::Time dt, CommandQueue& commands) override;
-	unsigned int getNodeType() const override { return GameSprite::getNodeType() | (unsigned int)NodeType::Aircraft; }
+
 
  private:
 	void createProjectile(WorldNode& node, ProjectileType projectileType, float xOffset, float yOffset);

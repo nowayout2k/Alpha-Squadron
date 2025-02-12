@@ -5,7 +5,7 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 
 
-SettingsState::SettingsState(StateStack& stack, Context context) : State(stack, context), m_guiContainer()
+SettingsState::SettingsState(StateStack& stack, Context context) : State(stack, context), m_guiContainer(getContext().Audio)
 {
 	sf::Vector2f center = context.Window->getView().getSize() / 2.f;
 	m_backgroundSprite.setTexture(ResourceManager::loadResource(TextureId::MetalBg));

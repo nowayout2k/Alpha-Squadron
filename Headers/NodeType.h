@@ -19,7 +19,8 @@ enum class NodeType
 	AlliedProjectile = 1 << 8,
 	SpriteFrontLayer = 1 << 9,
 	Pickup = 1 << 10,
-	UiCanvas = 1 << 11
+	UiCanvas = 1 << 11,
+	Sound = 1 << 12,
 };
 
 

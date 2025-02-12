@@ -21,6 +21,7 @@ class Engine
 	bool m_isPaused;
 	sf::RenderWindow m_window;
 	Player m_input;
+	Audio m_audio;
 	StateStack m_stateStack;
 };
 

@@ -2,17 +2,13 @@
 
 #include "../Headers/Audio.h"
 #include "../Headers/Debug.h"
-#include <SFML/Audio.hpp>
 #include "../Headers/ResourceManager.h"
-
-std::list<PooledSound> Audio::m_sounds;
-sf::Music Audio::m_music;
 
 #define POOL_RESIZE_LIMIT 40
 
-void Audio::playSound(SoundFxId soundFxId, float volume)
+PooledSound* Audio::getSoundFromPool()
 {
-	sf::SoundBuffer& buffer = ResourceManager::loadResource(soundFxId);
+
 	PooledSound* availableSound = nullptr;
 
 	for (auto& pooledSound : m_sounds)
@@ -37,14 +33,32 @@ void Audio::playSound(SoundFxId soundFxId, float volume)
 		if(m_sounds.size() > POOL_RESIZE_LIMIT)
 		{
 			Debug::logWarning("Audio pool limit reached. Cannot play sound!");
-			return;
+			return nullptr;
 		}
-		m_sounds.push_back(PooledSound());
+		m_sounds.emplace_back();
 		availableSound = &m_sounds.back();
 	}
 
+	return availableSound;
+}
+
+void Audio::playSound(SoundFxId soundFxId, float volume)
+{
+	playSound(soundFxId, getListenerPosition(), volume);
+}
+
+void Audio::playSound(SoundFxId soundFxId, sf::Vector2f position, float volume)
+{
+	sf::SoundBuffer& buffer = ResourceManager::loadResource(soundFxId);
+	PooledSound* availableSound = getSoundFromPool();
+	if(!availableSound)
+		return;
+
 	availableSound->IsAvailable = false;
 	availableSound->Sound.setBuffer(buffer);
+	availableSound->Sound.setPosition(position.x, -position.y, 0.f);
+	availableSound->Sound.setAttenuation(Attenuation);
+	availableSound->Sound.setMinDistance(MinDistance3D);
 	availableSound->Sound.setVolume(volume);
 	availableSound->Sound.play();
 }
@@ -76,7 +90,7 @@ std::string Audio::getMusicPath(MusicId musicId)
 		return "../Assets/Music/menu_music.wav";
 	default:
 		Debug::logError("Music Id is unknown!");
-		return nullptr;
+		return "";
 	}
 }
 void Audio::stopAllSounds()

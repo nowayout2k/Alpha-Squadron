@@ -39,7 +39,6 @@ void Pickup::setPickupColor()
 
 void Pickup::apply(Aircraft& player) const
 {
-	Audio::playSound(SoundFxId::CollectPickup, 10);
 	m_action(player);
 }
 
