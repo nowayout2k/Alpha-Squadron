@@ -116,7 +116,7 @@ void Aircraft::checkProjectileLaunch(sf::Time dt, CommandQueue& commands)
 
 	if (m_isFiring && m_fireCooldownRemaining <= 0)
 	{
-		playLocalSound(commands, SoundFxId::BulletLaunch, 100);
+		playLocalSound(commands, SoundFxId::BulletLaunch, 10);
 		commands.push(m_fireCommand);
 		m_fireCooldownRemaining += 1.f / (m_fireRateLevel+1);
 		m_isFiring = false;
@@ -128,7 +128,7 @@ void Aircraft::checkProjectileLaunch(sf::Time dt, CommandQueue& commands)
 
 	if (m_isLaunchingMissile)
 	{
-		playLocalSound(commands, SoundFxId::MissileLaunch, 100);
+		playLocalSound(commands, SoundFxId::MissileLaunch, 10);
 		commands.push(m_missileCommand);
 		m_isLaunchingMissile = false;
 	}

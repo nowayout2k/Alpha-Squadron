@@ -247,6 +247,7 @@ void World::handleCollisions()
 			pickup.apply(player);
 			pickup.destroy();
 			pickup.markForRemoval();
+			m_audioPlayer.playSound(SoundFxId::CollectPickup, 20);
 		}
 		else if (matchesCategories(pair, NodeType::Enemy, NodeType::AlliedProjectile) ||
 					matchesCategories(pair, NodeType::Player, NodeType::EnemyProjectile))
@@ -270,6 +271,11 @@ void World::handleCollisions()
 			}
 		}
 	}
+}
+
+void World::updateSounds()
+{
+	m_audioPlayer.setListenerPosition(m_playerAircraft->getWorldPosition());
 }
 
 bool World::matchesCategories(WorldNode::Pair& colliders, NodeType t1, NodeType t2)
@@ -314,6 +320,8 @@ void World::loadResources()
 
 void World::update(sf::Time deltaTime)
 {
+	updateSounds();
+
 	if(m_playerAircraft->isDestroyed())
 	{
 		m_isPlayerAlive = false;

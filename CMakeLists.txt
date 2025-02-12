@@ -112,7 +112,6 @@ add_executable(Alpha-Squadron main.cpp
         Source/CanvasNode.cpp
         Headers/CanvasNode.h
         Source/GameSprite.cpp
-        Source/AudioNode.cpp
         Headers/AudioNode.h
 )
 

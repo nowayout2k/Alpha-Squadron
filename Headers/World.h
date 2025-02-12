@@ -59,6 +59,7 @@ private:
 	void guideMissiles();
 	void adaptPlayerVelocity();
 	void adaptPlayerPosition();
+	void updateSounds();
 	static bool matchesCategories(WorldNode::Pair& colliders, NodeType t1, NodeType t2);
 
 	static float m_scrollSpeed;

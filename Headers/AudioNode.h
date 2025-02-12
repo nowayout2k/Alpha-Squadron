@@ -13,15 +13,15 @@
 class AudioNode : public WorldNode
 {
  public:
-	explicit AudioNode(Audio& player);
-	void playSound(SoundFxId sound, sf::Vector2f position, float volume);
-	void playMusic(MusicId musicType, float volume = 100);
-	virtual unsigned int getCategory() const;
-	sf::FloatRect getBoundingRect() const override;
+	explicit AudioNode(Audio& player) : m_audioPlayer(player) {}
+	void playSound(SoundFxId sound, sf::Vector2f position, float volume) { m_audioPlayer.playSound(sound, position, volume); }
+	void playMusic(MusicId musicType, float volume = 100) { m_audioPlayer.playMusic(musicType, volume); }
+	unsigned int getNodeType() const override {return WorldNode::getNodeType() | static_cast<unsigned int>(NodeType::Sound);}
+	sf::FloatRect getBoundingRect() const override {return WorldNode::getBoundingRect();}
  protected:
-	void render(sf::RenderTarget& renderTarget, sf::RenderStates states) const override;
-	void loadResources() override;
-	void update(sf::Time deltaTime, CommandQueue& commands) override;
+	void render(sf::RenderTarget& renderTarget, sf::RenderStates states) const override {}
+	void loadResources() override {}
+	void update(sf::Time deltaTime, CommandQueue& commands) override {}
  private:
 	Audio& m_audioPlayer;
 };
