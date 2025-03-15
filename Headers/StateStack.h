@@ -24,6 +24,14 @@ class StateStack
 		  return State::Ptr(new T(*this, m_context));
 		};
 	}
+	template<typename T, typename Param>
+	void registerState(StateId stateId, Param arg)
+	{
+		m_factories[stateId] = [this, arg]()
+		{
+		  return State::Ptr(new T(*this, m_context, arg));
+		};
+	}
 	void update(sf::Time deltaTime);
 	void render();
 	void handleEvent(const sf::Event& event);

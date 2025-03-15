@@ -7,17 +7,14 @@
 #include <SFML/Graphics/View.hpp>
 
 
-GameOverState::GameOverState(StateStack& stack, Context context) :
+GameOverState::GameOverState(StateStack& stack, Context context, const std::string& text) :
 	State(stack, context) , m_gameOverText(), m_elapsedTime(0)
 {
 	sf::Font& font = ResourceManager::loadResource(FontId::Arnold);
 	sf::Vector2f windowSize(context.Window->getSize());
 
 	m_gameOverText.setFont(font);
-	if (context.Player->getMissionStatus() == Player::MissionStatus::Failure)
-		m_gameOverText.setString("Mission failed!");
-	else
-		m_gameOverText.setString("Mission successful!");
+	m_gameOverText.setString(text);
 
 	m_gameOverText.setCharacterSize(70);
 	Utility::centerOrigin(m_gameOverText);

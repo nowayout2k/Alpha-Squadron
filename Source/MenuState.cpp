@@ -5,7 +5,7 @@
 #include "../Headers/Audio.h"
 
 MenuState::MenuState(StateStack& stack, State::Context context) : State(stack, context),
-		m_backgroundSprite(), m_titleText(), m_guiContainer(context.Audio)
+		m_backgroundSprite(), m_titleText(), m_guiContainer()
 {
 	sf::Vector2f center = context.Window->getView().getSize() / 2.f;
 	m_backgroundSprite.setTexture(ResourceManager::loadResource(TextureId::MetalBg));
@@ -19,9 +19,7 @@ MenuState::MenuState(StateStack& stack, State::Context context) : State(stack, c
 	Utility::centerOrigin(m_titleText);
 	m_titleText.setPosition(context.Window->getView().getSize().x / 2.f, context.Window->getView().getSize().y / 3.f);
 
-	auto playButton = std::make_shared<GUI::Button>(sf::IntRect(0,0,208,64),
-		sf::IntRect(223,0,208,64),
-		sf::IntRect(445,0,208,64));
+	auto playButton = std::make_shared<GUI::Button>(context);
 	playButton->setPosition(center.x, center.y);
 	playButton->setText(24, "Play");
 	playButton->setCallback([this] ()
@@ -30,20 +28,34 @@ MenuState::MenuState(StateStack& stack, State::Context context) : State(stack, c
 		requestStackPush(StateId::Game);
 	});
 
-	auto settingsButton = std::make_shared<GUI::Button>(sf::IntRect(0,0,208,64),
-		sf::IntRect(223,0,208,64),
-		sf::IntRect(445,0,208,64));
-	settingsButton->setPosition(center.x, center.y+100);
+	auto hostMultiplayerButton = std::make_shared<GUI::Button>(context);
+	playButton->setPosition(center.x, center.y+100);
+	playButton->setText(24, "Host SingleGame");
+	playButton->setCallback([this] ()
+	{
+	  requestStackPop();
+	  requestStackPush(StateId::HostGame);
+	});
+
+	auto joinMultiplayerButton = std::make_shared<GUI::Button>(context);
+	playButton->setPosition(center.x, center.y+200);
+	playButton->setText(24, "Join SingleGame");
+	playButton->setCallback([this] ()
+	{
+	  requestStackPop();
+	  requestStackPush(StateId::JoinGame);
+	});
+
+	auto settingsButton = std::make_shared<GUI::Button>(context);
+	settingsButton->setPosition(center.x, center.y+300);
 	settingsButton->setText(24, "Settings");
 	settingsButton->setCallback([this] ()
 	{
 		requestStackPush(StateId::Settings);
 	});
 
-	auto exitButton = std::make_shared<GUI::Button>(sf::IntRect(0,0,208,64),
-		sf::IntRect(223,0,208,64),
-		sf::IntRect(445,0,208,64));
-	exitButton->setPosition(center.x, center.y+200);
+	auto exitButton = std::make_shared<GUI::Button>(context);
+	exitButton->setPosition(center.x, center.y+400);
 	exitButton->setText(24, "Exit");
 	exitButton->setCallback([this] ()
 	{

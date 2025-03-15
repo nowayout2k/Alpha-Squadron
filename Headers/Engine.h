@@ -20,9 +20,10 @@ class Engine
 	void createWindow(const sf::VideoMode& mode, const std::string& title, sf::Uint32 style);
 	bool m_isPaused;
 	sf::RenderWindow m_window;
-	Player m_input;
 	Audio m_audio;
 	StateStack m_stateStack;
+	KeyBinding m_keyBinding1;
+	KeyBinding m_keyBinding2;
 };
 
 #endif //ENGINE_H_

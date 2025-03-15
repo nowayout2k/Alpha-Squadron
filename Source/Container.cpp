@@ -33,7 +33,6 @@ void GUI::Container::handleEvent(const sf::Event& event)
 		{
 			if (hasSelection())
 			{
-				m_audio.playSound(SoundFxId::ButtonClick);
 				m_children[m_selectedChild]->activate();
 			}
 		}
@@ -47,7 +46,6 @@ bool GUI::Container::isSelectable() const
 
 void GUI::Container::select(int index)
 {
-	m_audio.playSound(SoundFxId::MenuClick);
 	if (m_children[index]->isSelectable())
 	{
 		if (hasSelection())

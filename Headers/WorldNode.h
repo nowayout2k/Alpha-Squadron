@@ -31,7 +31,7 @@ class WorldNode : public sf::Transformable, public sf::Drawable
 	virtual sf::FloatRect getBoundingRect() const;
 	virtual void updateHierarchy(sf::Time deltaTime, CommandQueue& commands);
 	virtual void loadHierarchyResources();
-	virtual unsigned int getNodeType() const { return (unsigned int)NodeType::WorldNode; }
+	virtual unsigned int getNodeType() const { return static_cast<unsigned int>(NodeType::WorldNode); }
 
 	bool isColliding(const WorldNode& lhs, const WorldNode& rhs);
 	void checkWorldCollision(WorldNode& sceneGraph, std::set<Pair>& collisionPairs);

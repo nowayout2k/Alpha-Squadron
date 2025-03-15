@@ -5,7 +5,7 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 
 
-SettingsState::SettingsState(StateStack& stack, Context context) : State(stack, context), m_guiContainer(getContext().Audio)
+SettingsState::SettingsState(StateStack& stack, Context context) : State(stack, context), m_guiContainer()
 {
 	sf::Vector2f center = context.Window->getView().getSize() / 2.f;
 	m_backgroundSprite.setTexture(ResourceManager::loadResource(TextureId::MetalBg));
@@ -13,18 +13,16 @@ SettingsState::SettingsState(StateStack& stack, Context context) : State(stack, 
 	auto bgSize = sf::Vector2f(m_backgroundSprite.getTexture()->getSize().x, m_backgroundSprite.getTexture()->getSize().y);
 	m_backgroundSprite.setScale(winSize.x/bgSize.x, winSize.y/bgSize.y);
 
-	addButtonLabel(Player::AccelerateNegX, sf::Vector2f ( center.x, center.y-300.f), "Move Left", context);
-	addButtonLabel(Player::AcceleratePosX, sf::Vector2f ( center.x, center.y-200.f), "Move Right", context);
-	addButtonLabel(Player::AcceleratePosY, sf::Vector2f ( center.x, center.y-100.f), "Move Up", context);
-	addButtonLabel(Player::AccelerateNegY, sf::Vector2f ( center.x, center.y), "Move Down", context);
-	addButtonLabel(Player::Fire, sf::Vector2f ( center.x, center.y+100.f), "Fire", context);
-	addButtonLabel(Player::LaunchMissile, sf::Vector2f ( center.x, center.y+200.f), "Launch Missile", context);
+	addButtonLabel(KeyBinding::ActionType::AccelerateNegX, sf::Vector2f ( center.x, center.y-300.f), "Move Left", context);
+	addButtonLabel(KeyBinding::ActionType::AcceleratePosX, sf::Vector2f ( center.x, center.y-200.f), "Move Right", context);
+	addButtonLabel(KeyBinding::ActionType::AcceleratePosY, sf::Vector2f ( center.x, center.y-100.f), "Move Up", context);
+	addButtonLabel(KeyBinding::ActionType::AccelerateNegY, sf::Vector2f ( center.x, center.y), "Move Down", context);
+	addButtonLabel(KeyBinding::ActionType::Fire, sf::Vector2f ( center.x, center.y+100.f), "Fire", context);
+	addButtonLabel(KeyBinding::ActionType::LaunchMissile, sf::Vector2f ( center.x, center.y+200.f), "Launch Missile", context);
 
 	updateLabels();
 
-	auto backButton = std::make_shared<GUI::Button>(sf::IntRect(0,0,208,64),
-		sf::IntRect(223,0,208,64),
-		sf::IntRect(445,0,208,64));
+	auto backButton = std::make_shared<GUI::Button>(context);
 	backButton->setPosition(center.x, center.y+300.f);
 	backButton->setText(24, "Back");
 	backButton->setCallback([this] { requestStackPop(); });
@@ -48,16 +46,23 @@ bool SettingsState::handleEvent(const sf::Event& event)
 {
 	bool isKeyBinding = false;
 
-	for (std::size_t actionType = 0; actionType < Player::ActionCount; ++actionType)
+	for (std::size_t i = 0; i < 2*KeyBinding::ActionType::ActionCount; ++i)
 	{
-		if (m_bindingButtons[actionType]->isActive())
+		if (m_bindingButtons[i]->isActive())
 		{
 			isKeyBinding = true;
 			if (event.type == sf::Event::KeyReleased)
 			{
-				getContext().Player->assignKey(static_cast<Player::ActionType>(actionType), event.key.code);
-				m_bindingButtons[actionType]->deactivate();
+				// Player 1
+				if (i < KeyBinding::ActionType::ActionCount)
+					getContext().KeysPlayer1->assignKey(static_cast<KeyBinding::ActionType>(i), event.key.code);
+
+					// Player 2
+				else
+					getContext().KeysPlayer2->assignKey(static_cast<KeyBinding::ActionType>(i - KeyBinding::ActionType::ActionCount), event.key.code);
 			}
+
+			m_bindingButtons[i]->deactivate();
 			break;
 		}
 	}
@@ -72,20 +77,23 @@ bool SettingsState::handleEvent(const sf::Event& event)
 
 void SettingsState::updateLabels()
 {
-	Player& input = *getContext().Player;
-
-	for (std::size_t i = 0; i < Player::ActionCount; ++i)
+	for (std::size_t i = 0; i < KeyBinding::ActionType::ActionCount; ++i)
 	{
-		sf::Keyboard::Key key = input.getAssignedKey(static_cast<Player::ActionType>(i));
-		m_bindingLabels[i]->setText(40, Utility::keyToString(key));
+		auto action = static_cast<LocalPlayerAction::ActionType>(i);
+
+		// Get keys of both players
+		sf::Keyboard::Key key1 = getContext().KeysPlayer1->getAssignedKey(action);
+		sf::Keyboard::Key key2 = getContext().KeysPlayer2->getAssignedKey(action);
+
+		// Assign both key strings to labels
+		m_bindingLabels[i]->setText(40, Utility::keyToString(key1));
+		m_bindingLabels[i + LocalPlayerAction::ActionType::ActionCount]->setText(40, Utility::keyToString(key2));
 	}
 }
 
 void SettingsState::addButtonLabel(Player::ActionType actionType, sf::Vector2f offset, const std::string& text, Context context)
 {
-	m_bindingButtons[actionType] = std::make_shared<GUI::Button>(sf::IntRect(0,0,208,64),
-		sf::IntRect(223,0,208,64),
-		sf::IntRect(445,0,208,64));
+	m_bindingButtons[actionType] = std::make_shared<GUI::Button>(context);
 	m_bindingButtons[actionType]->setPosition(offset.x, offset.y);
 	m_bindingButtons[actionType]->setText(18, text);
 	m_bindingButtons[actionType]->setToggle(true);

@@ -17,18 +17,17 @@
 class Aircraft : public GameSprite
 {
  public:
-	explicit Aircraft(bool hasCollision, sf::Vector2f scale, sf::Vector2f position);
+	explicit Aircraft(NodeType nodeType, AircraftType aircraftType, sf::Vector2f position, sf::Vector2f scale);
 	~Aircraft() override = default;
 
 	float getHealth() const { return m_health; }
 	void setHealth(float health) { m_health = health; }
-
+	AircraftType getAircraftType() { return m_aircraftType; }
 	void accelerate(sf::Vector2f velocity) { setVelocity(getVelocity() + velocity); }
 	void accelerate(float x, float y) { setVelocity(getVelocity() + sf::Vector2f(x, y)); }
 
 	float getMaxSpeed() const { return m_speed; }
 	bool isExploding() const { return m_showExplosion && !m_explosion.isComplete(); }
-	virtual AircraftType getAircraftType() = 0;
 
 	void loadResources() override;
 	void fire();
@@ -39,12 +38,13 @@ class Aircraft : public GameSprite
 	virtual void changeHealth(float increment);
 	void playLocalSound(CommandQueue& commands, SoundFxId effect, float volume);
 	void render(sf::RenderTarget&, sf::RenderStates) const override;
-	unsigned int getNodeType() const override { return GameSprite::getNodeType() | (unsigned int)NodeType::Aircraft; }
+	unsigned int getNodeType() const override { return GameSprite::getNodeType() | static_cast<unsigned int>(NodeType::Aircraft) | static_cast<unsigned int>(m_nodeType); }
+	int getIdentifier() const { return m_identifier; }
+	void setIdentifier(int identifier) {m_identifier = identifier;}
+	int getMissileCount() { return m_missileCount; }
  protected:
-	virtual void handleAnimation(sf::Time deltaTime);
-	void handleDamageAnimation(sf::Time deltaTime);
+	virtual void handleDamageAnimation(sf::Time deltaTime);
 	void update(sf::Time dt, CommandQueue& commands) override;
-
 
  private:
 	void createProjectile(WorldNode& node, ProjectileType projectileType, float xOffset, float yOffset);
@@ -63,6 +63,7 @@ class Aircraft : public GameSprite
 	float m_timeSinceDamage;
 	float m_fireCooldownRemaining;
 	float m_routineDistanceTravelled;
+	int m_identifier;
 	float m_spawnDistanceTravelled;
 	bool m_isFiring;
 	Command m_fireCommand;
@@ -84,6 +85,8 @@ class Aircraft : public GameSprite
 	sf::Vector2f m_spawnPos;
 	Direction m_enterDirection{};
 	Direction m_exitDirection{};
+	AircraftType m_aircraftType;
+	NodeType m_nodeType;
 };
 
 #endif //AIRCRAFT_H_

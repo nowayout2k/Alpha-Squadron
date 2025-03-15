@@ -12,13 +12,16 @@
 #include "ProjectileType.h"
 #include "Particle.h"
 #include "WorldNode.h"
+#include <random>
 
 #ifndef M_PI
 #define M_PI 3.14159265359
 #endif
 
+
 class Utility
 {
+
 public:
 #pragma region Misc Functions
 	static void beginStopwatch(std::string& message)
@@ -130,6 +133,15 @@ public:
 	static constexpr float toDegree(float angle)
 	{
 		return angle * (180.f / M_PI);
+	}
+
+	template<typename T>
+	static T getRandomNumber(T min, T max)
+	{
+		static std::random_device rd;
+		static std::mt19937 mt(rd());
+		std::uniform_int_distribution<int> dist(min, max);
+		return dist(mt);
 	}
 #pragma endregion // Math Functions
 

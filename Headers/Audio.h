@@ -27,6 +27,7 @@ class Audio
 	void playSound(SoundFxId soundFxId, sf::Vector2f position, float volume = 100);
 	void playSound(SoundFxId soundFxId, float volume = 100);
 	void playMusic(MusicId musicType, float volume = 100);
+	void pauseMusic(bool isPaused) { if(isPaused) m_music.pause(); else m_music.play(); }
 	void stopMusic();
 	void stopAllSounds();
 	std::string getMusicPath(MusicId musicId);

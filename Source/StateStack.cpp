@@ -11,17 +11,17 @@ StateStack::StateStack(State::Context context) : m_context(context)
 
 void StateStack::pushState(StateId stateId)
 {
-	m_pendingList.push_back(PendingChange(StackActionType::Push, stateId));
+	m_pendingList.emplace_back(StackActionType::Push, stateId);
 }
 
 void StateStack::popState()
 {
-	m_pendingList.push_back(PendingChange(StackActionType::Pop));
+	m_pendingList.emplace_back(StackActionType::Pop);
 }
 
 void StateStack::clearStates()
 {
-	m_pendingList.push_back(PendingChange(StackActionType::Clear));
+	m_pendingList.emplace_back(StackActionType::Clear);
 }
 
 bool StateStack::isEmpty() const

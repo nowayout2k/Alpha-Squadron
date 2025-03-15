@@ -14,10 +14,11 @@ class State
 	typedef std::unique_ptr<State> Ptr;
 	struct Context
 	{
-		Context(sf::RenderWindow& window, Player& input, Audio& audio) : Window(&window), Player(&input), Audio(&audio){};
+		Context(sf::RenderWindow& window, Audio& audio, KeyBinding& keys1, KeyBinding& keys2) : Window(&window), Audio(&audio), KeysPlayer1(&keys1), KeysPlayer2(&keys2) {};
 		sf::RenderWindow* Window;
-		Player* Player;
 		Audio* Audio;
+		KeyBinding* KeysPlayer1;
+		KeyBinding* KeysPlayer2;
 	};
  public:
 	State(StateStack& stack, Context context) : m_stack(&stack), m_context(context) {}

@@ -31,10 +31,6 @@ add_executable(Alpha-Squadron main.cpp
         Headers/GameSprite.h
         Source/World.cpp
         Headers/World.h
-        Source/Chopper.cpp
-        Headers/Chopper.h
-        Source/Tomcat.cpp
-        Headers/Tomcat.h
         Headers/SoundFxId.h
         Headers/MusicId.h
         Source/Projectile.cpp
@@ -113,6 +109,16 @@ add_executable(Alpha-Squadron main.cpp
         Headers/CanvasNode.h
         Source/GameSprite.cpp
         Headers/AudioNode.h
+        Source/MultiplayerGameState.cpp
+        Headers/MultiplayerGameState.h
+        Source/GameServer.cpp
+        Headers/GameServer.h
+        Source/NetworkNode.cpp
+        Headers/NetworkNode.h
+        Source/NetworkProtocol.cpp
+        Headers/NetworkProtocol.h
+        Source/KeyBinding.cpp
+        Headers/KeyBinding.h
 )
 
 # Link the SFML libraries and nlohmann_json

@@ -2,22 +2,34 @@
 #include "../Headers/GameState.h"
 #include "../Headers/Audio.h"
 
+GameState::GameState(StateStack& stack, Context context)
+	: State(stack, context)
+	, m_world(*context.Window, *context.Audio, false)
+	, m_player(nullptr, 1, context.KeysPlayer1)
+{
+	m_world.addAircraft(1);
+	m_player.setMissionStatus(Player::MissionStatus::None);
+
+	// Play game theme
+	context.Audio->playMusic(MusicId::GameMusic);
+}
+
 bool GameState::update(sf::Time deltaTime)
 {
 	m_world.update(deltaTime);
-	if(!m_world.isPlayerAlive() && !m_world.isPlayerAircraftExploding())
+	if(!m_world.hasPlayerAlive())
 	{
-		getContext().Player->setMissionStatus(Player::MissionStatus::Failure);
+		m_player.setMissionStatus(Player::MissionStatus::Failure);
 		requestStackPush(StateId::GameOver);
 	}
 	else if(m_world.hasPlayerReachedEnd())
 	{
-		getContext().Player->setMissionStatus(Player::MissionStatus::Success);
+		m_player.setMissionStatus(Player::MissionStatus::Success);
 		requestStackPush(StateId::GameOver);
 	}
 
 	CommandQueue& commands = m_world.getCommandQueue();
-	getContext().Player->handleRealtimeInput(commands);
+	m_player.handleRealtimeInput(commands);
 
 	return true;
 }
@@ -30,6 +42,6 @@ void GameState::render()
 bool GameState::handleEvent(const sf::Event& event)
 {
 	CommandQueue& commands = m_world.getCommandQueue();
-	getContext().Player->handleEvent(event, commands);
+	m_player.handleEvent(event, commands);
 	return true;
 }

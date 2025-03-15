@@ -21,6 +21,7 @@ enum class NodeType
 	Pickup = 1 << 10,
 	UiCanvas = 1 << 11,
 	Sound = 1 << 12,
+	Network = 1 << 13
 };
 
 

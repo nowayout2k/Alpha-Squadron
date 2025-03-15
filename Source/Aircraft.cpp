@@ -15,10 +15,10 @@ constexpr float MAX_SPAWN_DISTANCE = 1000.0f;
 
 #define MAX_HEALTH 100.f
 
-Aircraft::Aircraft(const bool hasCollision, sf::Vector2f  scale, sf::Vector2f position)
-	: m_explosion(ResourceManager::loadResource(TextureId::ExplosionSpriteSheet), sf::Vector2i(256, 256), 16, sf::seconds(1)),
-	  m_showExplosion(false),
-	GameSprite(hasCollision, true),
+Aircraft::Aircraft(NodeType nodeType, AircraftType aircraftType, sf::Vector2f position, sf::Vector2f scale)
+	: 	GameSprite(true, true),
+		m_explosion(ResourceManager::loadResource(TextureId::ExplosionSpriteSheet),sf::Vector2i(256, 256), 16, sf::seconds(1)),
+	  	m_showExplosion(false),
 		m_isExiting(false),
 		m_timeSinceDamage(0),
 		m_routineDistanceTravelled(0),
@@ -33,7 +33,9 @@ Aircraft::Aircraft(const bool hasCollision, sf::Vector2f  scale, sf::Vector2f po
 		m_fireRateLevel(0),
 		m_isLaunchingMissile(false),
 		m_spreadLevel(0),
-	  	m_missileCount(3)
+		m_missileCount(3),
+		m_aircraftType(aircraftType),
+		m_nodeType(nodeType)
 {
 	setScale(scale);
 	setPosition(m_spawnPos);
@@ -97,9 +99,25 @@ void Aircraft::updateRollAnimation()
 	setSpriteTextureRegion(textureRect);
 }
 
-void Aircraft::handleAnimation(sf::Time deltaTime)
+void Aircraft::handleDamageAnimation(sf::Time deltaTime)
 {
-	handleDamageAnimation(deltaTime);
+	if (m_isDamageAnimationActive)
+	{
+		m_timeSinceDamage += deltaTime.asSeconds();
+
+		if (m_timeSinceDamage > DAMAGE_FLASH_TIME)
+		{
+			setColor(sf::Color::White);
+			m_isDamageAnimationActive = false;
+		}
+		else
+		{
+			float phase = fmod(m_timeSinceDamage, 1.0f);
+			float t = 0.5f * (1.0f + std::cos(phase * 2.0f * M_PI));
+			float c = Utility::lerp(0, 255, t);
+			setColor(sf::Color(255, c, c, 255));
+		}
+	}
 }
 
 bool Aircraft::isAllied() const
@@ -134,26 +152,6 @@ void Aircraft::checkProjectileLaunch(sf::Time dt, CommandQueue& commands)
 	}
 }
 
-void Aircraft::handleDamageAnimation(sf::Time deltaTime)
-{
-	if (m_isDamageAnimationActive)
-	{
-		m_timeSinceDamage += deltaTime.asSeconds();
-
-		if (m_timeSinceDamage > DAMAGE_FLASH_TIME)
-		{
-			setColor(sf::Color::White);
-			m_isDamageAnimationActive = false;
-		}
-		else
-		{
-			float phase = fmod(m_timeSinceDamage, 1.0f);
-			float t = 0.5f * (1.0f + std::cos(phase * 2.0f * M_PI));
-			float c = Utility::lerp(0, 255, t);
-			setColor(sf::Color(255, c, c, 255));
-		}
-	}
-}
 
 void Aircraft::update(sf::Time deltaTime, CommandQueue& commands)
 {

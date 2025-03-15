@@ -9,9 +9,14 @@ enum class StateId
 	Title,
 	Menu,
 	Game,
+	Loading,
 	Settings,
 	Pause,
-	GameOver
+	GameOver,
+	NetworkPause,
+	HostGame,
+	JoinGame,
+	MissionSuccess
 };
 
 #endif //STATEIDENTIFIERS_H_

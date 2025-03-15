@@ -2,18 +2,19 @@
 
 #include <SFML/Window/Event.hpp>
 #include "../Headers/Engine.h"
-#include "../Headers/State.h"
 #include "../Headers/TitleState.h"
 #include "../Headers/MenuState.h"
 #include "../Headers/GameState.h"
 #include "../Headers/PauseState.h"
 #include "../Headers/SettingsState.h"
 #include "../Headers/GameOverState.h"
+#include "../Headers/MultiplayerGameState.h"
 
 #define FRAME_RATE_LIMIT 60.0f
 #define TIME_STEP_MAX (1.0f/FRAME_RATE_LIMIT)
 
-Engine::Engine() : m_isPaused(false), m_stateStack(State::Context(m_window, m_input, m_audio))
+Engine::Engine() : m_isPaused(false), m_keyBinding1(1), m_keyBinding2(2),
+	m_stateStack(State::Context(m_window, m_audio, m_keyBinding1, m_keyBinding2))
 {
 	createWindow(sf::VideoMode(2000,1000), "Alpha Squadron", sf::Style::Resize);
 	registerStates();
@@ -90,7 +91,13 @@ void Engine::registerStates()
 	m_stateStack.registerState<TitleState>(StateId::Title);
 	m_stateStack.registerState<MenuState>(StateId::Menu);
 	m_stateStack.registerState<GameState>(StateId::Game);
+
+	m_stateStack.registerState<MultiplayerGameState>(StateId::HostGame, true);
+	m_stateStack.registerState<MultiplayerGameState>(StateId::JoinGame, false);
+	m_stateStack.registerState<PauseState>(StateId::NetworkPause, true);
+
 	m_stateStack.registerState<PauseState>(StateId::Pause);
 	m_stateStack.registerState<SettingsState>(StateId::Settings);
-	m_stateStack.registerState<GameOverState>(StateId::GameOver);
+	m_stateStack.registerState<GameOverState>(StateId::GameOver, "Mission Failed!");
+	m_stateStack.registerState<GameOverState>(StateId::MissionSuccess, "Mission Successful!");
 }

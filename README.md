@@ -1,11 +1,11 @@
-# 2D Side Scroller Framework and Game
+# 2D Side Scroller Framework and SingleGame
 
 ## Overview
 This project is a game engine and framework designed to support the development of a game with various components like game states, entities, sound, and graphical elements. It includes support for managing game assets, entities, user input, and game states, as well as integrating audio and graphical features.
 
 ## Table of Contents
 - [Components](#components)
-- [Game States](#game-states)
+- [SingleGame States](#game-states)
 - [Entities and Aircraft](#entities-and-aircraft)
 - [Audio](#audio)
 - [Utility](#utility)
@@ -23,7 +23,7 @@ The project includes several key components, such as:
 - **Container**: A container for UI elements, such as buttons and labels.
 - **Layer**: Manages the layering of objects in the game scene.
 
-## Game States
+## SingleGame States
 The game operates using various game states, which are managed by the **StateStack**:
 - **TitleState**: The initial game screen where the player can start the game.
 - **MenuState**: A state for handling the main menu.
