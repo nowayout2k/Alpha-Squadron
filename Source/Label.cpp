@@ -21,7 +21,7 @@ void GUI::Label::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
 void GUI::Label::setText(const unsigned int size, const std::string& text)
 {
-	m_text.setCharacterSize(size);
+ 	m_text.setCharacterSize(size);
 	m_text.setString(text);
 	Utility::centerOrigin(m_text);
 }
