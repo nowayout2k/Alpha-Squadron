@@ -22,7 +22,7 @@ class SettingsState : public State
 	virtual bool handleEvent(const sf::Event& event) override;
  private:
 	void updateLabels();
-	void addButtonLabel(std::size_t index, sf::Vector2f offset, const std::string& text, Context context);
+	void addButtonLabel(std::size_t index, sf::Vector2i offset, const std::string& text, Context context);
 	sf::Sprite m_backgroundSprite;
 	GUI::Container m_guiContainer;
 	std::array<GUI::Button::Ptr, 2*Player::ActionType::ActionCount> m_bindingButtons;

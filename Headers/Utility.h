@@ -76,7 +76,7 @@ public:
 		auto desiredSize = sf::Vector2f(viewSize.x * scalePercentageOfView.x,viewSize.y * scalePercentageOfView.y);
 
 		float scaleX = desiredSize.x / textureSize.x;
-		float scaleY =desiredSize.y / textureSize.y;
+		float scaleY = desiredSize.y / textureSize.y;
 
 		if(preserveAspectRatio)
 		{

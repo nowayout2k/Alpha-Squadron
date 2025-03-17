@@ -15,17 +15,19 @@ SettingsState::SettingsState(StateStack& stack, Context context) : State(stack, 
 
 	for (std::size_t x = 0; x < 2; ++x)
 	{
-		addButtonLabel(KeyBinding::ActionType::AccelerateNegX, sf::Vector2f (x, 0), "Move Left", context);
-		addButtonLabel(KeyBinding::ActionType::AcceleratePosX, sf::Vector2f (x, 1), "Move Right", context);
-		addButtonLabel(KeyBinding::ActionType::AcceleratePosY, sf::Vector2f (x, 2), "Move Up", context);
-		addButtonLabel(KeyBinding::ActionType::AccelerateNegY, sf::Vector2f (x, 3), "Move Down", context);
-		addButtonLabel(KeyBinding::ActionType::Fire, sf::Vector2f (x, 4), "Fire", context);
-		addButtonLabel(KeyBinding::ActionType::LaunchMissile, sf::Vector2f (x, 5), "Launch Missile", context);
+		addButtonLabel(KeyBinding::ActionType::AccelerateNegX, sf::Vector2i (x, 0), "Move Left", context);
+		addButtonLabel(KeyBinding::ActionType::AcceleratePosX, sf::Vector2i (x, 1), "Move Right", context);
+		addButtonLabel(KeyBinding::ActionType::AcceleratePosY, sf::Vector2i (x, 2), "Move Up", context);
+		addButtonLabel(KeyBinding::ActionType::AccelerateNegY, sf::Vector2i (x, 3), "Move Down", context);
+		addButtonLabel(KeyBinding::ActionType::Fire, sf::Vector2i (x, 4), "Fire", context);
+		addButtonLabel(KeyBinding::ActionType::LaunchMissile, sf::Vector2i (x, 5), "Launch Missile", context);
 	}
 	updateLabels();
 	sf::Vector2f center = context.Window->getView().getSize() / 2.f;
 	auto backButton = std::make_shared<GUI::Button>(context);
-	backButton->setPosition(center.x, center.y-300.f);
+
+	backButton->setButtonOrigin(0,0);
+	backButton->setPosition(0,0);
 	backButton->setText(24, "Back");
 	backButton->setCallback([this] { requestStackPop(); });
 
@@ -93,19 +95,19 @@ void SettingsState::updateLabels()
 	}
 }
 
-void SettingsState::addButtonLabel(std::size_t index, sf::Vector2f offset, const std::string& text, Context context)
+void SettingsState::addButtonLabel(std::size_t index, sf::Vector2i offset, const std::string& text, Context context)
 {
-	sf::Vector2f center = context.Window->getView().getSize() / 2.f;
+	sf::Vector2f screenSize = context.Window->getView().getSize();
 
 	index += Player::ActionType::ActionCount * offset.x;
 
 	m_bindingButtons[index] = std::make_shared<GUI::Button>(context);
-	m_bindingButtons[index]->setPosition(center.x-500 + offset.x * 300, center.y-200.f + offset.y * 100);
+	m_bindingButtons[index]->setPosition(offset.x==0 ? screenSize.x*.4 : screenSize.x*.8, (index%Player::ActionType::ActionCount + 1.f)*screenSize.y*.14);
 	m_bindingButtons[index]->setText(18, text);
 	m_bindingButtons[index]->setToggle(true);
 
 	m_bindingLabels[index] = std::make_shared<GUI::Label>("");
-	m_bindingLabels[index]->setPosition(center.x - 500.f + offset.x * 300.f, center.y-200.f + offset.y * 100);
+	m_bindingLabels[index]->setPosition(offset.x==0 ? screenSize.x*.2 : screenSize.x*.6, (index%Player::ActionType::ActionCount + 1.f)*screenSize.y*.14);
 
 	m_guiContainer.pack(m_bindingButtons[index]);
 	m_guiContainer.pack(m_bindingLabels[index]);

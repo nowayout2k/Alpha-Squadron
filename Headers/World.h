@@ -37,7 +37,7 @@ public:
 	void destroyEntitiesOutsideView();
 	void update(sf::Time deltaTime);
 	static GameData GameData;
-	bool hasPlayerAlive() const { return m_playerAircrafts.empty(); }
+	bool hasPlayerAlive() const { return !m_playerAircrafts.empty(); }
 	bool hasPlayerReachedEnd() const;
 	Aircraft* getAircraft(int identifier) const;
 	void removeAircraft(int identifier);

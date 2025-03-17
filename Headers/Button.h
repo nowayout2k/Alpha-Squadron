@@ -26,24 +26,25 @@ namespace GUI
 			ButtonCount
 		};
 	 public:
-		Button(State::Context context);
+		explicit Button(State::Context context);
 
 		void setCallback(Callback callback);
-		void setText(const int size, const std::string& text);
+		void setText(int size, const std::string& text);
+		void setButtonOrigin(float x, float y);
 		void setToggle(bool flag);
 
-		virtual bool isSelectable() const;
-		virtual void select();
-		virtual void deselect();
+		bool isSelectable() const override;
+		void select() override;
+		void deselect() override;
 
-		virtual void activate();
-		virtual void deactivate();
+		void activate() override;
+		void deactivate() override;
 
-		virtual void handleEvent(const sf::Event& event);
+		void handleEvent(const sf::Event& event) override;
 
 
 	 private:
-		virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+		void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 		void changeTexture(Type buttonType);
 
 	 private:

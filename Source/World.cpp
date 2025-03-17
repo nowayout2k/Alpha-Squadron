@@ -155,8 +155,9 @@ Aircraft* World::addAircraft(int identifier)
 	std::unique_ptr<Aircraft> player(new Aircraft(NodeType::Player, AircraftType::Tomcat, sf::Vector2f(1,1), m_worldView.getCenter()));
 	player->setPosition(m_worldView.getCenter());
 	player->setIdentifier(identifier);
-
+	player->loadResources();
 	m_playerAircrafts.push_back(player.get());
+
 	m_worldLayers[static_cast<int>(Layer::SpriteFront)]->attachNode(std::move(player));
 	return m_playerAircrafts.back();
 }

@@ -66,7 +66,6 @@ void CanvasNode::loadResources()
 	m_healthBgElement->setScale(textureScaleAdjustment.x * .205f, textureScaleAdjustment.y * .015f);
 	m_healthBarElement->setScale(textureScaleAdjustment.x * .2f, textureScaleAdjustment.y * .01f);
 
-	auto offset = sf::Vector2f(viewSize.x / 2 - m_healthBgElement->getBoundingRect().width/2, viewSize.y - m_healthBgElement->getBoundingRect().height/2);
 	m_healthBgElement->setPosition(viewSize.x / 2 - m_healthBgElement->getBoundingRect().width/2, viewSize.y * .02f);
 	m_healthBarElement->setPosition(viewSize.x * .001f + (viewSize.x / 2 - m_healthBarElement->getBoundingRect().width/2), viewSize.y * .023f);
 

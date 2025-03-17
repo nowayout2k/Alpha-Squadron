@@ -18,8 +18,7 @@ namespace GUI
 	{
 		changeTexture(Normal);
 
-		sf::FloatRect bounds = m_sprite.getLocalBounds();
-		m_text.setPosition(bounds.width / 2.f, bounds.height / 2.f);
+		Utility::centerOrigin(m_sprite);
 	}
 
 	void Button::setCallback(Callback callback)
@@ -111,5 +110,15 @@ namespace GUI
 		else
 			textureRect = sf::IntRect(445,0,208,64);
 		m_sprite.setTextureRect(textureRect);
+	}
+
+	void Button::setButtonOrigin(const float x, const float y)
+	{
+		m_sprite.setOrigin(x,y);
+		sf::FloatRect spriteBounds = m_sprite.getLocalBounds();
+		sf::FloatRect textBounds = m_text.getLocalBounds();
+
+		m_text.setOrigin(textBounds.width / 2.f, textBounds.height / 2.f);
+		m_text.setPosition(spriteBounds.width / 2.f, spriteBounds.height / 2.f);
 	}
 }

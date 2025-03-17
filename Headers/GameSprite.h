@@ -32,7 +32,12 @@ public:
 	void render(sf::RenderTarget& renderTarget, sf::RenderStates states) const override;
 	void drawBoundingRect(sf::RenderTarget& target, sf::RenderStates) const;
 	void loadResources() override;
-	sf::FloatRect getBoundingRect() const override{return getWorldTransform().transformRect(m_sprite.getGlobalBounds());}
+	sf::FloatRect getBoundingRect() const override
+	{
+		auto gb = m_sprite.getGlobalBounds();
+		auto rect = getWorldTransform().transformRect(gb);
+		return rect;
+	}
 	void setSpriteOrigin(float x, float y){m_sprite.setOrigin(x,y);}
 	void setColor(sf::Color color){m_sprite.setColor(color);}
 	void setSpriteTextureRegion(sf::IntRect rect) { m_spriteTextureRegion = rect; m_sprite.setTextureRect(m_spriteTextureRegion); }
