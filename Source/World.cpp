@@ -196,6 +196,7 @@ void World::loadResources()
 
 void World::adaptPlayerPosition()
 {
+	return;
 	for(auto& a : m_playerAircrafts)
 	{
 		sf::FloatRect viewBounds(m_worldView.getCenter() - m_worldView.getSize() / 2.f,m_worldView.getSize());
