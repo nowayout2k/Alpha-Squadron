@@ -21,8 +21,8 @@ GameServer::GameServer(sf::Vector2f battlefieldSize)
 	, m_clientTimeoutTime(sf::seconds(3.f))
 	, m_maxConnectedPlayers(10)
 	, m_connectedPlayers(0)
-	, m_worldHeight(5000.f)
-	, m_battleFieldRect(0.f, m_worldHeight - battlefieldSize.y, battlefieldSize.x, battlefieldSize.y)
+	, m_worldWidth(100000.f)
+	, m_battleFieldRect(0, 0, battlefieldSize.x, battlefieldSize.y)
 	, m_battleFieldScrollSpeed(-50.f)
 	, m_aircraftCount(0)
 	, m_peers(1)
@@ -128,7 +128,7 @@ void GameServer::executionThread()
 		// Fixed update step
 		while (stepTime >= stepInterval)
 		{
-			m_battleFieldRect.top += m_battleFieldScrollSpeed * stepInterval.asSeconds();
+			m_battleFieldRect.left += m_battleFieldScrollSpeed * stepInterval.asSeconds();
 			stepTime -= stepInterval;
 		}
 
@@ -153,7 +153,7 @@ void GameServer::tick()
 	for(auto& pair : m_aircraftInfo)
 	{
 		// As long as one player has not crossed the finish line yet, set variable to false
-		if (pair.second.Position.y > 0.f)
+		if (pair.second.Position.x < 100000.f)
 			allAircraftsDone = false;
 	}
 	if (allAircraftsDone)
@@ -176,7 +176,7 @@ void GameServer::tick()
 	if (now() >= m_timeForNextSpawn + m_lastSpawnTime)
 	{
 		// No more enemies are spawned near the end
-		if (m_battleFieldRect.top > 600.f)
+		if (m_battleFieldRect.left < 90000.f)
 		{
 			std::size_t enemyCount = Utility::getRandomNumber(1, 2);
 			float spawnCenter = Utility::getRandomNumber(-250.f, 250.f);
@@ -198,7 +198,7 @@ void GameServer::tick()
 				sf::Packet packet;
 				packet << static_cast<sf::Int32>(Server::SpawnEnemy);
 				packet << static_cast<sf::Int32>(Utility::getRandomNumber(1u, static_cast<unsigned int>(AircraftType::AircraftTypeCount)-1));
-				packet << m_worldHeight - m_battleFieldRect.top + 500;
+				packet << m_battleFieldRect.left;
 				packet << nextSpawnPosition;
 
 				nextSpawnPosition += planeDistance / 2.f;
@@ -283,7 +283,7 @@ void GameServer::handleIncomingPacket(sf::Packet& p, RemotePeer& receivingPeer, 
 	case Client::RequestCoopPartner:
 	{
 		receivingPeer.AircraftIdentifiers.push_back(m_aircraftIdentifierCounter);
-		m_aircraftInfo[m_aircraftIdentifierCounter].Position = sf::Vector2f(m_battleFieldRect.width / 2, m_battleFieldRect.top + m_battleFieldRect.height / 2);
+		m_aircraftInfo[m_aircraftIdentifierCounter].Position = sf::Vector2f(m_battleFieldRect.left + m_battleFieldRect.width / 2, m_battleFieldRect.height / 2);
 		m_aircraftInfo[m_aircraftIdentifierCounter].Hp = 100;
 		m_aircraftInfo[m_aircraftIdentifierCounter].MissileAmmo = 2;
 
@@ -360,7 +360,7 @@ void GameServer::updateClientState()
 {
 	sf::Packet updateClientStatePacket;
 	updateClientStatePacket << static_cast<sf::Int32>(Server::UpdateClientState);
-	updateClientStatePacket << static_cast<float>(m_battleFieldRect.top + m_battleFieldRect.height);
+	updateClientStatePacket << static_cast<float>(m_battleFieldRect.left);
 	updateClientStatePacket << static_cast<sf::Int32>(m_aircraftInfo.size());
 
 	for(auto& aircraft : m_aircraftInfo)
@@ -377,7 +377,7 @@ void GameServer::handleIncomingConnections()
 	if (m_listenerSocket.accept(m_peers[m_connectedPlayers]->Socket) == sf::TcpListener::Done)
 	{
 		// order the new client to spawn its own plane ( player 1 )
-		m_aircraftInfo[m_aircraftIdentifierCounter].Position = sf::Vector2f(m_battleFieldRect.width / 2, m_battleFieldRect.top + m_battleFieldRect.height / 2);
+		m_aircraftInfo[m_aircraftIdentifierCounter].Position = sf::Vector2f(m_battleFieldRect.left, m_battleFieldRect.height/2);
 		m_aircraftInfo[m_aircraftIdentifierCounter].Hp = 100;
 		m_aircraftInfo[m_aircraftIdentifierCounter].MissileAmmo = 2;
 
@@ -446,7 +446,7 @@ void GameServer::informWorldState(sf::TcpSocket& socket)
 {
 	sf::Packet packet;
 	packet << static_cast<sf::Int32>(Server::InitialState);
-	packet << m_worldHeight << m_battleFieldRect.top + m_battleFieldRect.height;
+	packet << m_worldWidth << m_battleFieldRect.left;
 	packet << static_cast<sf::Int32>(m_aircraftCount);
 
 	for (std::size_t i = 0; i < m_connectedPlayers; ++i)

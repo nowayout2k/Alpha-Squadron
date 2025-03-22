@@ -115,7 +115,6 @@ add_executable(Alpha-Squadron main.cpp
         Headers/GameServer.h
         Source/NetworkNode.cpp
         Headers/NetworkNode.h
-        Source/NetworkProtocol.cpp
         Headers/NetworkProtocol.h
         Source/KeyBinding.cpp
         Headers/KeyBinding.h

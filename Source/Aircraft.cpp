@@ -365,7 +365,7 @@ void Aircraft::createProjectile(WorldNode& node, ProjectileType projectileType, 
 
 	projectile->loadResources();
 
-	sf::Vector2f offset(sign * (getBoundingRect().width/2) + (sign * xOffset), projectileType == ProjectileType::Missile ? getBoundingRect().height/2 : 0);
+	sf::Vector2f offset(sign * (getBoundingRect().width/2) + (sign * xOffset), projectileType == ProjectileType::Missile ? getBoundingRect().height/2 + yOffset : 0);
 	projectile->setPosition(getWorldPosition() + offset);
 
 	node.attachNode(std::move(projectile));

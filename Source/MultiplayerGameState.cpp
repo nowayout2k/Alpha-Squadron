@@ -47,7 +47,7 @@ MultiplayerGameState::MultiplayerGameState(StateStack& stack, Context context, b
 	m_playerInvitationText.setCharacterSize(20);
 	m_playerInvitationText.setFillColor(sf::Color::White);
 	m_playerInvitationText.setString("Press Enter to spawn player 2");
-	m_playerInvitationText.setPosition(1000 - m_playerInvitationText.getLocalBounds().width, 760 - m_playerInvitationText.getLocalBounds().height);
+	m_playerInvitationText.setPosition(m_window.getSize().x/2 - m_playerInvitationText.getLocalBounds().width/2, m_window.getSize().y - m_playerInvitationText.getLocalBounds().height);
 
 	// We reuse this text for "Attempt to connect" and "Failed to connect" messages
 	m_failedConnectionText.setFont(ResourceManager::loadResource(FontId::Arnold));
@@ -83,7 +83,7 @@ MultiplayerGameState::MultiplayerGameState(StateStack& stack, Context context, b
 	m_socket.setBlocking(false);
 
 	// Play game theme
-	context.Audio->playMusic(MusicId::GameMusic);
+	context.Audio->playMusic(MusicId::GameMusic, 12.f);
 }
 
 void MultiplayerGameState::render()

@@ -36,7 +36,7 @@ class GameServer
 
 	struct AircraftInfo
 	{
-		sf::Vector2f  Position;
+		sf::Vector2f Position;
 		sf::Int32 Hp;
 		sf::Int32 MissileAmmo;
 		std::map<sf::Int32, bool> RealtimeActions;
@@ -72,7 +72,7 @@ class GameServer
 	std::size_t m_maxConnectedPlayers;
 	std::size_t m_connectedPlayers;
 
-	float m_worldHeight;
+	float m_worldWidth;
 	sf::FloatRect m_battleFieldRect;
 	float m_battleFieldScrollSpeed;
 

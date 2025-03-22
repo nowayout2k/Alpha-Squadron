@@ -5,6 +5,55 @@
 
 std::vector<Player::ActionType> Player::m_realTimeActionTypes;
 
+struct AircraftMover
+{
+	AircraftMover(float vx, float vy, int identifier) : m_velocity(vx, vy), aircraftId(identifier) {}
+	explicit AircraftMover(const sf::Vector2f& mVelocity, int identifier) : m_velocity(mVelocity), aircraftId(identifier)
+	{
+	}
+
+	void operator() (Aircraft& aircraft, sf::Time dt) const
+	{
+		if (aircraft.getIdentifier() == aircraftId)
+			aircraft.accelerate(m_velocity * aircraft.getMaxSpeed());
+	}
+
+ private:
+	sf::Vector2f m_velocity;
+	int aircraftId;
+};
+
+
+struct AircraftFireTrigger
+{
+	explicit AircraftFireTrigger(int identifier) : aircraftId(identifier)
+	{
+	}
+
+	void operator() (Aircraft& aircraft, sf::Time) const
+	{
+		if (aircraft.getIdentifier() == aircraftId)
+			aircraft.fire();
+	}
+
+	int aircraftId;
+};
+
+struct AircraftMissileTrigger
+{
+	explicit AircraftMissileTrigger(int identifier) : aircraftId(identifier)
+	{
+	}
+
+	void operator() (Aircraft& aircraft, sf::Time) const
+	{
+		if (aircraft.getIdentifier() == aircraftId)
+			aircraft.launchMissile();
+	}
+
+	int aircraftId;
+};
+
 Player::Player(sf::TcpSocket* socket, sf::Int32 identifier, const KeyBinding* binding)
 	: m_keyBinding(binding)
 	, m_missionStatus(MissionStatus::None)
@@ -18,12 +67,12 @@ Player::Player(sf::TcpSocket* socket, sf::Int32 identifier, const KeyBinding* bi
 	m_realTimeActionTypes.push_back(ActionType::AcceleratePosY);
 	m_realTimeActionTypes.push_back(ActionType::Fire);
 
-	m_actionBinding[ActionType::AccelerateNegX].Action = DerivedAction<Aircraft>(AircraftMover(-1, 0));
-	m_actionBinding[ActionType::AcceleratePosX].Action = DerivedAction<Aircraft>(AircraftMover(1, 0));
-	m_actionBinding[ActionType::AccelerateNegY].Action = DerivedAction<Aircraft>(AircraftMover(0, -1));
-	m_actionBinding[ActionType::AcceleratePosY].Action = DerivedAction<Aircraft>(AircraftMover(0, 1));
- 	m_actionBinding[ActionType::Fire].Action = DerivedAction<Aircraft>([](Aircraft& a, sf::Time){ a.fire(); });
-	m_actionBinding[ActionType::LaunchMissile].Action = DerivedAction<Aircraft>([](Aircraft& a, sf::Time){ a.launchMissile(); });
+	m_actionBinding[ActionType::AccelerateNegX].Action = DerivedAction<Aircraft>(AircraftMover(-1, 0, identifier));
+	m_actionBinding[ActionType::AcceleratePosX].Action = DerivedAction<Aircraft>(AircraftMover(1, 0, identifier));
+	m_actionBinding[ActionType::AccelerateNegY].Action = DerivedAction<Aircraft>(AircraftMover(0, -1, identifier));
+	m_actionBinding[ActionType::AcceleratePosY].Action = DerivedAction<Aircraft>(AircraftMover(0, 1, identifier));
+ 	m_actionBinding[ActionType::Fire].Action = DerivedAction<Aircraft>(AircraftFireTrigger(identifier));
+	m_actionBinding[ActionType::LaunchMissile].Action = DerivedAction<Aircraft>(AircraftMissileTrigger(identifier));
 
 	for(auto& pair : m_actionBinding)
 		pair.second.NodeType = (unsigned int)NodeType::Player;
@@ -45,8 +94,7 @@ void Player::handleEvent(const sf::Event& event, CommandQueue& commands)
 				packet << static_cast<sf::Int32>(action);
 				m_socket->send(packet);
 			}
-
-				// Network disconnected -> local event
+			// Network disconnected -> local event
 			else
 			{
 				commands.push(m_actionBinding[action]);

@@ -11,7 +11,7 @@ GameState::GameState(StateStack& stack, Context context)
 	m_player.setMissionStatus(Player::MissionStatus::None);
 
 	// Play game theme
-	context.Audio->playMusic(MusicId::GameMusic);
+	context.Audio->playMusic(MusicId::GameMusic, 12.f);
 }
 
 bool GameState::update(sf::Time deltaTime)
@@ -25,7 +25,7 @@ bool GameState::update(sf::Time deltaTime)
 	else if(m_world.hasPlayerReachedEnd())
 	{
 		m_player.setMissionStatus(Player::MissionStatus::Success);
-		requestStackPush(StateId::GameOver);
+		requestStackPush(StateId::MissionSuccess);
 	}
 
 	CommandQueue& commands = m_world.getCommandQueue();

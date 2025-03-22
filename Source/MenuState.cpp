@@ -19,36 +19,18 @@ MenuState::MenuState(StateStack& stack, State::Context context) : State(stack, c
 	Utility::centerOrigin(m_titleText);
 	m_titleText.setPosition(context.Window->getView().getSize().x / 2.f, context.Window->getView().getSize().y / 5.f);
 
-	auto playButton = std::make_shared<GUI::Button>(context);
-	playButton->setPosition(center.x, center.y-200);
-	playButton->setText(20, "Play");
-	playButton->setCallback([this] ()
+	auto localPlayButton = std::make_shared<GUI::Button>(context);
+	localPlayButton->setPosition(center.x, center.y-100);
+	localPlayButton->setText(20, "Play");
+	localPlayButton->setCallback([this] ()
 	{
 		requestStackPop();
 		requestStackPush(StateId::Game);
 	});
 
-	auto hostPlayButton = std::make_shared<GUI::Button>(context);
-	hostPlayButton->setPosition(center.x, center.y-100);
-	hostPlayButton->setText(20, "Online Host");
-	hostPlayButton->setCallback([this] ()
-	{
-	  requestStackPop();
-	  requestStackPush(StateId::HostGame);
-	});
-
-	auto joinPlayButton = std::make_shared<GUI::Button>(context);
-	joinPlayButton->setPosition(center.x, center.y);
-	joinPlayButton->setText(20, "Online Join");
-	joinPlayButton->setCallback([this] ()
-	{
-	  requestStackPop();
-	  requestStackPush(StateId::JoinGame);
-	});
-
 	auto hostMultiplayerButton = std::make_shared<GUI::Button>(context);
-	hostMultiplayerButton->setPosition(center.x, center.y+100);
-	hostMultiplayerButton->setText(20, "Local Host");
+	hostMultiplayerButton->setPosition(center.x, center.y);
+	hostMultiplayerButton->setText(20, "Host Game");
 	hostMultiplayerButton->setCallback([this] ()
 	{
 	  requestStackPop();
@@ -56,8 +38,8 @@ MenuState::MenuState(StateStack& stack, State::Context context) : State(stack, c
 	});
 
 	auto joinMultiplayerButton = std::make_shared<GUI::Button>(context);
-	joinMultiplayerButton->setPosition(center.x, center.y+200);
-	joinMultiplayerButton->setText(20, "Local Join");
+	joinMultiplayerButton->setPosition(center.x, center.y+100);
+	joinMultiplayerButton->setText(20, "Join Game");
 	joinMultiplayerButton->setCallback([this] ()
 	{
 	  requestStackPop();
@@ -65,7 +47,7 @@ MenuState::MenuState(StateStack& stack, State::Context context) : State(stack, c
 	});
 
 	auto settingsButton = std::make_shared<GUI::Button>(context);
-	settingsButton->setPosition(center.x, center.y+300);
+	settingsButton->setPosition(center.x, center.y+200);
 	settingsButton->setText(20, "Settings");
 	settingsButton->setCallback([this] ()
 	{
@@ -73,16 +55,14 @@ MenuState::MenuState(StateStack& stack, State::Context context) : State(stack, c
 	});
 
 	auto exitButton = std::make_shared<GUI::Button>(context);
-	exitButton->setPosition(center.x, center.y+400);
+	exitButton->setPosition(center.x, center.y+300);
 	exitButton->setText(20, "Exit");
 	exitButton->setCallback([this] ()
 	{
 		requestStackPop();
 	});
 
-	m_guiContainer.pack(playButton);
-	m_guiContainer.pack(hostPlayButton);
-	m_guiContainer.pack(joinPlayButton);
+	m_guiContainer.pack(localPlayButton);
 	m_guiContainer.pack(hostMultiplayerButton);
 	m_guiContainer.pack(joinMultiplayerButton);
 	m_guiContainer.pack(settingsButton);

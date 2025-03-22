@@ -13,7 +13,7 @@ sf::View World::m_worldView = {};
 float World::m_scrollSpeed = 500.0f;
 
 World::World(sf::RenderTarget& outputTarget, Audio& audioPlayer, bool isNetworked) : m_target(outputTarget), m_audioPlayer(audioPlayer),
-																	m_worldBounds(0.0f,0.0f,100000.0f,m_worldView.getSize().y),
+																	m_worldBounds(0, 0.0f,100000.0f,m_worldView.getSize().y),
 																	m_spawnPosition(0, m_worldView.getSize().y/2),
 																	m_playerAircrafts(), m_viewPositionOffset(0,0), m_commandQueue(),
 																	m_scrollSpeedCompensation(1.f),
@@ -86,13 +86,16 @@ void World::update(sf::Time deltaTime)
 		{
 			m_fpsText.setPosition(sf::Vector2f(0,0));
 		}
-		if(m_timeSinceLastFpsUpdate > 1)
+		if(m_timeSinceLastFpsUpdate > .1)
 		{
 			auto value = std::to_string((int)(m_framesSinceLastFpsUpdate/m_timeSinceLastFpsUpdate));
 			auto& view = getWorldView();
 			sf::Vector2f center = view.getCenter();
 			sf::Vector2f size = view.getSize();
-			m_fpsText.setString("FPS: " + value + " POS: (x= " + std::to_string(center.x + size.x / 2.f) +  + " y= " + std::to_string(center.y) + ")");
+			m_fpsText.setCharacterSize(15);
+			Aircraft* player = getAircraft(1);
+			sf::Vector2f playerPos = (player == nullptr) ? sf::Vector2f() : getAircraft(1)->getPosition();
+			m_fpsText.setString("FPS: " + value + "\nView POS: (x= " + std::to_string((int)center.x + (int)size.x / 2) +  + " y= " + std::to_string((int)center.y) + ")" + "\nPlayer Pos: (x= " + std::to_string((int)playerPos.x) +  + " y= " + std::to_string((int)playerPos.y) + ")");
 			m_timeSinceLastFpsUpdate = 0;
 			m_framesSinceLastFpsUpdate = 0;
 		}
@@ -138,8 +141,6 @@ Aircraft* World::getAircraft(int identifier) const
 	return nullptr;
 }
 
-
-
 void World::removeAircraft(int identifier)
 {
 	Aircraft* aircraft = getAircraft(identifier);
@@ -152,8 +153,10 @@ void World::removeAircraft(int identifier)
 
 Aircraft* World::addAircraft(int identifier)
 {
-	std::unique_ptr<Aircraft> player(new Aircraft(NodeType::Player, AircraftType::Tomcat, sf::Vector2f(1,1), m_worldView.getCenter()));
-	player->setPosition(m_worldView.getCenter());
+	std::unique_ptr<Aircraft> player(new Aircraft(NodeType::Player, AircraftType::Tomcat, m_worldView.getCenter(), sf::Vector2f(1,1)));
+	auto center = m_worldView.getCenter();
+	auto sizeX = m_worldView.getSize().x/2;
+	player->setPosition(center.x-sizeX, center.y);
 	player->setIdentifier(identifier);
 	player->loadResources();
 	m_playerAircrafts.push_back(player.get());
@@ -175,10 +178,11 @@ bool World::pollGameAction(GameActions::Action& out)
 {
 	return m_networkNode->pollGameAction(out);
 }
+
 void World::setCurrentBattleFieldPosition(float lineX)
 {
-	m_worldView.setCenter(m_worldView.getCenter().x, lineX - m_worldView.getSize().y/2);
-	m_spawnPosition.y = m_worldBounds.height;
+	m_worldView.setCenter(lineX + m_worldView.getSize().x/2, m_worldView.getCenter().y);
+	m_spawnPosition.x = lineX;
 }
 
 bool World::hasPlayerReachedEnd() const
@@ -196,7 +200,6 @@ void World::loadResources()
 
 void World::adaptPlayerPosition()
 {
-	return;
 	for(auto& a : m_playerAircrafts)
 	{
 		sf::FloatRect viewBounds(m_worldView.getCenter() - m_worldView.getSize() / 2.f,m_worldView.getSize());
@@ -246,6 +249,7 @@ bool World::matchesCategories(WorldNode::Pair& colliders, NodeType t1, NodeType 
 		return false;
 	}
 }
+
 void World::handleCollisions()
 {
 	std::set<WorldNode::Pair> collisionPairs;
@@ -309,8 +313,7 @@ void World::updateSounds()
 	{
 		listenerPosition = m_worldView.getCenter();
 	}
-
-		// 1 or more players -> mean position between all aircrafts
+    // 1 or more players -> mean position between all aircrafts
 	else
 	{
 		for(Aircraft* aircraft : m_playerAircrafts)
@@ -365,7 +368,7 @@ void World::setup()
 	m_worldLayers[static_cast<int>(Layer::Audio)]->attachNode(std::move(audioNode));
 
 	loadResources();
-	m_worldView.setCenter(m_spawnPosition);
+	m_worldView.setCenter(m_worldView.getSize().x/2, m_worldView.getSize().y/2);
 
 	if (m_isNetworkedWorld)
 	{
@@ -412,6 +415,7 @@ void World::addEnemy(AircraftType type, float spawnDistance)
 	EnemySpawnPoint spawn(type, spawnDistance);
 	m_enemySpawnPoints.push_back(spawn);
 }
+
 void World::spawnEnemies()
 {
 	auto bounds = getBattlefieldBounds();

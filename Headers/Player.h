@@ -9,22 +9,6 @@
 #include "World.h"
 #include "KeyBinding.h"
 
-struct AircraftMover
-{
-	AircraftMover(float vx, float vy) : m_velocity(vx, vy){}
-	explicit AircraftMover(const sf::Vector2f& mVelocity) : m_velocity(mVelocity)
-	{
-	}
-
-	void operator() (Aircraft& aircraft, sf::Time dt) const
-	{
-		aircraft.accelerate(sf::Vector2f(m_velocity.x * aircraft.getMaxSpeed(), m_velocity.y * aircraft.getMaxSpeed()));
-	}
-
- private:
-	sf::Vector2f m_velocity;
-};
-
 class Player
 {
  public:
