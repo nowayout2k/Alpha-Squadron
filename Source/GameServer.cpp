@@ -23,7 +23,7 @@ GameServer::GameServer(sf::Vector2f battlefieldSize)
 	, m_connectedPlayers(0)
 	, m_worldWidth(100000.f)
 	, m_battleFieldRect(0, 0, battlefieldSize.x, battlefieldSize.y)
-	, m_battleFieldScrollSpeed(-50.f)
+	, m_battleFieldScrollSpeed(500.f)
 	, m_aircraftCount(0)
 	, m_peers(1)
 	, m_aircraftIdentifierCounter(1)
@@ -198,7 +198,7 @@ void GameServer::tick()
 				sf::Packet packet;
 				packet << static_cast<sf::Int32>(Server::SpawnEnemy);
 				packet << static_cast<sf::Int32>(Utility::getRandomNumber(1u, static_cast<unsigned int>(AircraftType::AircraftTypeCount)-1));
-				packet << m_battleFieldRect.left;
+				packet << m_battleFieldRect.left + m_battleFieldRect.width+100;
 				packet << nextSpawnPosition;
 
 				nextSpawnPosition += planeDistance / 2.f;

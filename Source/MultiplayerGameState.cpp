@@ -428,10 +428,11 @@ void MultiplayerGameState::handlePacket(sf::Int32 packetType, sf::Packet& packet
 		}
 		case Server::SpawnEnemy:
 		{
-			float width;
 			sf::Int32 type;
-			packet >> type >> width;
-			m_world.addEnemy(static_cast<AircraftType>(type), width);
+			float relativeY;
+			float spawnDistance;
+			packet >> type >> spawnDistance >> relativeY;
+			m_world.addEnemy(static_cast<AircraftType>(type), spawnDistance);
 			m_world.sortEnemies();
 			break;
 		}
