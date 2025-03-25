@@ -8,7 +8,6 @@
 
 PooledSound* Audio::getSoundFromPool()
 {
-
 	PooledSound* availableSound = nullptr;
 
 	for (auto& pooledSound : m_sounds)
@@ -44,11 +43,13 @@ PooledSound* Audio::getSoundFromPool()
 
 void Audio::playSound(SoundFxId soundFxId, float volume)
 {
+	return;
 	playSound(soundFxId, getListenerPosition(), volume);
 }
 
 void Audio::playSound(SoundFxId soundFxId, sf::Vector2f position, float volume)
 {
+	return;
 	sf::SoundBuffer& buffer = ResourceManager::loadResource(soundFxId);
 	PooledSound* availableSound = getSoundFromPool();
 	if(!availableSound)
@@ -65,19 +66,34 @@ void Audio::playSound(SoundFxId soundFxId, sf::Vector2f position, float volume)
 
 void Audio::playMusic(MusicId musicId, float volume)
 {
-	m_music.stop();
-	std::string pathToFile = getMusicPath(musicId);
-	if (!m_music.openFromFile(pathToFile))
-		return;
+	return;
+	try
+	{
+		m_music.stop();
+		std::string pathToFile = getMusicPath(musicId);
+		if (!m_music.openFromFile(pathToFile))
+			return;
 
-	m_music.setLoop(true);
-	m_music.setVolume(volume);
-	m_music.play();
+		m_music.setLoop(true);
+		m_music.setVolume(volume);
+		m_music.play();
+	}
+	catch(std::exception& e)
+	{
+		Debug::logWarning(e.what());
+	}
 }
 
 void Audio::stopMusic()
 {
-	m_music.stop();
+	try
+	{
+		m_music.stop();
+	}
+	catch(std::exception& e)
+	{
+		Debug::logWarning(e.what());
+	}
 }
 
 std::string Audio::getMusicPath(MusicId musicId)
@@ -95,13 +111,19 @@ std::string Audio::getMusicPath(MusicId musicId)
 }
 void Audio::stopAllSounds()
 {
-	m_music.stop();
-	for (auto& pooledSound : m_sounds )
+	try
 	{
-		if(pooledSound.Sound.getStatus() == sf::Sound::Status::Playing)
+		m_music.stop();
+		for (auto& pooledSound : m_sounds )
 		{
-			pooledSound.Sound.stop();
+			if(pooledSound.Sound.getStatus() == sf::Sound::Status::Playing)
+			{
+				pooledSound.Sound.stop();
+			}
 		}
 	}
-
+	catch(std::exception& e)
+	{
+		Debug::logWarning(e.what());
+	}
 }

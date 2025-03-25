@@ -6,7 +6,7 @@
 #define ALPHA_SQUADRON_SOURCE_NETWORKPROTOCOL_H_
 
 #include <SFML/System/Vector2.hpp>
-const unsigned short ServerPort = 5000;
+const unsigned short ServerPort = 5394;
 
 namespace Server
 {

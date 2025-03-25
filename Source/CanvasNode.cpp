@@ -3,7 +3,7 @@
 #include "../Headers/CanvasNode.h"
 #include "../Headers/Engine.h"
 
-CanvasNode::CanvasNode() : m_health(0), m_healthBarElement(), m_healthBgElement(), m_healthTextElement()
+CanvasNode::CanvasNode() : m_healthBarElement(), m_healthBgElement(), m_healthTextElement()
 {
 	auto healthBarElementPtr = std::make_unique<GameSprite>(false,TextureId::MetalBg);
 	auto healthBgElementPtr = std::make_unique<GameSprite>(false, TextureId::MetalBg);
@@ -13,6 +13,8 @@ CanvasNode::CanvasNode() : m_health(0), m_healthBarElement(), m_healthBgElement(
 	m_healthBgElement = healthBgElementPtr.get();
 	m_healthBarElement = healthBarElementPtr.get();
 	m_healthBarElement->setColor(sf::Color::Green);
+
+	m_playerHealths.push_back(100);
 
 	attachNode(std::move(healthTextElementPtr));
 	attachNode(std::move(healthBgElementPtr));
@@ -39,7 +41,7 @@ void CanvasNode::update(sf::Time deltaTime, CommandQueue& commands)
 	setOrigin(0, 0);
 	setPosition(viewCenter - viewSize / 2.f);
 	auto bgSize = sf::Vector2f(m_healthBgElement->getTexture()->getSize().x, m_healthBgElement->getTexture()->getSize().y);
-	m_healthBarElement->setScale((viewSize.x / bgSize.x*.2)*(m_health/100.f), m_healthBarElement->getScale().y);
+	m_healthBarElement->setScale((viewSize.x / bgSize.x*.2)*(m_playerHealths[0]/100.f), m_healthBarElement->getScale().y);
 }
 
 void CanvasNode::render(sf::RenderTarget& target, sf::RenderStates states) const
@@ -71,4 +73,11 @@ void CanvasNode::loadResources()
 
 	m_healthTextElement->setPosition(viewSize.x / 2, 0);
 	m_healthTextElement->setOrigin(m_healthTextElement->getBoundingRect().width/2,0);
+}
+void CanvasNode::setHeath(float health, int playerNum)
+{
+	if(m_playerHealths.size() <= playerNum)
+		return;
+
+	m_playerHealths[playerNum] = std::max(health, 0.f);
 }

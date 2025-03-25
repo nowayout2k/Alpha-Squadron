@@ -149,7 +149,7 @@ void GameServer::tick()
 	updateClientState();
 
 	// Check for mission success = all planes with position.y < offset
-	bool allAircraftsDone = true;
+	bool allAircraftsDone = !m_aircraftInfo.empty();
 	for(auto& pair : m_aircraftInfo)
 	{
 		// As long as one player has not crossed the finish line yet, set variable to false

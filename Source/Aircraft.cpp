@@ -35,7 +35,8 @@ Aircraft::Aircraft(NodeType nodeType, AircraftType aircraftType, sf::Vector2f po
 		m_spreadLevel(0),
 		m_missileCount(3),
 		m_aircraftType(aircraftType),
-		m_nodeType(nodeType)
+		m_nodeType(nodeType),
+		m_health(100)
 {
 	setScale(scale);
 	setPosition(m_spawnPos);

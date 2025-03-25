@@ -1,7 +1,6 @@
 // Copyright (c) 2025 No Way Out LLC All rights reserved.
 
 #include "../Headers/World.h"
-#include "../Headers/Audio.h"
 #include "../Headers/Pickup.h"
 #include "../Headers/Engine.h"
 #include "../Headers/ParticleSystemNode.h"
@@ -35,23 +34,14 @@ void World::setWorldScrollCompensation(float compensation)
 
 void World::update(sf::Time deltaTime)
 {
-	/*if(m_playerAircraft->isDestroyed())
-	{
-		m_isPlayerAlive = false;
-	}
-
-	m_ui->setHeath(m_playerAircraft->getHealth());
-
-	if(m_worldView.getCenter().x > 15000.0f)
-	{
-		m_hasPlayerReachedEnd = true;
-		return;
-	}*/
-
 	m_worldView.move(m_scrollSpeed * deltaTime.asSeconds(), 0.f);
 
+	int count = 0;
 	for(auto& a : m_playerAircrafts)
+	{
+		m_ui->setHeath(a->getHealth(), count++);
 		a->setVelocity(0,0);
+	}
 
 	destroyEntitiesOutsideView();
 	guideMissiles();
@@ -211,7 +201,6 @@ void World::adaptPlayerPosition()
 		position.y = std::min(position.y, viewBounds.top + viewBounds.height - spriteBounds.height/2);
 		a->setPosition(position);
 	}
-
 }
 
 void World::adaptPlayerVelocity()

@@ -20,11 +20,11 @@ class CanvasNode : public WorldNode
 	unsigned int getNodeType() const override;
 	sf::FloatRect getLocalBounds() const;
 	void update(sf::Time deltaTime, CommandQueue& commands) override;
-	void setHeath(float health) { m_health = std::max(health, 0.f); }
+	void setHeath(float health, int playerNum);
  protected:
 	void loadResources() override;
  private:
-	float m_health;
+	std::vector<float> m_playerHealths;
 	GameSprite* m_healthBgElement;
 	GameSprite* m_healthBarElement;
 	GameText* m_healthTextElement;
