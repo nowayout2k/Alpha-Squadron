@@ -21,7 +21,7 @@ GameServer::GameServer(sf::Vector2f battlefieldSize)
 	, m_clientTimeoutTime(sf::seconds(3.f))
 	, m_maxConnectedPlayers(10)
 	, m_connectedPlayers(0)
-	, m_worldWidth(100000.f)
+	, m_worldWidth(10000.f)
 	, m_battleFieldRect(0, 0, battlefieldSize.x, battlefieldSize.y)
 	, m_battleFieldScrollSpeed(500.f)
 	, m_aircraftCount(0)
@@ -153,7 +153,7 @@ void GameServer::tick()
 	for(auto& pair : m_aircraftInfo)
 	{
 		// As long as one player has not crossed the finish line yet, set variable to false
-		if (pair.second.Position.x < 100000.f)
+		if (pair.second.Position.x < m_worldWidth)
 			allAircraftsDone = false;
 	}
 	if (allAircraftsDone)
@@ -176,7 +176,7 @@ void GameServer::tick()
 	if (now() >= m_timeForNextSpawn + m_lastSpawnTime)
 	{
 		// No more enemies are spawned near the end
-		if (m_battleFieldRect.left < 90000.f)
+		if (m_battleFieldRect.left < 9000.f)
 		{
 			std::size_t enemyCount = Utility::getRandomNumber(1, 2);
 			float spawnCenter = Utility::getRandomNumber(-250.f, 250.f);

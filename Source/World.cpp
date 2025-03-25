@@ -12,7 +12,7 @@ sf::View World::m_worldView = {};
 float World::m_scrollSpeed = 500.0f;
 
 World::World(sf::RenderTarget& outputTarget, Audio& audioPlayer, bool isNetworked) : m_target(outputTarget), m_audioPlayer(audioPlayer),
-																	m_worldBounds(0, 0.0f,100000.0f,m_worldView.getSize().y),
+																	m_worldBounds(0, 0.0f,10000.0f,m_worldView.getSize().y),
 																	m_spawnPosition(0, m_worldView.getSize().y/2),
 																	m_playerAircrafts(), m_viewPositionOffset(0,0), m_commandQueue(),
 																	m_scrollSpeedCompensation(1.f),
@@ -338,7 +338,7 @@ void World::setup()
 	backgroundSprite->setPosition( m_worldBounds.left - m_worldView.getSize().x, m_worldBounds.top);
 	auto windowSize = m_target.getView().getSize();
 	auto bgTextureSize = backgroundSprite->getTexture()->getSize();
-	backgroundSprite->setSpriteTextureRegion(sf::IntRect(0, 0, m_worldBounds.width, bgTextureSize.y));
+	backgroundSprite->setSpriteTextureRegion(sf::IntRect(0, 0, 50000, bgTextureSize.y));
 	backgroundSprite->setScale(windowSize.x/bgTextureSize.x, windowSize.y/bgTextureSize.y);
 	m_worldLayers[static_cast<int>(Layer::Background)]->attachNode(std::move(backgroundSprite));
 
@@ -381,12 +381,12 @@ void World::addEnemies()
 	if(m_isNetworkedWorld)
 		return;
 
-	m_enemySpawnPoints.emplace_back(AircraftType::Tomcat, 3500.f);
-	m_enemySpawnPoints.emplace_back(AircraftType::Chopper, 5500.f);
+	m_enemySpawnPoints.emplace_back(AircraftType::Tomcat, 2500.f);
+	m_enemySpawnPoints.emplace_back(AircraftType::Chopper, 3000.f);
+	m_enemySpawnPoints.emplace_back(AircraftType::Chopper, 4000.f);
+	m_enemySpawnPoints.emplace_back(AircraftType::Chopper, 4200.f);
+	m_enemySpawnPoints.emplace_back(AircraftType::Tomcat, 6000.f);
 	m_enemySpawnPoints.emplace_back(AircraftType::Chopper, 7000.f);
-	m_enemySpawnPoints.emplace_back(AircraftType::Chopper, 9000.f);
-	m_enemySpawnPoints.emplace_back(AircraftType::Tomcat, 12000.f);
-	m_enemySpawnPoints.emplace_back(AircraftType::Chopper, 15000.f);
 	sortEnemies();
 }
 

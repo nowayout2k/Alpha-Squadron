@@ -187,6 +187,7 @@ void Aircraft::update(sf::Time deltaTime, CommandQueue& commands)
 	}
 
 	updateRollAnimation();
+	handleDamageAnimation(deltaTime);
 }
 
 void Aircraft::updateAiPosition(sf::Time deltaTime)
