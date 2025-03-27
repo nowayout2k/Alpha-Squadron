@@ -10,7 +10,7 @@
  * TODO: AUDIO AND PICKUPS FIX
  */
 
-#include "Headers/Engine.h"
+#include "Headers/Engine/Engine.h"
 
 #define BUILD_VERSION_MAJOR 1
 #define BUILD_VERSION_MINOR 0
@@ -36,6 +36,3 @@ int main()
 
 	return 0;
 }
-
-// TODO: Split into game and engine
-// TODO: Update Readme
