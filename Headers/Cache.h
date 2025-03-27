@@ -96,7 +96,7 @@ class Cache
 		return nullptr;
 	}
 
-	std::unordered_map<std::string, std::unique_ptr<T>> m_cache; // Map of cached resources.
+	std::unordered_map<std::string, std::unique_ptr<T>> m_cache; ///< Map of cached resources.
 };
 
 #endif // CACHE_H_

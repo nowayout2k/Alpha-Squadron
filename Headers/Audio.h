@@ -99,8 +99,8 @@ class Audio
 	 */
 	PooledSound* getSoundFromPool();
 
-	std::list<PooledSound> m_sounds;  // Pool of sound objects.
-	sf::Music m_music;                // Music object.
+	std::list<PooledSound> m_sounds;  ///< Pool of sound objects.
+	sf::Music m_music;                ///< Music object.
 };
 
 #endif // AUDIO_H_

@@ -52,7 +52,7 @@ class CommandQueue
 	std::queue<Command>::size_type size() const { return m_queue.size(); }
 
  private:
-	std::queue<Command> m_queue; // Underlying container for commands.
+	std::queue<Command> m_queue; ///< Underlying container for commands.
 };
 
 #endif // COMMANDQUEUE_H_

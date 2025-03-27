@@ -117,11 +117,11 @@ namespace GUI
 		 */
 		void changeTexture(Type buttonType);
 
-		Callback m_callback;  // Callback function to execute on activation.
-		sf::Sprite m_sprite;  // Sprite representing the button.
-		sf::Text m_text;      // Text displayed on the button.
-		bool m_isToggle;      // Flag indicating whether the button is toggleable.
-		Audio& m_audio;       // Reference to the audio system.
+		Callback m_callback;  ///< Callback function to execute on activation.
+		sf::Sprite m_sprite;  ///< Sprite representing the button.
+		sf::Text m_text;      ///< Text displayed on the button.
+		bool m_isToggle;      ///< Flag indicating whether the button is toggleable.
+		Audio& m_audio;       ///< Reference to the audio system.
 	};
 }
 

@@ -47,8 +47,8 @@ class GameOverState : public State
 	virtual bool handleEvent(const sf::Event& event) override;
 
  private:
-	sf::Text m_gameOverText; // Text element displaying the game over message.
-	float m_elapsedTime;     // Accumulated time since the state was entered.
+	sf::Text m_gameOverText; ///< Text element displaying the game over message.
+	float m_elapsedTime;     ///< Accumulated time since the state was entered.
 };
 
 #endif // GAMEOVERSTATE_H_

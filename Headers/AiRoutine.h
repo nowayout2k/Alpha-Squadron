@@ -18,8 +18,8 @@ struct AiRoutine
 	 */
 	AiRoutine(float angle, float distance) : Angle(angle), Distance(distance) {}
 
-	float Angle;    // Angle in degrees for the routine's movement.
-	float Distance; // Distance to travel for the routine.
+	float Angle;    ///< Angle in degrees for the routine's movement.
+	float Distance; ///< Distance to travel for the routine.
 };
 
 #endif // AIROUTINE_H_

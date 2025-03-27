@@ -36,10 +36,9 @@ int main()
 
 	return 0;
 }
-//Copyright
-//Structs and Enums
 //Add << to comments
 //Remove comments above includes
+//Structs and Enums
 //Namespaces
 //definitions in headers to inline
 //update Readme

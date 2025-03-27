@@ -56,8 +56,7 @@ class NetworkNode : public EmptyWorldNode
 	unsigned int getNodeType() const override { return EmptyWorldNode::getNodeType() | static_cast<unsigned int>(NodeType::Network); }
 
  private:
-	// Queue to store pending game actions received via the network.
-	std::queue<GameActions::Action>	m_pendingActions;
+	std::queue<GameActions::Action>	m_pendingActions; ///< Queue to store pending game actions received via the network.
 };
 
 #endif //ALPHA_SQUADRON_SOURCE_NETWORKNODE_H_

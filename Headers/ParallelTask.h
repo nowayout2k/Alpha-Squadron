@@ -67,18 +67,12 @@ class ParallelTask
 	void runTask();
 
  private:
-	// The function representing the task to execute.
-	std::function<void()> m_task;
-	// The current completion percentage of the task (0.0 to 1.0).
-	float m_completion;
-	// SFML thread used to run the task concurrently.
-	sf::Thread m_thread;
-	// Flag indicating whether the task has finished execution.
-	bool m_finished;
-	// Clock to measure elapsed time since the task started.
-	sf::Clock m_elapsedTime;
-	// Mutex to protect shared data during multithreaded execution.
-	sf::Mutex m_mutex;
+	std::function<void()> m_task; 	///< The function representing the task to execute.
+	float m_completion;///< The current completion percentage of the task (0.0 to 1.0).
+	sf::Thread m_thread;///< SFML thread used to run the task concurrently.
+	bool m_finished;///< Flag indicating whether the task has finished execution.
+	sf::Clock m_elapsedTime;///< Clock to measure elapsed time since the task started.
+	sf::Mutex m_mutex;///< Mutex to protect shared data during multithreaded execution.
 };
 
 #endif //PARALLELTASK_H_

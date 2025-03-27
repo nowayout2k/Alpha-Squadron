@@ -11,11 +11,11 @@
  */
 enum Direction
 {
-	North,         // Represents the north direction.
-	South,         // Represents the south direction.
-	East,          // Represents the east direction.
-	West,          // Represents the west direction.
-	DirectionCount // Represents the total number of directions.
+	North,         ///< Represents the north direction.
+	South,         ///< Represents the south direction.
+	East,          ///< Represents the east direction.
+	West,          ///< Represents the west direction.
+	DirectionCount ///< Represents the total number of directions.
 };
 
 #endif // DIRECTION_H_

@@ -97,8 +97,8 @@ namespace GUI
 		void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 	 private:
-		int m_selectedChild;                    // Index of the currently selected child.
-		std::vector<Component::Ptr> m_children;   // Collection of child components.
+		int m_selectedChild;                    ///< Index of the currently selected child.
+		std::vector<Component::Ptr> m_children;   ///< Collection of child components.
 	};
 }
 

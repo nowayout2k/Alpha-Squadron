@@ -57,7 +57,7 @@ class AudioNode : public WorldNode
 	void update(sf::Time deltaTime, CommandQueue& commands) override {}
 
  private:
-	Audio& m_audioPlayer; // Reference to the audio player.
+	Audio& m_audioPlayer; ///< Reference to the audio player.
 };
 
 #endif // ALPHA_SQUADRON_HEADERS_AUDIONODE_H_

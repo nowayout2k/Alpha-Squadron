@@ -75,9 +75,9 @@ class BloomEffect : public PostEffect
 
 	typedef std::array<sf::RenderTexture, 2> RenderTextureArray;
 
-	sf::RenderTexture  m_brightnessTexture;   // Render texture for brightness filtering.
-	RenderTextureArray m_firstPassTextures;     // Render textures used for the first blur pass.
-	RenderTextureArray m_secondPassTextures;    // Render textures used for the second blur pass.
+	sf::RenderTexture  m_brightnessTexture;   ///< Render texture for brightness filtering.
+	RenderTextureArray m_firstPassTextures;     ///< Render textures used for the first blur pass.
+	RenderTextureArray m_secondPassTextures;    ///< Render textures used for the second blur pass.
 };
 
 #endif // ALPHA_SQUADRON_HEADERS_BLOOMEFFECT_H_

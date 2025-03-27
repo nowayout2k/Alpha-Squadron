@@ -92,8 +92,8 @@ class GameText : public WorldNode
 	}
 
  private:
-	sf::Text m_text;   // SFML text object.
-	FontId m_fontType; // Font identifier.
+	sf::Text m_text;   ///< SFML text object.
+	FontId m_fontType; ///< Font identifier.
 };
 
 #endif // GAMETEXT_H_

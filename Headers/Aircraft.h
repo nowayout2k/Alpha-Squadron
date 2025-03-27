@@ -249,32 +249,32 @@ class Aircraft : public GameSprite
 	 */
 	bool isAllied() const;
 
-	int m_identifier;                   // Unique identifier for the aircraft.
-	int m_fireRateLevel{};              // Current fire rate level.
-	int m_spreadLevel{};                // Current bullet spread level.
-	int m_missileCount{};               // Remaining missile count.
-	int m_routineIndex;                 // Current index in the AI routine list.
-	float m_health{};                   // Current health points.
-	float m_speed{};                    // Maximum speed of the aircraft.
-	float m_timeSinceDamage;            // Time elapsed since the last damage was taken.
-	float m_fireCooldownRemaining;      // Remaining cooldown time before the next allowed fire.
-	float m_routineDistanceTravelled;   // Distance travelled while following the current AI routine.
-	float m_spawnDistanceTravelled;     // Distance travelled since spawning.
-	float m_despawnDistance{};          // Distance at which the aircraft despawns.
-	bool m_isLaunchingMissile;          // Flag indicating a missile launch is in progress.
-	bool m_isFiring;                    // Flag indicating the aircraft is firing.
-	bool m_isDamageAnimationActive;     // Flag indicating that the damage animation is active.
-	bool m_isExiting;                   // Flag indicating the aircraft is in the process of exiting.
-	bool m_showExplosion;               // Flag to show the explosion animation.
-	Command m_fireCommand;              // Command to fire bullets.
-	Command m_missileCommand;           // Command to launch a missile.
-	Animation m_explosion;              // Explosion animation for the aircraft.
-	sf::Vector2f m_spawnPos;            // Initial spawn position.
-	Direction m_enterDirection{};       // Direction from which the aircraft enters.
-	Direction m_exitDirection{};        // Direction for the aircraft's exit.
-	AircraftType m_aircraftType;        // Specific type of the aircraft.
-	NodeType m_nodeType;                // Node type for this aircraft.
-	std::vector<AiRoutine> m_aiRoutines; // AI movement routines for the aircraft.
+	int m_identifier;                   ///< Unique identifier for the aircraft.
+	int m_fireRateLevel{};              ///< Current fire rate level.
+	int m_spreadLevel{};                ///< Current bullet spread level.
+	int m_missileCount{};               ///< Remaining missile count.
+	int m_routineIndex;                 ///< Current index in the AI routine list.
+	float m_health{};                   ///< Current health points.
+	float m_speed{};                    ///< Maximum speed of the aircraft.
+	float m_timeSinceDamage;            ///< Time elapsed since the last damage was taken.
+	float m_fireCooldownRemaining;      ///< Remaining cooldown time before the next allowed fire.
+	float m_routineDistanceTravelled;   ///< Distance travelled while following the current AI routine.
+	float m_spawnDistanceTravelled;     ///< Distance travelled since spawning.
+	float m_despawnDistance{};          ///< Distance at which the aircraft despawns.
+	bool m_isLaunchingMissile;          ///< Flag indicating a missile launch is in progress.
+	bool m_isFiring;                    ///< Flag indicating the aircraft is firing.
+	bool m_isDamageAnimationActive;     ///< Flag indicating that the damage animation is active.
+	bool m_isExiting;                   ///< Flag indicating the aircraft is in the process of exiting.
+	bool m_showExplosion;               ///< Flag to show the explosion animation.
+	Command m_fireCommand;              ///< Command to fire bullets.
+	Command m_missileCommand;           ///< Command to launch a missile.
+	Animation m_explosion;              ///< Explosion animation for the aircraft.
+	sf::Vector2f m_spawnPos;            ///< Initial spawn position.
+	Direction m_enterDirection{};       ///< Direction from which the aircraft enters.
+	Direction m_exitDirection{};        ///< Direction for the aircraft's exit.
+	AircraftType m_aircraftType;        ///< Specific type of the aircraft.
+	NodeType m_nodeType;                ///< Node type for this aircraft.
+	std::vector<AiRoutine> m_aiRoutines; ///< AI movement routines for the aircraft.
 };
 
 #endif // AIRCRAFT_H_

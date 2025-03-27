@@ -11,7 +11,7 @@
  */
 enum class FontId
 {
-	Arnold // Represents the Arnold font.
+	Arnold ///< Represents the Arnold font.
 };
 
 #endif // FONTID_H_

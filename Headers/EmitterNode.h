@@ -68,9 +68,9 @@ class EmitterNode : public WorldNode
 	 */
 	void emitParticles(sf::Time dt);
 
-	sf::Time m_accumulatedTime;           // Accumulated time used to determine when to emit a new particle.
-	Particle::Type m_type;                // The type of particles to emit.
-	ParticleSystemNode* m_particleSystem{}; // Pointer to the matching ParticleSystemNode, if found.
+	sf::Time m_accumulatedTime;           ///< Accumulated time used to determine when to emit a new particle.
+	Particle::Type m_type;                ///< The type of particles to emit.
+	ParticleSystemNode* m_particleSystem{}; ///< Pointer to the matching ParticleSystemNode, if found.
 };
 
 #endif // ALPHA_SQUADRON_HEADERS_EMITTERNODE_H_

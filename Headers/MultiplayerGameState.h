@@ -88,30 +88,30 @@ class MultiplayerGameState : public State
 	typedef std::unique_ptr<Player> PlayerPtr;
 
 	// Member variables:
-	World m_world;                              // The game world instance.
-	sf::RenderWindow& m_window;                   // Reference to the render window.
-	std::map<int, PlayerPtr> m_players;           // Map of players by their identifier.
-	std::vector<sf::Int32> m_localPlayerIdentifiers; // List of local player identifiers.
-	sf::TcpSocket m_socket;                       // TCP socket for network communication.
-	bool m_connected;                             // Flag indicating if the connection is established.
-	std::unique_ptr<GameServer> m_gameServer;     // Unique pointer to the game server (if hosting).
-	sf::Clock m_tickClock;                        // Clock for timing regular updates.
-	std::vector<std::string> m_broadcasts;        // List of broadcast messages.
-	sf::Text m_broadcastText;                     // Text object for displaying broadcast messages.
-	sf::Time m_broadcastElapsedTime;              // Elapsed time since the last broadcast update.
+	World m_world;                              ///< The game world instance.
+	sf::RenderWindow& m_window;                   ///< Reference to the render window.
+	std::map<int, PlayerPtr> m_players;           ///< Map of players by their identifier.
+	std::vector<sf::Int32> m_localPlayerIdentifiers; ///< List of local player identifiers.
+	sf::TcpSocket m_socket;                       ///< TCP socket for network communication.
+	bool m_connected;                             ///< Flag indicating if the connection is established.
+	std::unique_ptr<GameServer> m_gameServer;     ///< Unique pointer to the game server (if hosting).
+	sf::Clock m_tickClock;                        ///< Clock for timing regular updates.
+	std::vector<std::string> m_broadcasts;        ///< List of broadcast messages.
+	sf::Text m_broadcastText;                     ///< Text object for displaying broadcast messages.
+	sf::Time m_broadcastElapsedTime;              ///< Elapsed time since the last broadcast update.
 
-	sf::Text m_playerInvitationText;              // Text for inviting a second player.
-	sf::Time m_playerInvitationTime;              // Timer for blinking the invitation text.
+	sf::Text m_playerInvitationText;              ///< Text for inviting a second player.
+	sf::Time m_playerInvitationTime;              ///< Timer for blinking the invitation text.
 
-	sf::Text m_failedConnectionText;              // Text for displaying connection failure messages.
-	sf::Clock m_failedConnectionClock;            // Clock for timing connection failure.
+	sf::Text m_failedConnectionText;              ///< Text for displaying connection failure messages.
+	sf::Clock m_failedConnectionClock;            ///< Clock for timing connection failure.
 
-	bool m_activeState;                           // Flag indicating if the state is active.
-	bool m_hasFocus;                              // Flag indicating if the window has focus.
-	bool m_host;                                  // Flag indicating if this instance is the host.
-	bool m_gameStarted;                           // Flag indicating if the game has started.
-	sf::Time m_clientTimeout;                     // Timeout duration for client inactivity.
-	sf::Time m_timeSinceLastPacket;               // Time elapsed since the last received packet.
+	bool m_activeState;                           ///< Flag indicating if the state is active.
+	bool m_hasFocus;                              ///< Flag indicating if the window has focus.
+	bool m_host;                                  ///< Flag indicating if this instance is the host.
+	bool m_gameStarted;                           ///< Flag indicating if the game has started.
+	sf::Time m_clientTimeout;                     ///< Timeout duration for client inactivity.
+	sf::Time m_timeSinceLastPacket;               ///< Time elapsed since the last received packet.
 };
 
 #endif //ALPHA_SQUADRON_HEADERS_MULTIPLAYERGAMESTATE_H_

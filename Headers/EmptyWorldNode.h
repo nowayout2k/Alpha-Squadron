@@ -58,7 +58,7 @@ class EmptyWorldNode : public WorldNode
 	sf::Rect<float> getBoundingRect() const override { return {}; }
 
  private:
-	NodeType m_type; // The specific node type for this empty node.
+	NodeType m_type; ///< The specific node type for this empty node.
 };
 
 #endif // EMPTYWORLDNODE_H_

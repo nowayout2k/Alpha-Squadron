@@ -135,13 +135,13 @@ class Animation : public sf::Drawable, public sf::Transformable
 	sf::FloatRect getGlobalBounds() const { return getTransform().transformRect(getLocalBounds()); }
 
  private:
-	sf::Sprite m_sprite;             // Sprite used for displaying the animation.
-	sf::Vector2i m_frameSize;        // Size of each animation frame.
-	std::size_t m_numFrames{};       // Number of frames in the animation.
-	std::size_t m_currentFrame{};    // Current frame index.
-	sf::Time m_duration;             // Total duration of the animation.
-	sf::Time m_elapsedTime;          // Elapsed time since the last frame update.
-	bool m_repeat{};                 // Flag indicating whether the animation should repeat.
+	sf::Sprite m_sprite;             ///< Sprite used for displaying the animation.
+	sf::Vector2i m_frameSize;        ///< Size of each animation frame.
+	std::size_t m_numFrames{};       ///< Number of frames in the animation.
+	std::size_t m_currentFrame{};    ///< Current frame index.
+	sf::Time m_duration;             ///< Total duration of the animation.
+	sf::Time m_elapsedTime;          ///< Elapsed time since the last frame update.
+	bool m_repeat{};                 ///< Flag indicating whether the animation should repeat.
 };
 
 #endif // ALPHA_SQUADRON_HEADERS_ANIMATION_H_

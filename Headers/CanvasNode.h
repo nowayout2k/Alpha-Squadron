@@ -92,10 +92,10 @@ class CanvasNode : public WorldNode
 	void loadResources() override;
 
  private:
-	std::vector<float> m_playerHealths;   // Health values for players.
-	GameSprite* m_healthBgElement;          // Pointer to the health background sprite.
-	GameSprite* m_healthBarElement;         // Pointer to the health bar sprite.
-	GameText* m_healthTextElement;          // Pointer to the health text element.
+	std::vector<float> m_playerHealths; ///< Health values for players.
+	GameSprite* m_healthBgElement; 		///< Pointer to the health background sprite.
+	GameSprite* m_healthBarElement;     ///< Pointer to the health bar sprite.
+	GameText* m_healthTextElement;      ///< Pointer to the health text element.
 };
 
 #endif // ALPHA_SQUADRON__UI_H_

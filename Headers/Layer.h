@@ -12,12 +12,12 @@
  */
 enum class Layer
 {
-	Background = 0, // Background layer.
-	UI = 1,         // User interface layer.
-	SpriteBack = 2, // Back sprite layer.
-	SpriteFront = 3, // Front sprite layer.
-	Audio = 4,      // Audio layer.
-	LayerCount = 5  // Total number of layers.
+	Background = 0, ///< Background layer.
+	UI = 1,         ///< User interface layer.
+	SpriteBack = 2, ///< Back sprite layer.
+	SpriteFront = 3, ///< Front sprite layer.
+	Audio = 4,      ///< Audio layer.
+	LayerCount = 5  ///< Total number of layers.
 };
 
 #endif // LAYER_H_

@@ -86,8 +86,8 @@ namespace GUI
 		virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override = 0;
 
 	 private:
-		bool m_isSelected; // Indicates whether the component is selected.
-		bool m_isActive;   // Indicates whether the component is active.
+		bool m_isSelected; ///< Indicates whether the component is selected.
+		bool m_isActive;   ///< Indicates whether the component is active.
 	};
 }
 

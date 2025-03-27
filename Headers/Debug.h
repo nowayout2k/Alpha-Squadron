@@ -103,9 +103,9 @@ class Debug
 	static bool isCollidersVisible() { return m_collidersVisible; }
 
  private:
-	static bool m_fpsVisible;         // Flag indicating if FPS display is visible.
-	static bool m_collidersVisible;   // Flag indicating if collider visualization is enabled.
-	static bool m_isDebuggingEnabled; // Flag indicating if debugging is enabled.
+	static bool m_fpsVisible;         ///< Flag indicating if FPS display is visible.
+	static bool m_collidersVisible;   ///< Flag indicating if collider visualization is enabled.
+	static bool m_isDebuggingEnabled; ///< Flag indicating if debugging is enabled.
 };
 
 #endif // DEBUG_H_
