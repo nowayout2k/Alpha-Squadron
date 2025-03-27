@@ -239,7 +239,7 @@ namespace AlphaSquadron
 				positionUpdatePacket << static_cast<sf::Int32>(m_localPlayerIdentifiers.size());
 				for (sf::Int32 identifier : m_localPlayerIdentifiers)
 				{
-					if (Aircraft * aircraft = m_world.getAircraft(identifier))
+					if (Aircraft* aircraft = m_world.getAircraft(identifier))
 						positionUpdatePacket << identifier << aircraft->getPosition().x << aircraft->getPosition().y
 											 << static_cast<sf::Int32>(aircraft->getHealth())
 											 << static_cast<sf::Int32>(aircraft->getMissileCount());
@@ -285,8 +285,8 @@ namespace AlphaSquadron
 				packet << static_cast<sf::Int32>(Engine::Client::RequestCoopPartner);
 				m_socket.send(packet);
 			}
-				// If Escape is pressed, disable realtime actions and push the pause state.
-			else if (event.key.code == sf::Keyboard::Escape)
+			// If Escape is pressed, disable realtime actions and push the pause state.
+			else if (event.key.code == sf::Keyboard::P)
 			{
 				disableAllRealtimeActions();
 				requestStackPush(StateId::NetworkPause);
@@ -350,7 +350,7 @@ namespace AlphaSquadron
 			sf::Int32 aircraftIdentifier;
 			sf::Vector2f aircraftPosition;
 			packet >> aircraftIdentifier >> aircraftPosition.x >> aircraftPosition.y;
-			Aircraft* aircraft = m_world.addAircraft(aircraftIdentifier);
+			Aircraft* aircraft = m_world.addAircraft(aircraftIdentifier, true);
 			aircraft->setPosition(aircraftPosition);
 			m_players[aircraftIdentifier].reset(new Player(&m_socket, aircraftIdentifier, getContext().KeysPlayer1));
 			m_localPlayerIdentifiers.push_back(aircraftIdentifier);
@@ -362,7 +362,7 @@ namespace AlphaSquadron
 			sf::Int32 aircraftIdentifier;
 			sf::Vector2f aircraftPosition;
 			packet >> aircraftIdentifier >> aircraftPosition.x >> aircraftPosition.y;
-			Aircraft* aircraft = m_world.addAircraft(aircraftIdentifier);
+			Aircraft* aircraft = m_world.addAircraft(aircraftIdentifier, false);
 			aircraft->setPosition(aircraftPosition);
 			m_players[aircraftIdentifier].reset(new Player(&m_socket, aircraftIdentifier, nullptr));
 			break;
@@ -390,7 +390,7 @@ namespace AlphaSquadron
 				sf::Int32 missileAmmo;
 				sf::Vector2f aircraftPosition;
 				packet >> aircraftIdentifier >> aircraftPosition.x >> aircraftPosition.y >> hitpoints >> missileAmmo;
-				Aircraft* aircraft = m_world.addAircraft(aircraftIdentifier);
+				Aircraft* aircraft = m_world.addAircraft(aircraftIdentifier, true);
 				aircraft->setPosition(aircraftPosition);
 				aircraft->setHealth(hitpoints);
 				aircraft->changeMissileCount(missileAmmo - aircraft->getMissileCount());
@@ -402,7 +402,7 @@ namespace AlphaSquadron
 		{
 			sf::Int32 aircraftIdentifier;
 			packet >> aircraftIdentifier;
-			m_world.addAircraft(aircraftIdentifier);
+			m_world.addAircraft(aircraftIdentifier, true);
 			m_players[aircraftIdentifier].reset(new Player(&m_socket, aircraftIdentifier, getContext().KeysPlayer2));
 			m_localPlayerIdentifiers.push_back(aircraftIdentifier);
 			break;

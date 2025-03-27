@@ -75,6 +75,15 @@ namespace Engine
 		}
 
 		/**
+		 * @brief Sets the text alpha.
+		 * @param value value from 0-255 for alpha.
+		 */
+		void setAlpha(const int value)
+		{
+			m_text.setFillColor(sf::Color(m_text.getFillColor().r,m_text.getFillColor().g, m_text.getFillColor().b, value));
+		}
+
+		/**
 		 * @brief Updates the text (no dynamic updates needed).
 		 * @param deltaTime The elapsed time.
 		 * @param commands The command queue.

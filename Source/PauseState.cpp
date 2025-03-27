@@ -17,7 +17,7 @@ namespace AlphaSquadron
 		: State(stack, context),
 		  m_backgroundSprite(),
 		  m_pausedText(),
-		  m_guiContainer(),
+		  m_guiContainer(*context.Audio),
 		  m_letUpdatesThrough(letUpdatesThrough)
 	{
 		// Retrieve the font resource and window size.

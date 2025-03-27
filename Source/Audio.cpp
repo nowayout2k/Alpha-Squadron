@@ -67,6 +67,7 @@ namespace Engine
 
 	void Audio::playMusic(AlphaSquadron::MusicId musicId, float volume)
 	{
+		return;
 		try
 		{
 			m_music.stop();

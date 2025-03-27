@@ -26,10 +26,10 @@ namespace Engine
 
 		/**
 		 * @brief Constructs an empty Container.
-		 *
+		 * @param audio audio reference for button clicks.
 		 * Initializes the container with no selected child.
 		 */
-		explicit Container();
+		explicit Container(Audio& audio);
 
 		/**
 		 * @brief Adds a component to the container.
@@ -98,7 +98,8 @@ namespace Engine
 
 	 private:
 		int m_selectedChild;                    ///< Index of the currently selected child.
-		std::vector<Component::Ptr> m_children;   ///< Collection of child components.
+		std::vector<Component::Ptr> m_children; ///< Collection of child components.
+		Audio& m_audio;							///< audio reference for button click.
 	};
 }
 #endif // CONTAINER_H_

@@ -14,7 +14,7 @@
 namespace AlphaSquadron
 {
 	SettingsState::SettingsState(Engine::StateStack& stack, Context context)
-		: State(stack, context), m_guiContainer()
+		: State(stack, context), m_guiContainer(*context.Audio)
 	{
 		// Set the background sprite texture and scale it to match the window size.
 		m_backgroundSprite.setTexture(ResourceManager::loadResource(TextureId::MetalBg));
@@ -29,8 +29,8 @@ namespace AlphaSquadron
 			// Each call creates a binding for a specific action with a given text label.
 			addButtonLabel(Engine::KeyBinding::ActionType::AccelerateNegX, sf::Vector2i(x, 0), "Move Left", context);
 			addButtonLabel(Engine::KeyBinding::ActionType::AcceleratePosX, sf::Vector2i(x, 1), "Move Right", context);
-			addButtonLabel(Engine::KeyBinding::ActionType::AcceleratePosY, sf::Vector2i(x, 2), "Move Up", context);
-			addButtonLabel(Engine::KeyBinding::ActionType::AccelerateNegY, sf::Vector2i(x, 3), "Move Down", context);
+			addButtonLabel(Engine::KeyBinding::ActionType::AccelerateNegY, sf::Vector2i(x, 2), "Move Up", context);
+			addButtonLabel(Engine::KeyBinding::ActionType::AcceleratePosY, sf::Vector2i(x, 3), "Move Down", context);
 			addButtonLabel(Engine::KeyBinding::ActionType::Fire, sf::Vector2i(x, 4), "Fire", context);
 			addButtonLabel(Engine::KeyBinding::ActionType::LaunchMissile, sf::Vector2i(x, 5), "Launch Missile", context);
 		}

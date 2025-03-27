@@ -1,9 +1,6 @@
 // Copyright (c) 2025 No Way Out LLC All rights reserved.
 
 #include "../Headers/Button.h"
-#include "../Headers/Component.h"
-#include "../Headers/Utility.h"
-#include "../Headers/ResourceManager.h"
 #include <SFML/Graphics/RenderStates.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 
@@ -14,7 +11,6 @@ namespace Engine
 		, m_sprite(AlphaSquadron::ResourceManager::loadResource(AlphaSquadron::TextureId::UiSpriteSheet))
 		, m_text("", AlphaSquadron::ResourceManager::loadResource(FontId::Arnold), 16)
 		, m_isToggle(false)
-		, m_audio(*context.Audio)
 	{
 		changeTexture(Normal);
 		Utility::centerOrigin(m_sprite);
@@ -65,8 +61,6 @@ namespace Engine
 
 		if (!m_isToggle)
 			deactivate();
-
-		m_audio.playSound(AlphaSquadron::SoundFxId::ButtonClick);
 	}
 
 	void Button::deactivate()

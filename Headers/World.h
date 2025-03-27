@@ -152,7 +152,7 @@ namespace AlphaSquadron
 		 * @param identifier The unique identifier for the aircraft.
 		 * @return Pointer to the newly added aircraft.
 		 */
-		Aircraft* addAircraft(int identifier);
+		Aircraft* addAircraft(int identifier, bool isLocal);
 
 		/**
 		 * @brief Polls for a game action from the network.
@@ -282,11 +282,12 @@ namespace AlphaSquadron
 		Engine::BloomEffect m_bloomEffect;             ///< Bloom effect for post-processing.
 		Engine::Audio& m_audioPlayer;                  ///< Reference to the audio system.
 		std::vector<Aircraft*> m_playerAircrafts; ///< List of player aircraft.
+		std::vector<int> m_localPlayerIds; 		///< List of local player Ids.
 		sf::Text m_fpsText;                    ///< Text for displaying FPS.
 		float m_scrollSpeedCompensation{};     ///< Compensation factor for scrolling speed.
 		bool m_isNetworkedWorld{};             ///< Flag indicating if the world is networked.
 		Engine::NetworkNode* m_networkNode{};          ///< Pointer to the network node (if any).
-		Engine::CanvasNode* m_ui{};                    ///< Pointer to the UI node.
+		AlphaSquadron::CanvasNode* m_ui{};                    ///< Pointer to the UI node.
 		float m_timeSinceLastFpsUpdate{};      ///< Time accumulator for FPS update.
 		int m_framesSinceLastFpsUpdate{};      ///< Frame counter for FPS update.
 	};

@@ -109,6 +109,15 @@ namespace Engine
 		}
 
 		/**
+		 * @brief Sets the text alpha.
+		 * @param value value from 0-255 for alpha.
+		 */
+		void setAlpha(const int value)
+		{
+			m_sprite.setColor(sf::Color(m_sprite.getColor().r,m_sprite.getColor().g, m_sprite.getColor().b, value));
+		}
+
+		/**
 		 * @brief Updates the sprite's position based on its velocity.
 		 * @param deltaTime The time elapsed since the last update.
 		 * @param commands The command queue.

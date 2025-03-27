@@ -121,7 +121,6 @@ namespace Engine
 		sf::Sprite m_sprite;  ///< Sprite representing the button.
 		sf::Text m_text;      ///< Text displayed on the button.
 		bool m_isToggle;      ///< Flag indicating whether the button is toggleable.
-		Audio& m_audio;       ///< Reference to the audio system.
 	};
 }
 #endif // BUTTON_H_

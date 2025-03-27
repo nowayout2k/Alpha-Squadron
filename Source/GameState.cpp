@@ -10,7 +10,7 @@ namespace AlphaSquadron
 		  m_world(*context.Window, *context.Audio, false),
 		  m_player(nullptr, 1, context.KeysPlayer1)
 	{
-		m_world.addAircraft(1);
+		m_world.addAircraft(1, true);
 		m_player.setMissionStatus(Player::MissionStatus::None);
 
 		// Play game theme

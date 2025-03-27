@@ -8,7 +8,7 @@
 namespace AlphaSquadron
 {
 	MenuState::MenuState(Engine::StateStack& stack, Context context)
-		: State(stack, context), m_backgroundSprite(), m_titleText(), m_guiContainer()
+		: State(stack, context), m_backgroundSprite(), m_titleText(), m_guiContainer(*context.Audio)
 	{
 		sf::Vector2f center = context.Window->getView().getSize() / 2.f;
 

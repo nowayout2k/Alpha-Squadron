@@ -56,10 +56,11 @@ namespace AlphaSquadron
 
 		// Update UI with player health and reset velocity.
 		int count = 0;
-		for (auto& a : m_playerAircrafts)
+		for (auto id : m_localPlayerIds)
 		{
-			m_ui->setHeath(a->getHealth(), count++);
-			a->setVelocity(0, 0);
+			m_ui->setHeath(getAircraft(id)->getHealth(), count == 0);
+			getAircraft(id)->setVelocity(0, 0);
+			count++;
 		}
 
 		// Remove entities outside the view.
@@ -76,6 +77,15 @@ namespace AlphaSquadron
 
 		adaptPlayerVelocity();
 		handleCollisions();
+
+		for(auto& a : m_playerAircrafts)
+		{
+			if(a->isMarkedForRemoval())
+			{
+				auto newEnd = std::remove_if(m_localPlayerIds.begin(), m_localPlayerIds.end(),[a](int id) { return id == a->getIdentifier(); });
+				m_localPlayerIds.erase(newEnd, m_localPlayerIds.end());
+			}
+		}
 
 		// Remove destroyed player aircraft.
 		auto firstToRemove = std::remove_if(m_playerAircrafts.begin(), m_playerAircrafts.end(), std::mem_fn(&Aircraft::isMarkedForRemoval));
@@ -167,12 +177,15 @@ namespace AlphaSquadron
 		Aircraft* aircraft = getAircraft(identifier);
 		if (aircraft)
 		{
+			auto newEnd = std::remove_if(m_localPlayerIds.begin(), m_localPlayerIds.end(),[identifier](int id) { return id == identifier; });
+			m_localPlayerIds.erase(newEnd, m_localPlayerIds.end());
+
 			aircraft->destroy();
 			m_playerAircrafts.erase(std::find(m_playerAircrafts.begin(), m_playerAircrafts.end(), aircraft));
 		}
 	}
 
-	Aircraft* World::addAircraft(int identifier)
+	Aircraft* World::addAircraft(int identifier, bool isLocalPlayer)
 	{
 		// Create a new player aircraft at a calculated spawn position.
 		std::unique_ptr<Aircraft> player(new Aircraft(NodeType::Player, AircraftType::Tomcat, m_worldView.getCenter(), sf::Vector2f(1, 1)));
@@ -182,6 +195,11 @@ namespace AlphaSquadron
 		player->setIdentifier(identifier);
 		player->loadResources();
 		m_playerAircrafts.push_back(player.get());
+		if(isLocalPlayer)
+			m_localPlayerIds.push_back(identifier);
+
+		if(m_localPlayerIds.size() == 2)
+			m_ui->addPlayer2Ui();
 
 		// Attach the aircraft to the front sprite layer.
 		m_worldLayers[static_cast<int>(Engine::Layer::SpriteFront)]->attachNode(std::move(player));
@@ -293,7 +311,20 @@ namespace AlphaSquadron
 				auto& enemy = dynamic_cast<Aircraft&>(*pair.second);
 				player.changeHealth(-enemy.getHealth());
 				enemy.changeHealth(-player.getHealth());
-				if (player.getHealth() <= 0)
+
+				if (enemy.getHealth() <= 0)
+				{
+					m_audioPlayer.playSound(SoundFxId::Explosion, 50);
+					if(!m_isNetworkedWorld && Engine::Utility::getRandomNumber(0, 3) == 0)
+					{
+						auto randPickup = Engine::Utility::getRandomNumber(0u, static_cast<unsigned int>(PickupType::PickupCount)-1);
+						createPickUp(enemy.getPosition(), static_cast<PickupType>(randPickup));
+					}
+				}
+				else
+					m_audioPlayer.playSound(SoundFxId::TakeDamage, 50);
+
+				if (player.getHealth() <= 0 || enemy.getHealth() <= 0)
 					m_audioPlayer.playSound(SoundFxId::Explosion, 50);
 				else
 				{
@@ -320,7 +351,15 @@ namespace AlphaSquadron
 				projectile.markForRemoval();
 
 				if (aircraft.getHealth() <= 0)
+				{
 					m_audioPlayer.playSound(SoundFxId::Explosion, 50);
+
+					if(!m_isNetworkedWorld && (static_cast<unsigned int>(NodeType::Enemy) & aircraft.getNodeType()) > 0 && Engine::Utility::getRandomNumber(0, 3) == 0)
+					{
+				 		auto randPickup = Engine::Utility::getRandomNumber(0u, static_cast<unsigned int>(PickupType::PickupCount)-1);
+						createPickUp(aircraft.getPosition(), static_cast<PickupType>(randPickup));
+					}
+				}
 				else
 				{
 					m_audioPlayer.playSound(SoundFxId::TakeDamage, 50);
@@ -387,7 +426,7 @@ namespace AlphaSquadron
 		m_worldLayers[static_cast<int>(Engine::Layer::Background)]->attachNode(std::move(backgroundSprite));
 
 		// Create the UI canvas node.
-		std::unique_ptr<Engine::CanvasNode> ui = std::make_unique<Engine::CanvasNode>();
+		std::unique_ptr<AlphaSquadron::CanvasNode> ui = std::make_unique<AlphaSquadron::CanvasNode>();
 		m_ui = ui.get();
 		m_worldLayers[static_cast<int>(Engine::Layer::UI)]->attachNode(std::move(ui));
 

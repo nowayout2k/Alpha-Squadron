@@ -10,7 +10,7 @@
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Transformable.hpp>
 #include <vector>
-namespace Engine
+namespace AlphaSquadron
 {
 	/**
 	 * @file CanvasNode.h
@@ -19,7 +19,7 @@ namespace Engine
 	 * The CanvasNode class is a UI element that displays health information for players.
 	 * It manages health bar, background, and text elements, and updates its layout based on the view.
 	 */
-	class CanvasNode : public WorldNode
+ class CanvasNode : public Engine::WorldNode
 	{
 	 public:
 		/**
@@ -28,6 +28,13 @@ namespace Engine
 		 * Creates the UI elements for displaying player health.
 		 */
 		explicit CanvasNode();
+
+	 	/**
+		* @brief Adds the ui for player 2.
+		*
+		* Creates the UI elements for displaying player health for player 2.
+		*/
+	 	void addPlayer2Ui();
 
 		/**
 		 * @brief Retrieves the bounding rectangle for the CanvasNode.
@@ -62,7 +69,7 @@ namespace Engine
 		 * @param deltaTime Time elapsed since the last update.
 		 * @param commands Command queue for issuing commands.
 		 */
-		void update(sf::Time deltaTime, CommandQueue& commands) override;
+		void update(sf::Time deltaTime, Engine::CommandQueue& commands) override;
 
 		/**
 		 * @brief Sets the health value for a given player.
@@ -72,7 +79,7 @@ namespace Engine
 		 * @param health The new health value.
 		 * @param playerNum The index of the player.
 		 */
-		void setHeath(float health, int playerNum);
+		void setHeath(float health, bool isPlayer1);
 
 	 protected:
 		/**
@@ -93,10 +100,14 @@ namespace Engine
 		void loadResources() override;
 
 	 private:
-		std::vector<float> m_playerHealths; ///< Health values for players.
-		GameSprite* m_healthBgElement;        ///< Pointer to the health background sprite.
-		GameSprite* m_healthBarElement;     ///< Pointer to the health bar sprite.
-		GameText* m_healthTextElement;      ///< Pointer to the health text element.
+		float m_player1Health; 							///< Health value for player 1.
+	 	float m_player2Health; 							///< Health value for player 2.
+		Engine::GameSprite* m_healthBgElement1;        ///< Pointer to the health background sprite for player 1.
+		Engine::GameSprite* m_healthBarElement1;     ///< Pointer to the health bar sprite for player 1.
+		Engine::GameText* m_healthTextElement1;      ///< Pointer to the health text element for player 1.
+		Engine::GameSprite* m_healthBgElement2;        ///< Pointer to the health background sprite for player 2.
+	 	Engine::GameSprite* m_healthBarElement2;     ///< Pointer to the health bar sprite for player 2.
+	 	Engine::GameText* m_healthTextElement2;      ///< Pointer to the health text element for player 2.
 	};
 }
 #endif // ALPHA_SQUADRON__UI_H_

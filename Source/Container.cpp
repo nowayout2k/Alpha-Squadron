@@ -7,9 +7,10 @@
 
 namespace Engine
 {
-	Container::Container()
+	Container::Container(Audio& audio)
 		: m_selectedChild(-1)
 		, m_children()
+		, m_audio(audio)
 	{
 	}
 
@@ -30,16 +31,19 @@ namespace Engine
 		{
 			if (event.key.code == sf::Keyboard::W || event.key.code == sf::Keyboard::Up)
 			{
+				m_audio.playSound(AlphaSquadron::SoundFxId::MenuClick);
 				selectPrevious();
 			}
 			else if (event.key.code == sf::Keyboard::S || event.key.code == sf::Keyboard::Down)
 			{
+				m_audio.playSound(AlphaSquadron::SoundFxId::MenuClick);
 				selectNext();
 			}
 			else if (event.key.code == sf::Keyboard::Return || event.key.code == sf::Keyboard::Space)
 			{
 				if (hasSelection())
 				{
+					m_audio.playSound(AlphaSquadron::SoundFxId::ButtonClick);
 					m_children[m_selectedChild]->activate();
 				}
 			}

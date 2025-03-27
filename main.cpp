@@ -37,7 +37,5 @@ int main()
 	return 0;
 }
 
-//Structs and Enums
-//definitions in headers to inline
-//update Readme
-// TODO: AUDIO AND PICKUPS and Multiplayer health bar fixes and Split into game and engine
+// TODO: Split into game and engine
+// TODO: Update Readme
