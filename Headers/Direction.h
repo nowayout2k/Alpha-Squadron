@@ -3,13 +3,19 @@
 #ifndef DIRECTION_H_
 #define DIRECTION_H_
 
+/**
+ * @file Direction.h
+ * @brief Declaration of the Direction enumeration.
+ *
+ * The Direction enumeration defines basic cardinal directions used in the game.
+ */
 enum Direction
 {
-	North,
-	South,
-	East,
-	West,
-	DirectionCount
+	North,         // Represents the north direction.
+	South,         // Represents the south direction.
+	East,          // Represents the east direction.
+	West,          // Represents the west direction.
+	DirectionCount // Represents the total number of directions.
 };
 
-#endif //DIRECTION_H_
+#endif // DIRECTION_H_

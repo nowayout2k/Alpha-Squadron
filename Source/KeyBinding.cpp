@@ -6,13 +6,13 @@
 #include <string>
 #include <algorithm>
 
-
-KeyBinding::KeyBinding(int controlPreconfiguration) : m_keyMap()
+KeyBinding::KeyBinding(int controlPreconfiguration)
+	: m_keyMap()
 {
 	// Set initial key bindings for player 1
 	if (controlPreconfiguration == 1)
 	{
-		m_keyMap[sf::Keyboard::Left] = LocalPlayerAction::AccelerateNegX;
+		m_keyMap[sf::Keyboard::Left]  = LocalPlayerAction::AccelerateNegX;
 		m_keyMap[sf::Keyboard::Right] = LocalPlayerAction::AcceleratePosX;
 		m_keyMap[sf::Keyboard::Up]    = LocalPlayerAction::AccelerateNegY;
 		m_keyMap[sf::Keyboard::Down]  = LocalPlayerAction::AcceleratePosY;
@@ -21,7 +21,7 @@ KeyBinding::KeyBinding(int controlPreconfiguration) : m_keyMap()
 	}
 	else if (controlPreconfiguration == 2)
 	{
-		// Player 2
+		// Player 2 key bindings
 		m_keyMap[sf::Keyboard::A] = LocalPlayerAction::AccelerateNegX;
 		m_keyMap[sf::Keyboard::D] = LocalPlayerAction::AcceleratePosX;
 		m_keyMap[sf::Keyboard::W] = LocalPlayerAction::AccelerateNegY;
@@ -33,7 +33,7 @@ KeyBinding::KeyBinding(int controlPreconfiguration) : m_keyMap()
 
 void KeyBinding::assignKey(ActionType action, sf::Keyboard::Key key)
 {
-	// Remove all keys that already map to action
+	// Remove all keys that already map to the given action.
 	for (auto itr = m_keyMap.begin(); itr != m_keyMap.end(); )
 	{
 		if (itr->second == action)
@@ -41,19 +41,17 @@ void KeyBinding::assignKey(ActionType action, sf::Keyboard::Key key)
 		else
 			++itr;
 	}
-
-	// Insert new binding
+	// Insert the new binding.
 	m_keyMap[key] = action;
 }
 
 sf::Keyboard::Key KeyBinding::getAssignedKey(ActionType action) const
 {
-	for(auto& pair : m_keyMap)
+	for (const auto& pair : m_keyMap)
 	{
 		if (pair.second == action)
 			return pair.first;
 	}
-
 	return sf::Keyboard::Unknown;
 }
 
@@ -61,28 +59,20 @@ bool KeyBinding::checkAction(sf::Keyboard::Key key, ActionType& out) const
 {
 	auto found = m_keyMap.find(key);
 	if (found == m_keyMap.end())
-	{
 		return false;
-	}
-	else
-	{
-		out = found->second;
-		return true;
-	}
+	out = found->second;
+	return true;
 }
 
 std::vector<KeyBinding::ActionType> KeyBinding::getRealtimeActions() const
 {
-	// Return all realtime actions that are currently active.
 	std::vector<ActionType> actions;
-
-	for(auto& pair : m_keyMap)
+	// Return all realtime actions that are currently active.
+	for (const auto& pair : m_keyMap)
 	{
-		// If key is pressed and an action is a realtime action, store it
 		if (sf::Keyboard::isKeyPressed(pair.first) && IsRealtimeAction(pair.second))
 			actions.push_back(pair.second);
 	}
-
 	return actions;
 }
 
@@ -96,7 +86,6 @@ bool IsRealtimeAction(LocalPlayerAction::ActionType action)
 	case LocalPlayerAction::AcceleratePosY:
 	case LocalPlayerAction::Fire:
 		return true;
-
 	default:
 		return false;
 	}

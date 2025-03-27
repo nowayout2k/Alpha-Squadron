@@ -1,22 +1,30 @@
-// Copyright (c) 2025 No Way Out LLC All rights reserved.
-
 #include "../Headers/LoadingState.h"
 #include "../Headers/ResourceManager.h"
 #include "../Headers/Utility.h"
 
-LoadingState::LoadingState(StateStack& stateStack, Context& context, std::function<void()> loadingTask) : State(stateStack, context)
+LoadingState::LoadingState(StateStack& stateStack, Context& context, std::function<void()> loadingTask)
+	: State(stateStack, context)
 {
+	// Set up the loading text.
 	m_loadingText.setFont(ResourceManager::loadResource(FontId::Arnold));
 	m_loadingText.setString("Loading Resources");
 	Utility::centerOrigin(m_loadingText);
 	m_loadingText.setPosition(getContext().Window->getSize().x / 2u, getContext().Window->getSize().y / 2u + 50);
+
+	// Configure the progress bar background.
 	m_progressBarBackground.setFillColor(sf::Color::White);
-	m_progressBarBackground.setSize(sf::Vector2f(getContext().Window->getSize().x - 20,10));
-	m_progressBarBackground.setPosition(10, m_loadingText.getPosition().y +40);
-	m_progressBar.setFillColor(sf::Color(100,100,100));
+	m_progressBarBackground.setSize(sf::Vector2f(getContext().Window->getSize().x - 20, 10));
+	m_progressBarBackground.setPosition(10, m_loadingText.getPosition().y + 40);
+
+	// Configure the progress bar.
+	m_progressBar.setFillColor(sf::Color(100, 100, 100));
 	m_progressBar.setSize(sf::Vector2f(200, 10));
 	m_progressBar.setPosition(10, m_loadingText.getPosition().y + 40);
+
+	// Initialize progress to 0%.
 	setCompletion(0.f);
+
+	// Start executing the loading task in parallel.
 	m_parallelTask.execute(loadingTask);
 }
 
@@ -38,11 +46,13 @@ void LoadingState::setCompletion(float percent)
 {
 	if (percent > 1.f)
 		percent = 1.f;
-	m_progressBar.setSize(sf::Vector2f(m_progressBarBackground.getSize().x * percent,m_progressBar.getSize().y));
+	// Update progress bar size based on completion percentage.
+	m_progressBar.setSize(sf::Vector2f(m_progressBarBackground.getSize().x * percent, m_progressBar.getSize().y));
 }
 
 void LoadingState::render()
 {
+	// Draw loading text and progress bar.
 	getContext().Window->draw(m_loadingText);
 	getContext().Window->draw(m_progressBarBackground);
 	getContext().Window->draw(m_progressBar);
@@ -50,5 +60,6 @@ void LoadingState::render()
 
 bool LoadingState::handleEvent(const sf::Event& event)
 {
+	// Loading state does not process events.
 	return true;
 }

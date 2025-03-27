@@ -1,6 +1,7 @@
 // Copyright (c) 2025 No Way Out LLC All rights reserved.
 
 #include "../Headers/Animation.h"
+
 void Animation::update(sf::Time dt)
 {
 	sf::Time timePerFrame = m_duration / static_cast<float>(m_numFrames);
@@ -17,13 +18,12 @@ void Animation::update(sf::Time dt)
 			textureRect.left = 0;
 			textureRect.top += textureRect.height;
 		}
-
 		m_elapsedTime -= timePerFrame;
 		if (m_repeat)
 		{
 			m_currentFrame = (m_currentFrame + 1) % m_numFrames;
 			if (m_currentFrame == 0)
-				textureRect = sf::IntRect(0, 0, m_frameSize.x,m_frameSize.y);
+				textureRect = sf::IntRect(0, 0, m_frameSize.x, m_frameSize.y);
 		}
 		else
 		{
@@ -32,6 +32,7 @@ void Animation::update(sf::Time dt)
 	}
 	m_sprite.setTextureRect(textureRect);
 }
+
 void Animation::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	states.transform *= getTransform();

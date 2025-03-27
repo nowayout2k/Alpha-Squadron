@@ -12,24 +12,24 @@ PooledSound* Audio::getSoundFromPool()
 
 	for (auto& pooledSound : m_sounds)
 	{
-		if(!pooledSound.IsAvailable && pooledSound.Sound.getStatus() == sf::Sound::Status::Stopped)
+		if (!pooledSound.IsAvailable && pooledSound.Sound.getStatus() == sf::Sound::Status::Stopped)
 		{
 			pooledSound.IsAvailable = true;
 		}
 	}
 
-	for (auto& pooledSound : m_sounds )
+	for (auto& pooledSound : m_sounds)
 	{
-		if(pooledSound.IsAvailable)
+		if (pooledSound.IsAvailable)
 		{
 			availableSound = &pooledSound;
 			break;
 		}
 	}
 
-	if(!availableSound)
+	if (!availableSound)
 	{
-		if(m_sounds.size() > POOL_RESIZE_LIMIT)
+		if (m_sounds.size() > POOL_RESIZE_LIMIT)
 		{
 			Debug::logWarning("Audio pool limit reached. Cannot play sound!");
 			return nullptr;
@@ -52,7 +52,7 @@ void Audio::playSound(SoundFxId soundFxId, sf::Vector2f position, float volume)
 	return;
 	sf::SoundBuffer& buffer = ResourceManager::loadResource(soundFxId);
 	PooledSound* availableSound = getSoundFromPool();
-	if(!availableSound)
+	if (!availableSound)
 		return;
 
 	availableSound->IsAvailable = false;
@@ -78,7 +78,7 @@ void Audio::playMusic(MusicId musicId, float volume)
 		m_music.setVolume(volume);
 		m_music.play();
 	}
-	catch(std::exception& e)
+	catch (std::exception& e)
 	{
 		Debug::logWarning(e.what());
 	}
@@ -90,7 +90,7 @@ void Audio::stopMusic()
 	{
 		m_music.stop();
 	}
-	catch(std::exception& e)
+	catch (std::exception& e)
 	{
 		Debug::logWarning(e.what());
 	}
@@ -109,20 +109,21 @@ std::string Audio::getMusicPath(MusicId musicId)
 		return "";
 	}
 }
+
 void Audio::stopAllSounds()
 {
 	try
 	{
 		m_music.stop();
-		for (auto& pooledSound : m_sounds )
+		for (auto& pooledSound : m_sounds)
 		{
-			if(pooledSound.Sound.getStatus() == sf::Sound::Status::Playing)
+			if (pooledSound.Sound.getStatus() == sf::Sound::Status::Playing)
 			{
 				pooledSound.Sound.stop();
 			}
 		}
 	}
-	catch(std::exception& e)
+	catch (std::exception& e)
 	{
 		Debug::logWarning(e.what());
 	}

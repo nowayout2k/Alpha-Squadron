@@ -1,4 +1,3 @@
-// Copyright (c) 2025 No Way Out LLC All rights reserved.
 #include "../Headers/DataTables.h"
 #include "../Headers/AircraftType.h"
 #include <fstream>
@@ -6,21 +5,22 @@
 #include "nlohmann/json.hpp"
 #include "../Headers/Aircraft.h"
 
+// Sets the action for a pickup based on its type.
 void SetPickupAction(PickupData& data)
 {
-	switch(data.Type)
+	switch (data.Type)
 	{
 	case PickupType::FireSpread:
-		data.Action = [data] (Aircraft& a) { a.changeFireSpread((int)data.Value); };
+		data.Action = [data](Aircraft& a) { a.changeFireSpread(static_cast<int>(data.Value)); };
 		break;
 	case PickupType::HealthRefill:
-		data.Action = [data] (Aircraft& a) { a.changeHealth(data.Value); };
+		data.Action = [data](Aircraft& a) { a.changeHealth(data.Value); };
 		break;
 	case PickupType::MissileRefill:
-		data.Action = [data] (Aircraft& a) { a.changeMissileCount((int)data.Value); };
+		data.Action = [data](Aircraft& a) { a.changeMissileCount(static_cast<int>(data.Value)); };
 		break;
 	case PickupType::FireRate:
-		data.Action = [data] (Aircraft& a) { a.changeFireRate((int)data.Value); };
+		data.Action = [data](Aircraft& a) { a.changeFireRate(static_cast<int>(data.Value)); };
 		break;
 	default:
 		break;
@@ -32,7 +32,8 @@ GameData LoadData(const std::string& filename)
 	try
 	{
 		std::ifstream file(filename);
-		if (!file.is_open()) {
+		if (!file.is_open())
+		{
 			throw std::runtime_error("Could not open JSON file: " + filename);
 		}
 
@@ -40,11 +41,12 @@ GameData LoadData(const std::string& filename)
 		file >> j;
 
 		GameData gameData;
+
 		for (const auto& item : j["aircraft"])
 		{
 			AircraftData aircraftData;
 			aircraftData.Type = Utility::stringToAircraftType(item["type"]);
-			if(aircraftData.Type == AircraftType::AircraftTypeCount)
+			if (aircraftData.Type == AircraftType::AircraftTypeCount)
 			{
 				Debug::logError("Index is greater than length of array! Could not parse " + filename);
 				return gameData;
@@ -56,23 +58,22 @@ GameData LoadData(const std::string& filename)
 			aircraftData.DespawnDistance = item["aiDespawnDistance"];
 			aircraftData.EnterDirection = Utility::stringToDirection(item["aiEnterDirection"]);
 			aircraftData.ExitDirection = Utility::stringToDirection(item["aiExitDirection"]);
+
 			for (auto aiRoutine : item["aiRoutine"])
 			{
-				aircraftData.AiRoutines.emplace_back( aiRoutine["angle"], aiRoutine["distance"]);
+				aircraftData.AiRoutines.emplace_back(aiRoutine["angle"], aiRoutine["distance"]);
 			}
 
-			auto sLeft = item["spriteTextureRegion"]["left"];
-			auto sTop = item["spriteTextureRegion"]["top"];
-			auto sWidth = item["spriteTextureRegion"]["width"];
-			auto sHeight = item["spriteTextureRegion"]["height"];
-
+			int sLeft = item["spriteTextureRegion"]["left"];
+			int sTop = item["spriteTextureRegion"]["top"];
+			int sWidth = item["spriteTextureRegion"]["width"];
+			int sHeight = item["spriteTextureRegion"]["height"];
 			aircraftData.SpriteTextureRegion = sf::IntRect(sLeft, sTop, sWidth, sHeight);
 
-			auto lLeft = item["textureLoadArea"]["left"];
-			auto lTop = item["textureLoadArea"]["top"];
-			auto lWidth = item["textureLoadArea"]["width"];
-			auto lHeight = item["textureLoadArea"]["height"];
-
+			int lLeft = item["textureLoadArea"]["left"];
+			int lTop = item["textureLoadArea"]["top"];
+			int lWidth = item["textureLoadArea"]["width"];
+			int lHeight = item["textureLoadArea"]["height"];
 			aircraftData.TextureLoadArea = sf::IntRect(lLeft, lTop, lWidth, lHeight);
 
 			gameData.AircraftData[aircraftData.Type] = aircraftData;
@@ -83,12 +84,14 @@ GameData LoadData(const std::string& filename)
 			PickupData pickupData{};
 			pickupData.Type = Utility::stringToPickupType(item["type"]);
 			pickupData.Value = item["value"];
-			pickupData.TextureId =  Utility::stringToTextureId(item["textureId"]);
-			auto left = item["textureLoadArea"]["left"];
-			auto top = item["textureLoadArea"]["top"];
-			auto width = item["textureLoadArea"]["width"];
-			auto height = item["textureLoadArea"]["height"];
+			pickupData.TextureId = Utility::stringToTextureId(item["textureId"]);
+
+			int left = item["textureLoadArea"]["left"];
+			int top = item["textureLoadArea"]["top"];
+			int width = item["textureLoadArea"]["width"];
+			int height = item["textureLoadArea"]["height"];
 			pickupData.TextureLoadArea = sf::IntRect(left, top, width, height);
+
 			SetPickupAction(pickupData);
 			gameData.PickupData[pickupData.Type] = pickupData;
 		}
@@ -98,12 +101,14 @@ GameData LoadData(const std::string& filename)
 			ProjectileData projectileData{};
 			projectileData.Type = Utility::stringToProjectileType(item["type"]);
 			projectileData.MaxSpeed = item["maxSpeed"];
-			projectileData.TextureId =  Utility::stringToTextureId(item["textureId"]);
-			auto left = item["textureLoadArea"]["left"];
-			auto top = item["textureLoadArea"]["top"];
-			auto width = item["textureLoadArea"]["width"];
-			auto height = item["textureLoadArea"]["height"];
+			projectileData.TextureId = Utility::stringToTextureId(item["textureId"]);
+
+			int left = item["textureLoadArea"]["left"];
+			int top = item["textureLoadArea"]["top"];
+			int width = item["textureLoadArea"]["width"];
+			int height = item["textureLoadArea"]["height"];
 			projectileData.TextureLoadArea = sf::IntRect(left, top, width, height);
+
 			gameData.ProjectileData[projectileData.Type] = projectileData;
 		}
 
@@ -118,10 +123,9 @@ GameData LoadData(const std::string& filename)
 
 		return gameData;
 	}
-	catch(std::exception& e)
+	catch (std::exception& e)
 	{
 		Debug::logError(e.what());
 		return {};
 	}
-
 }

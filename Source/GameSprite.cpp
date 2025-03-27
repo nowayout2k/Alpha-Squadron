@@ -1,12 +1,9 @@
-// Copyright (c) 2025 No Way Out LLC All rights reserved.
-
 #include "../Headers/GameSprite.h"
-
 
 void GameSprite::render(sf::RenderTarget& renderTarget, sf::RenderStates states) const
 {
 	renderTarget.draw(m_sprite, states);
-	if(Debug::isCollidersVisible())
+	if (Debug::isCollidersVisible())
 		drawBoundingRect(renderTarget, states);
 }
 
@@ -37,8 +34,8 @@ void GameSprite::loadResources()
 	auto& tex = ResourceManager::loadResource(m_textureId, m_textureLoadArea);
 	tex.setRepeated(m_repeatTexture);
 	m_sprite.setTexture(tex);
-	if(m_spriteTextureRegion != sf::IntRect())
+	if (m_spriteTextureRegion != sf::IntRect())
 		m_sprite.setTextureRect(m_spriteTextureRegion);
-	if(m_centerOrigin)
+	if (m_centerOrigin)
 		Utility::centerOrigin(m_sprite);
 }

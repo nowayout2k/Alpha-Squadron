@@ -1,4 +1,5 @@
 // Copyright (c) 2025 No Way Out LLC All rights reserved.
+
 #include "../Headers/GameState.h"
 #include "../Headers/Audio.h"
 
@@ -17,12 +18,13 @@ GameState::GameState(StateStack& stack, Context context)
 bool GameState::update(sf::Time deltaTime)
 {
 	m_world.update(deltaTime);
-	if(!m_world.hasPlayerAlive())
+
+	if (!m_world.hasPlayerAlive())
 	{
 		m_player.setMissionStatus(Player::MissionStatus::Failure);
 		requestStackPush(StateId::GameOver);
 	}
-	else if(m_world.hasPlayerReachedEnd())
+	else if (m_world.hasPlayerReachedEnd())
 	{
 		m_player.setMissionStatus(Player::MissionStatus::Success);
 		requestStackPush(StateId::MissionSuccess);

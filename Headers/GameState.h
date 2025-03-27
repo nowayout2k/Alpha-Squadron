@@ -3,19 +3,52 @@
 #ifndef GAMESTATE_H_
 #define GAMESTATE_H_
 
+// Local includes using quotes.
 #include "State.h"
 #include "World.h"
+#include "Player.h"
 
+/**
+ * @file GameState.h
+ * @brief Declaration of the GameState class.
+ *
+ * The GameState class manages the main game simulation. It contains a World object
+ * that represents the game world and a Player object that handles player input and status.
+ * The state updates the world, processes input, and transitions to GameOver or MissionSuccess states
+ * based on the game conditions.
+ */
 class GameState : public State
 {
  public:
+	/**
+	 * @brief Constructs a GameState.
+	 * @param stack The state stack.
+	 * @param context The shared state context.
+	 */
 	GameState(StateStack& stack, State::Context context);
+
+	/**
+	 * @brief Renders the game state.
+	 */
 	void render() override;
+
+	/**
+	 * @brief Updates the game state.
+	 * @param deltaTime The time elapsed since the last update.
+	 * @return True if the state should continue, false otherwise.
+	 */
 	bool update(sf::Time deltaTime) override;
+
+	/**
+	 * @brief Handles an incoming event.
+	 * @param event The event to process.
+	 * @return True if the event was handled.
+	 */
 	bool handleEvent(const sf::Event& event) override;
+
  private:
-	World m_world;
-	Player m_player;
+	World m_world;    ///< The game world.
+	Player m_player;  ///< The player.
 };
 
-#endif //GAMESTATE_H_
+#endif // GAMESTATE_H_

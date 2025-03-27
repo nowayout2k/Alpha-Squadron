@@ -1,263 +1,51 @@
 // Copyright (c) 2025 No Way Out LLC All rights reserved.
+
 #include "../Headers/Aircraft.h"
 #include "../Headers/Audio.h"
 #include "../Headers/World.h"
-#include "../Headers/Engine.h"
 #include "../Headers/AudioNode.h"
 
+// Constants for damage animation timing and spawn/despawn distances.
 constexpr float DAMAGE_FLASH_TIME = 2.0f;
 constexpr float DAMAGE_INVINCIBILITY_TIME = 0.5f;
 constexpr float MAX_SPAWN_DISTANCE = 1000.0f;
 
 #ifndef M_PI
-	#define M_PI 3.14159265359
+#define M_PI 3.14159265359
 #endif
 
 #define MAX_HEALTH 100.f
 
 Aircraft::Aircraft(NodeType nodeType, AircraftType aircraftType, sf::Vector2f position, sf::Vector2f scale)
-	: 	GameSprite(true, true),
-		m_explosion(ResourceManager::loadResource(TextureId::ExplosionSpriteSheet),sf::Vector2i(256, 256), 16, sf::seconds(1)),
-	  	m_showExplosion(false),
-		m_isExiting(false),
-		m_timeSinceDamage(0),
-		m_routineDistanceTravelled(0),
-		m_spawnDistanceTravelled(0),
-		m_routineIndex(0),
-		m_isDamageAnimationActive(false),
-		m_fireCooldownRemaining(0),
-		m_spawnPos(position),
-		m_isFiring(false),
-		m_fireCommand(),
-		m_missileCommand(),
-		m_fireRateLevel(0),
-		m_isLaunchingMissile(false),
-		m_spreadLevel(0),
-		m_missileCount(3),
-		m_aircraftType(aircraftType),
-		m_nodeType(nodeType),
-		m_health(100)
+	: GameSprite(true, true),
+	  m_explosion(ResourceManager::loadResource(TextureId::ExplosionSpriteSheet),
+		  sf::Vector2i(256, 256), 16, sf::seconds(1)),
+	  m_showExplosion(false),
+	  m_isExiting(false),
+	  m_timeSinceDamage(0),
+	  m_routineDistanceTravelled(0),
+	  m_spawnDistanceTravelled(0),
+	  m_routineIndex(0),
+	  m_isDamageAnimationActive(false),
+	  m_fireCooldownRemaining(0),
+	  m_spawnPos(position),
+	  m_isFiring(false),
+	  m_fireCommand(),
+	  m_missileCommand(),
+	  m_fireRateLevel(0),
+	  m_isLaunchingMissile(false),
+	  m_spreadLevel(0),
+	  m_missileCount(3),
+	  m_aircraftType(aircraftType),
+	  m_nodeType(nodeType),
+	  m_health(100)
 {
+	// Set the scale and initial position.
 	setScale(scale);
 	setPosition(m_spawnPos);
+
+	// Center the explosion animation.
 	m_explosion.setOrigin(m_explosion.getFrameSize().x / 2.f, m_explosion.getFrameSize().y / 2.f);
-
-}
-
-void Aircraft::playLocalSound(CommandQueue& commands, SoundFxId effect, float volume)
-{
-	Command command;
-	command.NodeType = static_cast<unsigned int>(NodeType::Sound);
-	command.Action = DerivedAction<AudioNode>(
-		[effect, this, volume](AudioNode& node, sf::Time dt) {
-		  node.playSound(effect, getWorldPosition(), volume);
-		}
-	);
-
-	commands.push(command);
-}
-
-void Aircraft::changeHealth(float increment)
-{
-	m_health = std::min(m_health + increment, MAX_HEALTH);
-	if(increment < 0)
-	{
-		if (((getNodeType() & static_cast<unsigned int>(NodeType::Player)) && m_isDamageAnimationActive) || m_health <= 0)
-		{
-			m_health=0;
-        	destroy();
-			m_showExplosion = true;
-			return;
-		}
-
-		m_timeSinceDamage = 0;
-		m_isDamageAnimationActive = true;
-		setIsCollidable(false);
-	}
-}
-
-void Aircraft::fire()
-{
- 	m_isFiring = true;
-}
-
-void Aircraft::launchMissile()
-{
-	if(m_missileCount > 0)
-	{
-		m_missileCount--;
-		m_isLaunchingMissile = true;
-	}
-}
-
-void Aircraft::updateRollAnimation()
-{
-	sf::IntRect textureRect = World::GameData.AircraftData[getAircraftType()].SpriteTextureRegion;
-	if (getVelocity().y > 0.f)
-		textureRect.left += textureRect.width;
-	else if (getVelocity().y < 0.f)
-		textureRect.left += 2 * textureRect.width;
-	setSpriteTextureRegion(textureRect);
-}
-
-void Aircraft::handleDamageAnimation(sf::Time deltaTime)
-{
-	if (m_isDamageAnimationActive)
-	{
-		m_timeSinceDamage += deltaTime.asSeconds();
-
-		if (m_timeSinceDamage > DAMAGE_FLASH_TIME)
-		{
-			setColor(sf::Color::White);
-			m_isDamageAnimationActive = false;
-		}
-		else
-		{
-			float phase = fmod(m_timeSinceDamage, 1.0f);
-			float t = 0.5f * (1.0f + std::cos(phase * 2.0f * M_PI));
-			float c = Utility::lerp(0, 255, t);
-			setColor(sf::Color(255, c, c, 255));
-		}
-	}
-}
-
-bool Aircraft::isAllied() const
-{
-	return getNodeType() & static_cast<unsigned int>(NodeType::Player);
-}
-
-void Aircraft::checkProjectileLaunch(sf::Time dt, CommandQueue& commands)
-{
-	if (!isAllied())
-	{
-		fire();
-	}
-
-	if (m_isFiring && m_fireCooldownRemaining <= 0)
-	{
-		playLocalSound(commands, SoundFxId::BulletLaunch, 10);
-		commands.push(m_fireCommand);
-		m_fireCooldownRemaining += 1.f / (m_fireRateLevel+1);
-		m_isFiring = false;
-	}
-	else if (m_fireCooldownRemaining > 0)
-	{
-		m_fireCooldownRemaining -= dt.asSeconds();
-	}
-
-	if (m_isLaunchingMissile)
-	{
-		playLocalSound(commands, SoundFxId::MissileLaunch, 10);
-		commands.push(m_missileCommand);
-		m_isLaunchingMissile = false;
-	}
-}
-
-
-void Aircraft::update(sf::Time deltaTime, CommandQueue& commands)
-{
-	if (isDestroyed())
-	{
-		if(m_explosion.isComplete())
-			markForRemoval();
-		else
-			m_explosion.update(deltaTime);
-		return;
-	}
-
-	GameSprite::update(deltaTime, commands);
-
-	if(m_timeSinceDamage > DAMAGE_INVINCIBILITY_TIME)
-	{
-		setIsCollidable(true);
-	}
-	else
-	{
-		m_timeSinceDamage += deltaTime.asSeconds();
-	}
-
-	checkProjectileLaunch(deltaTime, commands);
-
-	if (m_fireCooldownRemaining > 0)
-		m_fireCooldownRemaining -= deltaTime.asSeconds();
-
-	if (!(getNodeType() & static_cast<unsigned int>(NodeType::Player)))
-	{
-		updateAiPosition(deltaTime);
-	}
-
-	updateRollAnimation();
-	handleDamageAnimation(deltaTime);
-}
-
-void Aircraft::updateAiPosition(sf::Time deltaTime)
-{
-	auto& view = World::getWorldView();
-	sf::Vector2f viewSize = view.getSize();
-	sf::Vector2f viewCenter = view.getCenter();
-	auto viewRect = sf::FloatRect(viewCenter - viewSize / 2.f, viewSize);
-
-	if (viewRect.left + viewRect.width > m_spawnPos.x + m_despawnDistance)
-		m_isExiting = true;
-
-	if (m_spawnDistanceTravelled < MAX_SPAWN_DISTANCE)
-	{
-		moveTowardsStart(deltaTime);
-	}
-	else if (m_isExiting)
-	{
-		exitPhase();
-	}
-	else if (!m_aiRoutines.empty())
-	{
-		followAiRoutines(deltaTime);
-	}
-}
-
-void Aircraft::moveTowardsStart(sf::Time deltaTime)
-{
-	sf::Vector2f velocity = calculateDirectionalVelocity(m_enterDirection);
-	setVelocity(velocity);
-	m_spawnDistanceTravelled += getMaxSpeed() * deltaTime.asSeconds();
-}
-
-void Aircraft::exitPhase()
-{
-	sf::Vector2f velocity = calculateDirectionalVelocity(m_exitDirection);
-	setVelocity(velocity);
-}
-
-void Aircraft::followAiRoutines(sf::Time deltaTime)
-{
-	float distanceToTravel = m_aiRoutines[m_routineIndex].distance;
-	if (m_routineDistanceTravelled > distanceToTravel)
-	{
-		m_routineIndex = (m_routineIndex + 1) % m_aiRoutines.size();
-		m_routineDistanceTravelled = 0.0f;
-	}
-
-	float radians = Utility::toRadian(m_aiRoutines[m_routineIndex].angle);
-	sf::Vector2f velocity = sf::Vector2f(World::getScrollSpeed() + getMaxSpeed() * std::cos(radians), getMaxSpeed() * std::sin(radians));
-
-	setVelocity(velocity);
-	m_routineDistanceTravelled += getMaxSpeed() * deltaTime.asSeconds();
-}
-
-sf::Vector2f Aircraft::calculateDirectionalVelocity(Direction direction) const
-{
-	switch (direction)
-	{
-	case Direction::North:
-		return {0, -getMaxSpeed()};
-	case Direction::South:
-		return {0, getMaxSpeed()};
-	case Direction::East:
-		return { getMaxSpeed() + World::getScrollSpeed(), 0};
-	case Direction::West:
-		return {-(getMaxSpeed() - World::getScrollSpeed()), 0};
-	default:
-		return {0, 0};
-	}
 }
 
 void Aircraft::loadResources()
@@ -267,7 +55,7 @@ void Aircraft::loadResources()
 	if (dataPair != World::GameData.AircraftData.end())
 	{
 		auto data = dataPair->second;
-		if(getNodeType() & static_cast<unsigned int>(NodeType::Player))
+		if (getNodeType() & static_cast<unsigned int>(NodeType::Player))
 		{
 			m_health = 100;
 		}
@@ -315,22 +103,239 @@ void Aircraft::loadResources()
 			vy = 0;
 			break;
 		}
+		// Adjust the spawn position based on the offsets.
 		m_spawnPos = m_spawnPos + sf::Vector2f(vx, vy);
 		setPosition(m_spawnPos);
 	}
 
-	m_fireCommand.NodeType = (unsigned int)NodeType::SpriteFrontLayer;
+	m_fireCommand.NodeType = static_cast<unsigned int>(NodeType::SpriteFrontLayer);
 	m_fireCommand.Action =
-		[this] (WorldNode& node, sf::Time dt)
+		[this](WorldNode& node, sf::Time dt)
 		{
 		  createBullets(node);
 		};
-	m_missileCommand.NodeType = (unsigned int)NodeType::SpriteFrontLayer;
+
+	m_missileCommand.NodeType = static_cast<unsigned int>(NodeType::SpriteFrontLayer);
 	m_missileCommand.Action =
-		[this] (WorldNode& node, sf::Time delta)
+		[this](WorldNode& node, sf::Time delta)
 		{
 		  createProjectile(node, ProjectileType::Missile, 0.f, 0.5f);
 		};
+}
+
+void Aircraft::render(sf::RenderTarget& target, sf::RenderStates states) const
+{
+	if (isDestroyed() && m_showExplosion)
+		target.draw(m_explosion, states);
+	else
+		GameSprite::render(target, states);
+}
+
+void Aircraft::changeHealth(float increment)
+{
+	m_health = std::min(m_health + increment, MAX_HEALTH);
+	if (increment < 0)
+	{
+		if (((getNodeType() & static_cast<unsigned int>(NodeType::Player)) && m_isDamageAnimationActive) || m_health <= 0)
+		{
+			m_health = 0;
+			destroy();
+			m_showExplosion = true;
+			return;
+		}
+
+		m_timeSinceDamage = 0;
+		m_isDamageAnimationActive = true;
+		setIsCollidable(false);
+	}
+}
+
+void Aircraft::fire()
+{
+	m_isFiring = true;
+}
+
+void Aircraft::launchMissile()
+{
+	if (m_missileCount > 0)
+	{
+		m_missileCount--;
+		m_isLaunchingMissile = true;
+	}
+}
+
+void Aircraft::playLocalSound(CommandQueue& commands, SoundFxId effect, float volume)
+{
+	Command command;
+	command.NodeType = static_cast<unsigned int>(NodeType::Sound);
+	command.Action = DerivedAction<AudioNode>(
+		[effect, this, volume](AudioNode& node, sf::Time dt) {
+		  node.playSound(effect, getWorldPosition(), volume);
+		}
+	);
+
+	commands.push(command);
+}
+
+void Aircraft::handleDamageAnimation(sf::Time deltaTime)
+{
+	if (m_isDamageAnimationActive)
+	{
+		m_timeSinceDamage += deltaTime.asSeconds();
+
+		if (m_timeSinceDamage > DAMAGE_FLASH_TIME)
+		{
+			setColor(sf::Color::White);
+			m_isDamageAnimationActive = false;
+		}
+		else
+		{
+			float phase = fmod(m_timeSinceDamage, 1.0f);
+			float t = 0.5f * (1.0f + std::cos(phase * 2.0f * M_PI));
+			float c = Utility::lerp(0, 255, t);
+			setColor(sf::Color(255, c, c, 255));
+		}
+	}
+}
+
+void Aircraft::update(sf::Time deltaTime, CommandQueue& commands)
+{
+	if (isDestroyed())
+	{
+		if (m_explosion.isComplete())
+			markForRemoval();
+		else
+			m_explosion.update(deltaTime);
+		return;
+	}
+
+	GameSprite::update(deltaTime, commands);
+
+	if (m_timeSinceDamage > DAMAGE_INVINCIBILITY_TIME)
+	{
+		setIsCollidable(true);
+	}
+	else
+	{
+		m_timeSinceDamage += deltaTime.asSeconds();
+	}
+
+	checkProjectileLaunch(deltaTime, commands);
+
+	if (m_fireCooldownRemaining > 0)
+		m_fireCooldownRemaining -= deltaTime.asSeconds();
+
+	if (!(getNodeType() & static_cast<unsigned int>(NodeType::Player)))
+	{
+		updateAiPosition(deltaTime);
+	}
+
+	updateRollAnimation();
+	handleDamageAnimation(deltaTime);
+}
+
+void Aircraft::createProjectile(WorldNode& node, ProjectileType projectileType, float xOffset, float yOffset)
+{
+	float sign = isAllied() ? 1.f : -1.f;
+	std::unique_ptr<Projectile> projectile(new Projectile(isAllied() ? NodeType::AlliedProjectile : NodeType::EnemyProjectile,
+		projectileType, sf::Vector2f(0, 0), sf::Vector2f(sign, 0)));
+
+	if (projectileType == ProjectileType::Missile)
+		projectile->setScale(.75, .75);
+	else
+		projectile->setScale(1, 1);
+
+	if (!isAllied())
+		projectile->setRotation(180);
+
+	projectile->loadResources();
+
+	sf::Vector2f offset(sign * (getBoundingRect().width / 2) + (sign * xOffset),
+		(projectileType == ProjectileType::Missile ? getBoundingRect().height / 2 + yOffset : 0));
+	projectile->setPosition(getWorldPosition() + offset);
+
+	node.attachNode(std::move(projectile));
+}
+
+void Aircraft::updateAiPosition(sf::Time deltaTime)
+{
+	auto& view = World::getWorldView();
+	sf::Vector2f viewSize = view.getSize();
+	sf::Vector2f viewCenter = view.getCenter();
+	auto viewRect = sf::FloatRect(viewCenter - viewSize / 2.f, viewSize);
+
+	if (viewRect.left + viewRect.width > m_spawnPos.x + m_despawnDistance)
+		m_isExiting = true;
+
+	if (m_spawnDistanceTravelled < MAX_SPAWN_DISTANCE)
+	{
+		moveTowardsStart(deltaTime);
+	}
+	else if (m_isExiting)
+	{
+		exitPhase();
+	}
+	else if (!m_aiRoutines.empty())
+	{
+		followAiRoutines(deltaTime);
+	}
+}
+
+void Aircraft::moveTowardsStart(sf::Time deltaTime)
+{
+	sf::Vector2f velocity = calculateDirectionalVelocity(m_enterDirection);
+	setVelocity(velocity);
+	m_spawnDistanceTravelled += getMaxSpeed() * deltaTime.asSeconds();
+}
+
+void Aircraft::exitPhase()
+{
+	sf::Vector2f velocity = calculateDirectionalVelocity(m_exitDirection);
+	setVelocity(velocity);
+}
+
+void Aircraft::followAiRoutines(sf::Time deltaTime)
+{
+	float distanceToTravel = m_aiRoutines[m_routineIndex].Distance;
+	if (m_routineDistanceTravelled > distanceToTravel)
+	{
+		m_routineIndex = (m_routineIndex + 1) % m_aiRoutines.size();
+		m_routineDistanceTravelled = 0.0f;
+	}
+
+	float radians = Utility::toRadian(m_aiRoutines[m_routineIndex].Angle);
+	sf::Vector2f velocity = sf::Vector2f(World::getScrollSpeed() + getMaxSpeed() * std::cos(radians),
+		getMaxSpeed() * std::sin(radians));
+
+	setVelocity(velocity);
+	m_routineDistanceTravelled += getMaxSpeed() * deltaTime.asSeconds();
+}
+
+void Aircraft::checkProjectileLaunch(sf::Time dt, CommandQueue& commands)
+{
+	if (!isAllied())
+	{
+		fire();
+	}
+
+	if (m_isFiring && m_fireCooldownRemaining <= 0)
+	{
+		playLocalSound(commands, SoundFxId::BulletLaunch, 10);
+		commands.push(m_fireCommand);
+		m_fireCooldownRemaining += 1.f / (m_fireRateLevel + 1);
+		m_isFiring = false;
+	}
+	else if (m_fireCooldownRemaining > 0)
+	{
+		m_fireCooldownRemaining -= dt.asSeconds();
+	}
+
+	if (m_isLaunchingMissile)
+	{
+		playLocalSound(commands, SoundFxId::MissileLaunch, 10);
+		commands.push(m_missileCommand);
+		m_isLaunchingMissile = false;
+	}
 }
 
 void Aircraft::createBullets(WorldNode& node)
@@ -352,31 +357,34 @@ void Aircraft::createBullets(WorldNode& node)
 	}
 }
 
-void Aircraft::createProjectile(WorldNode& node, ProjectileType projectileType, float xOffset, float yOffset)
+void Aircraft::updateRollAnimation()
 {
-	float sign = isAllied() ? 1.f : - 1.f;
-	std::unique_ptr<Projectile> projectile(new Projectile(isAllied() ? NodeType::AlliedProjectile :  NodeType::EnemyProjectile ,projectileType, sf::Vector2f(0, 0), sf::Vector2f(sign, 0)));
-
-	if(projectileType == ProjectileType::Missile)
-		projectile->setScale(.75, .75);
-	else
-		projectile->setScale(1, 1);
-
-	if(!isAllied())
-		projectile->setRotation(180);
-
-	projectile->loadResources();
-
-	sf::Vector2f offset(sign * (getBoundingRect().width/2) + (sign * xOffset), projectileType == ProjectileType::Missile ? getBoundingRect().height/2 + yOffset : 0);
-	projectile->setPosition(getWorldPosition() + offset);
-
-	node.attachNode(std::move(projectile));
+	sf::IntRect textureRect = World::GameData.AircraftData[getAircraftType()].SpriteTextureRegion;
+	if (getVelocity().y > 0.f)
+		textureRect.left += textureRect.width;
+	else if (getVelocity().y < 0.f)
+		textureRect.left += 2 * textureRect.width;
+	setSpriteTextureRegion(textureRect);
 }
 
-void Aircraft::render(sf::RenderTarget& target, sf::RenderStates states) const
+sf::Vector2f Aircraft::calculateDirectionalVelocity(Direction direction) const
 {
-	if (isDestroyed() && m_showExplosion)
-		target.draw(m_explosion, states);
-	else
-		GameSprite::render(target, states);
+	switch (direction)
+	{
+	case Direction::North:
+		return {0, -getMaxSpeed()};
+	case Direction::South:
+		return {0, getMaxSpeed()};
+	case Direction::East:
+		return {getMaxSpeed() + World::getScrollSpeed(), 0};
+	case Direction::West:
+		return {-(getMaxSpeed() - World::getScrollSpeed()), 0};
+	default:
+		return {0, 0};
+	}
+}
+
+bool Aircraft::isAllied() const
+{
+	return getNodeType() & static_cast<unsigned int>(NodeType::Player);
 }
