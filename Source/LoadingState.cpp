@@ -1,3 +1,4 @@
+// Copyright (c) 2025 No Way Out LLC All rights reserved.
 #include "../Headers/LoadingState.h"
 #include "../Headers/ResourceManager.h"
 #include "../Headers/Utility.h"

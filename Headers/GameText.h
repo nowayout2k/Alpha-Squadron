@@ -3,11 +3,9 @@
 #ifndef GAMETEXT_H_
 #define GAMETEXT_H_
 
-// Local includes using quotes.
 #include "ResourceManager.h"
 #include "Utility.h"
 
-// SFML includes.
 #include <SFML/Graphics/Text.hpp>
 
 /**

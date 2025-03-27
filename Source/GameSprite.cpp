@@ -1,3 +1,4 @@
+// Copyright (c) 2025 No Way Out LLC All rights reserved.
 #include "../Headers/GameSprite.h"
 
 void GameSprite::render(sf::RenderTarget& renderTarget, sf::RenderStates states) const

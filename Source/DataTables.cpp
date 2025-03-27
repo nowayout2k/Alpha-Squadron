@@ -1,3 +1,4 @@
+// Copyright (c) 2025 No Way Out LLC All rights reserved.
 #include "../Headers/DataTables.h"
 #include "../Headers/AircraftType.h"
 #include <fstream>
@@ -5,7 +6,6 @@
 #include "nlohmann/json.hpp"
 #include "../Headers/Aircraft.h"
 
-// Sets the action for a pickup based on its type.
 void SetPickupAction(PickupData& data)
 {
 	switch (data.Type)

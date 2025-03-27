@@ -15,7 +15,6 @@
 
 #define LAUNCH_TIME 0.25f ///< Duration (in seconds) for the projectile's launch phase.
 
-/// Constructs a Projectile with the specified parameters.
 Projectile::Projectile(NodeType type, ProjectileType projectileType, sf::Vector2f targetDirection, sf::Vector2f launchDirection)
 	: m_type(type),
 	  m_targetDirection(targetDirection),
@@ -29,7 +28,6 @@ Projectile::Projectile(NodeType type, ProjectileType projectileType, sf::Vector2
 	// Constructor initializes projectile parameters including launch state and direction.
 }
 
-/// Updates the projectile's state, managing launch timing and movement behavior.
 void Projectile::update(sf::Time deltaTime, CommandQueue& commands)
 {
 	// Update launch timer if projectile is still launching.
@@ -85,25 +83,21 @@ void Projectile::update(sf::Time deltaTime, CommandQueue& commands)
 	GameSprite::update(deltaTime, commands);
 }
 
-/// Returns the maximum speed of the projectile.
 float Projectile::getMaxSpeed() const
 {
 	return m_maxSpeed;
 }
 
-/// Renders the projectile by invoking the base class rendering.
 void Projectile::render(sf::RenderTarget& renderTarget, sf::RenderStates states) const
 {
 	GameSprite::render(renderTarget, states);
 }
 
-/// Determines whether the projectile is guided (i.e., is a missile).
 bool Projectile::isGuided() const
 {
 	return m_projectileType == Missile;
 }
 
-/// Adjusts the projectile's target direction to guide it towards the specified position.
 void Projectile::guideTowards(sf::Vector2f position)
 {
 	if(isGuided())
@@ -113,13 +107,11 @@ void Projectile::guideTowards(sf::Vector2f position)
 	}
 }
 
-/// Returns the damage dealt by the projectile.
 float Projectile::getDamage()
 {
 	return 25;
 }
 
-/// Loads resources for the projectile, including textures and particle effects.
 void Projectile::loadResources()
 {
 	// Retrieve projectile configuration data based on its type.

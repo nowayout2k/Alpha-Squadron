@@ -5,7 +5,6 @@
 #include "../Headers/World.h"
 #include "../Headers/AudioNode.h"
 
-// Constants for damage animation timing and spawn/despawn distances.
 constexpr float DAMAGE_FLASH_TIME = 2.0f;
 constexpr float DAMAGE_INVINCIBILITY_TIME = 0.5f;
 constexpr float MAX_SPAWN_DISTANCE = 1000.0f;

@@ -3,12 +3,10 @@
 #ifndef AUDIO_H_
 #define AUDIO_H_
 
-// Local includes using quotes.
 #include "SoundFxId.h"
 #include "MusicId.h"
 #include "PooledSound.h"
 
-// Standard library includes.
 #include <SFML/Audio/Music.hpp>
 #include <SFML/Audio/Sound.hpp>
 #include <SFML/Audio/SoundBuffer.hpp>

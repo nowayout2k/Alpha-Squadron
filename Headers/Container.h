@@ -3,11 +3,9 @@
 #ifndef CONTAINER_H_
 #define CONTAINER_H_
 
-// Local includes using quotes.
 #include "Component.h"
 #include "Audio.h"
 
-// Standard library includes.
 #include <vector>
 #include <memory>
 

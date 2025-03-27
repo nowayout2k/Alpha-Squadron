@@ -1,3 +1,4 @@
+// Copyright (c) 2025 No Way Out LLC All rights reserved.
 #include "../Headers/MenuState.h"
 #include "../Headers/Button.h"
 #include "../Headers/Audio.h"

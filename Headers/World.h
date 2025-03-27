@@ -25,7 +25,6 @@
 #include "Audio.h"
 #include "NetworkProtocol.h"
 
-// Forward declaration
 namespace sf
 {
 	class RenderTarget;

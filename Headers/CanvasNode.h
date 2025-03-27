@@ -3,12 +3,10 @@
 #ifndef ALPHA_SQUADRON__UI_H_
 #define ALPHA_SQUADRON__UI_H_
 
-// Local includes using quotes.
 #include "WorldNode.h"
 #include "GameSprite.h"
 #include "GameText.h"
 
-// Standard library includes.
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Transformable.hpp>
 #include <vector>

@@ -3,7 +3,6 @@
 #ifndef EMPTYWORLDNODE_H_
 #define EMPTYWORLDNODE_H_
 
-// Local includes using quotes.
 #include "WorldNode.h"
 
 /**

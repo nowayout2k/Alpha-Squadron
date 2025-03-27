@@ -16,11 +16,8 @@
 #include "../Headers/AudioNode.h"
 #include "../Headers/NetworkNode.h"
 
-// Load game data from a JSON file.
 GameData World::GameData = LoadData("../DataFiles/gameData.json");
-// Initialize the static world view.
 sf::View World::m_worldView = {};
-// Set the base scroll speed.
 float World::m_scrollSpeed = 500.0f;
 
 World::World(sf::RenderTarget& outputTarget, Audio& audioPlayer, bool isNetworked)
@@ -112,9 +109,11 @@ void World::update(sf::Time deltaTime)
 			m_fpsText.setCharacterSize(15);
 			Aircraft* player = getAircraft(1);
 			sf::Vector2f playerPos = (player == nullptr) ? sf::Vector2f() : getAircraft(1)->getPosition();
-			m_fpsText.setString("FPS: " + value + "\nView POS: (x= " + std::to_string((int)center.x + (int)size.x / 2) +
+			m_fpsText.setString("FPS: " + value + "
+View POS: (x= " + std::to_string((int)center.x + (int)size.x / 2) +
 				" y= " + std::to_string((int)center.y) + ")" +
-				"\nPlayer Pos: (x= " + std::to_string((int)playerPos.x) +
+				"
+Player Pos: (x= " + std::to_string((int)playerPos.x) +
 				" y= " + std::to_string((int)playerPos.y) + ")");
 			m_timeSinceLastFpsUpdate = 0;
 			m_framesSinceLastFpsUpdate = 0;

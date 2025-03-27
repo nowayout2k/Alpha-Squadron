@@ -2,7 +2,6 @@
 
 #include "../Headers/ResourceManager.h"
 
-// Define static cache members.
 Cache<sf::Texture> ResourceManager::m_textureCache;
 Cache<sf::SoundBuffer> ResourceManager::m_soundBufferCache;
 Cache<sf::Font> ResourceManager::m_fontCache;

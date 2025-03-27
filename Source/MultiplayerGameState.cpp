@@ -1,6 +1,4 @@
-//
-// Created by Johnnie on 2/20/2025.
-//
+// Copyright (c) 2025 No Way Out LLC All rights reserved.
 /**
  * @file MultiplayerGameState.cpp
  * @brief Implements the MultiplayerGameState class functionalities.
@@ -18,7 +16,6 @@
 #include <fstream>
 #include <memory>
 
-// Retrieves the IP address from file "ip.txt" or creates the file with a default address.
 sf::IpAddress GetAddressFromFile()
 {
 	{

@@ -1,6 +1,4 @@
-//
-// Created by Johnnie on 3/12/2025.
-//
+// Copyright (c) 2025 No Way Out LLC All rights reserved.
 /**
  * @file NetworkNode.h
  * @brief Declaration of the NetworkNode class.

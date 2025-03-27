@@ -3,10 +3,8 @@
 #ifndef COMMAND_H_
 #define COMMAND_H_
 
-// Local includes using quotes.
 #include "WorldNode.h"
 
-// Standard library includes.
 #include <functional>
 #include <SFML/System/Time.hpp>
 

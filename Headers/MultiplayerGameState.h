@@ -1,6 +1,4 @@
-//
-// Created by Johnnie on 2/20/2025.
-//
+// Copyright (c) 2025 No Way Out LLC All rights reserved.
 /**
  * @file MultiplayerGameState.h
  * @brief Declaration of the MultiplayerGameState class.

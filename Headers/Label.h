@@ -3,10 +3,8 @@
 #ifndef LABEL_H_
 #define LABEL_H_
 
-// Local includes using quotes.
 #include "Component.h"
 
-// SFML includes.
 #include <SFML/Graphics/Text.hpp>
 
 /**

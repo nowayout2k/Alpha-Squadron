@@ -3,11 +3,9 @@
 #ifndef MENUSTATE_H_
 #define MENUSTATE_H_
 
-// Local includes using quotes.
 #include "StateStack.h"
 #include "Container.h"
 
-// SFML includes.
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Text.hpp>
 

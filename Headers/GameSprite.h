@@ -3,11 +3,9 @@
 #ifndef GAMESPRITE_H_
 #define GAMESPRITE_H_
 
-// Local includes using quotes.
 #include "ResourceManager.h"
 #include "Utility.h"
 
-// Standard library and SFML includes are assumed to be included via the headers.
 
 /**
  * @file GameSprite.h

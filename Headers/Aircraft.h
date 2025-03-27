@@ -3,14 +3,12 @@
 #ifndef AIRCRAFT_H_
 #define AIRCRAFT_H_
 
-// Local includes using quotes.
 #include "GameSprite.h"
 #include "DataTables.h"
 #include "GameText.h"
 #include "Projectile.h"
 #include "Animation.h"
 
-// Standard library includes.
 #include <vector>
 
 /**
@@ -22,7 +20,7 @@
  * AI behavior, and rendering (including explosion animations).
  */
 
-// Macros for maximum levels and counts.
+// Constants for damage animation timing and spawn/despawn distances.
 #define MAX_FIRE_RATE 3
 #define MAX_MISSILE_COUNT 3
 #define MAX_SPREAD_LEVEL 3

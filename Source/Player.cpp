@@ -11,7 +11,6 @@
 #include <SFML/Network/Packet.hpp>
 #include "../Headers/Player.h"
 
-// Initialize the static vector for realtime action types.
 std::vector<Player::ActionType> Player::m_realTimeActionTypes;
 
 /**

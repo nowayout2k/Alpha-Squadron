@@ -1,3 +1,4 @@
+// Copyright (c) 2025 No Way Out LLC All rights reserved.
 #include <SFML/Window/Event.hpp>
 #include "../Headers/Engine.h"
 #include "../Headers/TitleState.h"

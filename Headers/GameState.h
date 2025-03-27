@@ -3,7 +3,6 @@
 #ifndef GAMESTATE_H_
 #define GAMESTATE_H_
 
-// Local includes using quotes.
 #include "State.h"
 #include "World.h"
 #include "Player.h"

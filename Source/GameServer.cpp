@@ -1,3 +1,4 @@
+// Copyright (c) 2025 No Way Out LLC All rights reserved.
 #include "../Headers/GameServer.h"
 #include "../Headers/NetworkProtocol.h"
 #include "../Headers/Utility.h"
@@ -5,7 +6,6 @@
 #include "../Headers/Aircraft.h"
 #include <SFML/Network/Packet.hpp>
 
-// RemotePeer constructor. Initializes the TCP socket to non-blocking mode.
 GameServer::RemotePeer::RemotePeer()
 	: Ready(false)
 	, TimedOut(false)

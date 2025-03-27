@@ -3,7 +3,6 @@
 #ifndef DATATABLES_H_
 #define DATATABLES_H_
 
-// Standard library and SFML includes.
 #include <SFML/Graphics/Rect.hpp>
 #include <unordered_map>
 #include <vector>
@@ -12,7 +11,6 @@
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/System/Time.hpp>
 
-// Local includes using quotes.
 #include "TextureId.h"
 #include "AircraftType.h"
 #include "AiRoutine.h"

@@ -3,12 +3,10 @@
 #ifndef ALPHA_SQUADRON_HEADERS_AUDIONODE_H_
 #define ALPHA_SQUADRON_HEADERS_AUDIONODE_H_
 
-// Local includes using quotes.
 #include "SoundFxId.h"
 #include "Audio.h"
 #include "WorldNode.h"
 
-// SFML include.
 #include <SFML/System/Vector2.hpp>
 
 /**

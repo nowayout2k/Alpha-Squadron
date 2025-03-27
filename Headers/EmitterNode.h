@@ -3,7 +3,6 @@
 #ifndef ALPHA_SQUADRON_HEADERS_EMITTERNODE_H_
 #define ALPHA_SQUADRON_HEADERS_EMITTERNODE_H_
 
-// Local includes using quotes.
 #include "Particle.h"
 #include "WorldNode.h"
 #include "ParticleSystemNode.h"

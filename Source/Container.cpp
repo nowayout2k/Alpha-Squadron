@@ -1,3 +1,4 @@
+// Copyright (c) 2025 No Way Out LLC All rights reserved.
 #include "../Headers/Container.h"
 #include "../Headers/Debug.h"
 #include "../Headers/Audio.h"

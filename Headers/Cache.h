@@ -3,10 +3,8 @@
 #ifndef CACHE_H_
 #define CACHE_H_
 
-// Local includes using quotes.
 #include "Debug.h"
 
-// Standard library includes.
 #include <iostream>
 #include <unordered_map>
 #include <memory>

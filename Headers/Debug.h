@@ -3,12 +3,10 @@
 #ifndef DEBUG_H_
 #define DEBUG_H_
 
-// Standard library includes.
 #include <sstream>
 #include <iostream>
 #include <string>
 
-// SFML includes.
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Text.hpp>
 

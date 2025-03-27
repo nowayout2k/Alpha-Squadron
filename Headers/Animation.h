@@ -3,10 +3,8 @@
 #ifndef ALPHA_SQUADRON_HEADERS_ANIMATION_H_
 #define ALPHA_SQUADRON_HEADERS_ANIMATION_H_
 
-// Local includes using quotes.
 #include "ResourceManager.h"
 
-// Standard library includes.
 #include <SFML/Graphics.hpp>
 
 /**

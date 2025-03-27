@@ -3,7 +3,6 @@
 #ifndef ALPHA_SQUADRON_HEADERS_GAMESERVER_H_
 #define ALPHA_SQUADRON_HEADERS_GAMESERVER_H_
 
-// Standard library and SFML includes.
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Network/TcpSocket.hpp>
 #include <map>

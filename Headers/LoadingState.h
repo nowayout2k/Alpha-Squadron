@@ -3,11 +3,9 @@
 #ifndef LOADINGSTATE_H_
 #define LOADINGSTATE_H_
 
-// Local includes using quotes.
 #include "ParallelTask.h"
 #include "State.h"
 
-// SFML includes.
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <functional>

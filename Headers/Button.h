@@ -3,12 +3,10 @@
 #ifndef BUTTON_H_
 #define BUTTON_H_
 
-// Local includes using quotes.
 #include "Audio.h"
 #include "Component.h"
 #include "State.h"
 
-// Standard library includes.
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Text.hpp>
 #include <functional>

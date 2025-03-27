@@ -3,12 +3,10 @@
 #ifndef ENGINE_H_
 #define ENGINE_H_
 
-// Local includes using quotes.
 #include "World.h"
 #include "Player.h"
 #include "StateStack.h"
 
-// Standard library includes.
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Time.hpp>
 #include <string>

@@ -3,10 +3,8 @@
 #ifndef GAMEOVERSTATE_H_
 #define GAMEOVERSTATE_H_
 
-// Local includes using quotes.
 #include "StateStack.h"
 
-// Standard library and SFML includes.
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Window/Event.hpp>
