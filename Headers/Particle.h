@@ -16,33 +16,21 @@
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/System/Time.hpp>
 
-/**
- * @struct Particle
- * @brief Represents a single particle in the particle system.
- *
- * The Particle structure holds the properties for an individual particle,
- * such as its spatial position, visual color, and the time it remains active.
- */
-struct Particle
+namespace Engine
 {
 	/**
-	 * @enum Type
-	 * @brief Enumerates possible particle types.
+	 * @struct Particle
+	 * @brief Represents a single particle in the particle system.
 	 *
-	 * The enumeration defines the types of particles, which can be used to
-	 * differentiate behavior and appearance in the particle system.
+	 * The Particle structure holds the properties for an individual particle,
+	 * such as its spatial position, visual color, and the time it remains active.
 	 */
-	enum Type
+	struct Particle
 	{
-		None,             ///< No specific particle type.
-		Propellant,       ///< Particle representing propellant effects.
-		Smoke,            ///< Particle representing smoke effects.
-		ParticleTypeCount ///< Total count of particle types.
+		sf::Vector2f Position; ///< The current position of the particle.
+		sf::Color Color;       ///< The color of the particle.
+		sf::Time Lifetime;     ///< The remaining lifetime of the particle.
 	};
-
-	sf::Vector2f Position; ///< The current position of the particle.
-	sf::Color Color;       ///< The color of the particle.
-	sf::Time Lifetime;     ///< The remaining lifetime of the particle.
-};
+}
 
 #endif //ALPHA_SQUADRON_HEADERS_PARTICLE_H_

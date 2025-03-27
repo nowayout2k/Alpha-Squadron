@@ -5,15 +5,17 @@
 
 #include <string>
 
-/**
- * File: AircraftType.h
- * Purpose: Defines the AircraftType enumeration used for identifying different aircraft types.
- */
-enum class AircraftType
+namespace AlphaSquadron
 {
-	Chopper,             // Helicopter type aircraft.
-	Tomcat,              // Fighter jet type aircraft.
-	AircraftTypeCount    // Represents the count of aircraft types.
-};
-
+	/**
+	 * File: AircraftType.h
+	 * Purpose: Defines the AircraftType enumeration used for identifying different aircraft types.
+	 */
+	enum class AircraftType
+	{
+		Chopper,             // Helicopter type aircraft.
+		Tomcat,              // Fighter jet type aircraft.
+		AircraftTypeCount    // Represents the count of aircraft types.
+	};
+}
 #endif // AIRCRAFTTYPE_H_

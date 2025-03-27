@@ -16,7 +16,7 @@
  * The Container class is a composite GUI component that manages a collection of child
  * components. It handles navigation through selectable children and forwards events to them.
  */
-namespace GUI
+namespace Engine
 {
 	class Container : public Component
 	{
@@ -101,5 +101,4 @@ namespace GUI
 		std::vector<Component::Ptr> m_children;   ///< Collection of child components.
 	};
 }
-
 #endif // CONTAINER_H_

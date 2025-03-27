@@ -12,24 +12,26 @@
 #ifndef SOUNDFXID_H_
 #define SOUNDFXID_H_
 
-/**
- * @enum SoundFxId
- * @brief Enumerates sound effect identifiers.
- *
- * This enumeration specifies the different sound effects available in the game,
- * such as button clicks, explosions, and various other in-game sounds.
- */
-enum class SoundFxId
+namespace AlphaSquadron
 {
-	ButtonClick,    ///< Sound effect for button clicks.
-	Explosion,      ///< Sound effect for explosions.
-	MenuClick,      ///< Sound effect for menu clicks.
-	BulletLaunch,   ///< Sound effect for bullet launches.
-	MissileLaunch,  ///< Sound effect for missile launches.
-	CollectPickup,  ///< Sound effect for collecting pickups.
-	DamageWarning1, ///< First damage warning sound effect.
-	DamageWarning2, ///< Second damage warning sound effect.
-	TakeDamage      ///< Sound effect for taking damage.
-};
-
+	/**
+	 * @enum SoundFxId
+	 * @brief Enumerates sound effect identifiers.
+	 *
+	 * This enumeration specifies the different sound effects available in the game,
+	 * such as button clicks, explosions, and various other in-game sounds.
+	 */
+	enum class SoundFxId
+	{
+		ButtonClick,    ///< Sound effect for button clicks.
+		Explosion,      ///< Sound effect for explosions.
+		MenuClick,      ///< Sound effect for menu clicks.
+		BulletLaunch,   ///< Sound effect for bullet launches.
+		MissileLaunch,  ///< Sound effect for missile launches.
+		CollectPickup,  ///< Sound effect for collecting pickups.
+		DamageWarning1, ///< First damage warning sound effect.
+		DamageWarning2, ///< Second damage warning sound effect.
+		TakeDamage      ///< Sound effect for taking damage.
+	};
+}
 #endif //SOUNDFXID_H_

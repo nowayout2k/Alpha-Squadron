@@ -1,7 +1,7 @@
 // Copyright (c) 2025 No Way Out LLC All rights reserved.
 #include "../Headers/Component.h"
 
-namespace GUI
+namespace Engine
 {
 	Component::Component()
 		: m_isActive(false)

@@ -12,29 +12,31 @@
 #ifndef TEXTUREID_H_
 #define TEXTUREID_H_
 
-/**
- * @enum TextureId
- * @brief Enumerates texture identifiers.
- *
- * This enumeration provides unique identifiers for each texture resource in the game.
- * It includes various background textures, sprite sheets for game characters and UI elements,
- * as well as textures for special effects.
- */
-enum class TextureId
+namespace AlphaSquadron
 {
-	ForestBg,            ///< Texture for a forest background.
-	SkyBg,               ///< Texture for a sky background.
-	JungleBg,            ///< Texture for a jungle background.
-	TallCityBg,          ///< Texture for a tall city background.
-	NightCityBg,         ///< Texture for a night city background.
-	DecayedCityBg,       ///< Texture for a decayed city background.
-	GameSpriteSheet,     ///< Sprite sheet containing game character graphics.
-	UiSpriteSheet,       ///< Sprite sheet used for UI elements.
-	ExplosionSpriteSheet,///< Sprite sheet for explosion effects.
-	MetalBg,             ///< Texture for a metal background.
-	Particle,            ///< Texture for particle effects.
-	CompanyLogo,         ///< Texture for the company logo.
-	TextureCount         ///< Total number of texture identifiers.
-};
-
+	/**
+	 * @enum TextureId
+	 * @brief Enumerates texture identifiers.
+	 *
+	 * This enumeration provides unique identifiers for each texture resource in the game.
+	 * It includes various background textures, sprite sheets for game characters and UI elements,
+	 * as well as textures for special effects.
+	 */
+	enum class TextureId
+	{
+		ForestBg,            ///< Texture for a forest background.
+		SkyBg,               ///< Texture for a sky background.
+		JungleBg,            ///< Texture for a jungle background.
+		TallCityBg,          ///< Texture for a tall city background.
+		NightCityBg,         ///< Texture for a night city background.
+		DecayedCityBg,       ///< Texture for a decayed city background.
+		GameSpriteSheet,     ///< Sprite sheet containing game character graphics.
+		UiSpriteSheet,       ///< Sprite sheet used for UI elements.
+		ExplosionSpriteSheet,///< Sprite sheet for explosion effects.
+		MetalBg,             ///< Texture for a metal background.
+		Particle,            ///< Texture for particle effects.
+		CompanyLogo,         ///< Texture for the company logo.
+		TextureCount         ///< Total number of texture identifiers.
+	};
+}
 #endif //TEXTUREID_H_

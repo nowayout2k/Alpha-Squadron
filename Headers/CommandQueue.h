@@ -6,53 +6,64 @@
 #include <queue>
 #include "Command.h"
 
-/**
- * @file CommandQueue.h
- * @brief Declaration of the CommandQueue class.
- *
- * The CommandQueue class provides a simple interface for managing a queue of Command objects.
- * It allows pushing commands into the queue and retrieving them for processing.
- */
-class CommandQueue
+namespace Engine
 {
- public:
 	/**
-	 * @brief Pushes a command onto the queue.
-	 * @param command The command to be added.
-	 */
-	void push(const Command& command) { m_queue.push(command); }
-
-	/**
-	 * @brief Pops the front command from the queue.
+	 * @file CommandQueue.h
+	 * @brief Declaration of the CommandQueue class.
 	 *
-	 * If the queue is empty, a runtime error is thrown.
-	 * @return The command that was at the front of the queue.
-	 * @throws std::runtime_error if the queue is empty.
+	 * The CommandQueue class provides a simple interface for managing a queue of Command objects.
+	 * It allows pushing commands into the queue and retrieving them for processing.
 	 */
-	Command pop()
+	class CommandQueue
 	{
-		if (m_queue.empty())
-			throw std::runtime_error("Queue is empty");
+	 public:
+		/**
+		 * @brief Pushes a command onto the queue.
+		 * @param command The command to be added.
+		 */
+		void push(const Command& command)
+		{
+			m_queue.push(command);
+		}
 
-		Command c = m_queue.front();
-		m_queue.pop();
-		return c;
-	}
+		/**
+		 * @brief Pops the front command from the queue.
+		 *
+		 * If the queue is empty, a runtime error is thrown.
+		 * @return The command that was at the front of the queue.
+		 * @throws std::runtime_error if the queue is empty.
+		 */
+		Command pop()
+		{
+			if (m_queue.empty())
+				throw std::runtime_error("Queue is empty");
 
-	/**
-	 * @brief Checks whether the queue is empty.
-	 * @return True if the queue is empty; false otherwise.
-	 */
-	bool isEmpty() const { return m_queue.empty(); }
+			Command c = m_queue.front();
+			m_queue.pop();
+			return c;
+		}
 
-	/**
-	 * @brief Returns the number of commands in the queue.
-	 * @return The size of the command queue.
-	 */
-	std::queue<Command>::size_type size() const { return m_queue.size(); }
+		/**
+		 * @brief Checks whether the queue is empty.
+		 * @return True if the queue is empty; false otherwise.
+		 */
+		bool isEmpty() const
+		{
+			return m_queue.empty();
+		}
 
- private:
-	std::queue<Command> m_queue; ///< Underlying container for commands.
-};
+		/**
+		 * @brief Returns the number of commands in the queue.
+		 * @return The size of the command queue.
+		 */
+		std::queue<Command>::size_type size() const
+		{
+			return m_queue.size();
+		}
 
+	 private:
+		std::queue<Command> m_queue; ///< Underlying container for commands.
+	};
+}
 #endif // COMMANDQUEUE_H_

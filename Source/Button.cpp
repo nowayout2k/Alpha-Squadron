@@ -7,12 +7,12 @@
 #include <SFML/Graphics/RenderStates.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 
-namespace GUI
+namespace Engine
 {
 	Button::Button(State::Context context)
 		: m_callback()
-		, m_sprite(ResourceManager::loadResource(TextureId::UiSpriteSheet))
-		, m_text("", ResourceManager::loadResource(FontId::Arnold), 16)
+		, m_sprite(AlphaSquadron::ResourceManager::loadResource(AlphaSquadron::TextureId::UiSpriteSheet))
+		, m_text("", AlphaSquadron::ResourceManager::loadResource(FontId::Arnold), 16)
 		, m_isToggle(false)
 		, m_audio(*context.Audio)
 	{
@@ -66,7 +66,7 @@ namespace GUI
 		if (!m_isToggle)
 			deactivate();
 
-		m_audio.playSound(SoundFxId::ButtonClick);
+		m_audio.playSound(AlphaSquadron::SoundFxId::ButtonClick);
 	}
 
 	void Button::deactivate()

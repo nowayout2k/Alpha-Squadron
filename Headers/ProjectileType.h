@@ -12,18 +12,21 @@
 #ifndef PROJECTILETYPE_H_
 #define PROJECTILETYPE_H_
 
-/**
- * @enum ProjectileType
- * @brief Enumerates the types of projectiles in the game.
- *
- * This enumeration allows the game to differentiate between various projectile
- * behaviors such as those for bullets and missiles.
- */
-enum ProjectileType
+namespace AlphaSquadron
 {
-	Bullet,    ///< Represents a bullet projectile.
-	Missile,   ///< Represents a missile projectile.
-	TypeCount  ///< Total count of projectile types.
-};
+	/**
+	 * @enum ProjectileType
+	 * @brief Enumerates the types of projectiles in the game.
+	 *
+	 * This enumeration allows the game to differentiate between various projectile
+	 * behaviors such as those for bullets and missiles.
+	 */
+	enum ProjectileType
+	{
+		Bullet,    ///< Represents a bullet projectile.
+		Missile,   ///< Represents a missile projectile.
+		TypeCount  ///< Total count of projectile types.
+	};
+}
 
 #endif //PROJECTILETYPE_H_

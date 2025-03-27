@@ -12,16 +12,19 @@
 #ifndef MUSICID_H_
 #define MUSICID_H_
 
+namespace AlphaSquadron
+{
+
 /**
  * @enum MusicId
  * @brief Enumerates music track identifiers.
  *
  * This enumeration is used to specify which music track should be played.
  */
-enum class MusicId
-{
-	GameMusic, ///< Identifier for the game music track.
-	MenuMusic, ///< Identifier for the menu music track.
-};
-
+	enum class MusicId
+	{
+		GameMusic, ///< Identifier for the game music track.
+		MenuMusic, ///< Identifier for the menu music track.
+	};
+}
 #endif //MUSICID_H_

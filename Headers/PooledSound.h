@@ -14,17 +14,20 @@
 
 #include <SFML/Audio/Sound.hpp>
 
-/**
- * @struct PooledSound
- * @brief Represents a sound in the pool along with its availability status.
- *
- * The PooledSound structure encapsulates an sf::Sound object and a boolean flag,
- * which is used to determine whether the sound is currently available for use.
- */
-struct PooledSound
+namespace Engine
 {
-	sf::Sound Sound;       ///< The SFML sound object.
-	bool IsAvailable = false; ///< Flag indicating whether the sound is available.
-};
 
+	/**
+	 * @struct PooledSound
+	 * @brief Represents a sound in the pool along with its availability status.
+	 *
+	 * The PooledSound structure encapsulates an sf::Sound object and a boolean flag,
+	 * which is used to determine whether the sound is currently available for use.
+	 */
+	struct PooledSound
+	{
+		sf::Sound Sound;       ///< The SFML sound object.
+		bool IsAvailable = false; ///< Flag indicating whether the sound is available.
+	};
+}
 #endif //POOLEDSOUND_H_

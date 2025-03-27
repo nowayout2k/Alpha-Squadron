@@ -16,8 +16,9 @@
  * The Component class provides a base interface for GUI components.
  * It inherits from sf::Drawable and sf::Transformable, and is non-copyable.
  */
-namespace GUI
+namespace Engine
 {
+
 	class Component : public sf::Drawable, public sf::Transformable, private sf::NonCopyable
 	{
 	 public:
@@ -90,5 +91,4 @@ namespace GUI
 		bool m_isActive;   ///< Indicates whether the component is active.
 	};
 }
-
 #endif // COMPONENT_H_

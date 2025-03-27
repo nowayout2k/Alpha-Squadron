@@ -10,21 +10,23 @@
 
 #include "../Headers/State.h"
 #include "../Headers/StateStack.h"
-
-void State::requestStackPush(StateId stateId)
+namespace Engine
 {
-	// Request the state stack to push a new state identified by stateId.
-	m_stack->pushState(stateId);
-}
+	void State::requestStackPush(AlphaSquadron::StateId stateId)
+	{
+		// Request the state stack to push a new state identified by stateId.
+		m_stack->pushState(stateId);
+	}
 
-void State::requestStackPop()
-{
-	// Request the state stack to remove the current state.
-	m_stack->popState();
-}
+	void State::requestStackPop()
+	{
+		// Request the state stack to remove the current state.
+		m_stack->popState();
+	}
 
-void State::requestStateClear()
-{
-	// Request the state stack to clear all states.
-	m_stack->clearStates();
+	void State::requestStateClear()
+	{
+		// Request the state stack to clear all states.
+		m_stack->clearStates();
+	}
 }

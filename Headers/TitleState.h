@@ -14,49 +14,51 @@
 
 #include "State.h"
 
-/**
- * @class TitleState
- * @brief Manages the title screen state.
- *
- * The TitleState class handles rendering the title screen graphics, updating a text
- * blinking effect, and processing input events to transition to the menu state.
- */
-class TitleState : public State
+namespace AlphaSquadron
 {
- public:
 	/**
-	 * @brief Constructs a TitleState.
-	 * @param stack The state stack.
-	 * @param context The shared context with common resources.
+	 * @class TitleState
+	 * @brief Manages the title screen state.
+	 *
+	 * The TitleState class handles rendering the title screen graphics, updating a text
+	 * blinking effect, and processing input events to transition to the menu state.
 	 */
-	TitleState(StateStack& stack, Context context);
+	class TitleState : public Engine::State
+	{
+	 public:
+		/**
+		 * @brief Constructs a TitleState.
+		 * @param stack The state stack.
+		 * @param context The shared context with common resources.
+		 */
+		TitleState(Engine::StateStack& stack, Context context);
 
-	/**
-	 * @brief Renders the title screen.
-	 */
-	void render() override;
+		/**
+		 * @brief Renders the title screen.
+		 */
+		void render() override;
 
-	/**
-	 * @brief Updates the title screen state.
-	 * @param deltaTime Time elapsed since the last update.
-	 * @return True if the state should continue updating.
-	 */
-	bool update(sf::Time deltaTime) override;
+		/**
+		 * @brief Updates the title screen state.
+		 * @param deltaTime Time elapsed since the last update.
+		 * @return True if the state should continue updating.
+		 */
+		bool update(sf::Time deltaTime) override;
 
-	/**
-	 * @brief Handles input events.
-	 * @param event The SFML event to process.
-	 * @return True if the event was handled.
-	 */
-	bool handleEvent(const sf::Event& event) override;
+		/**
+		 * @brief Handles input events.
+		 * @param event The SFML event to process.
+		 * @return True if the event was handled.
+		 */
+		bool handleEvent(const sf::Event& event) override;
 
- private:
-	sf::Sprite m_backgroundSprite; ///< Background sprite covering the title screen.
-	sf::Sprite m_logoSprite;       ///< Sprite displaying the company logo.
-	sf::Text m_continueText;       ///< Blinking text prompt instructing the user to continue.
+	 private:
+		sf::Sprite m_backgroundSprite; ///< Background sprite covering the title screen.
+		sf::Sprite m_logoSprite;       ///< Sprite displaying the company logo.
+		sf::Text m_continueText;       ///< Blinking text prompt instructing the user to continue.
 
-	bool m_showText;             ///< Flag to toggle the visibility of the continue text.
-	float m_textEffectTime;      ///< Accumulated time to manage blinking effect.
-};
-
+		bool m_showText;             ///< Flag to toggle the visibility of the continue text.
+		float m_textEffectTime;      ///< Accumulated time to manage blinking effect.
+	};
+}
 #endif //TITLESTATE_H_

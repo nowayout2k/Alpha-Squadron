@@ -4,10 +4,10 @@
 #include "../Headers/ResourceManager.h"
 #include "../Headers/Utility.h"
 
-namespace GUI
+namespace Engine
 {
 	Label::Label(const std::string& text)
-		: m_text(text, ResourceManager::loadResource(FontId::Arnold), 16)
+		: m_text(text, AlphaSquadron::ResourceManager::loadResource(FontId::Arnold), 16)
 	{
 	}
 

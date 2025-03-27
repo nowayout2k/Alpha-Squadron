@@ -118,6 +118,7 @@ add_executable(Alpha-Squadron main.cpp
         Headers/NetworkProtocol.h
         Source/KeyBinding.cpp
         Headers/KeyBinding.h
+        Headers/ParticleType.h
 )
 
 # Link the SFML libraries and nlohmann_json

@@ -8,31 +8,33 @@
  */
 
 #include "../Headers/NetworkNode.h"
-
-NetworkNode::NetworkNode()
-	: EmptyWorldNode(), m_pendingActions()
+namespace Engine
 {
-	// Constructor initializes the base EmptyWorldNode and sets up an empty queue.
-}
-
-void NetworkNode::notifyGameAction(GameActions::Type type, sf::Vector2f position)
-{
-	// Add a new game action to the pending actions queue.
-	m_pendingActions.emplace(type, position);
-}
-
-bool NetworkNode::pollGameAction(GameActions::Action& out)
-{
-	// If there are no pending actions, return false.
-	if (m_pendingActions.empty())
+	NetworkNode::NetworkNode()
+		: EmptyWorldNode(), m_pendingActions()
 	{
-		return false;
+		// Constructor initializes the base EmptyWorldNode and sets up an empty queue.
 	}
-	else
+
+	void NetworkNode::notifyGameAction(GameActions::Type type, sf::Vector2f position)
 	{
-		// Retrieve and remove the front action from the queue.
-		out = m_pendingActions.front();
-		m_pendingActions.pop();
-		return true;
+		// Add a new game action to the pending actions queue.
+		m_pendingActions.emplace(type, position);
+	}
+
+	bool NetworkNode::pollGameAction(GameActions::Action& out)
+	{
+		// If there are no pending actions, return false.
+		if (m_pendingActions.empty())
+		{
+			return false;
+		}
+		else
+		{
+			// Retrieve and remove the front action from the queue.
+			out = m_pendingActions.front();
+			m_pendingActions.pop();
+			return true;
+		}
 	}
 }

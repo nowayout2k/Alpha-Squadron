@@ -7,15 +7,15 @@
 
 #include <SFML/Graphics/Text.hpp>
 
-/**
- * @file Label.h
- * @brief Declaration of the Label class.
- *
- * The Label class is a GUI component used for displaying non-interactive text.
- * It does not support selection or activation.
- */
-namespace GUI
+namespace Engine
 {
+	/**
+	 * @file Label.h
+	 * @brief Declaration of the Label class.
+	 *
+	 * The Label class is a GUI component used for displaying non-interactive text.
+	 * It does not support selection or activation.
+	 */
 	class Label : public Component
 	{
 	 public:
@@ -58,5 +58,4 @@ namespace GUI
 		sf::Text m_text; ///< The SFML text object used to display the label.
 	};
 }
-
 #endif // LABEL_H_

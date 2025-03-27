@@ -18,7 +18,7 @@
  * The Button class is a GUI component that responds to user input.
  * It displays a sprite and text, manages selection state, and triggers a callback when activated.
  */
-namespace GUI
+namespace Engine
 {
 	class Button : public Component
 	{
@@ -124,5 +124,4 @@ namespace GUI
 		Audio& m_audio;       ///< Reference to the audio system.
 	};
 }
-
 #endif // BUTTON_H_

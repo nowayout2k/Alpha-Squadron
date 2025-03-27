@@ -25,7 +25,7 @@ int main()
 	try
 	{
 		// Create the Engine and run the main loop.
-		Engine engine;
+		Engine::GameEngine engine;
 		engine.run();
 	}
 	catch (std::exception& e)
@@ -36,10 +36,8 @@ int main()
 
 	return 0;
 }
-//Add << to comments
-//Remove comments above includes
+
 //Structs and Enums
-//Namespaces
 //definitions in headers to inline
 //update Readme
 // TODO: AUDIO AND PICKUPS and Multiplayer health bar fixes and Split into game and engine
