@@ -26,7 +26,8 @@ This README provides a comprehensive overview of the project structure, a detail
   - [UI & States](#ui--states)
   - [Multiplayer](#multiplayer)
   - [Game Data & Configuration](#game-data--configuration)
-- [Additional Notes on Systems](#additional-notes-on-systems)
+- [Additional Notes on Systems](#system-overview)
+- [System Overview](#)
 
 ---
 
