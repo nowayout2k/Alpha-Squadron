@@ -11,19 +11,18 @@ This README provides a comprehensive overview of the project structure, a detail
 
 ## Table of Contents
 
-- [Project Structure Overview](#project-structure-overview)
-- [Additional Notes on Systems](#additional-notes-on-systems)
+- [Project Structure Overview](#project-structure)
 - [System Overview](#system-overview)
   - [Game Loop](#Game-Loop)
   - [States](#States)
-  - [Config](#Config)
-  - [Muliplayer](#Muliplayer)
+  - [Configuration](#Configuration)
+  - [Multiplayer](#Multiplayer)
   - [UI](#UI)
-  - [Cache](#Cache)
-  - [Pooling](#Pooling)
   - [Audio](#Audio)
+  - [Animation](#Animation)
   - [Scene Graph](#Scene-Graph)
   - [Rendering](#Rendering)
+  - [Misc](#Misc)
 
 ---
 
@@ -338,6 +337,7 @@ An excerpt from the JSON file illustrates the format:
 By editing `gameData.json` you can tweak gameplay values or add new entries
 without recompiling the code.
 
+---
 ### Multiplayer
 
 The sample game showcases a simple client/server architecture built on top of SFML networking.
@@ -475,217 +475,9 @@ m_world.createPickUp({400.f, 200.f}, PickupType::HealthRefill); // Spawn a picku
 
 The world automatically integrates new objects into the scene graph and removes
 them once they leave the battlefield bounds.
+
+
 ---
-### Misc
-
-#### ParallelTask
-
-`ParallelTask` runs a function in a separate thread while reporting completion progress. It is typically used in the loading screen to avoid freezing the main loop.
-
-```cpp
-Engine::ParallelTask task;
-task.execute([]()
-{
-    // Example long-running work
-    loadResources();
-});
-
-while (!task.isFinished())
-{
-    float progress = task.getCompletion();
-    updateProgressBar(progress);
-}
-```
-
-#### Debug Utility
-
-The `Debug` class prints log messages and can toggle developer overlays like the FPS counter or collider outlines.
-
-```cpp
-Engine::Debug::log("Window lost focus");
-Engine::Debug::toggleFps();        // Show FPS counter
-Engine::Debug::toggleDrawColliders();
-```
-
-#### Cache Template
-
-`Cache` stores already loaded resources so subsequent requests return the same instance. The sample game uses it through `ResourceManager` but it can be used directly:
-
-```cpp
-Engine::Cache<sf::Texture> textureCache;
-
-sf::Texture& player = textureCache.load("player", "../Assets/Textures/player.png");
-// ... later requests with the same key return the cached texture
-```
-
-These helpers reduce boilerplate and keep the main engine systems focused on gameplay.
-
-#### ParallelTask Example
-
-The `ParallelTask` utility runs a function on a separate thread while the main
-game loop stays responsive. A task can report its progress from inside the
-thread and the owner can poll the state to drive a loading screen.
-
-```cpp
-Engine::ParallelTask loader;
-loader.execute([&loader]() {
-    for (unsigned i = 0; i < 10; ++i) {
-        loadChunk(i);            // Perform part of the work
-        loader.updateCompletion(0.1f);  // Report progress
-    }
-});
-
-while (!loader.isFinished()) {
-    float percent = loader.getCompletion();
-    updateProgressBar(percent);
-}
-```
-
-
-#### Pooling
-
-The engine employs a small object pool for sound effects so that `sf::Sound`
-instances are reused rather than created every time a sound plays. Each sound in
-the pool is represented by the `PooledSound` structure:
-
-```cpp
-struct PooledSound
-{
-    sf::Sound Sound;
-    bool IsAvailable = false;
-};
-```
-
-When a new sound is requested, `Audio::getSoundFromPool()` first looks for an
-available entry. If none are free, the pool grows until it reaches a preset
-limit:
-
-```cpp
-PooledSound* Audio::getSoundFromPool()
-{
-    PooledSound* availableSound = nullptr;
-
-    for (auto& pooledSound : m_sounds)
-    {
-        if (!pooledSound.IsAvailable && pooledSound.Sound.getStatus() == sf::Sound::Status::Stopped)
-        {
-            pooledSound.IsAvailable = true;
-        }
-    }
-
-    for (auto& pooledSound : m_sounds)
-    {
-        if (pooledSound.IsAvailable)
-        {
-            availableSound = &pooledSound;
-            break;
-        }
-    }
-
-    if (!availableSound)
-    {
-        if (m_sounds.size() > POOL_RESIZE_LIMIT)
-        {
-            Engine::Debug::logWarning("Audio pool limit reached. Cannot play sound!");
-            return nullptr;
-        }
-        m_sounds.emplace_back();
-        availableSound = &m_sounds.back();
-    }
-
-    return availableSound;
-}
-```
-
-After playback, a sound becomes available again when its status changes to
-`Stopped`. This pooling strategy keeps memory allocations low and avoids the
-overhead of repeatedly constructing sound objects during intense audio activity.
-
-
-### Cache
-
-The `Cache` template in the engine provides a lightweight mechanism for loading
-and reusing resources. Each cache stores objects of a specific type and indexes
-them by a string key. When `load()` is called with a key, the cache first checks
-if the resource already exists and returns it if so; otherwise it attempts to
-load it from disk.
-
-```cpp
-// Stand-alone usage
-Engine::Cache<sf::Texture> textureCache;
-sf::Texture& tex = textureCache.load("ui-sheet", "../Assets/Textures/UI/ui_sprite_sheet.png");
-
-// Loading a sub-rectangle using the parameter overload
-sf::Texture& sub = textureCache.load(
-    "ui-sheet-rect",
-    "../Assets/Textures/UI/ui_sprite_sheet.png",
-    sf::IntRect(0, 0, 64, 64));
-
-// Subsequent calls with the same key return the cached instance
-sf::Texture& same = textureCache.load("ui-sheet", "../Assets/Textures/UI/ui_sprite_sheet.png");
-
-// Caches can be cleared when no longer needed
-textureCache.clear();
-```
-
-In the sample game, `ResourceManager` wraps several cache instances to manage
-textures, sounds, fonts and shaders. Clearing the state stack via
-`StateStack::clear()` also calls `ResourceManager::clearAllCache()` to release
-all cached assets.
-
-- **`Cache.h`**
-  Generic template used to load and cache resources. A resource is loaded once
-  and retrieved by hash on subsequent calls.
-- **`ResourceManager.h` / `ResourceManager.cpp`**
-  Game-specific wrapper around `Cache` that maps enumeration IDs to file paths
-  for textures, fonts, sound buffers and shaders.
-- **`TextureId.h`**, **`SoundFxId.h`**, **`FontId.h`**, **`ShaderId.h`**
-  Enumerations defining IDs used by `ResourceManager` to locate asset files.
-
-Example usage:
-
-```cpp
-// Load a texture from the manager
-sf::Texture& sheet = AlphaSquadron::ResourceManager::loadResource(
-    AlphaSquadron::TextureId::UiSpriteSheet);
-
-// Directly using the Cache template
-Engine::Cache<sf::Texture> localCache;
-sf::Texture& logo = localCache.load("logo", "../Assets/Textures/UI/company_logo.png");
-```
-
-The input system revolves around the **KeyBinding** class. Each player has a
-set of actions mapped to keyboard keys. During the game loop, you poll the
-`KeyBinding` instance to determine which actions are currently active and then
-translate those actions into commands.
-
-Example usage:
-
-```cpp
-// Create bindings for player one
-Engine::KeyBinding playerInput(1);
-
-// Inside your main event loop
-sf::Event event;
-while (window.pollEvent(event))
-{
-    // ... other event handling ...
-
-    Engine::KeyBinding::ActionType action;
-    if (playerInput.checkAction(event.key.code, action))
-    {
-        // Respond to the action (e.g., push a command)
-    }
-}
-
-// Check realtime actions each frame
-for (auto action : playerInput.getRealtimeActions())
-{
-    // Handle continuous input like movement or firing
-}
-```
-
-
 ### Audio
 
 The audio subsystem wraps SFML's sound API and provides a simple interface for
@@ -725,7 +517,7 @@ Engine::Audio::setListenerPosition(listener);
 ```
 
 
-
+---
 ### Animation
 
 The `Animation` helper cycles through a sprite sheet based on the elapsed time. You
@@ -785,7 +577,7 @@ window.draw(root);
 
 
 ---
-### Rendering System
+### Rendering
 
 The engine's rendering pipeline is built on top of **SFML** and revolves around
 the `WorldNode` scene graph. Each node inherits from `WorldNode` and implements
@@ -917,4 +709,201 @@ gui.handleEvent(event);
 
 // inside State::render
 window.draw(gui);
+```
+
+---
+### Misc
+
+#### ParallelTask
+
+`ParallelTask` runs a function in a separate thread while reporting completion progress. It is typically used in the loading screen to avoid freezing the main loop.
+
+```cpp
+Engine::ParallelTask task;
+task.execute([]()
+{
+    // Example long-running work
+    loadResources();
+});
+
+while (!task.isFinished())
+{
+    float progress = task.getCompletion();
+    updateProgressBar(progress);
+}
+```
+
+#### Debug Utility
+
+The `Debug` class prints log messages and can toggle developer overlays like the FPS counter or collider outlines.
+
+```cpp
+Engine::Debug::log("Window lost focus");
+Engine::Debug::toggleFps();        // Show FPS counter
+Engine::Debug::toggleDrawColliders();
+```
+
+#### ParallelTask Example
+
+The `ParallelTask` utility runs a function on a separate thread while the main
+game loop stays responsive. A task can report its progress from inside the
+thread and the owner can poll the state to drive a loading screen.
+
+```cpp
+Engine::ParallelTask loader;
+loader.execute([&loader]() {
+    for (unsigned i = 0; i < 10; ++i) {
+        loadChunk(i);            // Perform part of the work
+        loader.updateCompletion(0.1f);  // Report progress
+    }
+});
+
+while (!loader.isFinished()) {
+    float percent = loader.getCompletion();
+    updateProgressBar(percent);
+}
+```
+
+
+#### Pooling
+
+The engine employs a small object pool for sound effects so that `sf::Sound`
+instances are reused rather than created every time a sound plays. Each sound in
+the pool is represented by the `PooledSound` structure:
+
+```cpp
+struct PooledSound
+{
+    sf::Sound Sound;
+    bool IsAvailable = false;
+};
+```
+
+When a new sound is requested, `Audio::getSoundFromPool()` first looks for an
+available entry. If none are free, the pool grows until it reaches a preset
+limit:
+
+```cpp
+PooledSound* Audio::getSoundFromPool()
+{
+    PooledSound* availableSound = nullptr;
+
+    for (auto& pooledSound : m_sounds)
+    {
+        if (!pooledSound.IsAvailable && pooledSound.Sound.getStatus() == sf::Sound::Status::Stopped)
+        {
+            pooledSound.IsAvailable = true;
+        }
+    }
+
+    for (auto& pooledSound : m_sounds)
+    {
+        if (pooledSound.IsAvailable)
+        {
+            availableSound = &pooledSound;
+            break;
+        }
+    }
+
+    if (!availableSound)
+    {
+        if (m_sounds.size() > POOL_RESIZE_LIMIT)
+        {
+            Engine::Debug::logWarning("Audio pool limit reached. Cannot play sound!");
+            return nullptr;
+        }
+        m_sounds.emplace_back();
+        availableSound = &m_sounds.back();
+    }
+
+    return availableSound;
+}
+```
+
+After playback, a sound becomes available again when its status changes to
+`Stopped`. This pooling strategy keeps memory allocations low and avoids the
+overhead of repeatedly constructing sound objects during intense audio activity.
+
+
+#### Cache
+
+The `Cache` template in the engine provides a lightweight mechanism for loading
+and reusing resources. Each cache stores objects of a specific type and indexes
+them by a string key. When `load()` is called with a key, the cache first checks
+if the resource already exists and returns it if so; otherwise it attempts to
+load it from disk.
+
+```cpp
+// Stand-alone usage
+Engine::Cache<sf::Texture> textureCache;
+sf::Texture& tex = textureCache.load("ui-sheet", "../Assets/Textures/UI/ui_sprite_sheet.png");
+
+// Loading a sub-rectangle using the parameter overload
+sf::Texture& sub = textureCache.load(
+    "ui-sheet-rect",
+    "../Assets/Textures/UI/ui_sprite_sheet.png",
+    sf::IntRect(0, 0, 64, 64));
+
+// Subsequent calls with the same key return the cached instance
+sf::Texture& same = textureCache.load("ui-sheet", "../Assets/Textures/UI/ui_sprite_sheet.png");
+
+// Caches can be cleared when no longer needed
+textureCache.clear();
+```
+
+In the sample game, `ResourceManager` wraps several cache instances to manage
+textures, sounds, fonts and shaders. Clearing the state stack via
+`StateStack::clear()` also calls `ResourceManager::clearAllCache()` to release
+all cached assets.
+
+- **`Cache.h`**
+  Generic template used to load and cache resources. A resource is loaded once
+  and retrieved by hash on subsequent calls.
+- **`ResourceManager.h` / `ResourceManager.cpp`**
+  Game-specific wrapper around `Cache` that maps enumeration IDs to file paths
+  for textures, fonts, sound buffers and shaders.
+- **`TextureId.h`**, **`SoundFxId.h`**, **`FontId.h`**, **`ShaderId.h`**
+  Enumerations defining IDs used by `ResourceManager` to locate asset files.
+
+Example usage:
+
+```cpp
+// Load a texture from the manager
+sf::Texture& sheet = AlphaSquadron::ResourceManager::loadResource(
+    AlphaSquadron::TextureId::UiSpriteSheet);
+
+// Directly using the Cache template
+Engine::Cache<sf::Texture> localCache;
+sf::Texture& logo = localCache.load("logo", "../Assets/Textures/UI/company_logo.png");
+```
+
+The input system revolves around the **KeyBinding** class. Each player has a
+set of actions mapped to keyboard keys. During the game loop, you poll the
+`KeyBinding` instance to determine which actions are currently active and then
+translate those actions into commands.
+
+Example usage:
+
+```cpp
+// Create bindings for player one
+Engine::KeyBinding playerInput(1);
+
+// Inside your main event loop
+sf::Event event;
+while (window.pollEvent(event))
+{
+    // ... other event handling ...
+
+    Engine::KeyBinding::ActionType action;
+    if (playerInput.checkAction(event.key.code, action))
+    {
+        // Respond to the action (e.g., push a command)
+    }
+}
+
+// Check realtime actions each frame
+for (auto action : playerInput.getRealtimeActions())
+{
+    // Handle continuous input like movement or firing
+}
 ```
