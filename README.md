@@ -150,7 +150,7 @@ Below is a detailed breakdown of the new directory structure, the purpose of eac
 ### Game Loop
 
 The engine revolves around a few fundamental classes. These systems manage the
-main loop, state transitions, and the scene graph. Together they keep the game
+main loop, state transitions, and the scene graph. Together, they keep the game
 running smoothly.
 
 #### GameEngine (Main Loop)
@@ -180,7 +180,7 @@ void GameEngine::run()
 }
 ```
 
-### State Management System
+### States
 
 The engine organizes gameplay and menus using a stack of states. Every screen is
 implemented as a class derived from `Engine::State`. The `Engine::StateStack`
@@ -252,7 +252,7 @@ bool TitleState::handleEvent(const sf::Event& event)
 
 ---
 
-### Configuration System
+### Configuration
 
 The engine reads gameplay parameters from JSON files located in the `DataFiles` directory.
 `DataTables.cpp` parses these files through the `AlphaSquadron::LoadData` function
@@ -338,7 +338,7 @@ An excerpt from the JSON file illustrates the format:
 By editing `gameData.json` you can tweak gameplay values or add new entries
 without recompiling the code.
 
-### Multiplayer System
+### Multiplayer
 
 The sample game showcases a simple client/server architecture built on top of SFML networking.
 `GameServer` hosts the session while each client runs `MultiplayerGameState` to
@@ -397,7 +397,7 @@ The server relays realtime events and updates to keep every client in sync.
 
 
 ---
-### UI System Walkthrough
+### UI
 
 The engine's GUI components form a small UI toolkit built entirely with SFML. Everything derives from `Engine::Component`, a drawable and transformable object that can respond to events. Higher level controls such as `Button` or `Label` implement this interface, while `Container` handles focus and event routing between child components.
 
@@ -475,8 +475,9 @@ m_world.createPickUp({400.f, 200.f}, PickupType::HealthRefill); // Spawn a picku
 
 The world automatically integrates new objects into the scene graph and removes
 them once they leave the battlefield bounds.
-
 ---
+### Misc
+
 #### ParallelTask
 
 `ParallelTask` runs a function in a separate thread while reporting completion progress. It is typically used in the loading screen to avoid freezing the main loop.
@@ -541,7 +542,7 @@ while (!loader.isFinished()) {
 ```
 
 
-#### 8. Pooling System
+#### Pooling
 
 The engine employs a small object pool for sound effects so that `sf::Sound`
 instances are reused rather than created every time a sound plays. Each sound in
@@ -601,7 +602,7 @@ After playback, a sound becomes available again when its status changes to
 overhead of repeatedly constructing sound objects during intense audio activity.
 
 
-### Cache System
+### Cache
 
 The `Cache` template in the engine provides a lightweight mechanism for loading
 and reusing resources. Each cache stores objects of a specific type and indexes
@@ -685,7 +686,7 @@ for (auto action : playerInput.getRealtimeActions())
 ```
 
 
-### Audio System
+### Audio
 
 The audio subsystem wraps SFML's sound API and provides a simple interface for
 playing sound effects and music. The `Engine::Audio` class keeps a pool of
@@ -725,7 +726,7 @@ Engine::Audio::setListenerPosition(listener);
 
 
 
-##### Animation
+### Animation
 
 The `Animation` helper cycles through a sprite sheet based on the elapsed time. You
 specify the size of each frame, the number of frames, and the overall duration of
@@ -754,57 +755,8 @@ while (window.isOpen())
 
 This example creates an explosion animation that plays once when the aircraft is destroyed.
 
-
-##### PostEffect
-
-The engine exposes a generic `PostEffect` interface with an `apply` method. The
-`BloomEffect` class derives from it to create a glow around bright areas using a
-series of shader passes. The simplified algorithm is:
-
-```cpp
-void BloomEffect::apply(const sf::RenderTexture& input, sf::RenderTarget& output)
-{
-    prepareTextures(input.getSize());
-    filterBright(input, m_brightnessTexture);
-    downSample(m_brightnessTexture, m_firstPassTextures[0]);
-    blurMultipass(m_firstPassTextures);
-    downSample(m_firstPassTextures[0], m_secondPassTextures[0]);
-    blurMultipass(m_secondPassTextures);
-    add(m_firstPassTextures[0], m_secondPassTextures[0], m_firstPassTextures[1]);
-    m_firstPassTextures[1].display();
-    add(input, m_firstPassTextures[1], output);
-}
-```
-
-Within `World::render` the scene graph is drawn to an offscreen texture and the
-effect is applied before the result is displayed:
-
-```cpp
-void World::render()
-{
-    if (!Engine::PostEffect::isSupported())
-    {
-        m_sceneTexture.clear();
-        m_sceneTexture.setView(m_worldView);
-        m_sceneTexture.draw(m_worldGraph);
-        m_sceneTexture.display();
-        m_bloomEffect.apply(m_sceneTexture, m_target);
-    }
-    else
-    {
-        m_target.setView(m_worldView);
-        m_target.draw(m_worldGraph);
-    }
-}
-```
-
-This modular approach makes it easy to chain or swap effects while gracefully
-handling systems without shader support.
-
-
-
 ---
-### Scene Graph Overview
+### Scene Graph
 
 The engine organizes all world objects in a tree of `WorldNode` instances. Each node stores its children and a pointer to its parent. Transformations are propagated through this hierarchy, so moving a parent automatically moves all of its descendants. Updates and rendering follow the same pattern using `updateHierarchy()` and `renderState()`, meaning you only invoke these on the root node.
 
@@ -851,6 +803,52 @@ void GameEngine::render()
     m_window.display();
 }
 ```
+
+#### Post Effect
+
+The engine exposes a generic `PostEffect` interface with an `apply` method. The
+`BloomEffect` class derives from it to create a glow around bright areas using a
+series of shader passes. The simplified algorithm is:
+
+```cpp
+void BloomEffect::apply(const sf::RenderTexture& input, sf::RenderTarget& output)
+{
+    prepareTextures(input.getSize());
+    filterBright(input, m_brightnessTexture);
+    downSample(m_brightnessTexture, m_firstPassTextures[0]);
+    blurMultipass(m_firstPassTextures);
+    downSample(m_firstPassTextures[0], m_secondPassTextures[0]);
+    blurMultipass(m_secondPassTextures);
+    add(m_firstPassTextures[0], m_secondPassTextures[0], m_firstPassTextures[1]);
+    m_firstPassTextures[1].display();
+    add(input, m_firstPassTextures[1], output);
+}
+```
+
+Within `World::render` the scene graph is drawn to an offscreen texture and the
+effect is applied before the result is displayed:
+
+```cpp
+void World::render()
+{
+    if (!Engine::PostEffect::isSupported())
+    {
+        m_sceneTexture.clear();
+        m_sceneTexture.setView(m_worldView);
+        m_sceneTexture.draw(m_worldGraph);
+        m_sceneTexture.display();
+        m_bloomEffect.apply(m_sceneTexture, m_target);
+    }
+    else
+    {
+        m_target.setView(m_worldView);
+        m_target.draw(m_worldGraph);
+    }
+}
+```
+
+This modular approach makes it easy to chain or swap effects while gracefully
+handling systems without shader support.
 
 Inside gameplay states, the `World` class handles offscreen rendering and post
 effects. If post effects are available, the scene graph is drawn directly;
